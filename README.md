@@ -1,1 +1,3 @@
-repurposed hw 5 file as base for project
+# Team Members
+
+- Kate Shen (kat3sjy)
