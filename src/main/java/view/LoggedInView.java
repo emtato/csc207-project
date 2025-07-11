@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -17,6 +19,7 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.note.NoteController;
 
 /**
  * The View for when the user is logged into the program.
@@ -28,10 +31,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JLabel passwordErrorField = new JLabel();
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
+    private NoteController noteController;
 
     private final JLabel username;
 
     private final JButton logOut;
+    private final JButton seeNote;
 
     private final JTextField passwordInputField = new JTextField(15);
     private final JButton changePassword;
@@ -55,6 +60,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         changePassword = new JButton("Change Password");
         buttons.add(changePassword);
+
+        seeNote = new JButton("See Note");
+        buttons.add(seeNote);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -106,6 +114,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        seeNote.addActionListener(
+                // This creates an anonymous subclass of ActionListener and instantiates it.
+                evt -> {
+                    if (evt.getSource().equals(seeNote)) {
+                        this.noteController.switchToNoteView();
+                    }
+                }
+        );
+
         this.add(title);
         this.add(usernameInfo);
         this.add(username);
@@ -138,5 +155,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+    public void setNoteController(NoteController noteController) {
+        this.noteController = noteController;
     }
 }

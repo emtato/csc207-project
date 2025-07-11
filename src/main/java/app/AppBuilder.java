@@ -19,6 +19,9 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.note.NoteController;
+import interface_adapter.note.NotePresenter;
+import interface_adapter.note.NoteViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -31,11 +34,15 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.note.NoteInputBoundary;
+import use_case.note.NoteInteractor;
+import use_case.note.NoteOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.LoggedInView;
 import view.LoginView;
+import view.NoteView;
 import view.SignupView;
 import view.ViewManager;
 
@@ -59,15 +66,18 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
+
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
+    private NoteViewModel noteViewModel;
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private NoteView noteView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -103,6 +113,17 @@ public class AppBuilder {
         loggedInViewModel = new LoggedInViewModel();
         loggedInView = new LoggedInView(loggedInViewModel);
         cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Note View to the application.
+     * @return this builder
+     */
+    public AppBuilder addNoteView() {
+        noteViewModel = new NoteViewModel();
+        noteView = new NoteView(noteViewModel);
+        cardPanel.add(noteView, noteView.getViewName());
         return this;
     }
 
@@ -166,6 +187,23 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Note Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addNoteUseCase() {
+        final NoteOutputBoundary noteOutputBoundary = new NotePresenter(viewManagerModel,
+                noteViewModel, loggedInViewModel);
+
+        final NoteInputBoundary noteInteractor =
+                new NoteInteractor(userDataAccessObject, noteOutputBoundary, userFactory);
+
+        final NoteController noteController = new NoteController(noteInteractor);
+        noteView.setNoteController(noteController);
+        loggedInView.setNoteController(noteController);
         return this;
     }
 
