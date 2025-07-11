@@ -7,6 +7,8 @@ import entity.User;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.note.DataAccessException;
+import use_case.note.NoteDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 /**
@@ -16,9 +18,11 @@ import use_case.signup.SignupUserDataAccessInterface;
 public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
-        LogoutUserDataAccessInterface {
+        LogoutUserDataAccessInterface,
+        NoteDataAccessInterface {
 
     private final Map<String, User> users = new HashMap<>();
+    private final Map<String, String> notes = new HashMap<>();
 
     private String currentUsername;
 
@@ -51,5 +55,16 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     @Override
     public String getCurrentUsername() {
         return this.currentUsername;
+    }
+
+    @Override
+    public String saveNote(User user, String note) throws DataAccessException {
+        notes.put(user.getName(), note);
+        return loadNote(user);
+    }
+
+    @Override
+    public String loadNote(User user) throws DataAccessException {
+        return notes.get(user.getName());
     }
 }
