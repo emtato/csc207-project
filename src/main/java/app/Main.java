@@ -1,6 +1,7 @@
 package app;
 
 import javax.swing.JFrame;
+import java.awt.*;
 
 /**
  * The Main class of our application.
@@ -23,7 +24,7 @@ public class Main {
                                             .addLogoutUseCase()
                                             .addNoteUseCase()
                                             .build();
-
+        application.setPreferredSize(new Dimension(1300, 800));
         application.pack();
         application.setVisible(true);
     }
