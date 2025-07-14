@@ -24,7 +24,7 @@ public class Main {
                                             .addLogoutUseCase()
                                             .addNoteUseCase()
                                             .build();
-        application.setPreferredSize(new Dimension(1300, 800));
+        application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();
         application.setVisible(true);
     }
