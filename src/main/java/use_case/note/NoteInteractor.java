@@ -1,6 +1,6 @@
 package use_case.note;
 
-import entity.CommonUser;
+//import entity.CommonUser;
 import entity.User;
 import entity.UserFactory;
 import use_case.signup.SignupOutputData;
