@@ -14,6 +14,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -26,6 +27,7 @@ import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -72,11 +74,15 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private NoteViewModel noteViewModel;
     private ProfileViewModel profileViewModel;
+    private EditProfileViewModel editProfileViewModel;
     private LoggedInViewModel loggedInViewModel;
+    private SettingsViewModel settingsViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
     private ProfileView profileView;
+    private EditProfileView editProfileView;
+    private SettingsView settingsView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -134,6 +140,28 @@ public class AppBuilder {
         profileViewModel = new ProfileViewModel();
         profileView = new ProfileView(profileViewModel);
         cardPanel.add(profileView, profileView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Edit Profile View to the application.
+     * @return this builder
+     */
+    public AppBuilder addEditProfileView() {
+        editProfileViewModel = new EditProfileViewModel();
+        editProfileView = new EditProfileView(editProfileViewModel);
+        cardPanel.add(editProfileView, editProfileView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Settings View to the application.
+     * @return this builder
+     */
+    public AppBuilder addSettingsView() {
+        settingsViewModel = new SettingsViewModel();
+        settingsView = new SettingsView(settingsViewModel);
+        cardPanel.add(settingsView, settingsView.getViewName());
         return this;
     }
 
@@ -227,7 +255,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(settingsView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

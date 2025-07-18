@@ -13,8 +13,7 @@ import javax.swing.Box;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -26,6 +25,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final ProfileViewModel profileViewModel;
     // TODO: declare controllers
 
+    final JLabel title;
     private final ImageIcon profilePicture;
     private final JLabel profilePictureLabel;
     private final JLabel displayName;
@@ -50,7 +50,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.profileViewModel = profileViewModel;
         this.profileViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel(ProfileViewModel.TITLE_LABEL);
+        title = new JLabel(ProfileViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setMinimumSize(new Dimension(1000, 50));
 
@@ -60,7 +60,12 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         mainPanel.setMaximumSize(new Dimension(1200, 300));
         mainPanel.setMinimumSize(new Dimension(1200, 300));
 
-        profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png");
+        Image profilePictureImage =  new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+        int newWidth = 200;
+        int newHeight = 200;
+        profilePictureImage = profilePictureImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        profilePicture = new ImageIcon(profilePictureImage);
+
         profilePictureLabel = new JLabel(profilePicture);
         profilePictureLabel.setMaximumSize(new Dimension(200, 200));
         profilePictureLabel.setMinimumSize(new Dimension(200, 200));
@@ -189,10 +194,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         if (evt.getPropertyName().equals("state")) {
 
         }
-        else if (evt.getPropertyName().equals("password")) {
-
-        }
-
     }
 
     public String getViewName() {
