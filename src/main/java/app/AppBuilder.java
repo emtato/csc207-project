@@ -11,6 +11,8 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.analyze_recipes.AnalyzeRecipeViewModel;
+import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -84,7 +86,8 @@ public class AppBuilder {
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-
+    private AnalyzeRecipesViewModel analyzeRecipesViewModel;
+    private AnalyzeRecipesView analyzeRecipesView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -110,6 +113,7 @@ public class AppBuilder {
 
     /**
      * Adds the HomePage View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addHomePageView() {
@@ -121,6 +125,7 @@ public class AppBuilder {
 
     /**
      * Adds the Signup View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSignupView() {
@@ -132,6 +137,7 @@ public class AppBuilder {
 
     /**
      * Adds the Login View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLoginView() {
@@ -143,6 +149,7 @@ public class AppBuilder {
 
     /**
      * Adds the LoggedIn View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLoggedInView() {
@@ -154,6 +161,7 @@ public class AppBuilder {
 
     /**
      * Adds the Note View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addNoteView() {
@@ -164,7 +172,20 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the analyze recipe View to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addAnalyzeRecipeView() {
+        analyzeRecipesViewModel = new AnalyzeRecipesViewModel();
+        analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel);
+        cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
+        return this;
+    }
+
+    /**
      * Adds the ClubHomePage View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addClubHomePageView() {
@@ -209,6 +230,7 @@ public class AppBuilder {
 
     /**
      * Adds the Signup Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addHomePageUseCase() {
@@ -223,6 +245,7 @@ public class AppBuilder {
 
     /**
      * Adds the Profile View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addProfileView() {
@@ -234,6 +257,7 @@ public class AppBuilder {
 
     /**
      * Adds the Edit Profile View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addEditProfileView() {
@@ -245,6 +269,7 @@ public class AppBuilder {
 
     /**
      * Adds the Settings View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSettingsView() {
@@ -256,6 +281,7 @@ public class AppBuilder {
 
     /**
      * Adds the Signup Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
@@ -271,6 +297,7 @@ public class AppBuilder {
 
     /**
      * Adds the Login Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
@@ -286,6 +313,7 @@ public class AppBuilder {
 
     /**
      * Adds the Change Password Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addChangePasswordUseCase() {
@@ -303,6 +331,7 @@ public class AppBuilder {
 
     /**
      * Adds the Logout Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
@@ -319,6 +348,7 @@ public class AppBuilder {
 
     /**
      * Adds the Note Use Case to the application.
+     *
      * @return this builder
      */
     public AppBuilder addNoteUseCase() {
@@ -336,6 +366,7 @@ public class AppBuilder {
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     *
      * @return the application
      */
     public JFrame build() {

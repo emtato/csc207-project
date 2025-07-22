@@ -1,5 +1,7 @@
 package view;
 
+import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -28,6 +30,8 @@ import javax.swing.event.DocumentListener;
 public class AnalyzeRecipesView extends JPanel {
 
     private final String viewName = "recipe view";
+    private final AnalyzeRecipesViewModel viewModel;
+
     //middle
     JTextArea recipeText = new JTextArea();
     //bottom
@@ -42,7 +46,10 @@ public class AnalyzeRecipesView extends JPanel {
     JButton saveButton = new JButton("Add to list");
     JButton shareButton = new JButton("Share");
 
-    public AnalyzeRecipesView() {
+    public AnalyzeRecipesView(AnalyzeRecipesViewModel viewModel) {
+        this.viewModel = viewModel;
+        this.viewModel.addPropertyChangeListener(this);
+
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
