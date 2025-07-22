@@ -34,10 +34,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event1desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event1desc.setFont(eventDescFont);
+        JButton signUp1 = new JButton("Sign Up");
+        signUp1.setFont(eventDescFont);
 
         JPanel event1 = new JPanel();
         event1.add(event1label);
         event1.add(event1desc);
+        event1.add(signUp1);
         formatEventPanel(event1);
         eventsGrid.add(event1);
 
@@ -47,10 +50,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event2desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event2desc.setFont(eventDescFont);
+        JButton signUp2 = new JButton("Sign Up");
+        signUp2.setFont(eventDescFont);
 
         JPanel event2 = new JPanel();
         event2.add(event2label);
         event2.add(event2desc);
+        event2.add(signUp2);
         formatEventPanel(event2);
         eventsGrid.add(event2);
 
@@ -60,10 +66,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event3desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event3desc.setFont(eventDescFont);
+        JButton signUp3 = new JButton("Sign Up");
+        signUp3.setFont(eventDescFont);
 
         JPanel event3 = new JPanel();
         event3.add(event3label);
         event3.add(event3desc);
+        event3.add(signUp3);
         formatEventPanel(event3);
         eventsGrid.add(event3);
 
@@ -73,20 +82,32 @@ public class ExploreEventsView extends JPanel {
         JLabel event4desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event4desc.setFont(eventDescFont);
+        JButton signUp4 = new JButton("Sign Up");
+        signUp4.setFont(eventDescFont);
 
         JPanel event4 = new JPanel();
         event4.add(event4label);
         event4.add(event4desc);
+        event4.add(signUp4);
         formatEventPanel(event4);
         eventsGrid.add(event4);
 
         this.add(eventsGrid);
+
+        JPanel buttonsBar = new JPanel();
+        buttonsBar.setLayout(new BoxLayout(buttonsBar, BoxLayout.X_AXIS));
+        JButton home = new JButton("Home");
+        JButton settings = new JButton("Settings");
+        JButton explore = new JButton("Explore");
+        buttonsBar.add(home);
+        buttonsBar.add(explore);
+        buttonsBar.add(settings);
+        this.add(buttonsBar);
     }
 
     public static void formatEventPanel(JPanel eventPanel) {
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
         eventPanel.setBackground(Color.PINK);
-        //eventPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
 
