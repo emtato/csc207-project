@@ -9,27 +9,29 @@ import java.awt.*;
 public class Main {
     /**
      * Builds and runs the CA architecture of the application.
+     *
      * @param args unused arguments
      */
     public static void main(String[] args) {
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
-                                            .addLoginView()
-                                            .addSignupView()
-                                            .addLoggedInView()
-                                            .addNoteView()
-                                            .addClubHomePageView()
-                                            .addHomePageView()
-                                            .addProfileView()
-                                            .addEditProfileView()
-                                            .addSettingsView()
-                                            .addSignupUseCase()
-                                            .addLoginUseCase()
-                                            .addChangePasswordUseCase()
-                                            .addLogoutUseCase()
-                                            .addNoteUseCase()
-                                            .addHomePageUseCase()
-                                            .build();
+                .addLoginView()
+                .addSignupView()
+                .addLoggedInView()
+                .addNoteView()
+                .addClubHomePageView()
+                .addHomePageView()
+                .addProfileView()
+                .addEditProfileView()
+                .addSettingsView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addChangePasswordUseCase()
+                .addLogoutUseCase()
+                .addNoteUseCase()
+                .addHomePageUseCase()
+                .addAnalyzeRecipesView()
+                .build();
         application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();
         application.setVisible(true);

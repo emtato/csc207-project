@@ -136,7 +136,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileContentPanel.setMinimumSize(new Dimension(1200, 250));
 
         profileContent = new JTextArea(ProfileViewModel.CONTENT_ROW_NUM,ProfileViewModel.CONTENT_COL_NUM);
-        profileContent.setText("Posts go here\nmore posts");
+        profileContent.setText("Posts go here\nmore posts\n more posts/??? this is getting ridiculous");
         profileContentPanel.add(profileContent);
 
 
@@ -199,7 +199,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     public String getViewName() {
         return viewName;
     }
-    
+
     // set controllers
-    
+
 }

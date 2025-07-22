@@ -52,9 +52,11 @@ public class AnalyzeRecipesView extends JPanel {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        JPanel topPanel = new JPanel(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         JPanel bottomPanel = new JPanel(new FlowLayout()); //pannel for main ui buttons (persists across views)
-        JPanel rightPanel = new JPanel(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel centerPanel = new JPanel();
 
         //top
@@ -82,6 +84,8 @@ public class AnalyzeRecipesView extends JPanel {
         rightPanel.add(shareButton);
 
 
+        this.add(bottomPanel, BorderLayout.SOUTH);
+
     }
 
     //@Override
@@ -90,6 +94,7 @@ public class AnalyzeRecipesView extends JPanel {
             System.out.println("analyzeButton");
         }
     }
+
     public String getViewName() {
         return viewName;
     }

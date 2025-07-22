@@ -176,7 +176,7 @@ public class AppBuilder {
      *
      * @return this builder
      */
-    public AppBuilder addAnalyzeRecipeView() {
+    public AppBuilder addAnalyzeRecipesView() {
         analyzeRecipesViewModel = new AnalyzeRecipesViewModel();
         analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel);
         cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
