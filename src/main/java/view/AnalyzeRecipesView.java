@@ -82,4 +82,7 @@ public class AnalyzeRecipesView extends JPanel {
             System.out.println("analyzeButton");
         }
     }
+    public String getViewName() {
+        return viewName;
+    }
 }
