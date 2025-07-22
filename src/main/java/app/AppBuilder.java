@@ -11,7 +11,7 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipeViewModel;
+import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
 import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
