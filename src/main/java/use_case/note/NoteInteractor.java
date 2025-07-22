@@ -2,6 +2,7 @@ package use_case.note;
 
 import entity.User;
 import entity.UserFactory;
+import use_case.signup.SignupOutputData;
 
 /**
  * The "Use Case Interactor" for our two note-related use cases of refreshing

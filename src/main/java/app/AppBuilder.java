@@ -15,15 +15,21 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
+import interface_adapter.clubs.ClubViewModel;
+//import interface_adapter.edit_profile.EditProfileViewModel;
+import interface_adapter.homepage.HomePageController;
+import interface_adapter.homepage.HomePagePresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
 import interface_adapter.profile.ProfileViewModel;
+//import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -31,6 +37,9 @@ import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.homepage.HomePageInputBoundary;
+import use_case.homepage.HomePageInteractor;
+import use_case.homepage.HomePageOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -43,6 +52,13 @@ import use_case.note.NoteOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import view.LoggedInView;
+import view.LoginView;
+import view.NoteView;
+import view.SignupView;
+import view.ViewManager;
+import view.ClubHomePageView;
+import view.HomePageView;
 import view.*;
 
 /**
@@ -76,16 +92,31 @@ public class AppBuilder {
     private ProfileViewModel profileViewModel;
     private EditProfileViewModel editProfileViewModel;
     private LoggedInViewModel loggedInViewModel;
+    private ClubViewModel clubViewModel;
+    private HomePageViewModel homePageViewModel;
     private SettingsViewModel settingsViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
+    private ClubHomePageView clubHomePageView;
+    private HomePageView homePageView;
     private ProfileView profileView;
     private EditProfileView editProfileView;
     private SettingsView settingsView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    /**
+     * Adds the HomePage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomePageView() {
+        homePageViewModel = new HomePageViewModel();
+        homePageView = new HomePageView(homePageViewModel);
+        cardPanel.add(homePageView, homePageView.getViewName());
+        return this;
     }
 
     /**
@@ -133,6 +164,64 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the ClubHomePage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addClubHomePageView() {
+        clubViewModel = new ClubViewModel();
+        clubHomePageView = new ClubHomePageView(clubViewModel);
+        cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
+        return this;
+    }
+
+//    /**
+//     * Adds the Profile View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addProfileView() {
+//        profileViewModel = new ProfileViewModel();
+//        profileView = new ProfileView(profileViewModel);
+//        cardPanel.add(profileView, profileView.getViewName());
+//        return this;
+//    }
+//
+//    /**
+//     * Adds the Edit Profile View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addEditProfileView() {
+//        editProfileViewModel = new EditProfileViewModel();
+//        editProfileView = new EditProfileView(editProfileViewModel);
+//        cardPanel.add(editProfileView, editProfileView.getViewName());
+//        return this;
+//    }
+//
+//    /**
+//     * Adds the Settings View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addSettingsView() {
+//        settingsViewModel = new SettingsViewModel();
+//        settingsView = new SettingsView(settingsViewModel);
+//        cardPanel.add(settingsView, settingsView.getViewName());
+//        return this;
+//    }
+
+    /**
+     * Adds the Signup Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomePageUseCase() {
+        final HomePageOutputBoundary homePageOutputBoundary = new HomePagePresenter(viewManagerModel,
+                homePageViewModel, signupViewModel, loginViewModel, clubViewModel);
+        final HomePageInputBoundary homePageInteractor = new HomePageInteractor(homePageOutputBoundary);
+
+        final HomePageController controller = new HomePageController(homePageInteractor);
+        homePageView.setHomePageController(controller);
+        return this;
+    }
+
+    /**
      * Adds the Profile View to the application.
      * @return this builder
      */
@@ -171,7 +260,7 @@ public class AppBuilder {
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
+                signupViewModel, loginViewModel, clubViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary, userFactory);
 
@@ -255,7 +344,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(settingsView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
