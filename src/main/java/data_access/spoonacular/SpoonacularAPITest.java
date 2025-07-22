@@ -19,12 +19,10 @@ public class SpoonacularAPITest {
         JSONArray ingredients = new JSONArray();
         ingredients.put("1 cup chopped kale");
         ingredients.put("1/2 cup cooked quinoa");
-// etc.
 
         body.put("ingredients", ingredients);
 
         String json = body.toString();
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.spoonacular.com/recipes/analyze?apiKey=3969e578906e44e5abd5998606e750d1&language=en&includeNutrition=false&includeTaste=false"))
                 .header("Content-Type", "application/json")
