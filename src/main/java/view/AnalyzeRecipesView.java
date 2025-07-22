@@ -84,7 +84,12 @@ public class AnalyzeRecipesView extends JPanel {
         rightPanel.add(shareButton);
 
 
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.add(mainPanel);
 
     }
 
