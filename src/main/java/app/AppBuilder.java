@@ -16,10 +16,12 @@ import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.clubs.ClubViewModel;
 //import interface_adapter.edit_profile.EditProfileViewModel;
+import interface_adapter.homepage.HomePageController;
+import interface_adapter.homepage.HomePagePresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.clubs.ClubState;
+import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.note.NoteController;
@@ -32,6 +34,9 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.homepage.HomePageInputBoundary;
+import use_case.homepage.HomePageInteractor;
+import use_case.homepage.HomePageOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -50,6 +55,7 @@ import view.NoteView;
 import view.SignupView;
 import view.ViewManager;
 import view.ClubHomePageView;
+import view.HomePageView;
 import view.*;
 
 /**
@@ -82,13 +88,26 @@ public class AppBuilder {
     private NoteViewModel noteViewModel;
     private LoggedInViewModel loggedInViewModel;
     private ClubViewModel clubViewModel;
+    private HomePageViewModel homePageViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
+    private HomePageView homePageView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    /**
+     * Adds the HomePage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomePageView() {
+        homePageViewModel = new HomePageViewModel();
+        homePageView = new HomePageView(homePageViewModel);
+        cardPanel.add(homePageView, homePageView.getViewName());
+        return this;
     }
 
     /**
@@ -183,6 +202,20 @@ public class AppBuilder {
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
+    public AppBuilder addHomePageUseCase() {
+        final HomePageOutputBoundary homePageOutputBoundary = new HomePagePresenter(viewManagerModel,
+                homePageViewModel, signupViewModel, loginViewModel, clubViewModel);
+        final HomePageInputBoundary homePageInteractor = new HomePageInteractor(homePageOutputBoundary);
+
+        final HomePageController controller = new HomePageController(homePageInteractor);
+        homePageView.setHomePageController(controller);
+        return this;
+    }
+
+    /**
+     * Adds the Signup Use Case to the application.
+     * @return this builder
+     */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
                 signupViewModel, loginViewModel, clubViewModel);
@@ -269,7 +302,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

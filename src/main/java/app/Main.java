@@ -19,11 +19,13 @@ public class Main {
                                             .addLoggedInView()
                                             .addNoteView()
                                             .addClubHomePageView()
+                                            .addHomePageView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
                                             .addLogoutUseCase()
                                             .addNoteUseCase()
+                                            .addHomePageUseCase()
                                             .build();
         application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();

@@ -11,10 +11,10 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.clubs.ClubViewModel;
 import interface_adapter.clubs.ClubState;
 
-/* Description:
- * ^ • ω • ^
+/**
+ * The View for the Club Home Page.
+ * This view displays the club's home page with a title.
  */
-
 public class ClubHomePageView extends JPanel {
 
     private final String viewName = "club view";
@@ -22,28 +22,11 @@ public class ClubHomePageView extends JPanel {
 
 
     public ClubHomePageView(ClubViewModel clubViewModel) {
-        System.out.println("ClubHomePageView constructor called");
+//        System.out.println("ClubHomePageView constructor called");
         this.clubViewModel = clubViewModel;
 
         JLabel title = new JLabel("WAAAAAAAAAAAAAAAAAAAAA"); //get recipe/post title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        clubViewModel.addPropertyChangeListener(new PropertyChangeListener() {
-//            @Override
-//            public void propertyChange(PropertyChangeEvent evt) {
-//                if (evt.getPropertyName().equals(ClubState.TITLE_PROPERTY)) {
-//                    title.setText(clubViewModel.getState().getTitle());
-//                }
-//            }
-//        });
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel topPanel = new JPanel();
-        JPanel bottomPanel = new JPanel(new FlowLayout()); //pannel for main ui buttons (persists across views)
-        JPanel rightPanel = new JPanel(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JPanel centerPanel = new JPanel();
-
-        //top
-        //middle
-        JTextArea recipeText = new JTextArea();
 
         this.add(title);
 

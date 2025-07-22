@@ -9,6 +9,7 @@ public class Club implements User{
     private String bio;
     private final ArrayList<Account> members = new ArrayList<>();
     private final ArrayList<String> foodPreferences = new ArrayList<>();
+    private final ArrayList<Post> posts = new ArrayList<>();
 
     public Club(String name, String password) {
         this.name = name;
@@ -22,7 +23,6 @@ public class Club implements User{
         }
         return this.bio;
     }
-
 
     @Override
     public String getName() {
@@ -45,4 +45,6 @@ public class Club implements User{
     public ArrayList<String> getFoodPreferences() {
         return foodPreferences;
     }
+
+    public ArrayList<Post> getPosts() {return posts;}
 }
