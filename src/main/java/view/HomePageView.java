@@ -3,12 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
 
 
@@ -16,6 +12,7 @@ import interface_adapter.clubs.ClubViewModel;
 import interface_adapter.clubs.ClubState;
 import interface_adapter.homepage.HomePageController;
 import interface_adapter.homepage.HomePageViewModel;
+import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
 
@@ -31,6 +28,7 @@ public class HomePageView extends JPanel {
     private final JButton signUp;
     private final JButton toLogin;
     private final JButton toClubs;
+    private final JButton toSettings;
 
 
     public HomePageView(HomePageViewModel homePageViewModel) {
@@ -48,6 +46,8 @@ public class HomePageView extends JPanel {
         buttons.add(toClubs);
         signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
+        toSettings = new JButton("Settings");
+        buttons.add(toSettings);
 
         signUp.addActionListener(
                 new ActionListener() {
@@ -74,6 +74,12 @@ public class HomePageView extends JPanel {
                     public void actionPerformed(ActionEvent e) {
                         homePageController.switchToClubView();
                     }
+                }
+        );
+        toSettings.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) { homePageController.switchToSettingsView(); }
                 }
         );
 

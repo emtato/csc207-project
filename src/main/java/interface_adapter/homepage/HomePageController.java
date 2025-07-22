@@ -14,4 +14,6 @@ public class HomePageController {
     public void switchToSignUpView() {inputBoundary.switchToSignUpView();}
 
     public void switchToClubView() {inputBoundary.switchToClubView();}
+
+    public void switchToSettingsView() {inputBoundary.switchToSettingsView();}
 }
