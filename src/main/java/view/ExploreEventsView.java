@@ -34,13 +34,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event1desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event1desc.setFont(eventDescFont);
-        JButton signUp1 = new JButton("Sign Up");
-        signUp1.setFont(eventDescFont);
+        JButton view1 = new JButton("View");
+        view1.setFont(eventDescFont);
 
         JPanel event1 = new JPanel();
         event1.add(event1label);
         event1.add(event1desc);
-        event1.add(signUp1);
+        event1.add(view1);
         formatEventPanel(event1);
         eventsGrid.add(event1);
 
@@ -50,13 +50,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event2desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event2desc.setFont(eventDescFont);
-        JButton signUp2 = new JButton("Sign Up");
-        signUp2.setFont(eventDescFont);
+        JButton view2 = new JButton("View");
+        view2.setFont(eventDescFont);
 
         JPanel event2 = new JPanel();
         event2.add(event2label);
         event2.add(event2desc);
-        event2.add(signUp2);
+        event2.add(view2);
         formatEventPanel(event2);
         eventsGrid.add(event2);
 
@@ -66,13 +66,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event3desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event3desc.setFont(eventDescFont);
-        JButton signUp3 = new JButton("Sign Up");
-        signUp3.setFont(eventDescFont);
+        JButton view3 = new JButton("View");
+        view3.setFont(eventDescFont);
 
         JPanel event3 = new JPanel();
         event3.add(event3label);
         event3.add(event3desc);
-        event3.add(signUp3);
+        event3.add(view3);
         formatEventPanel(event3);
         eventsGrid.add(event3);
 
@@ -82,13 +82,13 @@ public class ExploreEventsView extends JPanel {
         JLabel event4desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
             "That's £200 off a family of 4!");
         event4desc.setFont(eventDescFont);
-        JButton signUp4 = new JButton("Sign Up");
-        signUp4.setFont(eventDescFont);
+        JButton view4 = new JButton("View");
+        view4.setFont(eventDescFont);
 
         JPanel event4 = new JPanel();
         event4.add(event4label);
         event4.add(event4desc);
-        event4.add(signUp4);
+        event4.add(view4);
         formatEventPanel(event4);
         eventsGrid.add(event4);
 
@@ -113,6 +113,7 @@ public class ExploreEventsView extends JPanel {
 
 
 //  test  /////////////////////////////////////////////////////////////////////
+
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
