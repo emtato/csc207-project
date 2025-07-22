@@ -18,6 +18,8 @@ public class Main {
                                             .addSignupView()
                                             .addLoggedInView()
                                             .addNoteView()
+                                            .addClubHomePageView()
+                                            .addHomePageView()
                                             .addProfileView()
                                             .addEditProfileView()
                                             .addSettingsView()
@@ -26,6 +28,7 @@ public class Main {
                                             .addChangePasswordUseCase()
                                             .addLogoutUseCase()
                                             .addNoteUseCase()
+                                            .addHomePageUseCase()
                                             .build();
         application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();
