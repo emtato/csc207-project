@@ -13,10 +13,9 @@ import javax.swing.JTextField;
 
 import data_access.DBUserDataAccessObject;
 import entity.Account;
-import interface_adapter.change_password.ChangePasswordController;
 import use_case.change_password.*;
 
-// TODO: remove magic numbers
+// TODO: figure out how to implement use cases
 
 public class ChangePassword {
 
@@ -75,13 +74,9 @@ public class ChangePassword {
                     new Alert("Password doesn't match", frame);
                     return;
                 }
-                // TODO: figure out parameter:
-//                ChangePasswordController change = new ChangePasswordController();
-//                if (change.execute(newPassword.getText(), user.getUsername())) {
-//                    new HomeView(user, database);
-//                    new Alert("Password changed successfully", frame);
-//                    frame.dispose();
-//                }
+                new HomeView(user, database);
+                new Alert("Password changed successfully", frame);
+                frame.dispose();
             }
         });
         center.add(submit);

@@ -61,7 +61,7 @@ public class HomeView {
 
         JPanel north = new JPanel(new BorderLayout());
         north.setBackground(null);
-        north.add(new JLabel("Home", 20, GUIConstants.BLACK, Font.BOLD),
+        north.add(new JLabel("Home", GUIConstants.TITLE_SIZE, GUIConstants.BLACK, Font.BOLD),
                 BorderLayout.WEST);
         header.add(north, BorderLayout.NORTH);
 

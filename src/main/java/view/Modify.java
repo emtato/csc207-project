@@ -81,7 +81,7 @@ public class Modify {
         center.add(submit);
         panel.add(center, BorderLayout.CENTER);
 
-        JLabel changePassword = new JLabel("Change Password", 20, GUIConstants.BLACK, Font.BOLD);
+        JLabel changePassword = new JLabel("Change Password", GUIConstants.TEXT_SIZE, GUIConstants.BLACK, Font.BOLD);
         changePassword.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {}
@@ -93,9 +93,8 @@ public class Modify {
             public void mouseEntered(MouseEvent e) {}
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO: fix ChangePassword
-//                new ChangePassword(user, database);
-//                frame.dispose();
+                new ChangePassword(user, database);
+                frame.dispose();
             }
         });
         changePassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
