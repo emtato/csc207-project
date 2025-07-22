@@ -6,6 +6,7 @@ import interface_adapter.note.NoteViewModel;
 import interface_adapter.signup.SignupState;
 
 import javax.swing.*;
+import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

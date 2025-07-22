@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import data_access.DBUserDataAccessObject;
 import entity.Account;
 import interface_adapter.change_password.ChangePasswordController;
+import use_case.change_password.*;
 
 // TODO: remove magic numbers
 
