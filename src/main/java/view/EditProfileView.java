@@ -6,6 +6,7 @@ import interface_adapter.edit_profile.EditProfileViewModel;
 
 
 import javax.swing.*;
+import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
