@@ -16,4 +16,9 @@ public interface HomePageInputBoundary {
      * Switches to the Club View.
      */
     void switchToClubView();
+
+    /**
+     * Switches to the Settings View.
+     */
+    void switchToSettingsView();
 }

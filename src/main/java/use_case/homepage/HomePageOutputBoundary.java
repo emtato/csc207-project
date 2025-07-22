@@ -21,4 +21,9 @@ public interface HomePageOutputBoundary {
      * Switches to the Club View.
      */
     void switchToClubView();
+
+    /**
+     * Switches to the Club View.
+     */
+    void switchToSettingsView();
 }

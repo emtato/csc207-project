@@ -213,7 +213,7 @@ public class AppBuilder {
      */
     public AppBuilder addHomePageUseCase() {
         final HomePageOutputBoundary homePageOutputBoundary = new HomePagePresenter(viewManagerModel,
-                homePageViewModel, signupViewModel, loginViewModel, clubViewModel);
+                homePageViewModel, signupViewModel, loginViewModel, clubViewModel, settingsViewModel);
         final HomePageInputBoundary homePageInteractor = new HomePageInteractor(homePageOutputBoundary);
 
         final HomePageController controller = new HomePageController(homePageInteractor);

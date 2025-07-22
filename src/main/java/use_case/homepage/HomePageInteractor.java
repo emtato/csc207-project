@@ -27,4 +27,9 @@ private final HomePageOutputBoundary homePageOutputBoundary;
     public void switchToClubView() {
         homePageOutputBoundary.switchToClubView();
     }
+
+    @Override
+    public void switchToSettingsView() {
+        homePageOutputBoundary.switchToSettingsView();
+    }
 }
