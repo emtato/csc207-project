@@ -48,7 +48,7 @@ public class AnalyzeRecipesView extends JPanel {
 
     public AnalyzeRecipesView(AnalyzeRecipesViewModel viewModel) {
         this.viewModel = viewModel;
-        this.viewModel.addPropertyChangeListener(this);
+        //this.viewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
