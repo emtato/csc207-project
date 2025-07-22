@@ -14,14 +14,18 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.clubs.ClubViewModel;
+//import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.clubs.ClubState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
+//import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -45,6 +49,8 @@ import view.LoginView;
 import view.NoteView;
 import view.SignupView;
 import view.ViewManager;
+import view.ClubHomePageView;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -75,9 +81,11 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private NoteViewModel noteViewModel;
     private LoggedInViewModel loggedInViewModel;
+    private ClubViewModel clubViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
+    private ClubHomePageView clubHomePageView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -128,12 +136,56 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the ClubHomePage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addClubHomePageView() {
+        clubViewModel = new ClubViewModel();
+        clubHomePageView = new ClubHomePageView(clubViewModel);
+        cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
+        return this;
+    }
+
+//    /**
+//     * Adds the Profile View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addProfileView() {
+//        profileViewModel = new ProfileViewModel();
+//        profileView = new ProfileView(profileViewModel);
+//        cardPanel.add(profileView, profileView.getViewName());
+//        return this;
+//    }
+//
+//    /**
+//     * Adds the Edit Profile View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addEditProfileView() {
+//        editProfileViewModel = new EditProfileViewModel();
+//        editProfileView = new EditProfileView(editProfileViewModel);
+//        cardPanel.add(editProfileView, editProfileView.getViewName());
+//        return this;
+//    }
+//
+//    /**
+//     * Adds the Settings View to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addSettingsView() {
+//        settingsViewModel = new SettingsViewModel();
+//        settingsView = new SettingsView(settingsViewModel);
+//        cardPanel.add(settingsView, settingsView.getViewName());
+//        return this;
+//    }
+
+    /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
+                signupViewModel, loginViewModel, clubViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary, userFactory);
 
