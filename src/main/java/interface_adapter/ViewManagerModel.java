@@ -11,4 +11,10 @@ public class ViewManagerModel extends ViewModel<String> {
         this.setState("");
     }
 
+    public void setState(String newState) {
+        System.out.println("[DEBUG] setState called with: " + newState);
+        super.setState(newState);
+        this.firePropertyChanged("state");
+    }
+
 }

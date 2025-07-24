@@ -1,6 +1,7 @@
 package view;
 
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
 
@@ -31,6 +32,8 @@ import javax.swing.event.DocumentListener;
 public class SettingsView extends JPanel implements PropertyChangeListener {
     private final String viewName = "settings";
     private final SettingsViewModel settingsViewModel;
+    private final ViewManagerModel viewManagerModel;
+
     // TODO: declare controllers
 
     final JLabel title;
@@ -46,8 +49,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private final JButton settingsButton;
     private final JButton profileButton;
 
-    public SettingsView(SettingsViewModel settingsViewModel) {
+    public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
+        this.viewManagerModel = viewManagerModel;
         this.settingsViewModel.addPropertyChangeListener(this);
 
         title = new JLabel(SettingsViewModel.TITLE_LABEL);
@@ -132,6 +136,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         this.add(title);
         this.add(mainPanel);
         this.add(generalButtons);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.NORTH);
     }
 
     // TODO: implement the propertyChange function and set controllers

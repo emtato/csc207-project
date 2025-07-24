@@ -86,11 +86,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        toClubs.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {signupController.switchToClubView();}
-                }
-        );
+
 
         cancel.addActionListener(this);
 

@@ -1,0 +1,23 @@
+// src/main/java/view/MenuBarPanel.java
+package view;
+
+import javax.swing.*;
+import java.awt.*;
+import interface_adapter.ViewManagerModel;
+
+public class MenuBarPanel extends JPanel {
+    public MenuBarPanel(ViewManagerModel viewManagerModel) {
+        setLayout(new FlowLayout(FlowLayout.LEFT));
+        JButton homeButton = new JButton("Home");
+        JButton clubsButton = new JButton("Clubs");
+        JButton settingsButton = new JButton("Settings");
+
+        homeButton.addActionListener(e -> viewManagerModel.setState("homepage view"));
+        clubsButton.addActionListener(e -> viewManagerModel.setState("club view"));
+        settingsButton.addActionListener(e -> viewManagerModel.setState("settings"));
+
+        add(homeButton);
+        add(clubsButton);
+        add(settingsButton);
+    }
+}
