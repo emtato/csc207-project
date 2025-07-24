@@ -114,7 +114,7 @@ public class ExploreEventsView extends JPanel {
 
 
 //  test  /////////////////////////////////////////////////////////////////////
-/*
+
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,7 +122,7 @@ public class ExploreEventsView extends JPanel {
         frame.pack();
         frame.setVisible(true);
     }
-*/
+
 }
 
 
