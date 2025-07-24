@@ -1,7 +1,10 @@
 package view;
 
 import javax.swing.*;
+
+import interface_adapter.explore_events.ExploreEventsViewModel;
 import java.awt.*;
+import javax.swing.JLabel;
 
 
 /* Description:
@@ -12,7 +15,7 @@ import java.awt.*;
 public class ExploreEventsView extends JPanel {
     private final String viewName = "explore events view";
 
-    public ExploreEventsView() {
+    public ExploreEventsView(ExploreEventsViewModel exploreEventsViewModel) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // set fonts
@@ -111,10 +114,13 @@ public class ExploreEventsView extends JPanel {
         eventPanel.setBackground(Color.PINK);
     }
 
+    public String getViewName() {
+        return viewName;
+    }
 
 
 //  test  /////////////////////////////////////////////////////////////////////
-
+/*
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,7 +128,7 @@ public class ExploreEventsView extends JPanel {
         frame.pack();
         frame.setVisible(true);
     }
-
+*/
 }
 
 

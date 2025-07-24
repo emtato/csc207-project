@@ -1,10 +1,12 @@
 package view;
 
+import interface_adapter.explore.ExploreViewModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.JLabel;
 
 /* Description:
  * explore restaurants, events, and recipes
@@ -12,7 +14,9 @@ import javax.swing.*;
 
 public class ExploreView extends JPanel {
 
-    public ExploreView() {
+    private final String viewName = "explore view";
+
+    public ExploreView(ExploreViewModel exploreViewModel) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel topPanel = new JPanel();
@@ -32,11 +36,11 @@ public class ExploreView extends JPanel {
         JButton exploreRecipesButton = new JButton("View");
         JButton exploreEventsButton = new JButton("View");
 
-        exploreEventsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ExploreEventsView.main(null);
-            }
-        });
+       // exploreEventsButton.addActionListener(new ActionListener() {
+            //public void actionPerformed(ActionEvent e) {
+            //    ExploreEventsView.main(null);
+        //    }
+        //});
 
         explorePanels.add(exploreRestaurantsLabel);
         explorePanels.add(exploreRecipesLabel);
@@ -56,16 +60,19 @@ public class ExploreView extends JPanel {
         this.add(bottomPanel);
     }
 
+    public String getViewName() {
+        return viewName;
+    }
 
     //test
-
+/*
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new ExploreView());
+        frame.add(new ExploreView(new ExploreViewModel exploreViewModel()));
         frame.pack();
         frame.setVisible(true);
     }
 
-
+*/
 }
