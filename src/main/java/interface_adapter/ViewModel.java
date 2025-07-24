@@ -16,7 +16,7 @@ public class ViewModel<T> {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    private T state;
+    public T state;
 
     public ViewModel(String viewName) {
         this.viewName = viewName;

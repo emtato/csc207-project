@@ -79,7 +79,7 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
     // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CreateAccount();
-    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
@@ -118,7 +118,7 @@ public class AppBuilder {
      */
     public AppBuilder addHomePageView() {
         homePageViewModel = new HomePageViewModel();
-        homePageView = new HomePageView(homePageViewModel);
+        homePageView = new HomePageView(homePageViewModel, viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -190,7 +190,7 @@ public class AppBuilder {
      */
     public AppBuilder addClubHomePageView() {
         clubViewModel = new ClubViewModel();
-        clubHomePageView = new ClubHomePageView(clubViewModel);
+        clubHomePageView = new ClubHomePageView(clubViewModel, viewManagerModel);
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
     }
@@ -274,7 +274,7 @@ public class AppBuilder {
      */
     public AppBuilder addSettingsView() {
         settingsViewModel = new SettingsViewModel();
-        settingsView = new SettingsView(settingsViewModel);
+        settingsView = new SettingsView(settingsViewModel, viewManagerModel);
         cardPanel.add(settingsView, settingsView.getViewName());
         return this;
     }
