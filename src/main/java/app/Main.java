@@ -29,7 +29,6 @@ public class Main {
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
                 .addNoteUseCase()
-                .addHomePageUseCase()
                 .addAnalyzeRecipesView()
                 .build();
         application.setPreferredSize(new Dimension(1920, 1080));

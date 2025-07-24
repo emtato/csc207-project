@@ -11,8 +11,7 @@ import javax.swing.JLabel;
 
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.clubs.ClubViewModel;
-import interface_adapter.clubs.ClubState;
+
 
 /**
  * The View for the Club Home Page.
@@ -21,13 +20,11 @@ import interface_adapter.clubs.ClubState;
 public class ClubHomePageView extends JPanel {
 
     private final String viewName = "club view";
-    private final ClubViewModel clubViewModel;
     private final ViewManagerModel viewManagerModel;
 
 
-    public ClubHomePageView(ClubViewModel clubViewModel, ViewManagerModel viewManagerModel) {
+    public ClubHomePageView(ViewManagerModel viewManagerModel) {
 
-        this.clubViewModel = clubViewModel;
         this.viewManagerModel = viewManagerModel;
 
         JLabel title = new JLabel("Clubs Page"); //get recipe/post title
