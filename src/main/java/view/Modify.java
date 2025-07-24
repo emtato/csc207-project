@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 // TODO: modify parameters, using GUI constants (ie. remove magic numbers)
+// TODO: change password
 
 public class Modify {
     public Modify(Account user, DBUserDataAccessObject database) {
@@ -93,8 +94,8 @@ public class Modify {
             public void mouseEntered(MouseEvent e) {}
             @Override
             public void mouseClicked(MouseEvent e) {
-                new ChangePassword(user, database);
-                frame.dispose();
+//                new ChangePasswordView();
+//                frame.dispose();
             }
         });
         changePassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
