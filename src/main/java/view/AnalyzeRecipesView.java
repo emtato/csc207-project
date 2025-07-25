@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
 
 import java.awt.*;
@@ -31,6 +32,7 @@ public class AnalyzeRecipesView extends JPanel {
 
     private final String viewName = "recipe view";
     private final AnalyzeRecipesViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
     //middle
     JTextArea recipeText = new JTextArea();
@@ -46,8 +48,9 @@ public class AnalyzeRecipesView extends JPanel {
     JButton saveButton = new JButton("Add to list");
     JButton shareButton = new JButton("Share");
 
-    public AnalyzeRecipesView(AnalyzeRecipesViewModel viewModel) {
+    public AnalyzeRecipesView(AnalyzeRecipesViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
         //this.viewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -90,6 +93,8 @@ public class AnalyzeRecipesView extends JPanel {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         this.add(mainPanel);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.NORTH);
 
     }
 

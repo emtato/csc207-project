@@ -11,13 +11,24 @@ public class MenuBarPanel extends JPanel {
         JButton homeButton = new JButton("Home");
         JButton clubsButton = new JButton("Clubs");
         JButton settingsButton = new JButton("Settings");
+        JButton eventsButton = new JButton("Events");
+        JButton recipeButton = new JButton("Recipes");
+
+
 
         homeButton.addActionListener(e -> viewManagerModel.setState("homepage view"));
         clubsButton.addActionListener(e -> viewManagerModel.setState("club view"));
         settingsButton.addActionListener(e -> viewManagerModel.setState("settings"));
+        eventsButton.addActionListener(e -> viewManagerModel.setState("explore events view"));
+        recipeButton.addActionListener(e -> viewManagerModel.setState("recipe view"));
+
 
         add(homeButton);
         add(clubsButton);
         add(settingsButton);
+        add(eventsButton);
+        add(recipeButton);
+
+
     }
 }
