@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JLabel;
+
+
 import javax.swing.*;
 
 /* Description:
@@ -32,11 +35,11 @@ public class ExploreView extends JPanel {
         JButton exploreRecipesButton = new JButton("View");
         JButton exploreEventsButton = new JButton("View");
 
-        exploreEventsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ExploreEventsView.main(null);
-            }
-        });
+//        exploreEventsButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                ExploreEventsView.main(null);
+//            }
+//        });
 
         explorePanels.add(exploreRestaurantsLabel);
         explorePanels.add(exploreRecipesLabel);

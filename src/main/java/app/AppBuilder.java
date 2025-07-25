@@ -77,8 +77,8 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
-    //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+//    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private AnalyzeRecipesViewModel analyzeRecipesViewModel;
     private AnalyzeRecipesView analyzeRecipesView;
     private SignupView signupView;
@@ -93,6 +93,7 @@ public class AppBuilder {
     private LoginView loginView;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
+    private ExploreEventsView exploreEventsView;
     private HomePageView homePageView;
     private ProfileView profileView;
     private EditProfileView editProfileView;
@@ -110,6 +111,12 @@ public class AppBuilder {
     public AppBuilder addHomePageView() {
         homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addEventsView() {
+        exploreEventsView = new ExploreEventsView(viewManagerModel);
+        cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
         return this;
     }
 
@@ -132,7 +139,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginView() {
         loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
+        loginView = new LoginView(loginViewModel, viewManagerModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
@@ -168,7 +175,7 @@ public class AppBuilder {
      */
     public AppBuilder addAnalyzeRecipesView() {
         analyzeRecipesViewModel = new AnalyzeRecipesViewModel();
-        analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel);
+        analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel, viewManagerModel);
         cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
         return this;
     }
@@ -316,7 +323,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
