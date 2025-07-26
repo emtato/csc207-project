@@ -15,7 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
@@ -27,7 +26,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private final String viewName = "log in";
     private final LoginViewModel loginViewModel;
-    private final ViewManagerModel viewManagerModel;
 
     private final JTextField usernameInputField = new JTextField(15);
     private final JLabel usernameErrorField = new JLabel();
@@ -37,13 +35,11 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private final JButton logIn;
     private final JButton cancel;
-    private final JButton signUp;
     private LoginController loginController;
 
-    public LoginView(LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
+    public LoginView(LoginViewModel loginViewModel) {
 
         this.loginViewModel = loginViewModel;
-        this.viewManagerModel = viewManagerModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel("Login Screen");
@@ -55,8 +51,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 new JLabel("Password"), passwordInputField);
 
         final JPanel buttons = new JPanel();
-        signUp = new JButton("sign up");
-        buttons.add(signUp);
         logIn = new JButton("log in");
         buttons.add(logIn);
         cancel = new JButton("cancel");
@@ -76,8 +70,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     }
                 }
         );
-
-        signUp.addActionListener(e -> viewManagerModel.setState("sign up"));
 
         cancel.addActionListener(this);
 

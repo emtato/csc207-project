@@ -49,7 +49,7 @@ public class Account implements User {
     }
 
     public String getName() {
-        return username;
+        return name;
     }
 
     public void setName(String name) {

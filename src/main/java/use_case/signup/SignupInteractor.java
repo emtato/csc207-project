@@ -29,9 +29,7 @@ public class SignupInteractor implements SignupInputBoundary {
         }
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
-            System.out.println(user.getName());
             userDataAccessObject.save(user);
-            System.out.println(userDataAccessObject.existsByName(user.getName()));
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
             userPresenter.prepareSuccessView(signupOutputData);
@@ -43,4 +41,8 @@ public class SignupInteractor implements SignupInputBoundary {
         userPresenter.switchToLoginView();
     }
 
+    @Override
+    public void switchToClubView() {
+        userPresenter.switchToClubView();
+    }
 }
