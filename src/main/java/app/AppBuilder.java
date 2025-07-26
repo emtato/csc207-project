@@ -9,10 +9,10 @@ import javax.swing.WindowConstants;
 import data_access.DBUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
+import entity.Post;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
+import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -26,6 +26,7 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
+import interface_adapter.post_view.PostViewModel;
 import interface_adapter.profile.ProfileViewModel;
 //import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
@@ -79,8 +80,8 @@ public class AppBuilder {
 
 //    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private AnalyzeRecipesViewModel analyzeRecipesViewModel;
-    private AnalyzeRecipesView analyzeRecipesView;
+    private PostViewModel postViewModel;
+    private PostView postView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -173,10 +174,10 @@ public class AppBuilder {
      *
      * @return this builder
      */
-    public AppBuilder addAnalyzeRecipesView() {
-        analyzeRecipesViewModel = new AnalyzeRecipesViewModel();
-        analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel, viewManagerModel);
-        cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
+    public AppBuilder addPostView() {
+        postViewModel = new PostViewModel();
+        postView = new PostView(postViewModel);
+        cardPanel.add(postView, postView.getViewName());
         return this;
     }
 

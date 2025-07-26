@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 // TODO: modify parameters, using GUI constants (ie. remove magic numbers)
-// TODO: change password
 
 public class Modify {
     public Modify(Account user, DBUserDataAccessObject database) {
@@ -82,7 +81,7 @@ public class Modify {
         center.add(submit);
         panel.add(center, BorderLayout.CENTER);
 
-        JLabel changePassword = new JLabel("Change Password", GUIConstants.TEXT_SIZE, GUIConstants.BLACK, Font.BOLD);
+        JLabel changePassword = new JLabel("Change Password", 20, GUIConstants.BLACK, Font.BOLD);
         changePassword.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {}
@@ -94,7 +93,8 @@ public class Modify {
             public void mouseEntered(MouseEvent e) {}
             @Override
             public void mouseClicked(MouseEvent e) {
-//                new ChangePasswordView();
+                // TODO: fix ChangePassword
+//                new ChangePassword(user, database);
 //                frame.dispose();
             }
         });

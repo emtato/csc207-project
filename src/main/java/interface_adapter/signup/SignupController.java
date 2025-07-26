@@ -34,5 +34,11 @@ public class SignupController {
         userSignupUseCaseInteractor.switchToLoginView();
     }
 
-
+    /**
+     * Executes the "switch to ClubView" Use Case.
+     */
+    public void switchToClubView() {
+//        System.out.println("Switched to Club View");
+        userSignupUseCaseInteractor.switchToClubView();
+    }
 }
