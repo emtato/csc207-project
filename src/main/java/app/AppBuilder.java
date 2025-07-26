@@ -7,12 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.DBUserDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
+import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -86,8 +84,8 @@ public class AppBuilder {
 
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private AnalyzeRecipesViewModel analyzeRecipesViewModel;
-    private AnalyzeRecipesView analyzeRecipesView;
+    private PostViewModel analyzeRecipesViewModel;
+    private PostView analyzeRecipesView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -177,8 +175,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addAnalyzeRecipesView() {
-        analyzeRecipesViewModel = new AnalyzeRecipesViewModel();
-        analyzeRecipesView = new AnalyzeRecipesView(analyzeRecipesViewModel);
+        analyzeRecipesViewModel = new PostViewModel();
+        analyzeRecipesView = new PostView(analyzeRecipesViewModel);
         cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
         return this;
     }
