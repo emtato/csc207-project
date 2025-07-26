@@ -1,37 +1,27 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.analyze_recipes.AnalyzeRecipesViewModel;
+import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.JLabel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 
 /* Description:
  * ^ • ω • ^
  */
 
-public class AnalyzeRecipesView extends JPanel {
+public class PostView extends JPanel {
 
     private final String viewName = "recipe view";
-    private final AnalyzeRecipesViewModel viewModel;
+    private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
 
     //middle
@@ -48,7 +38,7 @@ public class AnalyzeRecipesView extends JPanel {
     JButton saveButton = new JButton("Add to list");
     JButton shareButton = new JButton("Share");
 
-    public AnalyzeRecipesView(AnalyzeRecipesViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         //this.viewModel.addPropertyChangeListener(this);

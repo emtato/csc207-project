@@ -3,6 +3,7 @@ package app;
 import javax.swing.JFrame;
 import java.awt.*;
 
+
 /**
  * The Main class of our application.
  */
@@ -29,7 +30,7 @@ public class Main {
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
                 .addNoteUseCase()
-                .addAnalyzeRecipesView()
+                .addPostView()
                 .build();
         application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();
