@@ -7,7 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.DBUserDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
+import entity.Post;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.post_view.PostViewModel;
@@ -15,19 +17,16 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
-import interface_adapter.clubs.ClubViewModel;
 //import interface_adapter.edit_profile.EditProfileViewModel;
-import interface_adapter.homepage.HomePageController;
-import interface_adapter.homepage.HomePagePresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
+import interface_adapter.post_view.PostViewModel;
 import interface_adapter.profile.ProfileViewModel;
 //import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
@@ -37,9 +36,6 @@ import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.homepage.HomePageInputBoundary;
-import use_case.homepage.HomePageInteractor;
-import use_case.homepage.HomePageOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -77,15 +73,15 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
     // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CreateAccount();
-    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
 
-    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
-    //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private PostViewModel analyzeRecipesViewModel;
-    private PostView analyzeRecipesView;
+//    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private PostViewModel postViewModel;
+    private PostView postView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -93,13 +89,12 @@ public class AppBuilder {
     private ProfileViewModel profileViewModel;
     private EditProfileViewModel editProfileViewModel;
     private LoggedInViewModel loggedInViewModel;
-    private ClubViewModel clubViewModel;
-    private HomePageViewModel homePageViewModel;
     private SettingsViewModel settingsViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
+    private ExploreEventsView exploreEventsView;
     private HomePageView homePageView;
     private ProfileView profileView;
     private EditProfileView editProfileView;
@@ -115,9 +110,14 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageViewModel = new HomePageViewModel();
-        homePageView = new HomePageView(homePageViewModel);
+        homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addEventsView() {
+        exploreEventsView = new ExploreEventsView(viewManagerModel);
+        cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
         return this;
     }
 
@@ -140,7 +140,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginView() {
         loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
+        loginView = new LoginView(loginViewModel, viewManagerModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
@@ -174,10 +174,10 @@ public class AppBuilder {
      *
      * @return this builder
      */
-    public AppBuilder addAnalyzeRecipesView() {
-        analyzeRecipesViewModel = new PostViewModel();
-        analyzeRecipesView = new PostView(analyzeRecipesViewModel);
-        cardPanel.add(analyzeRecipesView, analyzeRecipesView.getViewName());
+    public AppBuilder addPostView() {
+        postViewModel = new PostViewModel();
+        postView = new PostView(postViewModel);
+        cardPanel.add(postView, postView.getViewName());
         return this;
     }
 
@@ -187,57 +187,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addClubHomePageView() {
-        clubViewModel = new ClubViewModel();
-        clubHomePageView = new ClubHomePageView(clubViewModel);
+        clubHomePageView = new ClubHomePageView(viewManagerModel);
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
-        return this;
-    }
-
-//    /**
-//     * Adds the Profile View to the application.
-//     * @return this builder
-//     */
-//    public AppBuilder addProfileView() {
-//        profileViewModel = new ProfileViewModel();
-//        profileView = new ProfileView(profileViewModel);
-//        cardPanel.add(profileView, profileView.getViewName());
-//        return this;
-//    }
-//
-//    /**
-//     * Adds the Edit Profile View to the application.
-//     * @return this builder
-//     */
-//    public AppBuilder addEditProfileView() {
-//        editProfileViewModel = new EditProfileViewModel();
-//        editProfileView = new EditProfileView(editProfileViewModel);
-//        cardPanel.add(editProfileView, editProfileView.getViewName());
-//        return this;
-//    }
-//
-//    /**
-//     * Adds the Settings View to the application.
-//     * @return this builder
-//     */
-//    public AppBuilder addSettingsView() {
-//        settingsViewModel = new SettingsViewModel();
-//        settingsView = new SettingsView(settingsViewModel);
-//        cardPanel.add(settingsView, settingsView.getViewName());
-//        return this;
-//    }
-
-    /**
-     * Adds the Signup Use Case to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addHomePageUseCase() {
-        final HomePageOutputBoundary homePageOutputBoundary = new HomePagePresenter(viewManagerModel,
-                homePageViewModel, signupViewModel, loginViewModel, clubViewModel, settingsViewModel);
-        final HomePageInputBoundary homePageInteractor = new HomePageInteractor(homePageOutputBoundary);
-
-        final HomePageController controller = new HomePageController(homePageInteractor);
-        homePageView.setHomePageController(controller);
         return this;
     }
 
@@ -272,7 +223,7 @@ public class AppBuilder {
      */
     public AppBuilder addSettingsView() {
         settingsViewModel = new SettingsViewModel();
-        settingsView = new SettingsView(settingsViewModel);
+        settingsView = new SettingsView(settingsViewModel, viewManagerModel);
         cardPanel.add(settingsView, settingsView.getViewName());
         return this;
     }
@@ -284,7 +235,7 @@ public class AppBuilder {
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel, clubViewModel);
+                signupViewModel, loginViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary, userFactory);
 
@@ -373,7 +324,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
