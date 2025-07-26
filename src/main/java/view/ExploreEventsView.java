@@ -138,7 +138,7 @@ public class ExploreEventsView extends JPanel {
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.add(new ExploreEventsView());
 //        frame.pack();
-//        frame.setVisible(true);
+//         frame.setVisible(true);
 //    }
 
 }

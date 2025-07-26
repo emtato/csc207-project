@@ -11,3 +11,5 @@ public class ExploreEventsViewModel extends ViewModel<ExploreEventsState> {
         setState(new ExploreEventsState());
     }
 }
+        //fix edit
+
