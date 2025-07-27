@@ -45,10 +45,16 @@ public class PostView extends JPanel {
     private final JButton settingsButton = new JButton("Settings");
     private final JButton profileButton = new JButton("Profile");
     //right
-    private final JButton likeButton = new JButton("Like");
+    private JButton likeButton = new JButton("Like");
     private final JButton analyzeButton = new JButton("Analyze");
     private final JButton saveButton = new JButton("Add to list");
     private final JButton shareButton = new JButton("Share");
+
+    private final JLabel title;
+    private final JLabel subtitle;
+
+    private boolean liked = false;
+    //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
         this.viewModel = viewModel;
@@ -65,15 +71,15 @@ public class PostView extends JPanel {
         JPanel centerPanel = new JPanel();
 
         //top
-        JLabel title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
+        title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
         title.setFont(Title);
         title.setText(post.getTitle());
 
         topPanel.add(title);
-        JLabel subtitle = new JLabel("meowers"); // post author and date
+        subtitle = new JLabel("meowers"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
-        subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes());
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
         JLabel tags = new JLabel("tags");
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
@@ -84,19 +90,23 @@ public class PostView extends JPanel {
 
         //middle
         recipeText.setEditable(false);
-        if (post.isRecipe()) {
-            recipeText.setText(post.getDescription() + "\n" + post.getRecipeObj().getIngredients() + "\n" + post.getRecipeObj().getDescription());
+        if (post instanceof Recipe) {
+            this.repice = (Recipe) post;
+            recipeText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getDescription() + "\n" + this.repice.getSteps());
 
         }
         else if (post.isImageVideo()) {
 
         }
+
         JScrollPane scrollPane = new JScrollPane(recipeText);
 
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1300, 800));
+        scrollPane.setPreferredSize(new
+
+                Dimension(1300, 800));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
@@ -107,10 +117,12 @@ public class PostView extends JPanel {
 
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
+        if (liked) {
+            likeButton.setText("unlike");
+        }
         rightButtons.add(likeButton);
         if (post instanceof Recipe) {
             rightButtons.add(analyzeButton);
-            this.repice = post.getRecipeObj();
         }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
@@ -146,8 +158,19 @@ public class PostView extends JPanel {
     //@Override
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            System.out.println("me likey likey");
-            post.setLikes(post.getLikes() + 1);
+            if (!liked) {
+                System.out.println("me likey likey");
+                post.setLikes(post.getLikes() + 1);
+                likeButton.setText("unlike");
+                liked = true;
+            }
+            else {
+                post.setLikes(post.getLikes() - 1);
+                likeButton.setText("like");
+                liked = false;
+            }
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+
         }
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
@@ -194,11 +217,8 @@ public class PostView extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
-                "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
-                "3.serve upside-down on a warm tile";
+        String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
-        trialpost.setRecipe(true);
 
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
