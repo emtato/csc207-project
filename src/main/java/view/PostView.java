@@ -186,6 +186,7 @@ public class PostView extends JPanel {
 //                new ArrayList<>(Arrays.asList("mediterranean", "middle eastern"))
 //        ));
 //        trialpost2.setRecipe(true);
+
         frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();
