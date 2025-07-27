@@ -16,7 +16,8 @@ public class Recipe extends Post {
      * @param ingredients A list of ingredients required for the recipe.
      * @param steps       The instructions to follow for making the recipe.
      * @param cuisines    A list of cuisines that the recipe belongs to.
-     * constructor for building recipe from scratch without a Post object
+     *                    <p>
+     *                    constructor for building recipe from scratch without a Post object
      */
     public Recipe(Account user, long postID, String title, String description, ArrayList<String> ingredients,
                   String steps, ArrayList<String> cuisines) {
@@ -26,6 +27,21 @@ public class Recipe extends Post {
         this.cuisines = cuisines;
     }
 
+    /**
+     * Constructs a Recipe object from an existing Post object.
+     *
+     * @param post        The existing Post object to base this Recipe on.
+     * @param ingredients A list of ingredients required for the recipe.
+     * @param steps       The instructions to follow for making the recipe.
+     * @param cuisines    A list of cuisines that the recipe belongs to.
+     */
+    public Recipe(Post post, ArrayList<String> ingredients,
+                  String steps, ArrayList<String> cuisines) {
+        super(post.getUser(), post.getID(), post.getTitle(), post.getDescription());
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.cuisines = cuisines;
+    }
 
     public ArrayList<String> getIngredients() {
         return ingredients;

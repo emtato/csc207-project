@@ -13,11 +13,9 @@ public class Post {
     private String title;
     private String description;
     private Account user;
-    private Recipe recipeObj;
     private ArrayList<String> tags;
 
     private boolean isImageVideo;
-    private boolean isRecipe;
     private boolean isReview;
     private boolean isPublic;
     private boolean isClub;
@@ -36,6 +34,10 @@ public class Post {
         this.description = description;
         this.tags = new ArrayList<>();
         dateTime = LocalDateTime.now();
+        this.isImageVideo = false;
+        this.isReview = false;
+        this.isPublic = false;
+        this.isClub = false;
     }
 
     public String getTitle() {
@@ -106,14 +108,6 @@ public class Post {
         isImageVideo = imageVideo;
     }
 
-    public boolean isRecipe() {
-        return isRecipe;
-    }
-
-    public void setRecipe(boolean recipe) {
-        isRecipe = recipe;
-    }
-
     public boolean isReview() {
         return isReview;
     }
@@ -136,14 +130,6 @@ public class Post {
 
     public void setClub(boolean club) {
         isClub = club;
-    }
-
-    public Recipe getRecipeObj() {
-        return recipeObj;
-    }
-
-    public void setRecipeObj(Recipe recipeObj) {
-        this.recipeObj = recipeObj;
     }
 
 

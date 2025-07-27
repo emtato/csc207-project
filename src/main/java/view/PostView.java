@@ -108,7 +108,7 @@ public class PostView extends JPanel {
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
         rightButtons.add(likeButton);
-        if (post.isRecipe()) {
+        if (post instanceof Recipe) {
             rightButtons.add(analyzeButton);
             this.repice = post.getRecipeObj();
         }
@@ -193,11 +193,11 @@ public class PostView extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
-        trialpost.setTitle("goon blean");
         trialpost.setRecipe(true);
 
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
