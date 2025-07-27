@@ -8,9 +8,18 @@ public class Recipe {
     private String description;
     private ArrayList<String> tags;
     private ArrayList<String> ingredients;
-    private ArrayList<String> steps;
+    private String steps;
     private ArrayList<String> cuisines;
 
+    public Recipe(Account user, String title, String description, ArrayList<String> tags, ArrayList<String> ingredients, String steps, ArrayList<String> cuisines) {
+        this.user = user;
+        this.title = title;
+        this.description = description;
+        this.tags = tags;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.cuisines = cuisines;
+    }
     public String getTitle() {
         return title;
     }
@@ -43,11 +52,11 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getSteps() {
+    public String getSteps() {
         return steps;
     }
 
-    public void setSteps(ArrayList<String> steps) {
+    public void setSteps(String steps) {
         this.steps = steps;
     }
 

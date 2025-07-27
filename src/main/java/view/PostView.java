@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -25,11 +26,11 @@ import entity.Recipe;
 
 public class PostView extends JPanel {
 
-    private final String viewName = "recipe view";
+    private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final Post post;
-    private Recipe recipe;
+    private Recipe repice;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -52,7 +53,7 @@ public class PostView extends JPanel {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.recipe = null;
+        this.repice = null;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -97,7 +98,7 @@ public class PostView extends JPanel {
         rightButtons.add(likeButton);
         if (post.isRecipe()) {
             rightButtons.add(analyzeButton);
-            this.recipe = post.getRecipeObj();
+            this.repice = post.getRecipeObj();
         }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
@@ -142,7 +143,6 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            Recipe repice = new Recipe();
             String result = spon.callAPI(repice);
             System.out.println(result);
         }
@@ -164,9 +164,28 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Post trialpost = new Post(new Account("meow", "woof"), 483958292);
         trialpost.setTitle("goon blean");
-        trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+
+        trialpost.setRecipeObj(new Recipe(new Account("meow", "grah"), "glunkler", "repice for glunking", new ArrayList<>(Arrays.asList("hi", "a")), new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
-                "3.serve upside-down on a warm tile");
+                "3.serve upside-down on a warm tile", new ArrayList<>(Arrays.asList("yeah"))));
+        trialpost.setRecipe(true);
+
+//        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
+//        trialpost2.setTitle(" salad");
+//        trialpost2.setRecipeObj(new Recipe(
+//                new Account("plantlover", "leaf123"),
+//                "Chickpea Salad Bowl",
+//                "A refreshing, hearty bowl of protein-packed chickpeas with crisp veggies and tahini dressing.",
+//                new ArrayList<>(Arrays.asList("healthy", "salad", "plantbased", "quickmeal")),
+//                new ArrayList<>(Arrays.asList("chickpeas", "cucumber", "cherry tomatoes", "red onion", "parsley", "lemon juice", "tahini", "olive oil", "salt", "pepper")),
+//                "1. Rinse and drain the chickpeas.\n" +
+//                        "2. Dice the cucumber, cherry tomatoes, and red onion.\n" +
+//                        "3. Mix all ingredients in a bowl.\n" +
+//                        "4. Whisk tahini, lemon juice, olive oil, salt, and pepper for dressing.\n" +
+//                        "5. Toss the salad with dressing and garnish with fresh parsley.",
+//                new ArrayList<>(Arrays.asList("mediterranean", "middle eastern"))
+//        ));
+//        trialpost2.setRecipe(true);
         frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();

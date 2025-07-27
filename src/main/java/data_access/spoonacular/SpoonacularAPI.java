@@ -9,29 +9,25 @@ import java.util.ArrayList;
 
 import entity.Recipe;
 import org.json.JSONObject;
-
+import org.json.JSONArray;
 
 public class SpoonacularAPI {
     public String callAPI(Recipe recipe) throws IOException, InterruptedException {
         String title = recipe.getTitle();
         String description = recipe.getDescription();
         ArrayList<String> ingredients = recipe.getIngredients();
-        ArrayList<String> steps = recipe.getSteps();
+        String steps = recipe.getSteps();
 
-        StringBuilder ingredientsStr = new StringBuilder();
+        JSONArray ingredientList = new JSONArray();
         for (String ingredient : ingredients) {
-            ingredientsStr.append(ingredient).append("\n");
+            ingredientList.put(ingredient);
         }
 
-        StringBuilder stepsStr = new StringBuilder();
-        for (String step : steps) {
-            stepsStr.append(step).append("\n");
-        }
         JSONObject body = new JSONObject();
         body.put("title", title);
         body.put("description", description);
-        body.put("ingredients", ingredientsStr);
-        body.put("steps", stepsStr);
+        body.put("ingredients", ingredientList);
+        body.put("steps", steps);
 
         String json = body.toString();
         HttpRequest request = HttpRequest.newBuilder()
