@@ -1,30 +1,41 @@
 package data_access.spoonacular;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import entity.Recipe;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 
-
 public class SpoonacularAPI {
-    public String callAPI(Recipe recipe){
-        return "BWAHHHHGHHHH";
-    }
-    public static void main(String[] args) throws Exception {
+    public String callAPI(Recipe recipe) throws IOException, InterruptedException {
+        String title = recipe.getTitle();
+        String description = recipe.getDescription();
+        ArrayList<String> ingredients = recipe.getIngredients();
+        ArrayList<String> steps = recipe.getSteps();
+        ArrayList tags = recipe.getTags();
+
+        StringBuilder ingredientsStr = new StringBuilder();
+        for (String ingredient : ingredients) {
+            ingredientsStr.append(ingredient).append("\n");
+        }
+
+        StringBuilder stepsStr = new StringBuilder();
+        for (String step : steps) {
+            stepsStr.append(step).append("\n");
+        }
         JSONObject body = new JSONObject();
-        body.put("title", "Simple Salad");
-        body.put("instructions", "1. Toss...");
-
-        JSONArray ingredients = new JSONArray();
-        ingredients.put("1 cup chopped kale");
-        ingredients.put("1/2 cup cooked quinoa");
-
-        body.put("ingredients", ingredients);
+        body.put("title", title);
+        body.put("description", description);
+        body.put("ingredients", ingredientsStr);
+        body.put("steps", stepsStr);
 
         String json = body.toString();
         HttpRequest request = HttpRequest.newBuilder()
@@ -38,5 +49,9 @@ public class SpoonacularAPI {
 
         System.out.println("Status: " + response.statusCode());
         System.out.println("Body:\n" + response.body());
+
+        return "BWAHHHHGHHHH";
+
+
     }
 }

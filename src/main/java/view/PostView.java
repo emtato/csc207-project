@@ -6,6 +6,7 @@ import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
@@ -117,24 +119,30 @@ public class PostView extends JPanel {
     }
 
     //@Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == likeButton) {
-            System.out.println("me likey likey");
-            post.setLikes(post.getLikes() + 1);
-        }
-        if (e.getSource() == analyzeButton) {
-            System.out.println("hmmmm \uD83E\uDD13");
-            SpoonacularAPI spon = new SpoonacularAPI();
-            Recipe repice = new Recipe();
-            spon.callAPI(repice);
-        }
-        if (e.getSource() == saveButton) {
-            System.out.println("popup add to list");
-        }
-        if (e.getSource() == shareButton) {
-            System.out.println("share slop");
-        }
+    public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
+        try {
+            if (e.getSource() == likeButton) {
+                System.out.println("me likey likey");
+                post.setLikes(post.getLikes() + 1);
+            }
+            if (e.getSource() == analyzeButton) {
+                System.out.println("hmmmm \uD83E\uDD13");
+                SpoonacularAPI spon = new SpoonacularAPI();
+                Recipe repice = new Recipe();
+                spon.callAPI(repice);
+            }
+            if (e.getSource() == saveButton) {
+                System.out.println("popup add to list");
+            }
+            if (e.getSource() == shareButton) {
+                System.out.println("share slop");
+            }
 
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("NOOOOOO D:");
+        }
     }
 
     public String getViewName() {
