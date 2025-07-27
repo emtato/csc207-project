@@ -8,27 +8,36 @@ public class Post {
     // TODO: add types of post (e.g. image/video, recipe, review)
     // TODO: public or community post
 
-    private int ID;
+    private long ID;
+    private String Title;
     private String content;
     private Account user;
     private LocalDateTime dateTime;
     private HashMap<Integer, Comment> comments;
-    private int likes = 0;
+    private long likes = 0;
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
-    public Post(String content, Account user) {
-        this.content = content;
+    public Post(Account user, long ID) {
         this.user = user;
+        this.ID = ID;
         dateTime = LocalDateTime.now();
     }
 
-    public int getID() {
+    public String getTitle() {
+        return this.Title;
+    }
+
+    public void setTitle(String Title) {
+        this.Title = Title;
+    }
+
+    public long getID() {
         return ID;
     }
 
-    public void setID(int ID) {
+    public void setID(long ID) {
         this.ID = ID;
     }
 
@@ -68,11 +77,11 @@ public class Post {
         return dateFormatter.format(dateTime);
     }
 
-    public int getLikes() {
+    public long getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(long likes) {
         this.likes = likes;
     }
 }
