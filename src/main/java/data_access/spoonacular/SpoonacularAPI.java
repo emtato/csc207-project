@@ -48,15 +48,15 @@ public class SpoonacularAPI {
         HashMap map = new HashMap<String, Integer>();
         map.put("vegeterian", responseJsonObject.get("vegetarian"));
         map.put("vegan", responseJsonObject.get("vegan"));
-        map.put("glutenfree", responseJsonObject.get("glutenFree"));
-        map.put("dairyfree", responseJsonObject.get("dairyFree"));
-        map.put("veryhealthy", responseJsonObject.get("veryHealthy"));
+        map.put("gluten free", responseJsonObject.get("glutenFree"));
+        map.put("dairy free", responseJsonObject.get("dairyFree"));
+        map.put("very healthy", responseJsonObject.get("veryHealthy"));
         map.put("cheap", responseJsonObject.get("cheap"));
         map.put("sustainable", responseJsonObject.get("sustainable"));
-        map.put("lowfodmap", responseJsonObject.get("lowFodmap"));
-        map.put("weightwatcher", responseJsonObject.get("weightWatcherSmartPoints"));
-        map.put("healthscore", responseJsonObject.get("healthScore"));
-        map.put("spoonacularscore", responseJsonObject.get("spoonacularScore"));
+        map.put("low FODMAP", responseJsonObject.get("lowFodmap"));
+        map.put("weight watcher score", responseJsonObject.get("weightWatcherSmartPoints"));
+        map.put("health score", responseJsonObject.get("healthScore"));
+        map.put("spoonacular score", responseJsonObject.get("spoonacularScore"));
         return map;
     }
 }

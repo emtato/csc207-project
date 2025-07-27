@@ -147,6 +147,22 @@ public class PostView extends JPanel {
             SpoonacularAPI spon = new SpoonacularAPI();
             HashMap<String, String> result = spon.callAPI(repice);
             System.out.println(result);
+            String resultDisplay = "";
+            for (String key : result.keySet()) {
+                String loopRes = String.valueOf(result.get(key));
+                if (loopRes.equals("true") || loopRes.equals("false")) {
+                    if (loopRes.equals("true")) {
+                        resultDisplay += "is " + key + " ✅\uD83D\uDE04💪 \n";
+                    }
+                    else{
+                        resultDisplay += "is not " + key + "💔😿😔 \n";
+                    }
+                }
+                else{
+                    resultDisplay += loopRes + " \n";
+                }
+            }
+            JOptionPane.showMessageDialog(null, "according to the analysis: + \n" + resultDisplay, "nerd", JOptionPane.INFORMATION_MESSAGE);
 
 
         }
