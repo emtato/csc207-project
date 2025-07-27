@@ -32,20 +32,20 @@ public class PostView extends JPanel {
     private final ViewManagerModel viewManagerModel;
     private final Post post;
     private Recipe repice;
-    //fonts & styles
-    private final Font Title = new Font("Roboto", Font.BOLD, 20);
+    // fonts & styles
+    private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
-    //middle
+    // middle
     private JTextPane postText = new JTextPane();
-    //bottom
+    // bottom
     private final JButton backButton = new JButton("Back");
     private final JButton mapsButton = new JButton("Maps");
     private final JButton slopButton = new JButton("Feed");
     private final JButton settingsButton = new JButton("Settings");
     private final JButton profileButton = new JButton("Profile");
     private final JButton comment = new JButton("Comment");
-    //right
+    // right
     private JButton likeButton = new JButton("Like");
     private final JButton analyzeButton = new JButton("Analyze");
     private final JButton saveButton = new JButton("Add to list");
@@ -54,7 +54,8 @@ public class PostView extends JPanel {
     private final JLabel title;
     private final JLabel subtitle;
 
-    private boolean liked = false;
+    private boolean liked;
+
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -71,9 +72,9 @@ public class PostView extends JPanel {
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel centerPanel = new JPanel();
 
-        //top
+        // top
         title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
-        title.setFont(Title);
+        title.setFont(fontTitle);
         title.setText(post.getTitle());
 
         topPanel.add(title);
@@ -90,7 +91,7 @@ public class PostView extends JPanel {
         topPanel.add(subtitle);
         topPanel.add(tags);
 
-        //middle
+        // middle
         postText.setEditable(false);
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
@@ -118,7 +119,7 @@ public class PostView extends JPanel {
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
 
-        //right
+        // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
         if (liked) {
             likeButton.setText("unlike");
@@ -157,7 +158,6 @@ public class PostView extends JPanel {
         this.add(mainPanel);
     }
 
-    //@Override
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
             if (!liked) {
