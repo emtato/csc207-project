@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -66,22 +67,33 @@ public class PostView extends JPanel {
         //top
         JLabel title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
         title.setFont(Title);
+        title.setText(post.getTitle());
 
         topPanel.add(title);
         JLabel subtitle = new JLabel("meowers"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes());
         JLabel tags = new JLabel("tags");
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
+        //TODO: add tags functionality
 
         topPanel.add(subtitle);
         topPanel.add(tags);
 
         //middle
         recipeText.setEditable(false);
-        recipeText.setText(post.toString());
+        if (post.isRecipe()) {
+            recipeText.setText(post.getDescription() + "\n" + post.getRecipeObj().getIngredients() + "\n" + post.getRecipeObj().getDescription());
+
+        }
+        else if (post.isImageVideo()) {
+
+        }
         JScrollPane scrollPane = new JScrollPane(recipeText);
+
+
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new Dimension(1300, 800));
@@ -128,10 +140,7 @@ public class PostView extends JPanel {
         mainPanel.add(rightPanel, BorderLayout.EAST);
         //mainPanel.add(menuBar, BorderLayout.SOUTH);
 
-
         this.add(mainPanel);
-
-
     }
 
     //@Override
@@ -143,14 +152,36 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            String result = spon.callAPI(repice);
+            HashMap<String, String> result = spon.callAPI(repice);
             System.out.println(result);
+            String resultDisplay = "";
+            String numers = "";
+            for (String key : result.keySet()) {
+                String loopRes = String.valueOf(result.get(key));
+                if (loopRes.equals("true") || loopRes.equals("false")) {
+                    if (loopRes.equals("true")) {
+                        resultDisplay += "is " + key + " ✅\uD83D\uDE04💪 \n";
+                    }
+                    else {
+                        resultDisplay += "is not " + key + "💔😿😔 \n";
+                    }
+                }
+                else {
+                    numers += key + ": " + loopRes + " \n";
+                }
+            }
+            JOptionPane.showMessageDialog(null, "according to the analysis: \n" + resultDisplay + numers, "nerd", JOptionPane.INFORMATION_MESSAGE);
+
+
         }
         if (e.getSource() == saveButton) {
+            JOptionPane.showMessageDialog(null, "havent added that yet cry abt it", "nerd", JOptionPane.INFORMATION_MESSAGE);
+
             System.out.println("popup add to list");
         }
         if (e.getSource() == shareButton) {
             System.out.println("share slop");
+            JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }
@@ -162,12 +193,11 @@ public class PostView extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Post trialpost = new Post(new Account("meow", "woof"), 483958292);
-        trialpost.setTitle("goon blean");
-
-        trialpost.setRecipeObj(new Recipe(new Account("meow", "grah"), "glunkler", "repice for glunking", new ArrayList<>(Arrays.asList("hi", "a")), new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+        String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
-                "3.serve upside-down on a warm tile", new ArrayList<>(Arrays.asList("yeah"))));
+                "3.serve upside-down on a warm tile";
+        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
+        trialpost.setTitle("goon blean");
         trialpost.setRecipe(true);
 
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);

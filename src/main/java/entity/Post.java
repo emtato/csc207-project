@@ -2,17 +2,19 @@ package entity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Post {
     // TODO: add types of post (e.g. image/video, recipe, review)
     // TODO: public or community post
 
-    private long ID;
+    private long postID;
     private String title;
-    private String content;
+    private String description;
     private Account user;
     private Recipe recipeObj;
+    private ArrayList<String> tags;
 
     private boolean isImageVideo;
     private boolean isRecipe;
@@ -27,9 +29,12 @@ public class Post {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
-    public Post(Account user, long ID) {
+    public Post(Account user, long ID, String title, String description) {
         this.user = user;
-        this.ID = ID;
+        this.postID = ID;
+        this.title = title;
+        this.description = description;
+        this.tags = new ArrayList<>();
         dateTime = LocalDateTime.now();
     }
 
@@ -42,19 +47,19 @@ public class Post {
     }
 
     public long getID() {
-        return ID;
+        return postID;
     }
 
     public void setID(long ID) {
-        this.ID = ID;
+        this.postID = ID;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Account getUser() {
@@ -139,6 +144,15 @@ public class Post {
 
     public void setRecipeObj(Recipe recipeObj) {
         this.recipeObj = recipeObj;
+    }
+
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 }
 

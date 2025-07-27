@@ -2,47 +2,30 @@ package entity;
 
 import java.util.ArrayList;
 
-public class Recipe {
-    private Account user;
-    private String title;
-    private String description;
-    private ArrayList<String> tags;
+public class Recipe extends Post {
+
     private ArrayList<String> ingredients;
     private String steps;
     private ArrayList<String> cuisines;
 
-    public Recipe(Account user, String title, String description, ArrayList<String> tags, ArrayList<String> ingredients, String steps, ArrayList<String> cuisines) {
-        this.user = user;
-        this.title = title;
-        this.description = description;
-        this.tags = tags;
+    /**
+     * @param user        The user who created the recipe post.
+     * @param postID      The unique ID for this post.
+     * @param title       The title of the recipe.
+     * @param description A short description of the recipe.
+     * @param ingredients A list of ingredients required for the recipe.
+     * @param steps       The instructions to follow for making the recipe.
+     * @param cuisines    A list of cuisines that the recipe belongs to.
+     * constructor for building recipe from scratch without a Post object
+     */
+    public Recipe(Account user, long postID, String title, String description, ArrayList<String> ingredients,
+                  String steps, ArrayList<String> cuisines) {
+        super(user, postID, title, description);
         this.ingredients = ingredients;
         this.steps = steps;
         this.cuisines = cuisines;
     }
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
 
     public ArrayList<String> getIngredients() {
         return ingredients;

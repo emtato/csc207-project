@@ -6,13 +6,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import entity.Recipe;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class SpoonacularAPI {
-    public String callAPI(Recipe recipe) throws IOException, InterruptedException {
+    public HashMap<String, String> callAPI(Recipe recipe) throws IOException, InterruptedException {
         String title = recipe.getTitle();
         String description = recipe.getDescription();
         ArrayList<String> ingredients = recipe.getIngredients();
@@ -40,10 +41,22 @@ public class SpoonacularAPI {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         System.out.println("BWAHHHHGHHHH");
-        System.out.println("Body:\n" + response.body());
+       //System.out.println("Body:\n" + response.body());
 
-        return response.body();
-
-
+        String responseJson = response.body().toString();
+        JSONObject responseJsonObject = new JSONObject(responseJson);
+        HashMap map = new HashMap<String, Integer>();
+        map.put("vegeterian", responseJsonObject.get("vegetarian"));
+        map.put("vegan", responseJsonObject.get("vegan"));
+        map.put("gluten free", responseJsonObject.get("glutenFree"));
+        map.put("dairy free", responseJsonObject.get("dairyFree"));
+        map.put("very healthy", responseJsonObject.get("veryHealthy"));
+        map.put("cheap", responseJsonObject.get("cheap"));
+        map.put("sustainable", responseJsonObject.get("sustainable"));
+        map.put("low FODMAP", responseJsonObject.get("lowFodmap"));
+        map.put("weight watcher score", responseJsonObject.get("weightWatcherSmartPoints"));
+        map.put("health score", responseJsonObject.get("healthScore"));
+        map.put("spoonacular score", responseJsonObject.get("spoonacularScore"));
+        return map;
     }
 }
