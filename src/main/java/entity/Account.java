@@ -17,9 +17,9 @@ public class Account implements User {
     private ArrayList<String> blockedTerms;
     private ArrayList<Account> mutedAccounts;
     private ArrayList<String> foodPreferences;
-    private ArrayList<Integer> likesUsernames;
+    private ArrayList<Long> likesUsernames;
     private ArrayList<String> followingAccounts;
-    private HashMap<Integer, Post> userPosts;
+    private HashMap<Long, Post> userPosts;
 
     public Account(String username, String password) {
         this.username = username;
@@ -74,11 +74,11 @@ public class Account implements User {
         this.bio = bio;
     }
 
-    public ArrayList<Integer> getLikesUsernames() {
+    public ArrayList<Long> getLikesUsernames() {
         return likesUsernames;
     }
 
-    public void setLikesUsernames(ArrayList<Integer> likesUsernames) {
+    public void setLikesUsernames(ArrayList<Long> likesUsernames) {
         this.likesUsernames = likesUsernames;
     }
 
@@ -132,7 +132,7 @@ public class Account implements User {
     }
 
     public void dislike(Post p) {
-        likesUsernames.remove( (Integer) p.getID());
+        likesUsernames.remove( p.getID());
     }
 
 

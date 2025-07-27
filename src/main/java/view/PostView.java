@@ -1,5 +1,6 @@
 package view;
 
+import entity.Account;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.post_view.PostViewModel;
 
@@ -13,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
+import entity.Post;
 
 /* Description:
  * ^ • ω • ^
@@ -24,7 +25,7 @@ public class PostView extends JPanel {
     private final String viewName = "recipe view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
-
+    private final Post post;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -43,9 +44,10 @@ public class PostView extends JPanel {
     private final JButton saveButton = new JButton("Add to list");
     private final JButton shareButton = new JButton("Share");
 
-    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
+        this.post = post;
         //this.viewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -118,6 +120,7 @@ public class PostView extends JPanel {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == likeButton) {
             System.out.println("me likey likey");
+
         }
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
@@ -138,7 +141,12 @@ public class PostView extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new PostView( new PostViewModel(), new ViewManagerModel()));
+        Post trialpost = new Post(new Account("meow", "woof"), 483958292);
+        trialpost.setTitle("goon blean");
+        trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+                "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
+                "3.serve upside-down on a warm tile");
+        frame.add(new PostView( new PostViewModel(), new ViewManagerModel(), trialpost));
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();
         frame.setVisible(true);

@@ -23,59 +23,18 @@ public class HomePageView extends JPanel {
 
 
     public HomePageView(ViewManagerModel viewManagerModel) {
-        super(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(10, 10, 10, 10);
         this.viewManagerModel = viewManagerModel;
 
-        JPanel profile = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        profile.setMaximumSize(new Dimension(182, 50));
-        profile.setBackground(GUIConstants.WHITE);
-        profile.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        profile.add(new view.JLabel("User ABC", 19, GUIConstants.BLACK, Font.BOLD));
 
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(GUIConstants.WHITE);
-        Dimension dimension = new Dimension(1000, 500);
-        header.setPreferredSize(dimension);
-        header.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        JLabel title = new JLabel("Home page"); //get recipe/post title
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel north = new JPanel(new BorderLayout());
-        north.setBackground(null);
-        north.add(new view.JLabel("Home", 48, GUIConstants.BLACK, Font.BOLD),
-                BorderLayout.WEST);
-        header.add(north, BorderLayout.NORTH);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-//        c.weightx = 1.0;
-//        c.weighty = 0.0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        this.add(profile, c);
 
-//        c.gridx = 1;
-//        c.gridy = 0;
-//        c.weighty = 1.0;
-//        c.weightx = 1.0;
-//        c.fill = GridBagConstraints.BOTH;
-//        this.add(north, c);
-
-        c.gridy = 1;
-        c.weighty = 1;
-        c.gridwidth = 2;
-        c.weightx = 1.0;
-        c.fill = GridBagConstraints.BOTH;
-        this.add(header, c);
-
+        this.add(title);
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        menuBar.setPreferredSize(new Dimension(500, 120));
-        c.gridy = 2;
-        c.weighty = 0.0;
-        c.fill = GridBagConstraints.HORIZONTAL; // Allow menuBar to use full width
-        c.anchor = GridBagConstraints.WEST;
-        this.add(menuBar, c);
+        add(menuBar, BorderLayout.NORTH);
 
     }
 

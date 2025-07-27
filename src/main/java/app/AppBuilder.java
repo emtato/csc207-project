@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
+import entity.Account;
 import entity.CreateAccount;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -53,6 +54,7 @@ import view.ViewManager;
 import view.ClubHomePageView;
 import view.HomePageView;
 import view.*;
+import entity.Post;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -186,8 +188,13 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPostView() {
+        Post trialpost = new Post(new Account("meow", "woof"), 483958292);
+        trialpost.setTitle("goon blean");
+        trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+                "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
+                "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel, viewManagerModel);
+        postView = new PostView(postViewModel, viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
@@ -244,16 +251,16 @@ public class AppBuilder {
      *
      * @return this builder
      */
-    public AppBuilder addSignupUseCase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-                userDataAccessObject, signupOutputBoundary, userFactory);
-
-        final SignupController controller = new SignupController(userSignupInteractor);
-        signupView.setSignupController(controller);
-        return this;
-    }
+//    public AppBuilder addSignupUseCase() {
+//        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
+//                signupViewModel, loginViewModel);
+//        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
+//                userDataAccessObject, signupOutputBoundary, userFactory);
+//
+//        final SignupController controller = new SignupController(userSignupInteractor);
+//        signupView.setSignupController(controller);
+//        return this;
+//    }
 
     /**
      * Adds the Login Use Case to the application.

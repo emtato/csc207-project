@@ -9,7 +9,7 @@ import use_case.signup.SignupOutputData;
 /**
  * The Presenter for the Signup Use Case.
  */
-public class SignupPresenter implements SignupOutputBoundary {
+public abstract class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
@@ -26,7 +26,6 @@ public class SignupPresenter implements SignupOutputBoundary {
     @Override
     public void prepareSuccessView(SignupOutputData response) {
         // On success, switch to the login view.
-//        System.out.println("User saved successfully. Username: " + response.getUsername());
         final LoginState loginState = loginViewModel.getState();
         loginState.setUsername(response.getUsername());
         this.loginViewModel.setState(loginState);
