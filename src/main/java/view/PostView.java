@@ -115,8 +115,7 @@ public class PostView extends JPanel {
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
 
-
-        //bottom
+        // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
 
         //right
@@ -149,7 +148,6 @@ public class PostView extends JPanel {
             });
             rightPanel.add(button);
         }
-
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
