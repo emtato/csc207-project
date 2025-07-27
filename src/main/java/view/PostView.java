@@ -14,8 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
-
+import entity.Recipe;
 /* Description:
  * ^ • ω • ^
  */
@@ -86,8 +87,7 @@ public class PostView extends JPanel {
 
 
         //bottom
-         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        mainPanel.add(menuBar, BorderLayout.NORTH);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
 
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -108,7 +108,7 @@ public class PostView extends JPanel {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+        mainPanel.add(menuBar, BorderLayout.SOUTH);
 
 
         this.add(mainPanel);
@@ -120,10 +120,13 @@ public class PostView extends JPanel {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == likeButton) {
             System.out.println("me likey likey");
-
+            post.setLikes(post.getLikes() + 1);
         }
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
+            SpoonacularAPI spon = new SpoonacularAPI();
+            Recipe repice = new Recipe();
+            spon.callAPI(repice);
         }
         if (e.getSource() == saveButton) {
             System.out.println("popup add to list");
@@ -146,7 +149,7 @@ public class PostView extends JPanel {
         trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
-        frame.add(new PostView( new PostViewModel(), new ViewManagerModel(), trialpost));
+        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();
         frame.setVisible(true);

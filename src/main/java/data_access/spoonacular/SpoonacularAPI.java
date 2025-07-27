@@ -5,12 +5,16 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import entity.Recipe;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 
 
-public class SpoonacularAPITest {
+public class SpoonacularAPI {
+    public String callAPI(Recipe recipe){
+        return "BWAHHHHGHHHH";
+    }
     public static void main(String[] args) throws Exception {
         JSONObject body = new JSONObject();
         body.put("title", "Simple Salad");

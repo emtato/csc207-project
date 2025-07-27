@@ -9,7 +9,6 @@ import java.awt.*;
  */
 public class Main {
     /**
-     *
      * Builds and runs the CA architecture of the application.
      *
      * @param args unused arguments
