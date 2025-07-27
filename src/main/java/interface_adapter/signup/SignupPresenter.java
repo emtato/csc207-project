@@ -1,7 +1,6 @@
 package interface_adapter.signup;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.clubs.ClubViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import use_case.signup.SignupOutputBoundary;
@@ -10,20 +9,18 @@ import use_case.signup.SignupOutputData;
 /**
  * The Presenter for the Signup Use Case.
  */
-public class SignupPresenter implements SignupOutputBoundary {
+public abstract class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
-    private final ClubViewModel clubViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
                            SignupViewModel signupViewModel,
-                           LoginViewModel loginViewModel, ClubViewModel clubViewModel) {
+                           LoginViewModel loginViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
         this.loginViewModel = loginViewModel;
-        this.clubViewModel = clubViewModel;
     }
 
     @Override
@@ -51,9 +48,4 @@ public class SignupPresenter implements SignupOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
-    @Override
-    public void switchToClubView() {
-        viewManagerModel.setState(clubViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
-    }
 }

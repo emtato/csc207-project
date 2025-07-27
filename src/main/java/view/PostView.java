@@ -1,10 +1,12 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginState;
 import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -29,19 +31,14 @@ public class PostView extends JPanel {
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
     //middle
     private final JTextArea recipeText = new JTextArea();
-    //bottom
-    private final JButton backButton = new JButton("Back");
-    private final JButton mapsButton = new JButton("Maps");
-    private final JButton slopButton = new JButton("Feed");
-    private final JButton settingsButton = new JButton("Settings");
-    private final JButton profileButton = new JButton("Profile");
+
     //right
     private final JButton likeButton = new JButton("Like");
     private final JButton analyzeButton = new JButton("Analyze");
     private final JButton saveButton = new JButton("Add to list");
     private final JButton shareButton = new JButton("Share");
 
-    public PostView(PostViewModel viewModel) {
+    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         //this.viewModel.addPropertyChangeListener(this);
 
@@ -81,16 +78,19 @@ public class PostView extends JPanel {
 
 
         //bottom
-        ArrayList<JButton> bottomButtons = new ArrayList<>();
-        bottomButtons.add(backButton);
-        bottomButtons.add(mapsButton);
-        bottomButtons.add(slopButton);
-        bottomButtons.add(settingsButton);
-        bottomButtons.add(profileButton);
-        for (JButton button : bottomButtons) {
-            button.setFont(text);
-            bottomPanel.add(button);
-        }
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+
+//        ArrayList<JButton> bottomButtons = new ArrayList<>();
+//        bottomButtons.add(backButton);
+//        bottomButtons.add(mapsButton);
+//        bottomButtons.add(slopButton);
+//        bottomButtons.add(settingsButton);
+//        bottomButtons.add(profileButton);
+//        for (JButton button : bottomButtons) {
+//            button.setFont(text);
+//            bottomPanel.add(button);
+//        }
+        bottomPanel.add(menuBar);
 
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -106,6 +106,14 @@ public class PostView extends JPanel {
             rightPanel.add(button);
         }
 
+        likeButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        System.out.println(likeButton.getText());
+
+                    }
+                }
+        );
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -116,12 +124,6 @@ public class PostView extends JPanel {
 
     }
 
-    //@Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == analyzeButton) {
-            System.out.println("analyzeButton");
-        }
-    }
 
     public String getViewName() {
         return viewName;
@@ -130,7 +132,12 @@ public class PostView extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new PostView(new PostViewModel()));
+
+        PostViewModel postViewModel = new PostViewModel();
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+
+        frame.add(new PostView(postViewModel, viewManagerModel));
+
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();
         frame.setVisible(true);

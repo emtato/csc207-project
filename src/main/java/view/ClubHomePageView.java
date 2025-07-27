@@ -10,8 +10,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
 
 
-import interface_adapter.clubs.ClubViewModel;
-import interface_adapter.clubs.ClubState;
+import interface_adapter.ViewManagerModel;
+
 
 /**
  * The View for the Club Home Page.
@@ -20,17 +20,19 @@ import interface_adapter.clubs.ClubState;
 public class ClubHomePageView extends JPanel {
 
     private final String viewName = "club view";
-    private final ClubViewModel clubViewModel;
+    private final ViewManagerModel viewManagerModel;
 
 
-    public ClubHomePageView(ClubViewModel clubViewModel) {
-//        System.out.println("ClubHomePageView constructor called");
-        this.clubViewModel = clubViewModel;
+    public ClubHomePageView(ViewManagerModel viewManagerModel) {
 
-        JLabel title = new JLabel("WAAAAAAAAAAAAAAAAAAAAA"); //get recipe/post title
+        this.viewManagerModel = viewManagerModel;
+
+        JLabel title = new JLabel("Clubs Page"); //get recipe/post title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         this.add(title);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.NORTH);
 
     }
 

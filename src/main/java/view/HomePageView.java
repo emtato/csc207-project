@@ -8,10 +8,7 @@ import javax.swing.*;
 import javax.swing.JLabel;
 
 
-import interface_adapter.clubs.ClubViewModel;
-import interface_adapter.clubs.ClubState;
-import interface_adapter.homepage.HomePageController;
-import interface_adapter.homepage.HomePageViewModel;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
@@ -22,70 +19,22 @@ import interface_adapter.signup.SignupViewModel;
 public class HomePageView extends JPanel {
 
     private final String viewName = "homepage view";
-    private final HomePageViewModel homePageViewModel;
-    private HomePageController homePageController;
-
-    private final JButton signUp;
-    private final JButton toLogin;
-    private final JButton toClubs;
-    private final JButton toSettings;
+    private final ViewManagerModel viewManagerModel;
 
 
-    public HomePageView(HomePageViewModel homePageViewModel) {
-//        System.out.println("ClubHomePageView constructor called");
-        this.homePageViewModel = homePageViewModel;
-//        homePageViewModel.addPropertyChangeListener(this);
+    public HomePageView(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
 
-        JLabel title = new JLabel("WAAAAAAAAAAAAAAAAAAAAA"); //get recipe/post title
+
+        JLabel title = new JLabel("Home page"); //get recipe/post title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final JPanel buttons = new JPanel();
-        toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
-        buttons.add(toLogin);
-        toClubs = new JButton("To Clubs");
-        buttons.add(toClubs);
-        signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        buttons.add(signUp);
-        toSettings = new JButton("Settings");
-        buttons.add(toSettings);
-
-        signUp.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        homePageController.switchToSignUpView();
-                    }
-                }
-        );
-
-
-        toLogin.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        homePageController.switchToLoginView();
-                    }
-                }
-        );
-
-        toClubs.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        homePageController.switchToClubView();
-                    }
-                }
-        );
-        toSettings.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) { homePageController.switchToSettingsView(); }
-                }
-        );
 
 
         this.add(title);
-        this.add(buttons);
+
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.NORTH);
 
     }
 
@@ -93,7 +42,4 @@ public class HomePageView extends JPanel {
         return viewName;
     }
 
-    public void setHomePageController(HomePageController controller) {
-        this.homePageController = controller;
-    }
 }

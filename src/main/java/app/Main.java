@@ -25,7 +25,7 @@ public class Main {
                 .addProfileView()
                 .addEditProfileView()
                 .addSettingsView()
-                .addSignupUseCase()
+                //.addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()

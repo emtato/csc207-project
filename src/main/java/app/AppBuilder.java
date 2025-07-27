@@ -174,7 +174,7 @@ public class AppBuilder {
      */
     public AppBuilder addPostView() {
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel);
+        postView = new PostView(postViewModel, viewManagerModel);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
@@ -231,16 +231,16 @@ public class AppBuilder {
      *
      * @return this builder
      */
-    public AppBuilder addSignupUseCase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-                userDataAccessObject, signupOutputBoundary, userFactory);
-
-        final SignupController controller = new SignupController(userSignupInteractor);
-        signupView.setSignupController(controller);
-        return this;
-    }
+//    public AppBuilder addSignupUseCase() {
+//        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
+//                signupViewModel, loginViewModel);
+//        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
+//                userDataAccessObject, signupOutputBoundary, userFactory);
+//
+//        final SignupController controller = new SignupController(userSignupInteractor);
+//        signupView.setSignupController(controller);
+//        return this;
+//    }
 
     /**
      * Adds the Login Use Case to the application.
@@ -322,7 +322,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(loginView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
