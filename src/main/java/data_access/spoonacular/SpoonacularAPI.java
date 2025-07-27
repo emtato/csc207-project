@@ -43,10 +43,10 @@ public class SpoonacularAPI {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("Status: " + response.statusCode());
+        System.out.println("BWAHHHHGHHHH");
         System.out.println("Body:\n" + response.body());
 
-        return "BWAHHHHGHHHH";
+        return response.body();
 
 
     }

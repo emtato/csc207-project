@@ -29,6 +29,7 @@ public class PostView extends JPanel {
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final Post post;
+    private Recipe recipe;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -51,13 +52,12 @@ public class PostView extends JPanel {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        //this.viewModel.addPropertyChangeListener(this);
+        this.recipe = null;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        JPanel bottomPanel = new JPanel(new FlowLayout()); //pannel for main ui buttons (persists across views)
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel centerPanel = new JPanel();
@@ -79,6 +79,7 @@ public class PostView extends JPanel {
 
         //middle
         recipeText.setEditable(false);
+        recipeText.setText(post.toString());
         JScrollPane scrollPane = new JScrollPane(recipeText);
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
@@ -94,7 +95,10 @@ public class PostView extends JPanel {
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
         rightButtons.add(likeButton);
-        rightButtons.add(analyzeButton);
+        if (post.isRecipe()) {
+            rightButtons.add(analyzeButton);
+            this.recipe = post.getRecipeObj();
+        }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
         for (JButton button : rightButtons) {
@@ -121,7 +125,7 @@ public class PostView extends JPanel {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
-        mainPanel.add(menuBar, BorderLayout.SOUTH);
+        //mainPanel.add(menuBar, BorderLayout.SOUTH);
 
 
         this.add(mainPanel);
@@ -139,7 +143,8 @@ public class PostView extends JPanel {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
             Recipe repice = new Recipe();
-            spon.callAPI(repice);
+            String result = spon.callAPI(repice);
+            System.out.println(result);
         }
         if (e.getSource() == saveButton) {
             System.out.println("popup add to list");
