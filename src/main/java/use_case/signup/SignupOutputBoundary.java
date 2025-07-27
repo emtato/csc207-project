@@ -22,8 +22,5 @@ public interface SignupOutputBoundary {
      */
     void switchToLoginView();
 
-    /**
-     * Switches to the Club View.
-     */
-    void switchToClubView();
+
 }

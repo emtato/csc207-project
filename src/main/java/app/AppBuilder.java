@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.DBUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
 import entity.UserFactory;
@@ -80,7 +79,7 @@ public class AppBuilder {
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
      private PostViewModel postViewModel;
     private PostView postView;
-    private SignupView signupView;
+        private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private NoteViewModel noteViewModel;
@@ -92,7 +91,9 @@ public class AppBuilder {
     private LoginView loginView;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
+    private NotificationsView notificationsView;
     private ExploreEventsView exploreEventsView;
+    private ExploreView exploreView;
     private HomePageView homePageView;
     private ProfileView profileView;
     private EditProfileView editProfileView;
@@ -116,6 +117,18 @@ public class AppBuilder {
     public AppBuilder addEventsView() {
         exploreEventsView = new ExploreEventsView(viewManagerModel);
         cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addExploreView() {
+        exploreView = new ExploreView(viewManagerModel);
+        cardPanel.add(exploreView, exploreView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addNotificationsView() {
+        notificationsView = new NotificationsView(viewManagerModel);
+        cardPanel.add(notificationsView, notificationsView.getViewName());
         return this;
     }
 
@@ -174,7 +187,7 @@ public class AppBuilder {
      */
     public AppBuilder addPostView() {
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel);
+        postView = new PostView(postViewModel, viewManagerModel);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
@@ -322,7 +335,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(loginView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

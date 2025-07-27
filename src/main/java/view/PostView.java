@@ -23,6 +23,8 @@ public class PostView extends JPanel {
 
     private final String viewName = "recipe view";
     private final PostViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
+
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -41,8 +43,9 @@ public class PostView extends JPanel {
     private final JButton saveButton = new JButton("Add to list");
     private final JButton shareButton = new JButton("Share");
 
-    public PostView(PostViewModel viewModel) {
+    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
         //this.viewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -113,6 +116,8 @@ public class PostView extends JPanel {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         this.add(mainPanel);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.NORTH);
 
     }
 
@@ -127,12 +132,12 @@ public class PostView extends JPanel {
         return viewName;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new PostView(new PostViewModel()));
-        frame.setPreferredSize(new Dimension(1920, 1080));
-        frame.pack();
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.add(new PostView(new PostViewModel()));
+//        frame.setPreferredSize(new Dimension(1920, 1080));
+//        frame.pack();
+//        frame.setVisible(true);
+//    }
 }

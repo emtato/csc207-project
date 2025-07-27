@@ -7,6 +7,7 @@ public class Comment {
     private String comment;
     private LocalDateTime date;
     private int likes;
+    private int ID;
 
     public Comment(Account account, String comment, LocalDateTime date, int likes) {
         this.account = account;
