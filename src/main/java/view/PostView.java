@@ -84,16 +84,8 @@ public class PostView extends JPanel {
 
 
         //bottom
-        ArrayList<JButton> bottomButtons = new ArrayList<>();
-        bottomButtons.add(backButton);
-        bottomButtons.add(mapsButton);
-        bottomButtons.add(slopButton);
-        bottomButtons.add(settingsButton);
-        bottomButtons.add(profileButton);
-        for (JButton button : bottomButtons) {
-            button.setFont(text);
-            bottomPanel.add(button);
-        }
+         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        mainPanel.add(menuBar, BorderLayout.NORTH);
 
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -106,6 +98,7 @@ public class PostView extends JPanel {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
             button.setOpaque(true);
+            button.addActionListener(e -> actionPerformed(e));
             rightPanel.add(button);
         }
 
@@ -115,29 +108,39 @@ public class PostView extends JPanel {
         mainPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
+
         this.add(mainPanel);
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        add(menuBar, BorderLayout.NORTH);
+
 
     }
 
     //@Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == analyzeButton) {
-            System.out.println("analyzeButton");
+        if (e.getSource() == likeButton) {
+            System.out.println("me likey likey");
         }
+        if (e.getSource() == analyzeButton) {
+            System.out.println("hmmmm \uD83E\uDD13");
+        }
+        if (e.getSource() == saveButton) {
+            System.out.println("popup add to list");
+        }
+        if (e.getSource() == shareButton) {
+            System.out.println("share slop");
+        }
+
     }
 
     public String getViewName() {
         return viewName;
     }
 
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame();
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(new PostView(new PostViewModel()));
-//        frame.setPreferredSize(new Dimension(1920, 1080));
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new PostView( new PostViewModel(), new ViewManagerModel()));
+        frame.setPreferredSize(new Dimension(1920, 1080));
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
