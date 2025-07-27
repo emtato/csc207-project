@@ -1,17 +1,14 @@
 package data_access.spoonacular;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import entity.Recipe;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 
 public class SpoonacularAPI {
@@ -20,7 +17,6 @@ public class SpoonacularAPI {
         String description = recipe.getDescription();
         ArrayList<String> ingredients = recipe.getIngredients();
         ArrayList<String> steps = recipe.getSteps();
-        ArrayList tags = recipe.getTags();
 
         StringBuilder ingredientsStr = new StringBuilder();
         for (String ingredient : ingredients) {
