@@ -1,5 +1,7 @@
 package view;
 
+import entity.Recipe;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -65,6 +67,11 @@ public class CreateNewPostView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Actionlistener function to delegate selections to functions to load desired views
+     *
+     * @param e actionevent
+     */
     public void actionPerformed(ActionEvent e) {
         contentPanel.removeAll();
 
@@ -81,6 +88,7 @@ public class CreateNewPostView extends JFrame {
         contentPanel.repaint();
     }
 
+
     private void recipePostView() {
         System.out.println(recipes.isSelected());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -91,18 +99,35 @@ public class CreateNewPostView extends JFrame {
         ingredientsList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea steps = new JTextArea("Enter steps to make the yum yum", 20, 80);
         steps.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JTextArea cuisines = new JTextArea("Enter cuisine separated by commas if u want", 1, 80);
+        cuisines.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         textFIeldHints(titleField, "Enter post title");
         textFIeldHints(bodyField, "Enter recipe description");
         textFIeldHints(ingredientsList, "Enter list of ingredients separated by commas");
         textFIeldHints(steps, "Enter steps to make the yum yum");
+        textFIeldHints(cuisines, "Enter cuisine separated by commas if u want");
 
         contentPanel.add(titleField);
         contentPanel.add(bodyField);
         contentPanel.add(ingredientsList);
         contentPanel.add(steps);
+        contentPanel.add(cuisines);
+
+        JButton okButton = new JButton("send it \uD83E\uDEE3");
+        okButton.setFont(new Font("papyrus", Font.BOLD, 20));
+
+        contentPanel.add(okButton);
+        // Recipe rep = new Recipe();
+
     }
 
+    /**
+     * Function for TextField/TextAreas to display a grey hint message when no text has been entered.
+     *
+     * @param titleField The text component to add hint to
+     * @param hint       the hint message
+     */
     private void textFIeldHints(JTextComponent titleField, String hint) {
 
         titleField.setForeground(Color.GRAY);
@@ -124,6 +149,8 @@ public class CreateNewPostView extends JFrame {
         });
     }
 
+//end of recipe new post view
+//---------------------------------------------------------------------------------------------------------------------
 
     private void function2() {
         JLabel larbel = new JLabel("meow");

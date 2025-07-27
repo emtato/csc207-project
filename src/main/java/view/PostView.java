@@ -36,6 +36,7 @@ public class PostView extends JPanel {
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
+    private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
@@ -201,7 +202,12 @@ public class PostView extends JPanel {
                     }
                 }
             }
-            JOptionPane.showMessageDialog(null, "according to le analysis: \n" + resultDisplay + numers, "nerd", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea messageArea = new JTextArea("according to le analysis: \n" + resultDisplay + numers);
+            messageArea.setFont(whimsy);
+            messageArea.setEditable(false);
+            messageArea.setOpaque(false);
+            JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
+
 
 
         }
