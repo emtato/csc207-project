@@ -6,7 +6,9 @@ import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -14,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
@@ -23,10 +26,11 @@ import entity.Recipe;
 
 public class PostView extends JPanel {
 
-    private final String viewName = "recipe view";
+    private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final Post post;
+    private Recipe repice;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -49,13 +53,12 @@ public class PostView extends JPanel {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        //this.viewModel.addPropertyChangeListener(this);
+        this.repice = null;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        JPanel bottomPanel = new JPanel(new FlowLayout()); //pannel for main ui buttons (persists across views)
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel centerPanel = new JPanel();
@@ -77,6 +80,7 @@ public class PostView extends JPanel {
 
         //middle
         recipeText.setEditable(false);
+        recipeText.setText(post.toString());
         JScrollPane scrollPane = new JScrollPane(recipeText);
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
@@ -92,7 +96,10 @@ public class PostView extends JPanel {
         //right
         ArrayList<JButton> rightButtons = new ArrayList<>();
         rightButtons.add(likeButton);
-        rightButtons.add(analyzeButton);
+        if (post.isRecipe()) {
+            rightButtons.add(analyzeButton);
+            this.repice = post.getRecipeObj();
+        }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
         for (JButton button : rightButtons) {
@@ -100,7 +107,18 @@ public class PostView extends JPanel {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
             button.setOpaque(true);
-            button.addActionListener(e -> actionPerformed(e));
+            button.addActionListener(e -> {
+                try {
+                    actionPerformed(e);
+                }
+                catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                    System.out.println("NOOOOOO D:");
+                }
+            });
             rightPanel.add(button);
         }
 
@@ -108,7 +126,7 @@ public class PostView extends JPanel {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
-        mainPanel.add(menuBar, BorderLayout.SOUTH);
+        //mainPanel.add(menuBar, BorderLayout.SOUTH);
 
 
         this.add(mainPanel);
@@ -117,7 +135,7 @@ public class PostView extends JPanel {
     }
 
     //@Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
             System.out.println("me likey likey");
             post.setLikes(post.getLikes() + 1);
@@ -125,8 +143,8 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            Recipe repice = new Recipe();
-            spon.callAPI(repice);
+            String result = spon.callAPI(repice);
+            System.out.println(result);
         }
         if (e.getSource() == saveButton) {
             System.out.println("popup add to list");
@@ -146,9 +164,29 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Post trialpost = new Post(new Account("meow", "woof"), 483958292);
         trialpost.setTitle("goon blean");
-        trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+
+        trialpost.setRecipeObj(new Recipe(new Account("meow", "grah"), "glunkler", "repice for glunking", new ArrayList<>(Arrays.asList("hi", "a")), new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
-                "3.serve upside-down on a warm tile");
+                "3.serve upside-down on a warm tile", new ArrayList<>(Arrays.asList("yeah"))));
+        trialpost.setRecipe(true);
+
+//        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
+//        trialpost2.setTitle(" salad");
+//        trialpost2.setRecipeObj(new Recipe(
+//                new Account("plantlover", "leaf123"),
+//                "Chickpea Salad Bowl",
+//                "A refreshing, hearty bowl of protein-packed chickpeas with crisp veggies and tahini dressing.",
+//                new ArrayList<>(Arrays.asList("healthy", "salad", "plantbased", "quickmeal")),
+//                new ArrayList<>(Arrays.asList("chickpeas", "cucumber", "cherry tomatoes", "red onion", "parsley", "lemon juice", "tahini", "olive oil", "salt", "pepper")),
+//                "1. Rinse and drain the chickpeas.\n" +
+//                        "2. Dice the cucumber, cherry tomatoes, and red onion.\n" +
+//                        "3. Mix all ingredients in a bowl.\n" +
+//                        "4. Whisk tahini, lemon juice, olive oil, salt, and pepper for dressing.\n" +
+//                        "5. Toss the salad with dressing and garnish with fresh parsley.",
+//                new ArrayList<>(Arrays.asList("mediterranean", "middle eastern"))
+//        ));
+//        trialpost2.setRecipe(true);
+
         frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         frame.setPreferredSize(new Dimension(1920, 1080));
         frame.pack();

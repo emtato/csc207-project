@@ -12,6 +12,7 @@ public class Post {
     private String title;
     private String content;
     private Account user;
+    private Recipe recipeObj;
 
     private boolean isImageVideo;
     private boolean isRecipe;
@@ -90,6 +91,54 @@ public class Post {
 
     public void setLikes(long likes) {
         this.likes = likes;
+    }
+
+    public boolean isImageVideo() {
+        return isImageVideo;
+    }
+
+    public void setImageVideo(boolean imageVideo) {
+        isImageVideo = imageVideo;
+    }
+
+    public boolean isRecipe() {
+        return isRecipe;
+    }
+
+    public void setRecipe(boolean recipe) {
+        isRecipe = recipe;
+    }
+
+    public boolean isReview() {
+        return isReview;
+    }
+
+    public void setReview(boolean review) {
+        isReview = review;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public boolean isClub() {
+        return isClub;
+    }
+
+    public void setClub(boolean club) {
+        isClub = club;
+    }
+
+    public Recipe getRecipeObj() {
+        return recipeObj;
+    }
+
+    public void setRecipeObj(Recipe recipeObj) {
+        this.recipeObj = recipeObj;
     }
 }
 
