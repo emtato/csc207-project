@@ -37,13 +37,14 @@ public class PostView extends JPanel {
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
     //middle
-    private final JTextArea recipeText = new JTextArea();
+    private JTextPane postText = new JTextPane();
     //bottom
     private final JButton backButton = new JButton("Back");
     private final JButton mapsButton = new JButton("Maps");
     private final JButton slopButton = new JButton("Feed");
     private final JButton settingsButton = new JButton("Settings");
     private final JButton profileButton = new JButton("Profile");
+    private final JButton comment = new JButton("Comment");
     //right
     private JButton likeButton = new JButton("Like");
     private final JButton analyzeButton = new JButton("Analyze");
@@ -83,23 +84,26 @@ public class PostView extends JPanel {
         JLabel tags = new JLabel("tags");
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
+        tags.setText("tags: " + post.getTags());
         //TODO: add tags functionality
 
         topPanel.add(subtitle);
         topPanel.add(tags);
 
         //middle
-        recipeText.setEditable(false);
+        postText.setEditable(false);
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
-            recipeText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getDescription() + "\n" + this.repice.getSteps());
+            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
+            String mainContent = "Description: " + this.repice.getDescription() + "\n";
+            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
 
         }
         else if (post.isImageVideo()) {
-
+            System.out.println("cry");
         }
 
-        JScrollPane scrollPane = new JScrollPane(recipeText);
+        JScrollPane scrollPane = new JScrollPane(postText);
 
 
         JTextArea comments = new JTextArea();
@@ -111,8 +115,7 @@ public class PostView extends JPanel {
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
 
-
-        //bottom
+        // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
 
         //right
@@ -145,7 +148,6 @@ public class PostView extends JPanel {
             });
             rightPanel.add(button);
         }
-
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -225,7 +227,7 @@ public class PostView extends JPanel {
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
-
+        trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
 //        trialpost2.setRecipeObj(new Recipe(
