@@ -7,8 +7,10 @@ import interface_adapter.post_view.PostViewModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -143,14 +145,19 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            String result = spon.callAPI(repice);
+            HashMap<String, String> result = spon.callAPI(repice);
             System.out.println(result);
+
+
         }
         if (e.getSource() == saveButton) {
+            JOptionPane.showMessageDialog(null, "havent added that yet cry abt it", "nerd", JOptionPane.INFORMATION_MESSAGE);
+
             System.out.println("popup add to list");
         }
         if (e.getSource() == shareButton) {
             System.out.println("share slop");
+            JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }
