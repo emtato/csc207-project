@@ -9,9 +9,16 @@ public class Post {
     // TODO: public or community post
 
     private long ID;
-    private String Title;
+    private String title;
     private String content;
     private Account user;
+
+    private boolean isImageVideo;
+    private boolean isRecipe;
+    private boolean isReview;
+    private boolean isPublic;
+    private boolean isClub;
+
     private LocalDateTime dateTime;
     private HashMap<Integer, Comment> comments;
     private long likes = 0;
@@ -26,11 +33,11 @@ public class Post {
     }
 
     public String getTitle() {
-        return this.Title;
+        return this.title;
     }
 
     public void setTitle(String Title) {
-        this.Title = Title;
+        this.title = Title;
     }
 
     public long getID() {
