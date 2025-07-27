@@ -150,7 +150,7 @@ public class PostView extends JPanel {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
-        //mainPanel.add(menuBar, BorderLayout.SOUTH);
+        mainPanel.add(menuBar, BorderLayout.SOUTH);
 
         this.add(mainPanel);
     }
@@ -190,10 +190,16 @@ public class PostView extends JPanel {
                     }
                 }
                 else {
-                    numers += key + ": " + loopRes + " \n";
+                    if (Double.valueOf(loopRes) > 30) {
+                        numers += key + ": " + loopRes + " \n";
+                    }
+                    else {
+                        numers += key + ": " + loopRes + " \uD83D\uDE25  \n";
+
+                    }
                 }
             }
-            JOptionPane.showMessageDialog(null, "according to the analysis: \n" + resultDisplay + numers, "nerd", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "according to le analysis: \n" + resultDisplay + numers, "nerd", JOptionPane.INFORMATION_MESSAGE);
 
 
         }

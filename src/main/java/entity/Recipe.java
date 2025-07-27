@@ -1,7 +1,12 @@
+
 package entity;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a recipe post, which extends a general Post with recipe-specific fields.
+ * Includes ingredients, preparation steps, and associated cuisines.
+ */
 public class Recipe extends Post {
 
     private ArrayList<String> ingredients;
@@ -43,26 +48,56 @@ public class Recipe extends Post {
         this.cuisines = cuisines;
     }
 
+    /**
+     * Returns the list of ingredients for this recipe.
+     *
+     * @return A list of ingredients
+     */
     public ArrayList<String> getIngredients() {
         return ingredients;
     }
 
+    /**
+     * Sets the list of ingredients for this recipe.
+     *
+     * @param ingredients A list of ingredients
+     */
     public void setIngredients(ArrayList<String> ingredients) {
         this.ingredients = ingredients;
     }
 
+    /**
+     * Returns the preparation steps for this recipe.
+     *
+     * @return The recipe instructions
+     */
     public String getSteps() {
         return steps;
     }
 
+    /**
+     * Sets the preparation steps for this recipe.
+     *
+     * @param steps The recipe instructions
+     */
     public void setSteps(String steps) {
         this.steps = steps;
     }
 
+    /**
+     * Returns the list of cuisines associated with this recipe.
+     *
+     * @return A list of cuisines
+     */
     public ArrayList<String> getCuisines() {
         return cuisines;
     }
 
+    /**
+     * Sets the cuisines associated with this recipe.
+     *
+     * @param cuisines A list of cuisines
+     */
     public void setCuisines(ArrayList<String> cuisines) {
         this.cuisines = cuisines;
     }

@@ -12,7 +12,22 @@ import entity.Recipe;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+
+/**
+ * A data access class for interacting with the Spoonacular API to analyze recipes.
+ * Takes a Recipe object and returns a map of dietary and nutritional properties
+ */
 public class SpoonacularAPI {
+    /**
+     * Sends a recipe to the Spoonacular API for analysis.
+     * Constructs a POST request using the recipe's details and parses the returned JSON
+     * to extract various dietary and health-related attributes.
+     *
+     * @param recipe The recipe to analyze
+     * @return A map of analyzed properties including vegetarian, vegan, gluten-free, etc.
+     * @throws IOException If there is a problem with the HTTP request
+     * @throws InterruptedException If the request is interrupted
+     */
     public HashMap<String, String> callAPI(Recipe recipe) throws IOException, InterruptedException {
         String title = recipe.getTitle();
         String description = recipe.getDescription();
