@@ -27,8 +27,6 @@ import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
 import interface_adapter.profile.ProfileViewModel;
 //import interface_adapter.profile.ProfileViewModel;
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
@@ -43,9 +41,6 @@ import use_case.logout.LogoutOutputBoundary;
 import use_case.note.NoteInputBoundary;
 import use_case.note.NoteInteractor;
 import use_case.note.NoteOutputBoundary;
-import use_case.signup.SignupInputBoundary;
-import use_case.signup.SignupInteractor;
-import use_case.signup.SignupOutputBoundary;
 import view.LoggedInView;
 import view.LoginView;
 import view.NoteView;
@@ -188,9 +183,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPostView() {
-        Post trialpost = new Post(new Account("meow", "woof"), 483958292);
+        Post trialpost = new Post(new Account("meow", "woof"), 483958292, "posttitle", "desc");
         trialpost.setTitle("goon blean");
-        trialpost.setContent("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
+        trialpost.setDescription("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
