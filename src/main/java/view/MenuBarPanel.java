@@ -3,6 +3,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+
 import interface_adapter.ViewManagerModel;
 
 public class MenuBarPanel extends JPanel {
@@ -40,17 +41,17 @@ public class MenuBarPanel extends JPanel {
 
 //        add(Box.createRigidArea(new Dimension(10, 0)));
 
+        //the bar was overflowing horizontally for many menus and i couldnt find out why, width changed from 100-> 0 and
+        // that seems to have worked
         add(homeButton);
-        add(Box.createRigidArea(new Dimension(100, 0)));
+        add(Box.createRigidArea(new Dimension(0, 0)));
         add(clubsButton);
-        add(Box.createRigidArea(new Dimension(100, 0)));
+        add(Box.createRigidArea(new Dimension(0, 0)));
         add(settingsButton);
-        add(Box.createRigidArea(new Dimension(100, 0)));
+        add(Box.createRigidArea(new Dimension(0, 0)));
         add(exploreButton);
-        add(Box.createRigidArea(new Dimension(100, 0)));
+        add(Box.createRigidArea(new Dimension(0, 0)));
         add(notifcationsButton);
 
-
-        //em test
     }
 }

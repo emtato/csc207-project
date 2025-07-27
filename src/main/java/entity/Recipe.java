@@ -1,7 +1,12 @@
+
 package entity;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a recipe post, which extends a general Post with recipe-specific fields.
+ * Includes ingredients, preparation steps, and associated cuisines.
+ */
 public class Recipe extends Post {
 
     private ArrayList<String> ingredients;
@@ -16,7 +21,8 @@ public class Recipe extends Post {
      * @param ingredients A list of ingredients required for the recipe.
      * @param steps       The instructions to follow for making the recipe.
      * @param cuisines    A list of cuisines that the recipe belongs to.
-     * constructor for building recipe from scratch without a Post object
+     *                    <p>
+     *                    constructor for building recipe from scratch without a Post object
      */
     public Recipe(Account user, long postID, String title, String description, ArrayList<String> ingredients,
                   String steps, ArrayList<String> cuisines) {
@@ -26,27 +32,72 @@ public class Recipe extends Post {
         this.cuisines = cuisines;
     }
 
+    /**
+     * Constructs a Recipe object from an existing Post object.
+     *
+     * @param post        The existing Post object to base this Recipe on.
+     * @param ingredients A list of ingredients required for the recipe.
+     * @param steps       The instructions to follow for making the recipe.
+     * @param cuisines    A list of cuisines that the recipe belongs to.
+     */
+    public Recipe(Post post, ArrayList<String> ingredients,
+                  String steps, ArrayList<String> cuisines) {
+        super(post.getUser(), post.getID(), post.getTitle(), post.getDescription());
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.cuisines = cuisines;
+    }
 
+    /**
+     * Returns the list of ingredients for this recipe.
+     *
+     * @return A list of ingredients
+     */
     public ArrayList<String> getIngredients() {
         return ingredients;
     }
 
+    /**
+     * Sets the list of ingredients for this recipe.
+     *
+     * @param ingredients A list of ingredients
+     */
     public void setIngredients(ArrayList<String> ingredients) {
         this.ingredients = ingredients;
     }
 
+    /**
+     * Returns the preparation steps for this recipe.
+     *
+     * @return The recipe instructions
+     */
     public String getSteps() {
         return steps;
     }
 
+    /**
+     * Sets the preparation steps for this recipe.
+     *
+     * @param steps The recipe instructions
+     */
     public void setSteps(String steps) {
         this.steps = steps;
     }
 
+    /**
+     * Returns the list of cuisines associated with this recipe.
+     *
+     * @return A list of cuisines
+     */
     public ArrayList<String> getCuisines() {
         return cuisines;
     }
 
+    /**
+     * Sets the cuisines associated with this recipe.
+     *
+     * @param cuisines A list of cuisines
+     */
     public void setCuisines(ArrayList<String> cuisines) {
         this.cuisines = cuisines;
     }
