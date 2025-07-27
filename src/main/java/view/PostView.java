@@ -102,7 +102,18 @@ public class PostView extends JPanel {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
             button.setOpaque(true);
-            button.addActionListener(e -> actionPerformed(e));
+            button.addActionListener(e -> {
+                try {
+                    actionPerformed(e);
+                }
+                catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                    System.out.println("NOOOOOO D:");
+                }
+            });
             rightPanel.add(button);
         }
 
@@ -120,29 +131,23 @@ public class PostView extends JPanel {
 
     //@Override
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
-        try {
-            if (e.getSource() == likeButton) {
-                System.out.println("me likey likey");
-                post.setLikes(post.getLikes() + 1);
-            }
-            if (e.getSource() == analyzeButton) {
-                System.out.println("hmmmm \uD83E\uDD13");
-                SpoonacularAPI spon = new SpoonacularAPI();
-                Recipe repice = new Recipe();
-                spon.callAPI(repice);
-            }
-            if (e.getSource() == saveButton) {
-                System.out.println("popup add to list");
-            }
-            if (e.getSource() == shareButton) {
-                System.out.println("share slop");
-            }
+        if (e.getSource() == likeButton) {
+            System.out.println("me likey likey");
+            post.setLikes(post.getLikes() + 1);
+        }
+        if (e.getSource() == analyzeButton) {
+            System.out.println("hmmmm \uD83E\uDD13");
+            SpoonacularAPI spon = new SpoonacularAPI();
+            Recipe repice = new Recipe();
+            spon.callAPI(repice);
+        }
+        if (e.getSource() == saveButton) {
+            System.out.println("popup add to list");
+        }
+        if (e.getSource() == shareButton) {
+            System.out.println("share slop");
+        }
 
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println("NOOOOOO D:");
-        }
     }
 
     public String getViewName() {
