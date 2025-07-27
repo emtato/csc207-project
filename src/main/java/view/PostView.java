@@ -5,6 +5,7 @@ import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -22,25 +23,26 @@ public class PostView extends JPanel {
 
     private final String viewName = "recipe view";
     private final PostViewModel viewModel;
-    private final ViewManagerModel viewManagerModel;
-
+    //fonts & styles
+    private final Font Title = new Font("Roboto", Font.BOLD, 20);
+    private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
+    private final Font text = new Font("Roboto", Font.PLAIN, 15);
     //middle
-    JTextArea recipeText = new JTextArea();
+    private final JTextArea recipeText = new JTextArea();
     //bottom
-    JButton backButton = new JButton("Back");
-    JButton mapsButton = new JButton("Maps");
-    JButton slopButton = new JButton("Feed");
-    JButton settingsButton = new JButton("Settings");
-    JButton profileButton = new JButton("Profile");
+    private final JButton backButton = new JButton("Back");
+    private final JButton mapsButton = new JButton("Maps");
+    private final JButton slopButton = new JButton("Feed");
+    private final JButton settingsButton = new JButton("Settings");
+    private final JButton profileButton = new JButton("Profile");
     //right
-    JButton likeButton = new JButton("Like");
-    JButton analyzeButton = new JButton("Analyze");
-    JButton saveButton = new JButton("Add to list");
-    JButton shareButton = new JButton("Share");
+    private final JButton likeButton = new JButton("Like");
+    private final JButton analyzeButton = new JButton("Analyze");
+    private final JButton saveButton = new JButton("Add to list");
+    private final JButton shareButton = new JButton("Share");
 
-    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public PostView(PostViewModel viewModel) {
         this.viewModel = viewModel;
-        this.viewManagerModel = viewManagerModel;
         //this.viewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -54,27 +56,55 @@ public class PostView extends JPanel {
 
         //top
         JLabel title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
+        title.setFont(Title);
+
         topPanel.add(title);
         JLabel subtitle = new JLabel("meowers"); // post author and date
+        subtitle.setFont(subtite);
+        subtitle.setForeground(Color.GRAY);
         JLabel tags = new JLabel("tags");
+        tags.setFont(text);
+        tags.setForeground(Color.LIGHT_GRAY);
+
         topPanel.add(subtitle);
         topPanel.add(tags);
 
         //middle
         recipeText.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(recipeText);
+        JTextArea comments = new JTextArea();
+        scrollPane.add(comments);
+        scrollPane.setPreferredSize(new Dimension(1300, 800));
+        centerPanel.add(scrollPane);
+        comments.setBackground(Color.PINK);
+        comments.setOpaque(true);
+
 
         //bottom
-        bottomPanel.add(backButton);
-        bottomPanel.add(mapsButton);
-        bottomPanel.add(slopButton);
-        bottomPanel.add(settingsButton);
-        bottomPanel.add(profileButton);
+        ArrayList<JButton> bottomButtons = new ArrayList<>();
+        bottomButtons.add(backButton);
+        bottomButtons.add(mapsButton);
+        bottomButtons.add(slopButton);
+        bottomButtons.add(settingsButton);
+        bottomButtons.add(profileButton);
+        for (JButton button : bottomButtons) {
+            button.setFont(text);
+            bottomPanel.add(button);
+        }
 
         //right
-        rightPanel.add(likeButton);
-        rightPanel.add(analyzeButton);
-        rightPanel.add(saveButton);
-        rightPanel.add(shareButton);
+        ArrayList<JButton> rightButtons = new ArrayList<>();
+        rightButtons.add(likeButton);
+        rightButtons.add(analyzeButton);
+        rightButtons.add(saveButton);
+        rightButtons.add(shareButton);
+        for (JButton button : rightButtons) {
+            button.setFont(text);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button.setBackground(Color.PINK);
+            button.setOpaque(true);
+            rightPanel.add(button);
+        }
 
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
@@ -83,8 +113,6 @@ public class PostView extends JPanel {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         this.add(mainPanel);
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        add(menuBar, BorderLayout.NORTH);
 
     }
 
@@ -97,5 +125,14 @@ public class PostView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new PostView(new PostViewModel()));
+        frame.setPreferredSize(new Dimension(1920, 1080));
+        frame.pack();
+        frame.setVisible(true);
     }
 }

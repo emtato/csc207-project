@@ -174,7 +174,7 @@ public class AppBuilder {
      */
     public AppBuilder addPostView() {
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel, viewManagerModel);
+        postView = new PostView(postViewModel);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
