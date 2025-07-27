@@ -51,5 +51,6 @@ public class MenuBarPanel extends JPanel {
         add(notifcationsButton);
 
 
+        //em test
     }
 }
