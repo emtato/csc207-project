@@ -30,7 +30,7 @@ public class PostView extends JPanel {
     private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
-    private final Post post;
+    private Post post;
     private Recipe repice;
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
@@ -74,15 +74,13 @@ public class PostView extends JPanel {
         title.setText(post.getTitle());
 
         topPanel.add(title);
-        subtitle = new JLabel("meowers"); // post author and date
+        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
-        subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
         JLabel tags = new JLabel("tags");
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
         tags.setText("tags: " + post.getTags());
-        //TODO: add tags functionality
 
         topPanel.add(subtitle);
         topPanel.add(tags);
@@ -93,6 +91,8 @@ public class PostView extends JPanel {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
             String mainContent = "Description: " + this.repice.getDescription() + "\n";
+            //like here
+
             postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
 
         }
@@ -150,6 +150,35 @@ public class PostView extends JPanel {
         mainPanel.add(menuBar, BorderLayout.SOUTH);
 
         this.add(mainPanel);
+    }
+
+    /**
+     * Display a new post in the current view to avoid having to recreate entire view every switch.
+     *
+     * @param newPost new post object
+     */
+    public void displayPost(Post newPost) {
+        this.post = newPost;
+        if (newPost instanceof Recipe) {
+            this.repice = (Recipe) newPost;
+        }
+        else {
+            this.repice = null;
+        }
+
+        title.setText(newPost.getTitle());
+        subtitle.setText(newPost.getUser().getUsername() + " | " + newPost.getLikes() + " likes");
+
+        if (newPost instanceof Recipe) {
+            postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
+        }
+        else {
+            postText.setText("No recipe to display.");
+        }
+
+        // refresh UI as needed
+        revalidate();
+        repaint();
     }
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
