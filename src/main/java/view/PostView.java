@@ -232,7 +232,7 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
-        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
+        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
