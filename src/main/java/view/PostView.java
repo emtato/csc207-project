@@ -150,7 +150,7 @@ public class PostView extends JPanel {
             rightPanel.add(button);
             rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 610)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 666)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -252,23 +252,31 @@ public class PostView extends JPanel {
             scrollPane.setSize(new Dimension(1400, 800)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
-            centerPanel.revalidate();
-            centerPanel.repaint();
+
             commentButton.setOpaque(true);
             commentButton.setText("");
+
+            JPanel subRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
             RoundedButton xButton = new RoundedButton("x");
-            rightPanel.add(xButton);
+            RoundedButton postButton = new RoundedButton("Post!");
+            subRight.add(postButton);
+            subRight.add(xButton);
+            rightPanel.add(subRight);
+
             xPresent = true;
             xButton.addActionListener(
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             centerPanel.remove(commentsArea);
-                            centerPanel.revalidate();
-                            centerPanel.repaint();
-                            rightPanel.remove(xButton);
-                            rightPanel.revalidate();
-                            rightPanel.repaint();
+                            rightPanel.remove(subRight);
+                            commentButton.setText("comment");
+                            commentButton.setOpaque(false);
+
+//                          centerPanel.revalidate();
+//                          centerPanel.repaint();
+//                          rightPanel.revalidate();
+//                          rightPanel.repaint();
                             xPresent = false;
                         }
                     });
