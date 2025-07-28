@@ -30,31 +30,35 @@ public class PostView extends JPanel {
     private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
+
     private final Post post;
     private Recipe recipe;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
+
+    private Post post;
+    private Recipe repice;
+    // fonts & styles
+    private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
+
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
-    //middle
+    private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
+    // middle
     private JTextPane postText = new JTextPane();
-    //bottom
-    private final JButton backButton = new JButton("Back");
-    private final JButton mapsButton = new JButton("Maps");
-    private final JButton slopButton = new JButton("Feed");
-    private final JButton settingsButton = new JButton("Settings");
-    private final JButton profileButton = new JButton("Profile");
-    private final JButton comment = new JButton("Comment");
-    //right
-    private JButton likeButton = new JButton("Like");
-    private final JButton analyzeButton = new JButton("Analyze");
-    private final JButton saveButton = new JButton("Add to list");
-    private final JButton shareButton = new JButton("Share");
+    // bottom
+
+    // right
+    private RoundedButton likeButton = new RoundedButton("Like");
+    private final RoundedButton analyzeButton = new RoundedButton("Analyze");
+    private final RoundedButton saveButton = new RoundedButton("Add to list");
+    private final RoundedButton shareButton = new RoundedButton("Share");
 
     private final JLabel title;
     private final JLabel subtitle;
 
-    private boolean liked = false;
+    private boolean liked;
+
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -71,32 +75,36 @@ public class PostView extends JPanel {
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel centerPanel = new JPanel();
 
-        //top
-        title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
-        title.setFont(Title);
-        title.setText(post.getTitle());
+        // top
+        title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
+        title.setFont(fontTitle);
 
         topPanel.add(title);
-        subtitle = new JLabel("meowers"); // post author and date
+        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
-        subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
-        JLabel tags = new JLabel("tags");
+        JLabel tags = new JLabel("tags: " + post.getTags());
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
-        tags.setText("tags: " + post.getTags());
-        //TODO: add tags functionality
+
 
         topPanel.add(subtitle);
         topPanel.add(tags);
 
-        //middle
+        // middle
         postText.setEditable(false);
         if (post instanceof Recipe) {
             this.recipe = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
+
             String mainContent = "Description: " + this.recipe.getDescription() + "\n";
             postText.setText(this.recipe.getDescription() + "\n" + this.recipe.getIngredients() + "\n" + this.recipe.getSteps());
+
+            String mainContent = "Description: " + this.recipe.getDescription() + "\n";
+            //like here
+
+            postText.setText(this.recipe.getDescription() + "\n" + this.recipe.getIngredients() + "\n" + this.recipe.getSteps());
+
 
         }
         else if (post.isImageVideo()) {
@@ -109,7 +117,6 @@ public class PostView extends JPanel {
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new
-
                 Dimension(1300, 800));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
@@ -118,7 +125,7 @@ public class PostView extends JPanel {
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
 
-        //right
+        // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
         if (liked) {
             likeButton.setText("unlike");
@@ -133,7 +140,6 @@ public class PostView extends JPanel {
             button.setFont(text);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
-            button.setOpaque(true);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -157,7 +163,35 @@ public class PostView extends JPanel {
         this.add(mainPanel);
     }
 
-    //@Override
+    /**
+     * Display a new post in the current view to avoid having to recreate entire view every switch.
+     *
+     * @param newPost new post object
+     */
+    public void displayPost(Post newPost) {
+        this.post = newPost;
+        if (newPost instanceof Recipe) {
+            this.recipe = (Recipe) newPost;
+        }
+        else {
+            this.recipe = null;
+        }
+
+        title.setText(newPost.getTitle());
+        subtitle.setText(newPost.getUser().getUsername() + " | " + newPost.getLikes() + " likes");
+
+        if (newPost instanceof Recipe) {
+            postText.setText(recipe.getDescription() + "\n" + recipe.getIngredients() + "\n" + recipe.getSteps());
+        }
+        else {
+            postText.setText("No recipe to display.");
+        }
+
+        // refresh UI as needed
+        revalidate();
+        repaint();
+    }
+
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
             if (!liked) {
@@ -178,6 +212,8 @@ public class PostView extends JPanel {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
             HashMap<String, String> result = spon.callAPI(recipe);
+            this.recipe.setRestrictionsMap(spon.callAPI(recipe));
+            HashMap<String, String> result = this.recipe.getRestrictionsMap();
             System.out.println(result);
             String resultDisplay = "";
             String numers = "";
@@ -201,7 +237,11 @@ public class PostView extends JPanel {
                     }
                 }
             }
-            JOptionPane.showMessageDialog(null, "according to le analysis: \n" + resultDisplay + numers, "nerd", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea messageArea = new JTextArea("according to le analysis: \n" + resultDisplay + numers);
+            messageArea.setFont(whimsy);
+            messageArea.setEditable(false);
+            messageArea.setOpaque(false);
+            JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
 
 
         }
@@ -226,7 +266,7 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
-        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
+        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "recipe for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
