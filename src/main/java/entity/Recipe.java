@@ -3,6 +3,7 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Represents a recipe post, which extends a general Post with recipe-specific fields.
@@ -13,7 +14,7 @@ public class Recipe extends Post {
     private ArrayList<String> ingredients;
     private String steps;
     private ArrayList<String> cuisines;
-
+    private HashMap<String, String> restrictionsMap;
     /**
      * @param user        The user who created the recipe post.
      * @param postID      The unique ID for this post.
@@ -31,6 +32,19 @@ public class Recipe extends Post {
         this.ingredients = ingredients;
         this.steps = steps;
         this.cuisines = cuisines;
+        HashMap map = new HashMap<String, String>();
+        map.put("vegeterian", false);
+        map.put("vegan", false);
+        map.put("gluten free", false);
+        map.put("dairy free", false);
+        map.put("very healthy", false);
+        map.put("cheap", false);
+        map.put("sustainable", false);
+        map.put("low FODMAP", false);
+        map.put("weight watcher score", 0);
+        map.put("health score", 0);
+        map.put("spoonacular score", 0);
+        this.restrictionsMap =map;
     }
 
     /**
@@ -103,6 +117,9 @@ public class Recipe extends Post {
         this.cuisines = cuisines;
     }
 
+
+
+
     /**
      * Basic debugging toString method
      *
@@ -111,5 +128,13 @@ public class Recipe extends Post {
     @Override
     public String toString() {
         return "PostID=" + this.getID() + ", Title=" + getTitle() + ", User=" + getUser() + ", Ingredients=" + Arrays.toString(ingredients.toArray());
+    }
+
+    public HashMap<String, String> getRestrictionsMap() {
+        return restrictionsMap;
+    }
+
+    public void setRestrictionsMap(HashMap<String, String> restrictionsMap) {
+        this.restrictionsMap = restrictionsMap;
     }
 }

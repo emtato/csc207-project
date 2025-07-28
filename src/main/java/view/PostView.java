@@ -69,18 +69,17 @@ public class PostView extends JPanel {
         JPanel centerPanel = new JPanel();
 
         // top
-        title = new JLabel("HELLLOOOO aaiaiaiee"); //recipe/post title
+        title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
-        title.setText(post.getTitle());
 
         topPanel.add(title);
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
-        JLabel tags = new JLabel("tags");
+        JLabel tags = new JLabel("tags: " + post.getTags());
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
-        tags.setText("tags: " + post.getTags());
+
 
         topPanel.add(subtitle);
         topPanel.add(tags);
@@ -200,7 +199,8 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            HashMap<String, String> result = spon.callAPI(repice);
+            this.repice.setRestrictionsMap(spon.callAPI(repice));
+            HashMap<String, String> result = this.repice.getRestrictionsMap();
             System.out.println(result);
             String resultDisplay = "";
             String numers = "";
