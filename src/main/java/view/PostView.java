@@ -40,17 +40,12 @@ public class PostView extends JPanel {
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
-    private final JButton backButton = new JButton("Back");
-    private final JButton mapsButton = new JButton("Maps");
-    private final JButton slopButton = new JButton("Feed");
-    private final JButton settingsButton = new JButton("Settings");
-    private final JButton profileButton = new JButton("Profile");
-    private final JButton comment = new JButton("Comment");
+
     // right
-    private JButton likeButton = new JButton("Like");
-    private final JButton analyzeButton = new JButton("Analyze");
-    private final JButton saveButton = new JButton("Add to list");
-    private final JButton shareButton = new JButton("Share");
+    private RoundedButton likeButton = new RoundedButton("Like");
+    private final RoundedButton analyzeButton = new RoundedButton("Analyze");
+    private final RoundedButton saveButton = new RoundedButton("Add to list");
+    private final RoundedButton shareButton = new RoundedButton("Share");
 
     private final JLabel title;
     private final JLabel subtitle;
@@ -111,7 +106,6 @@ public class PostView extends JPanel {
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new
-
                 Dimension(1300, 800));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
@@ -135,7 +129,6 @@ public class PostView extends JPanel {
             button.setFont(text);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
-            button.setOpaque(true);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -209,7 +202,6 @@ public class PostView extends JPanel {
             JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
 
 
-
         }
         if (e.getSource() == saveButton) {
             JOptionPane.showMessageDialog(null, "havent added that yet cry abt it", "nerd", JOptionPane.INFORMATION_MESSAGE);
@@ -232,7 +224,7 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
-        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "description", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
+        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");

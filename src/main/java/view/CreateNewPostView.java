@@ -1,6 +1,8 @@
 package view;
 
+import entity.Account;
 import entity.Recipe;
+import interface_adapter.signup.SignupState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +20,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
+
+import static java.util.Arrays.asList;
 
 
 public class CreateNewPostView extends JFrame {
@@ -97,26 +103,42 @@ public class CreateNewPostView extends JFrame {
         bodyField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea ingredientsList = new JTextArea("Enter list of ingredients separated by commas", 20, 80);
         ingredientsList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea steps = new JTextArea("Enter steps to make the yum yum", 20, 80);
-        steps.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea cuisines = new JTextArea("Enter cuisine separated by commas if u want", 1, 80);
-        cuisines.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JTextArea stepsField = new JTextArea("Enter steps to make the yum yum", 20, 80);
+        stepsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JTextArea cuisinesField = new JTextArea("Enter cuisine separated by commas if u want", 1, 80);
+        cuisinesField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         textFIeldHints(titleField, "Enter post title");
         textFIeldHints(bodyField, "Enter recipe description");
         textFIeldHints(ingredientsList, "Enter list of ingredients separated by commas");
-        textFIeldHints(steps, "Enter steps to make the yum yum");
-        textFIeldHints(cuisines, "Enter cuisine separated by commas if u want");
+        textFIeldHints(stepsField, "Enter steps to make the yum yum");
+        textFIeldHints(cuisinesField, "Enter cuisine separated by commas if u want");
 
         contentPanel.add(titleField);
         contentPanel.add(bodyField);
         contentPanel.add(ingredientsList);
-        contentPanel.add(steps);
-        contentPanel.add(cuisines);
+        contentPanel.add(stepsField);
+        contentPanel.add(cuisinesField);
 
         JButton okButton = new JButton("send it \uD83E\uDEE3");
         okButton.setFont(new Font("papyrus", Font.BOLD, 20));
+        okButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        String title = titleField.getText();
+                        String body = bodyField.getText();
+                        ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsList.getText().split(",")));
+                        String steps = stepsField.getText();
+                        ArrayList<String> cuisines = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
+                        Account user = new Account("r", "y");
 
+                        Recipe repice = new Recipe(user,843417361846184L, title, body, ingredients, steps, cuisines);
+                        System.out.println("repice obj creted");
+                        //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
+                    }
+
+                }
+        );
         contentPanel.add(okButton);
         // Recipe rep = new Recipe();
 
