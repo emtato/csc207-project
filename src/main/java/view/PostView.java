@@ -40,17 +40,12 @@ public class PostView extends JPanel {
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
-    private final JButton backButton = new JButton("Back");
-    private final JButton mapsButton = new JButton("Maps");
-    private final JButton slopButton = new JButton("Feed");
-    private final JButton settingsButton = new JButton("Settings");
-    private final JButton profileButton = new JButton("Profile");
-    private final JButton comment = new JButton("Comment");
+
     // right
-    private JButton likeButton = new JButton("Like");
-    private final JButton analyzeButton = new JButton("Analyze");
-    private final JButton saveButton = new JButton("Add to list");
-    private final JButton shareButton = new JButton("Share");
+    private RoundedButton likeButton = new RoundedButton("Like");
+    private final RoundedButton analyzeButton = new RoundedButton("Analyze");
+    private final RoundedButton saveButton = new RoundedButton("Add to list");
+    private final RoundedButton shareButton = new RoundedButton("Share");
 
     private final JLabel title;
     private final JLabel subtitle;
@@ -135,7 +130,6 @@ public class PostView extends JPanel {
             button.setFont(text);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setBackground(Color.PINK);
-            button.setOpaque(true);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -207,7 +201,6 @@ public class PostView extends JPanel {
             messageArea.setEditable(false);
             messageArea.setOpaque(false);
             JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
-
 
 
         }
