@@ -60,9 +60,19 @@ public class HomePageView extends JPanel {
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
         for (int i = 0; i < 5; i++) {
-            PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1200, 600);
-            feedPanel.add(postPanel);
-            feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            JPanel feedRow = new JPanel();
+            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
+            feedRow.setAlignmentX(Component.CENTER_ALIGNMENT);
+            PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400);
+            feedRow.setMaximumSize(new Dimension(2000, 420));
+            feedRow.setAlignmentX(Component.CENTER_ALIGNMENT);
+            feedRow.add(postPanel);
+            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
+            feedRow.add(new PostPanel(viewManagerModel, trialpost, 1000, 400)); // second post
+            feedRow.add(Box.createHorizontalGlue());
+
+            feedPanel.add(feedRow);
+            //feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
         JScrollPane mainScrollPane = new JScrollPane(wrapperPanel);
