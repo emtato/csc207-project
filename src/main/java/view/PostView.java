@@ -6,6 +6,7 @@ import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,12 +54,16 @@ public class PostView extends JPanel {
     private final RoundedButton analyzeButton = new RoundedButton("Analyze");
     private final RoundedButton saveButton = new RoundedButton("Add to list");
     private final RoundedButton shareButton = new RoundedButton("Share");
+    private final RoundedButton commentButton = new RoundedButton("coment");
 
     private final JLabel title;
     private final JLabel subtitle;
 
     private boolean liked;
-
+    private JPanel centerPanel;
+    private JScrollPane scrollPane;
+    private JPanel rightPanel;
+    private boolean xPresent;
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -71,15 +76,15 @@ public class PostView extends JPanel {
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        JPanel rightPanel = new JPanel();
+        rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        JPanel centerPanel = new JPanel();
+        centerPanel = new JPanel();
 
         // top
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title);
+        topPanel.add(title); //TODO: fix datetime thing
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -111,19 +116,21 @@ public class PostView extends JPanel {
             System.out.println("cry");
         }
 
-        JScrollPane scrollPane = new JScrollPane(postText);
+        scrollPane = new JScrollPane(postText);
 
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new
-                Dimension(1300, 800));
+        scrollPane.setPreferredSize(new Dimension(1400, 850));
         centerPanel.add(scrollPane);
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
 
+
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        menuBar.setPreferredSize(new Dimension(1200, 100));
 
         // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -136,10 +143,10 @@ public class PostView extends JPanel {
         }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
+        rightButtons.add(commentButton);
         for (JButton button : rightButtons) {
             button.setFont(text);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.setBackground(Color.PINK);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -153,7 +160,9 @@ public class PostView extends JPanel {
                 }
             });
             rightPanel.add(button);
+            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 666)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -184,10 +193,9 @@ public class PostView extends JPanel {
             postText.setText(recipe.getDescription() + "\n" + recipe.getIngredients() + "\n" + recipe.getSteps());
         }
         else {
-            postText.setText("No recipe to display.");
+            postText.setText(post.getDescription());
         }
-
-        // refresh UI as needed
+        //TODO: update comments for new post
         revalidate();
         repaint();
     }
@@ -233,7 +241,6 @@ public class PostView extends JPanel {
                     }
                     else {
                         numers += key + ": " + loopRes + " \uD83D\uDE25  \n";
-
                     }
                 }
             }
@@ -242,7 +249,6 @@ public class PostView extends JPanel {
             messageArea.setEditable(false);
             messageArea.setOpaque(false);
             JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
-
 
         }
         if (e.getSource() == saveButton) {
@@ -253,6 +259,40 @@ public class PostView extends JPanel {
         if (e.getSource() == shareButton) {
             System.out.println("share slop");
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (e.getSource() == commentButton && !xPresent) {
+            JTextArea commentsArea = new JTextArea(2, 20);
+            scrollPane.setSize(new Dimension(1400, 800)); //YOPPP WORKS
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+            centerPanel.add(commentsArea);
+
+            commentButton.setOpaque(true);
+            commentButton.setText("");
+
+            JPanel subRight = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            RoundedButton xButton = new RoundedButton("x");
+            RoundedButton postButton = new RoundedButton("Post!");
+            subRight.add(postButton);
+            subRight.add(xButton);
+            rightPanel.add(subRight);
+
+            xPresent = true;
+            xButton.addActionListener(
+                    new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            centerPanel.remove(commentsArea);
+                            rightPanel.remove(subRight);
+                            commentButton.setText("comment");
+                            commentButton.setOpaque(false);
+
+//                          centerPanel.revalidate();
+//                          centerPanel.repaint();
+//                          rightPanel.revalidate();
+//                          rightPanel.repaint();
+                            xPresent = false;
+                        }
+                    });
         }
 
     }
@@ -286,7 +326,7 @@ public class PostView extends JPanel {
 //        trialpost2.setRecipe(true);
 
         frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
-        frame.setPreferredSize(new Dimension(1920, 1080));
+        frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
     }
