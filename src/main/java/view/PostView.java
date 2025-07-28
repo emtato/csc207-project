@@ -6,6 +6,7 @@ import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,8 @@ public class PostView extends JPanel {
     private boolean liked;
     private JPanel centerPanel;
     private JScrollPane scrollPane;
+    private JPanel rightPanel;
+    private boolean xPresent;
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -66,7 +69,7 @@ public class PostView extends JPanel {
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        JPanel rightPanel = new JPanel();
+        rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         centerPanel = new JPanel();
 
@@ -108,8 +111,10 @@ public class PostView extends JPanel {
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new Dimension(1400, 850));
         centerPanel.add(scrollPane);
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
+
 
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
@@ -129,7 +134,7 @@ public class PostView extends JPanel {
         rightButtons.add(commentButton);
         for (JButton button : rightButtons) {
             button.setFont(text);
-            //button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -143,7 +148,9 @@ public class PostView extends JPanel {
                 }
             });
             rightPanel.add(button);
+            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 610)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -221,7 +228,6 @@ public class PostView extends JPanel {
                     }
                     else {
                         numers += key + ": " + loopRes + " \uD83D\uDE25  \n";
-
                     }
                 }
             }
@@ -230,7 +236,6 @@ public class PostView extends JPanel {
             messageArea.setEditable(false);
             messageArea.setOpaque(false);
             JOptionPane.showMessageDialog(null, messageArea, "nerd", JOptionPane.INFORMATION_MESSAGE);
-
 
         }
         if (e.getSource() == saveButton) {
@@ -242,13 +247,31 @@ public class PostView extends JPanel {
             System.out.println("share slop");
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
-        if (e.getSource() == commentButton) {
+        if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
             scrollPane.setSize(new Dimension(1400, 800)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
             centerPanel.revalidate();
             centerPanel.repaint();
+            commentButton.setOpaque(true);
+            commentButton.setText("");
+            RoundedButton xButton = new RoundedButton("x");
+            rightPanel.add(xButton);
+            xPresent = true;
+            xButton.addActionListener(
+                    new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            centerPanel.remove(commentsArea);
+                            centerPanel.revalidate();
+                            centerPanel.repaint();
+                            rightPanel.remove(xButton);
+                            rightPanel.revalidate();
+                            rightPanel.repaint();
+                            xPresent = false;
+                        }
+                    });
         }
 
     }
