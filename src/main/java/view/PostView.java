@@ -98,11 +98,25 @@ public class PostView extends JPanel {
         postText.setEditable(false);
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
-            String mainContent = "Description: " + this.repice.getDescription() + "\n";
-            //like here
-
-            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
+            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
+            String mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+                    <ul>""" + this.repice.getIngredients() + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+                          </p>
+                          </body>
+                        </html>
+                    """;
+            postText.setContentType("text/html");
+            postText.setText(mainContent);
 
         }
         else if (post.isImageVideo()) {
@@ -276,40 +290,40 @@ public class PostView extends JPanel {
             rightPanel.add(subRight);
 
             xPresent = true;
-            xButton.addActionListener(
-                    new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            centerPanel.remove(commentsArea);
-                            rightPanel.remove(subRight);
-                            commentButton.setText("comment");
-                            commentButton.setOpaque(false);
+            xButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    centerPanel.remove(commentsArea);
+                    rightPanel.remove(subRight);
+                    commentButton.setText("comment");
+                    commentButton.setOpaque(false);
 
 //                          centerPanel.revalidate();
 //                          centerPanel.repaint();
 //                          rightPanel.revalidate();
 //                          rightPanel.repaint();
-                            xPresent = false;
-                        }
-                    });
-            postButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String mesage = commentsArea.getText();
-                            //TODO: send comment to whoever deals with this idk
-                            centerPanel.remove(commentsArea);
-                            rightPanel.remove(subRight);
-                            commentButton.setText("comment");
-                            commentButton.setOpaque(false);
-                            xPresent = false;
-                            HashMap<Integer, Comment> map = post.getComments();
-                            //TODO: account user implementation
-                            Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
-                            map.put(comment.getID(), comment);
-                            post.setComments(map);
-                        }
+                    xPresent = false;
+                }
+            });
+            postButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String mesage = commentsArea.getText();
+                    //TODO: send comment to whoever deals with this idk
+                    centerPanel.remove(commentsArea);
+                    rightPanel.remove(subRight);
+                    commentButton.setText("comment");
+                    commentButton.setOpaque(false);
+                    xPresent = false;
+                    HashMap<Integer, Comment> map = post.getComments();
+                    if (map == null) {
+                        map = new HashMap<Integer, Comment>();
                     }
-            );
+                    //TODO: account user implementation, and send post to scroll
+                    Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
+                    map.put(comment.getID(), comment);
+                    post.setComments(map);
+                }
+            });
         }
 
     }

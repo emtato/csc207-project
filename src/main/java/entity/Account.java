@@ -173,4 +173,12 @@ public class Account implements User {
     public String toString() {
         return "Account username=" + username + ", password=" + password + ", name=" + name;
     }
+
+    public HashMap<Long, Post> getUserPosts() {
+        return userPosts;
+    }
+
+    public void setUserPosts(HashMap<Long, Post> userPosts) {
+        this.userPosts = userPosts;
+    }
 }
