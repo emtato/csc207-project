@@ -46,12 +46,14 @@ public class PostView extends JPanel {
     private final RoundedButton analyzeButton = new RoundedButton("Analyze");
     private final RoundedButton saveButton = new RoundedButton("Add to list");
     private final RoundedButton shareButton = new RoundedButton("Share");
+    private final RoundedButton commentButton = new RoundedButton("coment");
 
     private final JLabel title;
     private final JLabel subtitle;
 
     private boolean liked;
-
+    private JPanel centerPanel;
+    private  JScrollPane scrollPane;
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -66,13 +68,13 @@ public class PostView extends JPanel {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        JPanel centerPanel = new JPanel();
+        centerPanel = new JPanel();
 
         // top
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title);
+        topPanel.add(title); //TODO: fix datetime thing
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -99,13 +101,12 @@ public class PostView extends JPanel {
             System.out.println("cry");
         }
 
-        JScrollPane scrollPane = new JScrollPane(postText);
+        scrollPane = new JScrollPane(postText);
 
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new
-                Dimension(1300, 800));
+        scrollPane.setPreferredSize(new Dimension(1300, 800));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
@@ -124,10 +125,10 @@ public class PostView extends JPanel {
         }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
+        rightButtons.add(commentButton);
         for (JButton button : rightButtons) {
             button.setFont(text);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.setBackground(Color.PINK);
+           //button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -172,10 +173,9 @@ public class PostView extends JPanel {
             postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
         }
         else {
-            postText.setText("No recipe to display.");
+            postText.setText(post.getDescription());
         }
-
-        // refresh UI as needed
+        //TODO: update comments for new post
         revalidate();
         repaint();
     }
@@ -240,6 +240,11 @@ public class PostView extends JPanel {
         if (e.getSource() == shareButton) {
             System.out.println("share slop");
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (e.getSource() == commentButton) {
+            JTextArea commentsArea = new JTextArea(2,20);
+            scrollPane.setSize(new Dimension(1300,600)); //YOPPP WORKS
+            centerPanel.add(commentsArea);
         }
 
     }
