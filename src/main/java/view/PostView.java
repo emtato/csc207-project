@@ -53,7 +53,7 @@ public class PostView extends JPanel {
 
     private boolean liked;
     private JPanel centerPanel;
-    private  JScrollPane scrollPane;
+    private JScrollPane scrollPane;
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
@@ -106,13 +106,14 @@ public class PostView extends JPanel {
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1300, 800));
+        scrollPane.setPreferredSize(new Dimension(1400, 850));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
 
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        menuBar.setPreferredSize(new Dimension(1200, 100));
 
         // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -128,7 +129,7 @@ public class PostView extends JPanel {
         rightButtons.add(commentButton);
         for (JButton button : rightButtons) {
             button.setFont(text);
-           //button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            //button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(e -> {
                 try {
                     actionPerformed(e);
@@ -242,9 +243,12 @@ public class PostView extends JPanel {
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource() == commentButton) {
-            JTextArea commentsArea = new JTextArea(2,20);
-            scrollPane.setSize(new Dimension(1300,600)); //YOPPP WORKS
+            JTextArea commentsArea = new JTextArea(2, 20);
+            scrollPane.setSize(new Dimension(1400, 800)); //YOPPP WORKS
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
+            centerPanel.revalidate();
+            centerPanel.repaint();
         }
 
     }
@@ -278,7 +282,7 @@ public class PostView extends JPanel {
 //        trialpost2.setRecipe(true);
 
         frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
-        frame.setPreferredSize(new Dimension(1920, 1080));
+        frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
     }
