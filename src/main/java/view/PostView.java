@@ -1,6 +1,7 @@
 package view;
 
 import entity.Account;
+import entity.Comment;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.post_view.PostViewModel;
 
@@ -8,8 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -31,8 +34,10 @@ public class PostView extends JPanel {
     private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
+
     private Post post;
     private Recipe repice;
+
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -292,6 +297,16 @@ public class PostView extends JPanel {
                         public void actionPerformed(ActionEvent e) {
                             String mesage = commentsArea.getText();
                             //TODO: send comment to whoever deals with this idk
+                            centerPanel.remove(commentsArea);
+                            rightPanel.remove(subRight);
+                            commentButton.setText("comment");
+                            commentButton.setOpaque(false);
+                            xPresent = false;
+                            HashMap<Integer, Comment> map = post.getComments();
+                            //TODO: account user implementation
+                            Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
+                            map.put(comment.getID(), comment);
+                            post.setComments(map);
                         }
                     }
             );
