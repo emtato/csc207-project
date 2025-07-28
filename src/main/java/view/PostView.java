@@ -31,7 +31,7 @@ public class PostView extends JPanel {
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final Post post;
-    private Recipe repice;
+    private Recipe recipe;
     //fonts & styles
     private final Font Title = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
@@ -61,7 +61,7 @@ public class PostView extends JPanel {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.repice = null;
+        this.recipe = null;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -93,10 +93,10 @@ public class PostView extends JPanel {
         //middle
         postText.setEditable(false);
         if (post instanceof Recipe) {
-            this.repice = (Recipe) post;
+            this.recipe = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
-            String mainContent = "Description: " + this.repice.getDescription() + "\n";
-            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
+            String mainContent = "Description: " + this.recipe.getDescription() + "\n";
+            postText.setText(this.recipe.getDescription() + "\n" + this.recipe.getIngredients() + "\n" + this.recipe.getSteps());
 
         }
         else if (post.isImageVideo()) {
@@ -177,7 +177,7 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            HashMap<String, String> result = spon.callAPI(repice);
+            HashMap<String, String> result = spon.callAPI(recipe);
             System.out.println(result);
             String resultDisplay = "";
             String numers = "";
