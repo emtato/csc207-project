@@ -309,7 +309,6 @@ public class PostView extends JPanel {
                     }
             );
         }
-
     }
 
     public String getViewName() {
