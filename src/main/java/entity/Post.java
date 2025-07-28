@@ -178,5 +178,15 @@ public class Post {
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
+
+    /**
+     * Basic debugging toString method
+     * @return postID, title, user
+     */
+    @Override
+    public String toString() {
+        return "PostID=" + postID + ", Title=" + title + ", User=" + user.getUsername();
+    }
 }
+
 

@@ -2,6 +2,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents a recipe post, which extends a general Post with recipe-specific fields.
@@ -100,5 +101,15 @@ public class Recipe extends Post {
      */
     public void setCuisines(ArrayList<String> cuisines) {
         this.cuisines = cuisines;
+    }
+
+    /**
+     * Basic debugging toString method
+     *
+     * @return postID, title, user, ingredients
+     */
+    @Override
+    public String toString() {
+        return "PostID=" + this.getID() + ", Title=" + getTitle() + ", User=" + getUser() + ", Ingredients=" + Arrays.toString(ingredients.toArray());
     }
 }

@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -132,7 +133,7 @@ public class Account implements User {
     }
 
     public void dislike(Post p) {
-        likesUsernames.remove( p.getID());
+        likesUsernames.remove(p.getID());
     }
 
 
@@ -161,5 +162,15 @@ public class Account implements User {
 
     public void removeFriend(Account f) {
         followingAccounts.remove(f.getUsername());
+    }
+
+    /**
+     * Basic debugging toString method
+     *
+     * @return postID, title, user, ingredients
+     */
+    @Override
+    public String toString() {
+        return "Account username=" + username + ", password=" + password + ", name=" + name;
     }
 }

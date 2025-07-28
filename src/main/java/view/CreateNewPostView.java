@@ -133,6 +133,7 @@ public class CreateNewPostView extends JFrame {
                         Account user = new Account("r", "y");
 
                         Recipe repice = new Recipe(user,843417361846184L, title, body, ingredients, steps, cuisines);
+                        System.out.println("repice obj creted");
                         //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
                     }
 
