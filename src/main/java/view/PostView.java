@@ -106,7 +106,6 @@ public class PostView extends JPanel {
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new
-
                 Dimension(1300, 800));
         centerPanel.add(scrollPane);
         comments.setBackground(Color.PINK);
