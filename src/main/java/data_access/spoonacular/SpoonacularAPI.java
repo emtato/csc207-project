@@ -56,11 +56,10 @@ public class SpoonacularAPI {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         System.out.println("BWAHHHHGHHHH");
-       //System.out.println("Body:\n" + response.body());
 
         String responseJson = response.body().toString();
         JSONObject responseJsonObject = new JSONObject(responseJson);
-        HashMap map = new HashMap<String, Integer>();
+        HashMap map = new HashMap<String, String>();
         map.put("vegeterian", responseJsonObject.get("vegetarian"));
         map.put("vegan", responseJsonObject.get("vegan"));
         map.put("gluten free", responseJsonObject.get("glutenFree"));
