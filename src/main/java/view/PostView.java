@@ -200,6 +200,13 @@ public class PostView extends JPanel {
         repaint();
     }
 
+    /**
+     * function to execute button presses
+     *
+     * @param e action event
+     * @throws IOException          idk
+     * @throws InterruptedException idk
+     */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
             if (!liked) {
@@ -293,6 +300,14 @@ public class PostView extends JPanel {
                             xPresent = false;
                         }
                     });
+            postButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String mesage = commentsArea.getText();
+                            //TODO: send comment to whoever deals with this idk
+                        }
+                    }
+            );
         }
 
     }
