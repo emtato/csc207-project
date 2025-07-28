@@ -187,6 +187,14 @@ public class Post {
     public String toString() {
         return "PostID=" + postID + ", Title=" + title + ", User=" + user.getUsername();
     }
+
+    public HashMap<Integer, Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(HashMap<Integer, Comment> comments) {
+        this.comments = comments;
+    }
 }
 
 
