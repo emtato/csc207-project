@@ -30,10 +30,17 @@ public class PostView extends JPanel {
     private final String viewName = "post view";
     private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
+
+    private final Post post;
+    private Recipe recipe;
+    //fonts & styles
+    private final Font Title = new Font("Roboto", Font.BOLD, 20);
+
     private Post post;
     private Recipe repice;
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
+
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
     private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
@@ -58,7 +65,7 @@ public class PostView extends JPanel {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.repice = null;
+        this.recipe = null;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -87,12 +94,17 @@ public class PostView extends JPanel {
         // middle
         postText.setEditable(false);
         if (post instanceof Recipe) {
-            this.repice = (Recipe) post;
+            this.recipe = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
-            String mainContent = "Description: " + this.repice.getDescription() + "\n";
+
+            String mainContent = "Description: " + this.recipe.getDescription() + "\n";
+            postText.setText(this.recipe.getDescription() + "\n" + this.recipe.getIngredients() + "\n" + this.recipe.getSteps());
+
+            String mainContent = "Description: " + this.recipe.getDescription() + "\n";
             //like here
 
-            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
+            postText.setText(this.recipe.getDescription() + "\n" + this.recipe.getIngredients() + "\n" + this.recipe.getSteps());
+
 
         }
         else if (post.isImageVideo()) {
@@ -159,17 +171,17 @@ public class PostView extends JPanel {
     public void displayPost(Post newPost) {
         this.post = newPost;
         if (newPost instanceof Recipe) {
-            this.repice = (Recipe) newPost;
+            this.recipe = (Recipe) newPost;
         }
         else {
-            this.repice = null;
+            this.recipe = null;
         }
 
         title.setText(newPost.getTitle());
         subtitle.setText(newPost.getUser().getUsername() + " | " + newPost.getLikes() + " likes");
 
         if (newPost instanceof Recipe) {
-            postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
+            postText.setText(recipe.getDescription() + "\n" + recipe.getIngredients() + "\n" + recipe.getSteps());
         }
         else {
             postText.setText("No recipe to display.");
@@ -199,8 +211,9 @@ public class PostView extends JPanel {
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
             SpoonacularAPI spon = new SpoonacularAPI();
-            this.repice.setRestrictionsMap(spon.callAPI(repice));
-            HashMap<String, String> result = this.repice.getRestrictionsMap();
+            HashMap<String, String> result = spon.callAPI(recipe);
+            this.recipe.setRestrictionsMap(spon.callAPI(recipe));
+            HashMap<String, String> result = this.recipe.getRestrictionsMap();
             System.out.println(result);
             String resultDisplay = "";
             String numers = "";
@@ -253,7 +266,7 @@ public class PostView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
-        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
+        Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "recipe for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
