@@ -3,6 +3,7 @@ package app;
 import javax.swing.JFrame;
 import java.awt.*;
 
+
 /**
  * The Main class of our application.
  */
@@ -21,16 +22,18 @@ public class Main {
                 .addNoteView()
                 .addClubHomePageView()
                 .addHomePageView()
+                .addExploreView()
+                .addEventsView()
+                .addNotificationsView()
                 .addProfileView()
                 .addEditProfileView()
                 .addSettingsView()
-                .addSignupUseCase()
+                //.addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
                 .addNoteUseCase()
-                .addHomePageUseCase()
-                .addAnalyzeRecipesView()
+                .addPostView()
                 .build();
         application.setPreferredSize(new Dimension(1920, 1080));
         application.pack();

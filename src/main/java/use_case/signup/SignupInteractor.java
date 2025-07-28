@@ -21,6 +21,7 @@ public class SignupInteractor implements SignupInputBoundary {
 
     @Override
     public void execute(SignupInputData signupInputData) {
+        System.out.println("Debug: Received signup input username: " + signupInputData.getUsername());
         if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
         }
@@ -29,7 +30,10 @@ public class SignupInteractor implements SignupInputBoundary {
         }
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
+            System.out.println("Debug: Created user with name: " + user.getName());
+
             userDataAccessObject.save(user);
+            System.out.println("Debug: User exists after save: " + userDataAccessObject.existsByName(user.getName()));
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
             userPresenter.prepareSuccessView(signupOutputData);
@@ -41,8 +45,4 @@ public class SignupInteractor implements SignupInputBoundary {
         userPresenter.switchToLoginView();
     }
 
-    @Override
-    public void switchToClubView() {
-        userPresenter.switchToClubView();
-    }
 }

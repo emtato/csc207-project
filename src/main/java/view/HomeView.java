@@ -18,14 +18,14 @@ public class HomeView {
         frame.setTitle("");
         frame.setVisible(true);
 
-        JPanel sideBar = new JPanel();
-        sideBar.setBackground(GUIConstants.WHITE);
-        Dimension sideBarDim = new Dimension(182, 1000);
-        sideBar.setPreferredSize(sideBarDim);
-        sideBar.setMaximumSize(sideBarDim);
-        sideBar.setMinimumSize(sideBarDim);
-        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.Y_AXIS));
-        sideBar.add(Box.createVerticalStrut(10));
+//        JPanel sideBar = new JPanel();
+//        sideBar.setBackground(GUIConstants.WHITE);
+//        Dimension sideBarDim = new Dimension(182, 1000);
+//        sideBar.setPreferredSize(sideBarDim);
+//        sideBar.setMaximumSize(sideBarDim);
+//        sideBar.setMinimumSize(sideBarDim);
+//        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.Y_AXIS));
+//        sideBar.add(Box.createVerticalStrut(10));
 
         JPanel profile = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         profile.setMaximumSize(new Dimension(182, 50));
@@ -61,7 +61,7 @@ public class HomeView {
 
         JPanel north = new JPanel(new BorderLayout());
         north.setBackground(null);
-        north.add(new JLabel("Home", GUIConstants.TITLE_SIZE, GUIConstants.BLACK, Font.BOLD),
+        north.add(new JLabel("Home", 20, GUIConstants.BLACK, Font.BOLD),
                 BorderLayout.WEST);
         header.add(north, BorderLayout.NORTH);
 

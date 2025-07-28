@@ -1,6 +1,8 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * An implementation of the User interface.
@@ -11,21 +13,22 @@ public class Account implements User {
     private String name;
     private String email;
     private String bio;
-    private ArrayList<Account> followerAccounts;
-    private ArrayList<Account> blockedAccounts;
+    private HashMap<String, Account> followerAccounts;
+    private HashMap<String, Account> blockedAccounts;
     private ArrayList<String> blockedTerms;
     private ArrayList<Account> mutedAccounts;
     private ArrayList<String> foodPreferences;
-    private ArrayList<Integer> likesUsernames;
+    private ArrayList<Long> likesUsernames;
     private ArrayList<String> followingAccounts;
+    private HashMap<Long, Post> userPosts;
 
     public Account(String username, String password) {
         this.username = username;
         this.password = password;
         likesUsernames = new ArrayList<>();
         followingAccounts = new ArrayList<>();
-        followerAccounts = new ArrayList<>();
-        blockedAccounts = new ArrayList<>();
+        followerAccounts = new HashMap<>();
+        blockedAccounts = new HashMap<>();
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
@@ -72,27 +75,27 @@ public class Account implements User {
         this.bio = bio;
     }
 
-    public ArrayList<Integer> getLikesUsernames() {
+    public ArrayList<Long> getLikesUsernames() {
         return likesUsernames;
     }
 
-    public void setLikesUsernames(ArrayList<Integer> likesUsernames) {
+    public void setLikesUsernames(ArrayList<Long> likesUsernames) {
         this.likesUsernames = likesUsernames;
     }
 
-    public ArrayList<Account> getFollowerAccounts() {
+    public HashMap<String, Account> getFollowerAccounts() {
         return followerAccounts;
     }
 
-    public void setFollowerAccounts(ArrayList<Account> followerAccounts) {
+    public void setFollowerAccounts(HashMap<String, Account> followerAccounts) {
         this.followerAccounts = followerAccounts;
     }
 
-    public ArrayList<Account> getBlockedAccounts() {
+    public HashMap<String, Account> getBlockedAccounts() {
         return blockedAccounts;
     }
 
-    public void setBlockedAccounts(ArrayList<Account> blockedAccounts) {
+    public void setBlockedAccounts(HashMap<String, Account> blockedAccounts) {
         this.blockedAccounts = blockedAccounts;
     }
 
@@ -130,7 +133,7 @@ public class Account implements User {
     }
 
     public void dislike(Post p) {
-        likesUsernames.remove( (Integer) p.getID());
+        likesUsernames.remove(p.getID());
     }
 
 
@@ -159,5 +162,15 @@ public class Account implements User {
 
     public void removeFriend(Account f) {
         followingAccounts.remove(f.getUsername());
+    }
+
+    /**
+     * Basic debugging toString method
+     *
+     * @return postID, title, user, ingredients
+     */
+    @Override
+    public String toString() {
+        return "Account username=" + username + ", password=" + password + ", name=" + name;
     }
 }

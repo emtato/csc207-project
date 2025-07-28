@@ -1,10 +1,14 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+
 import javax.swing.*;
 
 import interface_adapter.explore_events.ExploreEventsViewModel;
 import java.awt.*;
+
 import javax.swing.JLabel;
+
 
 
 /* Description:
@@ -14,9 +18,11 @@ import javax.swing.JLabel;
 
 public class ExploreEventsView extends JPanel {
     private final String viewName = "explore events view";
+    private final ViewManagerModel viewManagerModel;
 
-    public ExploreEventsView(ExploreEventsViewModel exploreEventsViewModel) {
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    public ExploreEventsView(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
+        this.setLayout(new BorderLayout());
 
         // set fonts
         Font titleFont = new Font("Sans Serif", Font.BOLD, 20);
@@ -25,8 +31,11 @@ public class ExploreEventsView extends JPanel {
 
         // title
         JLabel title = new JLabel("Explore Events");
+
         title.setFont(titleFont);
-        this.add(title);
+        this.add(title, BorderLayout.NORTH);
+
+
 
         // events grid
         JPanel eventsGrid = new JPanel();
@@ -96,7 +105,7 @@ public class ExploreEventsView extends JPanel {
         formatEventPanel(event4);
         eventsGrid.add(event4);
 
-        this.add(eventsGrid);
+        this.add(eventsGrid, BorderLayout.CENTER);
 
         JPanel buttonsBar = new JPanel();
         buttonsBar.setLayout(new BoxLayout(buttonsBar, BoxLayout.X_AXIS));
@@ -106,7 +115,10 @@ public class ExploreEventsView extends JPanel {
         buttonsBar.add(home);
         buttonsBar.add(explore);
         buttonsBar.add(settings);
-        this.add(buttonsBar);
+        this.add(buttonsBar, BorderLayout.SOUTH);
+
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        add(menuBar, BorderLayout.WEST);
     }
 
     public static void formatEventPanel(JPanel eventPanel) {
@@ -119,16 +131,18 @@ public class ExploreEventsView extends JPanel {
     }
 
 
-//  test  /////////////////////////////////////////////////////////////////////
-/*
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new ExploreEventsView());
-        frame.pack();
-        frame.setVisible(true);
-    }
-*/
+
+
+////  test  /////////////////////////////////////////////////////////////////////
+//
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.add(new ExploreEventsView());
+//        frame.pack();
+//         frame.setVisible(true);
+//    }
+
 }
 
 
