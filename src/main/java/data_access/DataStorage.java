@@ -53,7 +53,7 @@ public class DataStorage {
 
         //add new comment
         JSONObject comment = new JSONObject();
-        comment.put("user", user);
+        comment.put("user", user.getUsername());
         comment.put("content", contents);
         comment.put("time", timestamp.toString());
         comments.put(comment);

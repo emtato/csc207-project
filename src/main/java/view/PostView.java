@@ -274,9 +274,8 @@ public class PostView extends JPanel {
         String commentsInView = "";
         ArrayList<Comment> comments = post.getComments();
         for(Comment comment: comments) {
-            commentsInView+= comment.getComment();
-        } //TODO actually finish this thing
-        System.out.println("Post: " + post.getTitle());
+            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>"+ comment.getDate() + "<br>" + comment.getComment();
+        }
 
         if (newPost instanceof Recipe) {
             this.repice = (Recipe) newPost;
@@ -441,7 +440,7 @@ public class PostView extends JPanel {
                         lst = new ArrayList<Comment>();
                     }
                     //TODO: account user implementation
-                    Account postingAccount = new Account("hi", "bye"); //TODO: current logged in account link to comment
+                    Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
                     post.setComments(lst);
