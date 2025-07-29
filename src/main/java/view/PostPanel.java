@@ -77,13 +77,27 @@ public class PostPanel extends JPanel {
 
         // middle
         postText.setEditable(false);
-        if (post instanceof Recipe) {
+       if (post instanceof Recipe) {
             this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
-            String mainContent = "Description: " + this.repice.getDescription() + "\n";
-            //like here
-
-            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
+            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
+            String mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+                    <ul>""" + this.repice.getIngredients() + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+                          </p>
+                          </body>
+                        </html>
+                    """;
+            postText.setContentType("text/html");
+            postText.setText(mainContent);
 
         }
         else if (post.isImageVideo()) {
