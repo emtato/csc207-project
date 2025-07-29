@@ -16,17 +16,17 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
-//import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.manage_followers.ManageFollowersViewModel;
+import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
 import interface_adapter.profile.ProfileViewModel;
-//import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
@@ -48,7 +48,16 @@ import view.SignupView;
 import view.ViewManager;
 import view.ClubHomePageView;
 import view.HomePageView;
-import view.*;
+import view.ManageFollowingView;
+import view.ManageFollowersView;
+import view.PostView;
+import view.ProfileView;
+import view.SettingsView;
+import view.NotificationsView;
+import view.ExploreView;
+import view.ExploreEventsView;
+import view.EditProfileView;
+
 import entity.Post;
 
 /**
@@ -72,11 +81,11 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-//    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    //    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-     private PostViewModel postViewModel;
+    private PostViewModel postViewModel;
     private PostView postView;
-        private SignupView signupView;
+    private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private NoteViewModel noteViewModel;
@@ -84,6 +93,8 @@ public class AppBuilder {
     private EditProfileViewModel editProfileViewModel;
     private LoggedInViewModel loggedInViewModel;
     private SettingsViewModel settingsViewModel;
+    private ManageFollowersViewModel manageFollowersViewModel;
+    private ManageFollowingViewModel manageFollowingViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
@@ -95,6 +106,8 @@ public class AppBuilder {
     private ProfileView profileView;
     private EditProfileView editProfileView;
     private SettingsView settingsView;
+    private ManageFollowersView manageFollowersView;
+    private ManageFollowingView manageFollowingView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -106,7 +119,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel);
+        homePageView = new HomePageView(viewManagerModel, cardPanel);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -189,7 +202,8 @@ public class AppBuilder {
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel, viewManagerModel, trialpost);
+        //postView = new PostView(postViewModel, viewManagerModel, trialpost);
+        postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
@@ -238,6 +252,30 @@ public class AppBuilder {
         settingsViewModel = new SettingsViewModel();
         settingsView = new SettingsView(settingsViewModel, viewManagerModel);
         cardPanel.add(settingsView, settingsView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Manage Followers View to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addManageFollowersView() {
+        manageFollowersViewModel = new ManageFollowersViewModel();
+        manageFollowersView = new ManageFollowersView(manageFollowersViewModel);
+        cardPanel.add(manageFollowersView, manageFollowersView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Manage Following View to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addManageFollowingView() {
+        manageFollowingViewModel = new ManageFollowingViewModel();
+        manageFollowingView = new ManageFollowingView(manageFollowingViewModel);
+        cardPanel.add(manageFollowingView, manageFollowingView.getViewName());
         return this;
     }
 

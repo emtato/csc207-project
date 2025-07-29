@@ -107,11 +107,12 @@ public class GooglePlacesAPI {
         map.put("primaryType", p.optString("primaryType", null));
         map.put("rating", p.has("rating") ? p.optDouble("rating") : null);
         map.put("websiteUri", p.optString("websiteUri", null));
+        map.put("priceLevel", p.optInt("priceLevel", -1));
 
         if (p.has("location")) {
-            JSONObject loc = p.getJSONObject("location");
-            double lat = loc.optDouble("latitude");
-            double lng = loc.optDouble("longitude");
+            JSONObject location = p.getJSONObject("location");
+            double lat = location.optDouble("latitude");
+            double lng = location.optDouble("longitude");
             map.put("location", lat + "," + lng);  // store as String
         }
         return map;
@@ -125,7 +126,8 @@ public class GooglePlacesAPI {
     }
 
     private String defaultSearchFieldMask() {
-        return "places.id,places.displayName,places.formattedAddress,places.primaryType,places.location,places.rating,places.websiteUri";
+        return "places.id,places.displayName,places.formattedAddress,places.primaryType," +
+                "places.location,places.rating,places.websiteUri";
     }
 
     private String defaultDetailsFieldMask() {

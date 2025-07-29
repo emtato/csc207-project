@@ -24,6 +24,30 @@ public class RestaurantMapper {
             cuisines.add((String) place.get("primaryType"));
         }
 
+        int priceLevel = -1;
+        if (place.containsKey("priceLevel") && place.get("priceLevel") instanceof Integer) {
+            priceLevel = (int) place.get("priceLevel");
+        }
+        String priceRange;
+        switch (priceLevel) {
+            case 0:
+                priceRange = "$";
+                break;
+            case 1:
+                priceRange = "$$";
+                break;
+            case 2:
+                priceRange = "$$$";
+                break;
+            case 3:
+                priceRange = "$$$$";
+                break;
+            default:
+                priceRange = "?";
+                break;
+        }
+
         return new Restaurant(name, address, phone, location, cuisines);
+
     }
 }
