@@ -28,6 +28,8 @@ public class Main {
                 .addProfileView()
                 .addEditProfileView()
                 .addSettingsView()
+                .addManageFollowersView()
+                .addManageFollowingView()
                 //.addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
