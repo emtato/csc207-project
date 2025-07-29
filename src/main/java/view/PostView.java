@@ -97,72 +97,79 @@ public class PostView extends JPanel {
         topPanel.add(tags);
 
         // middle
-
-        // if has media:
-        int maxBoxHeight = 739123617;
-        if (post.isImageVideo()) {
-            try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                ArrayList<String> imageURLS = post.getImageURLs();
-                for (String imageURL : imageURLS) {
-                    URL url = new URL(imageURL);
-                    ImageIcon imageIcon = new ImageIcon(url);
-                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
-                    ImageIcon scaledIcon = new ImageIcon(img);
-                    JLabel image = new JLabel(scaledIcon);
-                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-                    imagePanel.add(image);
-                }
-                centerPanel.add(imagePanel);
-
-                maxBoxHeight = 350;
-            }
-            catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        postText.setEditable(false);
-        if (post instanceof Recipe || this.repice != null) {
-            this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
-            String mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
-                    </p>
-                    
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + this.repice.getIngredients() + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                          </p>
-                          </body>
-                        </html>
-                    """;
-            postText.setContentType("text/html");
-            postText.setText(mainContent);
-
-        }
-        else if (post.isImageVideo()) {
-            System.out.println("cry");
-        }
-        else {
-            postText.setText(post.getDescription());
-        }
         scrollPane = new JScrollPane(postText);
+        displayPost(post);
 
-
-        JTextArea comments = new JTextArea();
-        scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
-        centerPanel.add(scrollPane);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
-        comments.setBackground(Color.PINK);
-        comments.setOpaque(true);
+        // PROBABLY CAN BE REMOVED, BUT I WANNA MAKE SURE DISPLAYPOST WORKS 100%
+        // if has media:
+//        int maxBoxHeight = 739123617;
+//        if (post.isImageVideo()) {
+//            try {
+//                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//                ArrayList<String> imageURLS = post.getImageURLs();
+//                for (String imageURL : imageURLS) {
+//                    URL url = new URL(imageURL);
+//                    ImageIcon imageIcon = new ImageIcon(url);
+//                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+//                    ImageIcon scaledIcon = new ImageIcon(img);
+//                    JLabel image = new JLabel(scaledIcon);
+//                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
+//                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+//                    imagePanel.add(image);
+//                }
+//                centerPanel.add(imagePanel);
+//
+//                maxBoxHeight = 350;
+//            }
+//            catch (MalformedURLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        postText.setEditable(false);
+//        if (post instanceof Recipe || this.repice != null) {
+//            this.repice = (Recipe) post;
+//            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
+//            String ingredientsText = "";
+//            ArrayList<String> ingredients = this.repice.getIngredients();
+//            for (String ingredient : ingredients) {
+//                ingredientsText += ingredient + "<br>";
+//            }
+//            System.out.println(ingredientsText);
+//            String mainContent = """
+//                    <html>
+//                      <body style='font-family: comic sans, sans-serif'>
+//                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+//                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """
+//                    </p>
+//
+//                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+//                    <ul>""" + ingredientsText + """
+//                    </ul>
+//                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+//                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+//                          </p>
+//                          </body>
+//                        </html>
+//                    """;
+//            postText.setContentType("text/html");
+//            postText.setText(mainContent);
+//
+//        }
+////        else if (post) {
+////            System.out.println("cry");
+////        }
+//        else {
+//            postText.setText(post.getDescription());
+//        }
+//
+//        JTextArea comments = new JTextArea();
+//        scrollPane.add(comments);
+//        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
+//        centerPanel.add(scrollPane);
+//        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
+//        comments.setBackground(Color.PINK);
+//        comments.setOpaque(true);
 
 
         // bottom
@@ -215,12 +222,53 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
+        centerPanel.removeAll();
         this.post = newPost;
+
+        int maxBoxHeight = 739123617;
+        if (post.isImageVideo()) {
+            try {
+                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                ArrayList<String> imageURLS = post.getImageURLs();
+                for (String imageURL : imageURLS) {
+                    URL url = new URL(imageURL);
+                    ImageIcon imageIcon = new ImageIcon(url);
+                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(img);
+                    JLabel image = new JLabel(scaledIcon);
+                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+                    imagePanel.add(image);
+                }
+                centerPanel.add(imagePanel);
+
+                maxBoxHeight = 350;
+            }
+            catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        postText.setEditable(false);
+
+        JTextArea comments = new JTextArea();
+        scrollPane.add(comments);
+        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
+        centerPanel.add(scrollPane);
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
+        comments.setBackground(Color.PINK);
+        comments.setOpaque(true);
+
         if (newPost instanceof Recipe) {
 
             this.repice = (Recipe) newPost;
 
-            //TODO
+            String ingredientsText = "";
+            ArrayList<String> ingredients = this.repice.getIngredients();
+            for (String ingredient : ingredients) {
+                ingredientsText += ingredient + "<br>";
+            }
+            System.out.println(ingredientsText);
             String mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
@@ -229,7 +277,7 @@ public class PostView extends JPanel {
                     </p>
                     
                     <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + this.repice.getIngredients() + """
+                    <ul>""" + ingredientsText + """
                     </ul>
                     <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
                     <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
@@ -239,13 +287,9 @@ public class PostView extends JPanel {
                     """;
             postText.setContentType("text/html");
             postText.setText(mainContent);
-            centerPanel.removeAll();
 
-            scrollPane = new JScrollPane(postText);
             // scrollPane.add(comments);
-            scrollPane.setPreferredSize(new Dimension(1400, 850));
 
-            centerPanel.add(scrollPane);
             mainPanel.add(centerPanel, BorderLayout.CENTER);
             this.add(mainPanel);
         }
@@ -261,6 +305,7 @@ public class PostView extends JPanel {
         //TODO: update comments for new post
         revalidate();
         repaint();
+
     }
 
     /**
