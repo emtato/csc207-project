@@ -50,6 +50,7 @@ public class ExploreView extends JPanel {
 
         JPanel topPanel = new JPanel();
         JLabel exploreLabel = new JLabel("Explore");
+        exploreLabel.setFont(new Font("Roboto", Font.BOLD, 20));
         topPanel.add(exploreLabel);
         this.add(topPanel, BorderLayout.NORTH);
 
@@ -60,14 +61,40 @@ public class ExploreView extends JPanel {
 
         // Restaurants
         JLabel exploreRestaurantsLabel = new JLabel("Explore Restaurants");
+        exploreRestaurantsLabel.setFont(new Font("Roboto", Font.BOLD, 17));
         JPanel exploreRestaurantsPanel = new JPanel();
         exploreRestaurantsPanel.setBackground(Color.PINK);
         exploreRestaurantsPanel.setBorder(BorderFactory.createLineBorder(this.getBackground()));
+        exploreRestaurantsPanel.setLayout(new BoxLayout(exploreRestaurantsPanel, BoxLayout.Y_AXIS));
+
+
+        for (int i = 0; i < 10; i++) {
+            JPanel RestaurantBox = new JPanel();
+            RestaurantBox.setLayout(new BoxLayout(RestaurantBox, BoxLayout.Y_AXIS));
+            RestaurantBox.setBackground(Color.WHITE);
+            RestaurantBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+            JLabel name = new JLabel(cheeseVille.getName());
+            name.setFont(new Font("Roboto", Font.BOLD, 15));
+            JLabel address = new JLabel(cheeseVille.getAddress());
+            JLabel priceRange = new JLabel("Price range: " + cheeseVille.getPriceRange());
+            JButton viewRestaurantButton = new JButton("View Restaurant");
+            RestaurantBox.add(name);
+            RestaurantBox.add(address);
+            RestaurantBox.add(priceRange);
+            RestaurantBox.add(viewRestaurantButton);
+            exploreRestaurantsPanel.add(RestaurantBox);
+            exploreRestaurantsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spacing
+        }
+
+        JScrollPane exploreRestaurantsScrollPanel = new JScrollPane(exploreRestaurantsPanel);
+        exploreRestaurantsScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
         JButton exploreRestaurantsButton = new JButton("View");
 
 
         // Recipes
         JLabel exploreRecipesLabel = new JLabel("Explore Recipes");
+        exploreRecipesLabel.setFont(new Font("Roboto", Font.BOLD, 17));
         JPanel exploreRecipesPanel = new JPanel();
         exploreRecipesPanel.setBackground(Color.PINK);
         exploreRecipesPanel.setLayout(new BoxLayout(exploreRecipesPanel, BoxLayout.Y_AXIS));
@@ -78,9 +105,9 @@ public class ExploreView extends JPanel {
             JPanel recipeBox = new JPanel();
             recipeBox.setLayout(new BoxLayout(recipeBox, BoxLayout.Y_AXIS));
             recipeBox.setBackground(Color.WHITE);
-            recipeBox.setPreferredSize(new Dimension(400, 150));
+            recipeBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
             JLabel recipeTitle = new JLabel(blueCheeseRecipe.getTitle());
-            recipeTitle.setFont(new Font("Roboto", Font.BOLD, 20));
+            recipeTitle.setFont(new Font("Roboto", Font.BOLD, 15));
             JLabel recipeDescription = new JLabel(blueCheeseRecipe.getDescription());
             JLabel recipePoster = new JLabel("Posted by: " + blueCheeseRecipe.getUser().getUsername());
             JButton viewRecipeButton = new JButton("View Recipe");
@@ -92,11 +119,8 @@ public class ExploreView extends JPanel {
             exploreRecipesPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spacing
         }
 
-        JScrollPane exploreRecipeScrollPane = new JScrollPane(exploreRecipesPanel);
-        exploreRecipeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-
-
+        JScrollPane exploreRecipeScrollPanel = new JScrollPane(exploreRecipesPanel);
+        exploreRecipeScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         JButton exploreRecipesButton = new JButton("View");
         exploreRecipesButton.addActionListener(e -> viewManagerModel.setState("recipe view"));
@@ -104,42 +128,57 @@ public class ExploreView extends JPanel {
 
         // Events
         JLabel exploreEventsLabel = new JLabel("Explore Events");
+        exploreEventsLabel.setFont(new Font("Roboto", Font.BOLD, 17));
         JPanel exploreEventsPanel = new JPanel();
         exploreEventsPanel.setBackground(Color.PINK);
         exploreEventsPanel.setBorder(BorderFactory.createLineBorder(this.getBackground()));
-        exploreEventsPanel.setPreferredSize(new Dimension(360, 500));
+        exploreEventsPanel.setLayout(new BoxLayout(exploreEventsPanel, BoxLayout.Y_AXIS));
+
+        for (int i = 0; i < 10; i++) {
+            JPanel EventBox = new JPanel();
+            EventBox.setLayout(new BoxLayout(EventBox, BoxLayout.Y_AXIS));
+            EventBox.setBackground(Color.WHITE);
+            EventBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+            JLabel eventTitle = new JLabel(cheeseMeetup.getTitle());
+            eventTitle.setFont(new Font("Roboto", Font.BOLD, 15));
+            JLabel eventDescription = new JLabel(cheeseMeetup.getDescription());
+            JLabel eventPoster = new JLabel("Posted by: " + cheeseMeetup.getUser().getUsername());
+            JButton viewEventButton = new JButton("View Event");
+            EventBox.add(eventTitle);
+            EventBox.add(eventDescription);
+            EventBox.add(eventPoster);
+            EventBox.add(viewEventButton);
+            exploreEventsPanel.add(EventBox);
+            exploreEventsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spacing
+        }
+
+        JScrollPane exploreEventScrollPanel = new JScrollPane(exploreEventsPanel);
+        exploreEventScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+
         JButton exploreEventsButton = new JButton("View");
         exploreEventsButton.addActionListener(e -> viewManagerModel.setState("explore events view"));
-
-
-//        JLabel restaurantsPlaceholder = new JLabel("restaurants go here");
-//        JLabel recipesPlaceholder = new JLabel("recipes go here");
-//        JLabel eventsPlaceholder = new JLabel("events go here");
-
-//        exploreRestaurantsPanel.add(restaurantsPlaceholder);
-//        exploreRecipesPanel.add(recipesPlaceholder);
-//        exploreEventsPanel.add(eventsPlaceholder);
 
 
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.add(exploreRestaurantsLabel);
-        leftPanel.add(exploreRestaurantsPanel);
+        leftPanel.add(exploreRestaurantsScrollPanel);
         leftPanel.add(exploreRestaurantsButton);
         explorePanel.add(leftPanel);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.add(exploreRecipesLabel);
-        centerPanel.add(exploreRecipeScrollPane);
+        centerPanel.add(exploreRecipeScrollPanel);
         centerPanel.add(exploreRecipesButton);
         explorePanel.add(centerPanel);
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.add(exploreEventsLabel);
-        rightPanel.add(exploreEventsPanel);
+        rightPanel.add(exploreEventScrollPanel);
         rightPanel.add(exploreEventsButton);
         explorePanel.add(rightPanel);
 
