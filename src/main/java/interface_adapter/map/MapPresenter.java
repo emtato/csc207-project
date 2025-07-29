@@ -4,6 +4,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.explore.ExploreViewModel;
 import interface_adapter.clubs.ClubViewModel;
+import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.map.MapOutputBoundary;
 
@@ -14,6 +15,7 @@ public class MapPresenter implements MapOutputBoundary {
     private final ExploreViewModel exploreViewModel;
     private final ClubViewModel clubViewModel;
     private final SettingsViewModel settingsViewModel;
+    private final ProfileViewModel profileViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public MapPresenter(ViewManagerModel viewManagerModel,
@@ -21,13 +23,15 @@ public class MapPresenter implements MapOutputBoundary {
                         HomePageViewModel homePageViewModel,
                         ClubViewModel clubViewModel,
                         ExploreViewModel exploreViewModel,
-                        SettingsViewModel settingsViewModel) {
+                        SettingsViewModel settingsViewModel,
+                        ProfileViewModel profileViewModel) {
         this.mapViewModel = mapViewModel;
         this.homePageViewModel = homePageViewModel;
         this.exploreViewModel = exploreViewModel;
         this.clubViewModel = clubViewModel;
         this.viewManagerModel = viewManagerModel;
         this.settingsViewModel = settingsViewModel;
+        this.profileViewModel = profileViewModel;
     }
 
     @Override
@@ -60,4 +64,9 @@ public class MapPresenter implements MapOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    @Override
+    public void switchToProfileView(){
+        viewManagerModel.setState(profileViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
 }

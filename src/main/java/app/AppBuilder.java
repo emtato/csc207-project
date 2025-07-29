@@ -1,15 +1,14 @@
 package app;
 
 import java.awt.CardLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.Account;
-import entity.CreateAccount;
-import entity.UserFactory;
+import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
@@ -17,6 +16,7 @@ import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersPresenter;
 import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingPresenter;
+import interface_adapter.map.MapViewModel;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -66,24 +66,7 @@ import use_case.profile.ProfileOutputBoundary;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
 import use_case.settings.SettingsOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.NoteView;
-import view.SignupView;
-import view.ViewManager;
-import view.ClubHomePageView;
-import view.HomePageView;
-import view.ManageFollowingView;
-import view.ManageFollowersView;
-import view.PostView;
-import view.ProfileView;
-import view.SettingsView;
-import view.NotificationsView;
-import view.ExploreView;
-import view.ExploreEventsView;
-import view.EditProfileView;
-
-import entity.Post;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -133,6 +116,8 @@ public class AppBuilder {
     private SettingsView settingsView;
     private ManageFollowersView manageFollowersView;
     private ManageFollowingView manageFollowingView;
+    private MapViewModel mapViewModel;
+    private MapView mapView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -230,6 +215,21 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        return this;
+    }
+
+    // TODO: implement addMapView()
+    /**
+     * Adds Map View to the application
+     *
+     * @return this builder
+     */
+    public AppBuilder addMapView() {
+        ArrayList<String> Cuisines = new ArrayList<>();
+        Restaurant exampleRestaurant = new Restaurant("","","","",Cuisines);
+        mapViewModel = new MapViewModel();
+        mapView = new MapView(mapViewModel, exampleRestaurant);
+        //cardPanel.add(mapView, mapView.getViewName());
         return this;
     }
 
