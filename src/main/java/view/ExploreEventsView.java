@@ -1,5 +1,6 @@
 package view;
 
+import entity.Account;
 import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
@@ -7,7 +8,13 @@ import javax.swing.*;
 import interface_adapter.explore_events.ExploreEventsViewModel;
 import java.awt.*;
 
+import entity.Account;
+import entity.Event;
+
 import javax.swing.JLabel;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 
@@ -19,6 +26,11 @@ import javax.swing.JLabel;
 public class ExploreEventsView extends JPanel {
     private final String viewName = "explore events view";
     private final ViewManagerModel viewManagerModel;
+
+    private Event jet2holiday = new Event(new Account("Jingle", "Bell"), 1234321234,
+        "Jet2Holiday", "Nothing beats a Jet2 holiday, and right now, you can save £50 per person. \" " +
+        "+\n" + "That's £200 off a family of 4!", "BA3185", LocalDate.of(2025, 8, 12),
+        new ArrayList<>(), new ArrayList<>());
 
     public ExploreEventsView(ViewManagerModel viewManagerModel) {
         this.viewManagerModel = viewManagerModel;
@@ -41,84 +53,34 @@ public class ExploreEventsView extends JPanel {
         JPanel eventsGrid = new JPanel();
         eventsGrid.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        // event 1
-        JLabel event1label = new JLabel("Event 1");
-        event1label.setFont(eventTitleFont);
-        JLabel event1desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
-            "That's £200 off a family of 4!");
-        event1desc.setFont(eventDescFont);
-        JButton view1 = new JButton("View");
-        view1.setFont(eventDescFont);
+        for(int i = 0; i < 10; i++ ) {
+            // event 1
+            JLabel eventlabel = new JLabel(jet2holiday.getTitle());
+            eventlabel.setFont(eventTitleFont);
+            JLabel eventdate = new JLabel("Date: " + jet2holiday.getDate().toString());
+            JLabel eventlocation = new JLabel("Location: " + jet2holiday.getLocation());
+            JLabel eventdesc = new JLabel(jet2holiday.getDescription());
+            eventdesc.setFont(eventDescFont);
+            eventdate.setFont(eventDescFont);
+            eventlocation.setFont(eventDescFont);
+            JButton viewevent = new JButton("View");
+            viewevent.setFont(eventDescFont);
 
-        JPanel event1 = new JPanel();
-        event1.add(event1label);
-        event1.add(event1desc);
-        event1.add(view1);
-        formatEventPanel(event1);
-        eventsGrid.add(event1);
-
-        // event 2
-        JLabel event2label = new JLabel("Event 2");
-        event2label.setFont(eventTitleFont);
-        JLabel event2desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
-            "That's £200 off a family of 4!");
-        event2desc.setFont(eventDescFont);
-        JButton view2 = new JButton("View");
-        view2.setFont(eventDescFont);
-
-        JPanel event2 = new JPanel();
-        event2.add(event2label);
-        event2.add(event2desc);
-        event2.add(view2);
-        formatEventPanel(event2);
-        eventsGrid.add(event2);
-
-        // event 3
-        JLabel event3label = new JLabel("Event 3");
-        event3label.setFont(eventTitleFont);
-        JLabel event3desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
-            "That's £200 off a family of 4!");
-        event3desc.setFont(eventDescFont);
-        JButton view3 = new JButton("View");
-        view3.setFont(eventDescFont);
-
-        JPanel event3 = new JPanel();
-        event3.add(event3label);
-        event3.add(event3desc);
-        event3.add(view3);
-        formatEventPanel(event3);
-        eventsGrid.add(event3);
-
-        // event 4
-        JLabel event4label = new JLabel("Event 4");
-        event4label.setFont(eventTitleFont);
-        JLabel event4desc= new JLabel("Nothing beats a Jet2 holiday, and right now, you can save £50 per person. " +
-            "That's £200 off a family of 4!");
-        event4desc.setFont(eventDescFont);
-        JButton view4 = new JButton("View");
-        view4.setFont(eventDescFont);
-
-        JPanel event4 = new JPanel();
-        event4.add(event4label);
-        event4.add(event4desc);
-        event4.add(view4);
-        formatEventPanel(event4);
-        eventsGrid.add(event4);
+            JPanel event = new JPanel();
+            event.setLayout(new BoxLayout(event, BoxLayout.Y_AXIS));
+            event.add(eventlabel);
+            event.add(eventdate);
+            event.add(eventlocation);
+            event.add(eventdesc);
+            event.add(viewevent);
+            formatEventPanel(event);
+            eventsGrid.add(event);
+        }
 
         this.add(eventsGrid, BorderLayout.CENTER);
 
-        JPanel buttonsBar = new JPanel();
-        buttonsBar.setLayout(new BoxLayout(buttonsBar, BoxLayout.X_AXIS));
-        JButton home = new JButton("Home");
-        JButton settings = new JButton("Settings");
-        JButton explore = new JButton("Explore");
-        buttonsBar.add(home);
-        buttonsBar.add(explore);
-        buttonsBar.add(settings);
-        this.add(buttonsBar, BorderLayout.SOUTH);
-
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        add(menuBar, BorderLayout.WEST);
+        add(menuBar, BorderLayout.SOUTH);
     }
 
     public static void formatEventPanel(JPanel eventPanel) {
@@ -134,14 +96,14 @@ public class ExploreEventsView extends JPanel {
 
 
 ////  test  /////////////////////////////////////////////////////////////////////
-//
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame();
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(new ExploreEventsView());
-//        frame.pack();
-//         frame.setVisible(true);
-//    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new ExploreEventsView(new ViewManagerModel()));
+        frame.pack();
+        frame.setVisible(true);
+    }
 
 }
 
