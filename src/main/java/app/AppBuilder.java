@@ -97,9 +97,7 @@ public class AppBuilder {
     private ProfileView profileView;
     private EditProfileView editProfileView;
     private SettingsView settingsView;
-    private ExploreEventsView exploreEventsView;
     private ExploreEventsViewModel exploreEventsViewModel;
-    private ExploreView exploreView;
     private ExploreViewModel exploreViewModel;
 
     public AppBuilder() {
@@ -211,29 +209,18 @@ public class AppBuilder {
         return this;
     }
 
-    /**
-     * Adds the Explore View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addExploreView() {
-        exploreViewModel = new ExploreViewModel();
-        exploreView = new ExploreView(exploreViewModel);
-        cardPanel.add(exploreView, exploreView.getViewName());
-        return this;
-    }
 
-    /**
-     * Adds the Explore Events View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addExploreEventsViewModel() {
-        exploreEventsViewModel = new ExploreEventsViewModel();
-        exploreEventsView = new ExploreEventsView(exploreEventsViewModel);
-        cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
-        return this;
-    }
+//    /**
+//     * Adds the Explore Events View to the application.
+//     *
+//     * @return this builder
+//     */
+//    public AppBuilder addExploreEventsViewModel() {
+//        exploreEventsViewModel = new ExploreEventsViewModel();
+//        exploreEventsView = new ExploreEventsView(exploreEventsViewModel);
+//        cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
+//        return this;
+//    }
 
     /**
      * Adds the Profile View to the application.

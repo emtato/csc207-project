@@ -1,35 +1,44 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Set;
 
-public class Event {
-    private String name;
-    private String description;
+public class Event extends Post {
     private String location;
     private LocalDate date;
-    private ArrayList<Account> participants;
-    private ArrayList<String> foodPreferences;
+    private Set<Account> participants;
+    private Set<String> foodPreferences;
 
-    public Event(String name, String description, String location, LocalDate date, ArrayList<Account> participants, ArrayList<String> foodPreferences) {
-        this.name = name;
-        this.description = description;
+    /**
+     * @param user              The user who created the event post.
+     * @param postID            The unique ID for this post.
+     * @param title             The title of the event.
+     * @param description       A short description of the event.
+     * @param location          The location of the event.
+     * @param date              The date of the event.
+     * @param participants      A list of attendees' accounts
+     * @param foodPreferences   A list of food preferences for the event.
+     *                    <p>
+     *                    constructor for building recipe from scratch without a Post object
+     */
+
+    public Event(Account user, long postID, String title, String description, String location, LocalDate date, Set<Account> participants, Set<String> foodPreferences) {
+        super(user, postID, title, description);
         this.location = location;
         this.date = date;
         this.participants = participants;
         this.foodPreferences = foodPreferences;
-    }
-    public String getName() {return name;}
 
-    public String getDescription() {return description;}
+
+    }
 
     public String getLocation() {return location;}
 
     public LocalDate getDate() {return date;}
 
-    public ArrayList<Account> getParticipants() {return participants;}
+    public Set<Account> getParticipants() {return participants;}
 
-    public ArrayList<String> getFoodPreferences() {return foodPreferences;}
+    public Set<String> getFoodPreferences() {return foodPreferences;}
 
     public void addParticipant(Account account) {participants.add(account);}
 
@@ -40,10 +49,6 @@ public class Event {
     public void removeFoodPreference(String preference) {foodPreferences.remove(preference);}
 
     public void editDate(LocalDate newdate) {this.date = newdate;}
-
-    public void editDescription(String newdescription) {this.description = newdescription;}
-
-    public void editName(String newname) {this.name = newname;}
 
     public void editLocation(String newlocation) {this.location = newlocation;}
 }
