@@ -3,6 +3,7 @@ package view;
 import interface_adapter.ViewManagerModel;
 
 import interface_adapter.explore.ExploreViewModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import entity.Account;
 import entity.Event;
 import entity.Recipe;
 import entity.Restaurant;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,24 +31,26 @@ public class ExploreView extends JPanel {
 
     private final String viewName = "explore view";
     private final ViewManagerModel viewManagerModel;
+    private static JPanel cardPanel;
 
     // example posts
     private Account swissCheez = new Account("swissCheez", "cheese");
     private Event cheeseMeetup = new Event(swissCheez, 1234567890, "Cheese Tasting",
-        "Visit to local cheesemongers and farmers markets", "St Lawrence Market",
-        LocalDate.of(2025, 8, 12), new ArrayList(), new ArrayList<String>());
-    private Restaurant cheeseVille = new Restaurant("CheeseVille","14 Cheese Ave", "+1 1234567890",
-        "14 Cheese Ave", new ArrayList<String>(Arrays.asList("French", "Italian", "Swiss")));
+            "Visit to local cheesemongers and farmers markets", "St Lawrence Market",
+            LocalDate.of(2025, 8, 12), new ArrayList(), new ArrayList<String>());
+    private Restaurant cheeseVille = new Restaurant("CheeseVille", "14 Cheese Ave", "+1 1234567890",
+            "14 Cheese Ave", new ArrayList<String>(Arrays.asList("French", "Italian", "Swiss")));
     private String blueCheeseSteps = "1. Get cheese \n" + "2. Cover it in blue food coloring diluted with milk \n" +
-        "3. Make it stinky \n" + "4. Congrats you have blue cheese. Consume it.";
+            "3. Make it stinky \n" + "4. Congrats you have blue cheese. Consume it.";
     private Recipe blueCheeseRecipe = new Recipe(swissCheez, 123454321, "DIY Blue Cheese",
-        "How to make blue cheese at home in 4 easy steps",
-        new ArrayList<String>(Arrays.asList("Cheese", "Blue food coloring", "Milk", "Stink")), blueCheeseSteps,
-        new ArrayList<String>(Arrays.asList("French")));
+            "How to make blue cheese at home in 4 easy steps",
+            new ArrayList<String>(Arrays.asList("Cheese", "Blue food coloring", "Milk", "Stink")), blueCheeseSteps,
+            new ArrayList<String>(Arrays.asList("French")));
 
-    public ExploreView(ViewManagerModel viewManagerModel) {
+    public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.setLayout(new BorderLayout(10, 10));
+        this.cardPanel = cardPanel;
 
         JPanel topPanel = new JPanel();
         JLabel exploreLabel = new JLabel("Explore");
@@ -56,7 +60,7 @@ public class ExploreView extends JPanel {
 
 
         JPanel explorePanel = new JPanel();
-        explorePanel.setLayout(new GridLayout(1,3));
+        explorePanel.setLayout(new GridLayout(1, 3));
 
 
         // Restaurants
@@ -111,9 +115,19 @@ public class ExploreView extends JPanel {
             JLabel recipeDescription = new JLabel(blueCheeseRecipe.getDescription());
             JLabel recipePoster = new JLabel("Posted by: " + blueCheeseRecipe.getUser().getUsername());
             JButton viewRecipeButton = new JButton("View Recipe");
-            viewRecipeButton.addActionListener(e -> viewManagerModel.setState("post view"));
-            PostView repice = new PostView(viewManagerModel, blueCheeseRecipe);
-            repice.displayPost(blueCheeseRecipe);
+            viewRecipeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewManagerModel.setState("post view");
+                    for (Component c : cardPanel.getComponents()) {
+                        if (c instanceof PostView) {
+                            ((PostView) c).displayPost(blueCheeseRecipe);
+                            break;
+                        }
+                    }
+                }
+            });
+
 
             recipeBox.add(recipeTitle);
             recipeBox.add(recipeDescription);
@@ -127,7 +141,6 @@ public class ExploreView extends JPanel {
         exploreRecipeScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         JButton exploreRecipesButton = new JButton("View");
-
 
 
         // Events
@@ -162,7 +175,6 @@ public class ExploreView extends JPanel {
 
         JButton exploreEventsButton = new JButton("View");
         exploreEventsButton.addActionListener(e -> viewManagerModel.setState("explore events view"));
-
 
 
         JPanel leftPanel = new JPanel();
@@ -220,7 +232,7 @@ public class ExploreView extends JPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new ExploreView(new ViewManagerModel()));
+        frame.add(new ExploreView(new ViewManagerModel(), cardPanel));
         frame.pack();
         frame.setVisible(true);
     }
