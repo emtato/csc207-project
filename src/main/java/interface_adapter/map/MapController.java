@@ -18,5 +18,5 @@ public class MapController {
     public void switchToExploreView() {inputBoundary.switchToExploreView();}
     public void switchToClubView() {inputBoundary.switchToClubView();}
     public void switchToSettingsView() {inputBoundary.switchToSettingsView();}
-
+    public void switchToProfileView() {inputBoundary.switchToProfileView();}
 }

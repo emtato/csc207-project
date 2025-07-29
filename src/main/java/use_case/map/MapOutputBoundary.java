@@ -23,7 +23,12 @@ public interface MapOutputBoundary {
     void switchToClubView();
 
     /**
-     * Switches to the Club View.
+     * Switches to the Settings View.
      */
     void switchToSettingsView();
+
+    /**
+     * Switches to the Profile View.
+     */
+    void switchToProfileView();
 }

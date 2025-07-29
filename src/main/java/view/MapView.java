@@ -3,19 +3,19 @@ package view;
 import data_access.places.GooglePlacesAPI;
 import data_access.places.RestaurantMapper;
 import entity.Restaurant;
-import entity.Review;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.map.MapViewModel;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+// TODO: differentiate Google Reviews and app reviews
+// TODO: GUI and apply API
 
 public class MapView {
     private final MapViewModel mapViewModel;
 
-    public MapView(MapViewModel viewModel, Restaurant restaurant, Review review) {
+    public MapView(MapViewModel viewModel, Restaurant restaurant) {
         this.mapViewModel = viewModel;
         GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
 
