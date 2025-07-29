@@ -3,16 +3,17 @@ package view;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ import entity.Recipe;
 public class PostView extends JPanel {
 
     private final String viewName = "post view";
-    private final PostViewModel viewModel;
+    //private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
 
     private Post post;
@@ -62,15 +63,16 @@ public class PostView extends JPanel {
     private JScrollPane scrollPane;
     private JPanel rightPanel;
     private boolean xPresent;
+    private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
-    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
-        this.viewModel = viewModel;
+    public PostView(ViewManagerModel viewManagerModel, Post post) {
+        //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
         this.repice = null;
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -95,26 +97,68 @@ public class PostView extends JPanel {
         topPanel.add(tags);
 
         // middle
-        postText.setEditable(false);
-        if (post instanceof Recipe) {
-            this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye
-            String mainContent = "Description: " + this.repice.getDescription() + "\n";
-            //like here
 
-            postText.setText(this.repice.getDescription() + "\n" + this.repice.getIngredients() + "\n" + this.repice.getSteps());
+        // if has media:
+        int maxBoxHeight = 739123617;
+        if (post.isImageVideo()) {
+            try {
+                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                ArrayList<String> imageURLS = post.getImageURLs();
+                for (String imageURL : imageURLS) {
+                    URL url = new URL(imageURL);
+                    ImageIcon imageIcon = new ImageIcon(url);
+                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(img);
+                    JLabel image = new JLabel(scaledIcon);
+                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+                    imagePanel.add(image);
+                }
+                centerPanel.add(imagePanel);
+
+                maxBoxHeight = 350;
+            }
+            catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        postText.setEditable(false);
+        if (post instanceof Recipe || this.repice != null) {
+            this.repice = (Recipe) post;
+            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
+            String mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+                    <ul>""" + this.repice.getIngredients() + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+                          </p>
+                          </body>
+                        </html>
+                    """;
+            postText.setContentType("text/html");
+            postText.setText(mainContent);
 
         }
         else if (post.isImageVideo()) {
             System.out.println("cry");
         }
-
+        else {
+            postText.setText(post.getDescription());
+        }
         scrollPane = new JScrollPane(postText);
 
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1400, 850));
+        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
         centerPanel.add(scrollPane);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
@@ -155,7 +199,7 @@ public class PostView extends JPanel {
             rightPanel.add(button);
             rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 666)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 680)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -173,21 +217,47 @@ public class PostView extends JPanel {
     public void displayPost(Post newPost) {
         this.post = newPost;
         if (newPost instanceof Recipe) {
+
             this.repice = (Recipe) newPost;
+
+            //TODO
+            String mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+                    <ul>""" + this.repice.getIngredients() + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+                          </p>
+                          </body>
+                        </html>
+                    """;
+            postText.setContentType("text/html");
+            postText.setText(mainContent);
+            centerPanel.removeAll();
+
+            scrollPane = new JScrollPane(postText);
+            // scrollPane.add(comments);
+            scrollPane.setPreferredSize(new Dimension(1400, 850));
+
+            centerPanel.add(scrollPane);
+            mainPanel.add(centerPanel, BorderLayout.CENTER);
+            this.add(mainPanel);
         }
+
         else {
-            this.repice = null;
+            repice = null;
+            postText.setText(post.getDescription());
         }
 
         title.setText(newPost.getTitle());
-        subtitle.setText(newPost.getUser().getUsername() + " | " + newPost.getLikes() + " likes");
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
-        if (newPost instanceof Recipe) {
-            postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
-        }
-        else {
-            postText.setText(post.getDescription());
-        }
         //TODO: update comments for new post
         revalidate();
         repaint();
@@ -213,7 +283,7 @@ public class PostView extends JPanel {
                 likeButton.setText("like");
                 liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == analyzeButton) {
@@ -276,40 +346,40 @@ public class PostView extends JPanel {
             rightPanel.add(subRight);
 
             xPresent = true;
-            xButton.addActionListener(
-                    new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            centerPanel.remove(commentsArea);
-                            rightPanel.remove(subRight);
-                            commentButton.setText("comment");
-                            commentButton.setOpaque(false);
+            xButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    centerPanel.remove(commentsArea);
+                    rightPanel.remove(subRight);
+                    commentButton.setText("comment");
+                    commentButton.setOpaque(false);
 
 //                          centerPanel.revalidate();
 //                          centerPanel.repaint();
 //                          rightPanel.revalidate();
 //                          rightPanel.repaint();
-                            xPresent = false;
-                        }
-                    });
-            postButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String mesage = commentsArea.getText();
-                            //TODO: send comment to whoever deals with this idk
-                            centerPanel.remove(commentsArea);
-                            rightPanel.remove(subRight);
-                            commentButton.setText("comment");
-                            commentButton.setOpaque(false);
-                            xPresent = false;
-                            HashMap<Integer, Comment> map = post.getComments();
-                            //TODO: account user implementation
-                            Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
-                            map.put(comment.getID(), comment);
-                            post.setComments(map);
-                        }
+                    xPresent = false;
+                }
+            });
+            postButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String mesage = commentsArea.getText();
+                    //TODO: send comment to whoever deals with this idk
+                    centerPanel.remove(commentsArea);
+                    rightPanel.remove(subRight);
+                    commentButton.setText("comment");
+                    commentButton.setOpaque(false);
+                    xPresent = false;
+                    HashMap<Integer, Comment> map = post.getComments();
+                    if (map == null) {
+                        map = new HashMap<Integer, Comment>();
                     }
-            );
+                    //TODO: account user implementation, and send comment to scroll window
+                    Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
+                    map.put(comment.getID(), comment);
+                    post.setComments(map);
+                }
+            });
         }
 
     }
@@ -325,6 +395,7 @@ public class PostView extends JPanel {
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
+        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
 //        trialpost2.setRecipeObj(new Recipe(
@@ -342,7 +413,9 @@ public class PostView extends JPanel {
 //        ));
 //        trialpost2.setRecipe(true);
 
-        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
+//        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
+        frame.add(new PostView(new ViewManagerModel(), trialpost));
+
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
