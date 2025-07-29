@@ -131,7 +131,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addExploreView() {
-        exploreView = new ExploreView(viewManagerModel);
+        exploreView = new ExploreView(viewManagerModel, cardPanel);
         cardPanel.add(exploreView, exploreView.getViewName());
         return this;
     }
