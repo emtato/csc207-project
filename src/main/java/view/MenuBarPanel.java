@@ -45,13 +45,12 @@ public class MenuBarPanel extends JPanel {
         // that seems to have worked
         add(homeButton);
         add(Box.createRigidArea(new Dimension(0, 0)));
-        add(clubsButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(settingsButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
         add(exploreButton);
         add(Box.createRigidArea(new Dimension(0, 0)));
         add(notifcationsButton);
-
+        add(Box.createRigidArea(new Dimension(0, 0)));
+        add(clubsButton);
+        add(Box.createRigidArea(new Dimension(0, 0)));
+        add(settingsButton);
     }
 }
