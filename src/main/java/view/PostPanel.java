@@ -30,9 +30,9 @@ public class PostPanel extends JPanel {
     private JPanel cardPanel;
 
     // fonts & styles
-    private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
-    private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
-    private final Font text = new Font("Roboto", Font.PLAIN, 15);
+    private final Font fontTitle = new Font("Roboto", Font.BOLD, 16);
+    private final Font subtite = new Font("Roboto", Font.PLAIN, 15);
+    private final Font text = new Font("Roboto", Font.PLAIN, 13);
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
@@ -99,18 +99,13 @@ public class PostPanel extends JPanel {
 
                     int finalW = imgW;
                     int finalH = imgH;
-                    float ratioW, ratioH;
+                    float ratioW;
                     if (imgW > 150) {
                         finalW = 150;
                         ratioW = imgW / 150f;
                         finalH = (int) (imgH / ratioW);
                     }
 
-                    if (finalH > 200) {
-                        finalH = 200;
-                        ratioH = imgH / 200f;
-                        finalW = (int) (imgW / ratioH);
-                    }
 
                     img = img.getScaledInstance(finalW, finalH, Image.SCALE_SMOOTH);
                     ImageIcon scaledIcon = new ImageIcon(img);
@@ -142,13 +137,6 @@ public class PostPanel extends JPanel {
                         <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
                         <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
                     </p>
-                    
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + this.repice.getIngredients() + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                          </p>
                           </body>
                         </html>
                     """;
