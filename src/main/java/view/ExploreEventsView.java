@@ -3,6 +3,8 @@ package view;
 import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
+
+import interface_adapter.explore_events.ExploreEventsViewModel;
 import java.awt.*;
 
 import javax.swing.JLabel;
