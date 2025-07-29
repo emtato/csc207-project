@@ -1,9 +1,9 @@
 package view;
 
 
+import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
 import interface_adapter.edit_profile.EditProfileViewModel;
-
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -20,7 +20,7 @@ import java.beans.PropertyChangeListener;
 public class EditProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "edit profile";
     private final EditProfileViewModel editProfileViewModel;
-    // TODO: declare controllers
+    private EditProfileController editProfileController;
 
     final JLabel title;
     private final ImageIcon profilePicture;
@@ -241,6 +241,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
+                        this.editProfileController.switchToProfileView();
                     }
                 }
         );
@@ -261,6 +262,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
-    // set controllers
+    public void setEditProfileController(EditProfileController controller) {
+        this.editProfileController = controller;
+    }
 
 }

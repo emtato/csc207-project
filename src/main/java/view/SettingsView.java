@@ -2,9 +2,9 @@ package view;
 
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
-
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -34,7 +34,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private final SettingsViewModel settingsViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    // TODO: declare controllers
+    private SettingsController settingsController;
 
     final JLabel title;
     private final JLabel header;
@@ -152,6 +152,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
-    // set controllers
-
+    public void setSettingsController(SettingsController controller) {
+        this.settingsController = controller;
+    }
 }

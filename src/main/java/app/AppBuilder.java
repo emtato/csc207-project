@@ -11,6 +11,12 @@ import entity.Account;
 import entity.CreateAccount;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.edit_profile.EditProfileController;
+import interface_adapter.edit_profile.EditProfilePresenter;
+import interface_adapter.manage_followers.ManageFollowersController;
+import interface_adapter.manage_followers.ManageFollowersPresenter;
+import interface_adapter.manage_following.ManageFollowingController;
+import interface_adapter.manage_following.ManageFollowingPresenter;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -26,21 +32,40 @@ import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.note.NoteController;
 import interface_adapter.note.NotePresenter;
 import interface_adapter.note.NoteViewModel;
+import interface_adapter.profile.ProfileController;
+import interface_adapter.profile.ProfilePresenter;
 import interface_adapter.profile.ProfileViewModel;
+import interface_adapter.settings.SettingsController;
+import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.edit_profile.EditProfileInputBoundary;
+import use_case.edit_profile.EditProfileInteractor;
+import use_case.edit_profile.EditProfileOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.manage_followers.ManageFollowersInputBoundary;
+import use_case.manage_followers.ManageFollowersInteractor;
+import use_case.manage_followers.ManageFollowersOutputBoundary;
+import use_case.manage_following.ManageFollowingInputBoundary;
+import use_case.manage_following.ManageFollowingInteractor;
+import use_case.manage_following.ManageFollowingOutputBoundary;
 import use_case.note.NoteInputBoundary;
 import use_case.note.NoteInteractor;
 import use_case.note.NoteOutputBoundary;
+import use_case.profile.ProfileInputBoundary;
+import use_case.profile.ProfileInteractor;
+import use_case.profile.ProfileOutputBoundary;
+import use_case.settings.SettingsInputBoundary;
+import use_case.settings.SettingsInteractor;
+import use_case.settings.SettingsOutputBoundary;
 import view.LoggedInView;
 import view.LoginView;
 import view.NoteView;
@@ -365,6 +390,88 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the Change Settings Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addSettingsUseCase() {
+        final SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(viewManagerModel,
+                settingsViewModel);
+
+        final SettingsInputBoundary settingsInteractor =
+                new SettingsInteractor(userDataAccessObject, settingsOutputBoundary);
+        final SettingsController settingsController = new SettingsController(settingsInteractor);
+        settingsView.setSettingsController(settingsController);
+        return this;
+    }
+
+    /**
+     * Adds the Profile Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addProfileUseCase() {
+        final ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(viewManagerModel,
+                profileViewModel, editProfileViewModel, manageFollowingViewModel, manageFollowersViewModel);
+        final ProfileInputBoundary profileInteractor =
+                new ProfileInteractor(userDataAccessObject, profileOutputBoundary);
+        final ProfileController profileController = new ProfileController(profileInteractor);
+        profileView.setProfileController(profileController);
+        return this;
+    }
+
+    /**
+     * Adds the Edit Profile Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addEditProfileUseCase() {
+        final EditProfileOutputBoundary editProfileOutputBoundary = new EditProfilePresenter(viewManagerModel,
+                editProfileViewModel, profileViewModel);
+        final EditProfileInputBoundary editProfileInteractor =
+                new EditProfileInteractor(userDataAccessObject, editProfileOutputBoundary);
+        final EditProfileController editProfileController = new EditProfileController(editProfileInteractor);
+        editProfileView.setEditProfileController(editProfileController);
+        return this;
+    }
+
+    /**
+     * Adds the Manage Following Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addManageFollowingUseCase() {
+        final ManageFollowingOutputBoundary manageFollowingOutputBoundary = new ManageFollowingPresenter(
+                viewManagerModel,
+                manageFollowingViewModel,
+                profileViewModel);
+        final ManageFollowingInputBoundary manageFollowingInteractor =
+                new ManageFollowingInteractor(userDataAccessObject, manageFollowingOutputBoundary);
+        final ManageFollowingController manageFollowingController =
+                new ManageFollowingController(manageFollowingInteractor);
+        manageFollowingView.setManageFollowingController(manageFollowingController);
+        return this;
+    }
+
+    /**
+     * Adds the Manage Followers Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addManageFollowersUseCase() {
+        final ManageFollowersOutputBoundary manageFollowersOutputBoundary = new ManageFollowersPresenter(
+                viewManagerModel,
+                manageFollowersViewModel,
+                profileViewModel);
+        final ManageFollowersInputBoundary manageFollowersInteractor =
+                new ManageFollowersInteractor(userDataAccessObject, manageFollowersOutputBoundary);
+        final ManageFollowersController manageFollowersController =
+                new ManageFollowersController(manageFollowersInteractor);
+        manageFollowersView.setManageFollowersController(manageFollowersController);
+        return this;
+    }
+
+    /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      *
      * @return the application
@@ -375,7 +482,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(profileView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

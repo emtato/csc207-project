@@ -1,6 +1,7 @@
 package view;
 
 
+import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingViewModel;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeListener;
 public class ManageFollowingView extends JPanel implements PropertyChangeListener {
     private final String viewName = "manage following";
     private final ManageFollowingViewModel manageFollowingViewModel;
-    // TODO: declare controllers
+    private ManageFollowingController manageFollowingController;
 
     final JLabel title;
 
@@ -103,6 +104,7 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
+                        this.manageFollowingController.switchToProfileView();
                     }
                 }
         );
@@ -124,6 +126,8 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         return viewName;
     }
 
-    // set controllers
+    public void setManageFollowingController(ManageFollowingController controller) {
+        this.manageFollowingController = controller;
+    }
 
 }
