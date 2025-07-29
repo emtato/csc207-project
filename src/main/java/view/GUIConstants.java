@@ -16,6 +16,7 @@ public class GUIConstants {
 
     public static final String FONT = "Inter";
     public static final Font FONT_TEXT = new Font(FONT, Font.PLAIN, 25);
+    public static final Font SMALL_FONT_TEXT = new Font(FONT, Font.PLAIN, 18);
     public static final Font FONT_HEADER = new Font(FONT, Font.PLAIN, 35);
     public static final Font FONT_TITLE = new Font(FONT, Font.BOLD, 48);
 
