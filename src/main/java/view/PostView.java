@@ -32,7 +32,7 @@ import entity.Recipe;
 public class PostView extends JPanel {
 
     private final String viewName = "post view";
-    private final PostViewModel viewModel;
+    //private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
 
     private Post post;
@@ -64,8 +64,8 @@ public class PostView extends JPanel {
     private boolean xPresent;
     //TODO: keep track of which posts liked to update this according to user and postID
 
-    public PostView(PostViewModel viewModel, ViewManagerModel viewManagerModel, Post post) {
-        this.viewModel = viewModel;
+    public PostView(ViewManagerModel viewManagerModel, Post post) {
+        //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
         this.repice = null;
@@ -193,8 +193,9 @@ public class PostView extends JPanel {
             this.repice = null;
         }
 
+
         title.setText(newPost.getTitle());
-        subtitle.setText(newPost.getUser().getUsername() + " | " + newPost.getLikes() + " likes");
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
         if (newPost instanceof Recipe) {
             postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
@@ -227,7 +228,7 @@ public class PostView extends JPanel {
                 likeButton.setText("like");
                 liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == analyzeButton) {
@@ -356,7 +357,9 @@ public class PostView extends JPanel {
 //        ));
 //        trialpost2.setRecipe(true);
 
-        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
+//        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
+                frame.add(new PostView(new ViewManagerModel(), trialpost));
+
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);

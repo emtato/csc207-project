@@ -72,11 +72,11 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-//    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    //    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-     private PostViewModel postViewModel;
+    private PostViewModel postViewModel;
     private PostView postView;
-        private SignupView signupView;
+    private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private NoteViewModel noteViewModel;
@@ -106,7 +106,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel);
+        homePageView = new HomePageView(viewManagerModel, cardPanel);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -189,7 +189,8 @@ public class AppBuilder {
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
-        postView = new PostView(postViewModel, viewManagerModel, trialpost);
+        //postView = new PostView(postViewModel, viewManagerModel, trialpost);
+        postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
         return this;
     }
