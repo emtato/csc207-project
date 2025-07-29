@@ -20,16 +20,17 @@ import java.util.ArrayList;
 public class DataStorage {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
-     public static void main(String[] args) {
-        String postId = "483958292";
+    public static void main(String[] args) {
+        long postId = 483958292l;
         DataStorage dataStorage = new DataStorage();
         dataStorage.writeDataToFile(postId, new Account("bil", "bal"), "bol", LocalDateTime.now());
 
 
-
     }
 
-    public void writeDataToFile(String parentPostID, Account user, String contents, LocalDateTime timestamp) {
+    public void writeDataToFile(long parentID, Account user, String contents, LocalDateTime timestamp) {
+
+        String parentPostID = String.valueOf(parentID);
         JSONObject data;
         JSONArray comments;
 
@@ -37,20 +38,22 @@ public class DataStorage {
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             data = new JSONObject(content);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             data = new JSONObject();
         }
 
 
         if (data.has(parentPostID)) {
             comments = data.getJSONArray(parentPostID);
-        } else {
+        }
+        else {
             comments = new JSONArray();
         }
 
         //add new comment
         JSONObject comment = new JSONObject();
-        comment.put("user", user);
+        comment.put("user", user.getUsername());
         comment.put("content", contents);
         comment.put("time", timestamp.toString());
         comments.put(comment);
@@ -59,12 +62,14 @@ public class DataStorage {
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
 
-    public ArrayList<Comment> getComments(String parentPostID) {
+    public ArrayList<Comment> getComments(long parentID) {
+        String parentPostID = String.valueOf(parentID);
         File file = new File(filePath);
         JSONObject data;
         JSONArray comments;
@@ -84,7 +89,7 @@ public class DataStorage {
         ArrayList<Comment> commentList = new ArrayList<>();
         for (int i = 0; i < comments.length(); i++) {
             JSONObject obj = comments.getJSONObject(i);
-            Account user = (Account) obj.get("user");
+            Account user = new Account((String) obj.get("user"), "passwod");
             String content = obj.getString("content");
             LocalDateTime time = LocalDateTime.parse(obj.getString("time"));
             commentList.add(new Comment(user, content, time, 0));
