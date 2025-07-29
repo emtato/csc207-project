@@ -62,6 +62,7 @@ public class PostView extends JPanel {
     private JScrollPane scrollPane;
     private JPanel rightPanel;
     private boolean xPresent;
+    private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(ViewManagerModel viewManagerModel, Post post) {
@@ -70,7 +71,7 @@ public class PostView extends JPanel {
         this.post = post;
         this.repice = null;
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -96,7 +97,7 @@ public class PostView extends JPanel {
 
         // middle
         postText.setEditable(false);
-        if (post instanceof Recipe) {
+        if (post instanceof Recipe || this.repice != null) {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
             String mainContent = """
@@ -169,7 +170,7 @@ public class PostView extends JPanel {
             rightPanel.add(button);
             rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 666)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 680)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -185,17 +186,49 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
-        this.post = newPost;
         if (newPost instanceof Recipe) {
+
             this.repice = (Recipe) newPost;
-        }
-        else {
-            this.repice = null;
+
+            //redoing it hopefully
+            //TODO
+            String mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
+                    <ul>""" + this.repice.getIngredients() + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
+                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
+                          </p>
+                          </body>
+                        </html>
+                    """;
+            postText.setContentType("text/html");
+            postText.setText(mainContent);
+            centerPanel.removeAll();
+
+            scrollPane = new JScrollPane(postText);
+            // scrollPane.add(comments);
+            scrollPane.setPreferredSize(new Dimension(1400, 850));
+
+            centerPanel.add(scrollPane);
+            mainPanel.add(centerPanel, BorderLayout.CENTER);
+            this.add(mainPanel);
         }
 
+        else {
+            repice = null;
+        }
 
         title.setText(newPost.getTitle());
-        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
+        subtitle.setText(post.getUser().
+
+                getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
         if (newPost instanceof Recipe) {
             postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
@@ -203,8 +236,10 @@ public class PostView extends JPanel {
         else {
             postText.setText(post.getDescription());
         }
+
         //TODO: update comments for new post
         revalidate();
+
         repaint();
     }
 
@@ -319,7 +354,7 @@ public class PostView extends JPanel {
                     if (map == null) {
                         map = new HashMap<Integer, Comment>();
                     }
-                    //TODO: account user implementation, and send post to scroll
+                    //TODO: account user implementation, and send comment to scroll window
                     Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
                     map.put(comment.getID(), comment);
                     post.setComments(map);
@@ -358,7 +393,7 @@ public class PostView extends JPanel {
 //        trialpost2.setRecipe(true);
 
 //        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
-                frame.add(new PostView(new ViewManagerModel(), trialpost));
+        frame.add(new PostView(new ViewManagerModel(), trialpost));
 
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
