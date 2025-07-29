@@ -1,16 +1,16 @@
 package app;
 
 import java.awt.CardLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.Account;
-import entity.CreateAccount;
-import entity.UserFactory;
-import interface_adapter.ViewManagerModel;
+import entity.*;
+import interface_adapter.*;
+import interface_adapter.map.MapViewModel;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -50,6 +50,7 @@ import view.ClubHomePageView;
 import view.HomePageView;
 import view.ManageFollowingView;
 import view.ManageFollowersView;
+import view.MapView;
 import view.PostView;
 import view.ProfileView;
 import view.SettingsView;
@@ -57,8 +58,6 @@ import view.NotificationsView;
 import view.ExploreView;
 import view.ExploreEventsView;
 import view.EditProfileView;
-
-import entity.Post;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -76,7 +75,7 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
     // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CreateAccount();
-    private ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
@@ -97,6 +96,8 @@ public class AppBuilder {
     private ManageFollowingViewModel manageFollowingViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private MapView mapView;
+    private MapViewModel mapViewModel;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
     private NotificationsView notificationsView;
@@ -205,6 +206,21 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        return this;
+    }
+
+    // TODO: implement addMapView()
+    /**
+     * Adds Map View to the application
+     *
+     * @return this builder
+     */
+    public AppBuilder addMapView() {
+        ArrayList<String> Cuisines = new ArrayList<>();
+        Restaurant exampleRestaurant = new Restaurant("","","","",Cuisines);
+        mapViewModel = new MapViewModel();
+        mapView = new MapView(mapViewModel, exampleRestaurant);
+        //cardPanel.add(mapView, mapView.getViewName());
         return this;
     }
 
@@ -370,7 +386,7 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login data_access.spoonacular.Example");
+        final JFrame application = new JFrame("Munchable");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);

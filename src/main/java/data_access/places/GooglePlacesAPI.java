@@ -91,9 +91,7 @@ public class GooglePlacesAPI {
         List<HashMap<String, Object>> results = new ArrayList<>();
         if (places == null) return results;
 
-        for (int i = 0; i < places.length(); i++) {
-            results.add(parseSinglePlace(places.getJSONObject(i)));
-        }
+        for (int i = 0; i < places.length(); i++) { results.add(parseSinglePlace(places.getJSONObject(i))); }
         return results;
     }
 

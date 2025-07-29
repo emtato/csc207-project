@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+// TODO: Account (modify username, email options), Appearance (fontsize + or -, dark mode)
+
 // TODO: use constants for the hardcoded parts
 public class SettingsView extends JPanel implements PropertyChangeListener {
     private final String viewName = "settings";
