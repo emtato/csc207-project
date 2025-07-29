@@ -92,6 +92,7 @@ public class ExploreView extends JPanel {
 
         JScrollPane exploreRestaurantsScrollPanel = new JScrollPane(exploreRestaurantsPanel);
         exploreRestaurantsScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        exploreRestaurantsScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
 
         JButton exploreRestaurantsButton = new JButton("View");
 
@@ -139,6 +140,8 @@ public class ExploreView extends JPanel {
 
         JScrollPane exploreRecipeScrollPanel = new JScrollPane(exploreRecipesPanel);
         exploreRecipeScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        exploreRecipeScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
+
 
         JButton exploreRecipesButton = new JButton("View");
 
@@ -161,6 +164,18 @@ public class ExploreView extends JPanel {
             JLabel eventDescription = new JLabel(cheeseMeetup.getDescription());
             JLabel eventPoster = new JLabel("Posted by: " + cheeseMeetup.getUser().getUsername());
             JButton viewEventButton = new JButton("View Event");
+            viewEventButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewManagerModel.setState("post view");
+                    for (Component c : cardPanel.getComponents()) {
+                        if (c instanceof PostView) {
+                            ((PostView) c).displayPost(cheeseMeetup);
+                            break;
+                        }
+                    }
+                }
+            });
             EventBox.add(eventTitle);
             EventBox.add(eventDescription);
             EventBox.add(eventPoster);
@@ -171,6 +186,8 @@ public class ExploreView extends JPanel {
 
         JScrollPane exploreEventScrollPanel = new JScrollPane(exploreEventsPanel);
         exploreEventScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        exploreEventScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
+
 
 
         JButton exploreEventsButton = new JButton("View");
@@ -200,25 +217,6 @@ public class ExploreView extends JPanel {
 
         add(explorePanel, BorderLayout.CENTER);
 
-//        explorePanels.add(exploreRestaurantsLabel);
-//        explorePanels.add(exploreRecipesLabel);
-//        explorePanels.add(exploreEventsLabel);
-//        explorePanels.add(exploreRestaurantsPanel);
-//        explorePanels.add(exploreRecipesPanel);
-//        explorePanels.add(exploreEventsPanel);
-//        explorePanels.add(exploreRestaurantsButton);
-//        explorePanels.add(exploreRecipesButton);
-//        explorePanels.add(exploreEventsButton);
-//        this.add(explorePanels);
-
-//        JPanel bottomPanel = new JPanel();
-//        JButton homeButton = new JButton("Home");
-//        JButton settingsButton = new JButton("Settings");
-//        JButton profileButton = new JButton("Profile");
-//        bottomPanel.add(homeButton);
-//        bottomPanel.add(settingsButton);
-//        bottomPanel.add(profileButton);
-//        this.add(bottomPanel);
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         this.add(menuBar, BorderLayout.SOUTH);
