@@ -255,8 +255,11 @@ public class PostView extends JPanel {
 
         String mainContent = "";
         String comments = "";
-        if (newPost instanceof Recipe) {
 
+        System.out.println("Post: " + post.getTitle());
+
+        if (newPost instanceof Recipe) {
+            System.out.println("isrecipe1");
             this.repice = (Recipe) newPost;
 
             String ingredientsText = "";
@@ -282,16 +285,16 @@ public class PostView extends JPanel {
                     <br>""";
 
         }
-        else{//modify this to make more sense later
+        else {//modify this to make more sense later
             repice = null;
             mainContent = post.getDescription();
-            }
+        }
 
-        mainContent+= """
+        mainContent += """
                 <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + this.post.getComments() + """
-                                          </body>
-                                        </html>
-    """;
+                                                      </body>
+                                                    </html>
+                """;
         postText.setContentType("text/html");
         postText.setText(mainContent);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
