@@ -37,7 +37,7 @@ public class Main {
                 .addNoteUseCase()
                 .addPostView()
                 .build();
-        application.setPreferredSize(new Dimension(1920, 1080));
+        application.setPreferredSize(new Dimension(1440, 900));
         application.pack();
         application.setVisible(true);
     }

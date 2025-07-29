@@ -123,7 +123,8 @@ public class ExploreView extends JPanel {
         exploreRecipeScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         JButton exploreRecipesButton = new JButton("View");
-        exploreRecipesButton.addActionListener(e -> viewManagerModel.setState("recipe view"));
+        exploreRecipesButton.addActionListener(e -> viewManagerModel.setState("post view"));
+
 
 
         // Events
