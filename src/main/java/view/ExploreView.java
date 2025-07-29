@@ -16,8 +16,8 @@ import entity.Restaurant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
+import view.PostView;
 
 import javax.swing.*;
 
@@ -111,6 +111,10 @@ public class ExploreView extends JPanel {
             JLabel recipeDescription = new JLabel(blueCheeseRecipe.getDescription());
             JLabel recipePoster = new JLabel("Posted by: " + blueCheeseRecipe.getUser().getUsername());
             JButton viewRecipeButton = new JButton("View Recipe");
+            viewRecipeButton.addActionListener(e -> viewManagerModel.setState("post view"));
+            PostView repice = new PostView(viewManagerModel, blueCheeseRecipe);
+            repice.displayPost(blueCheeseRecipe);
+
             recipeBox.add(recipeTitle);
             recipeBox.add(recipeDescription);
             recipeBox.add(recipePoster);
@@ -123,7 +127,6 @@ public class ExploreView extends JPanel {
         exploreRecipeScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         JButton exploreRecipesButton = new JButton("View");
-        exploreRecipesButton.addActionListener(e -> viewManagerModel.setState("post view"));
 
 
 
