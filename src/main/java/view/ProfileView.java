@@ -1,6 +1,7 @@
 package view;
 
 
+import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileViewModel;
 
 import javax.swing.JPanel;
@@ -23,7 +24,8 @@ import java.beans.PropertyChangeListener;
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";
     private final ProfileViewModel profileViewModel;
-    // TODO: declare controllers
+
+    private ProfileController profileController;
 
     final JLabel title;
     private final ImageIcon profilePicture;
@@ -164,6 +166,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         editProfileButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(editProfileButton)) {
+                        this.profileController.switchToEditProfileView();
                     }
                 }
         );
@@ -171,6 +174,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         followersButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(followersButton)) {
+                        this.profileController.switchToManageFollowersView();
                     }
                 }
         );
@@ -178,6 +182,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         followingButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(followingButton)) {
+                        this.profileController.switchToManageFollowingView();
                     }
                 }
         );
@@ -200,6 +205,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
-    // set controllers
+    public void setProfileController(ProfileController controller) {
+        this.profileController = controller;
+    }
 
 }

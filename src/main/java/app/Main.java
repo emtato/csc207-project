@@ -35,6 +35,11 @@ public class Main {
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
                 .addNoteUseCase()
+                .addEditProfileUseCase()
+                .addSettingsUseCase()
+                .addManageFollowersUseCase()
+                .addManageFollowingUseCase()
+                .addProfileUseCase()
                 .addPostView()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));

@@ -5,10 +5,15 @@ import java.util.Map;
 
 import entity.User;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.manage_followers.ManageFollowersUserDataAccessInterface;
+import use_case.manage_following.ManageFollowingUserDataAccessInterface;
 import use_case.note.DataAccessException;
 import use_case.note.NoteDataAccessInterface;
+import use_case.profile.ProfileUserDataAccessInterface;
+import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 /**
@@ -19,7 +24,12 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface,
-        NoteDataAccessInterface {
+        NoteDataAccessInterface,
+        SettingsUserDataAccessInterface,
+        ProfileUserDataAccessInterface,
+        EditProfileUserDataAccessInterface,
+        ManageFollowingUserDataAccessInterface,
+        ManageFollowersUserDataAccessInterface {
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, String> notes = new HashMap<>();
