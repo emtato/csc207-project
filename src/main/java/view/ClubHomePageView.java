@@ -1,15 +1,13 @@
 package view;
 
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
 
 
+import entity.Account;
+import entity.Post;
 import interface_adapter.ViewManagerModel;
 
 
@@ -21,18 +19,165 @@ public class ClubHomePageView extends JPanel {
 
     private final String viewName = "club view";
     private final ViewManagerModel viewManagerModel;
+    private final JPanel cardPanel;
+    private Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 
 
-    public ClubHomePageView(ViewManagerModel viewManagerModel) {
+    public ClubHomePageView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
 
         this.viewManagerModel = viewManagerModel;
+        this.cardPanel = cardPanel;
 
-        JLabel title = new JLabel("Clubs Page"); //get recipe/post title
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+
+        // my clubs panel
+        JPanel myClubsPanel = new JPanel(new BorderLayout());
+
+        JLabel title = new JLabel("My Clubs");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(GUIConstants.FONT_TITLE);
+        myClubsPanel.add(title, BorderLayout.NORTH);
 
-        this.add(title);
+        JPanel clubsListPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        for (int i = 0; i < 8; i++) {
+            // club icon
+            JPanel clubIconPanel = new JPanel(new BorderLayout());
+            clubIconPanel.setPreferredSize(new Dimension(150, 150));
+
+            RoundImagePanel roundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
+            roundPanel.setPreferredSize(new Dimension(100, 100));
+            JPanel centeringPanel = new JPanel();
+            centeringPanel.add(roundPanel);
+            centeringPanel.setBackground(GUIConstants.WHITE);
+            clubIconPanel.add(centeringPanel, BorderLayout.CENTER);
+
+            JLabel clubIconName = new JLabel("Club " + (i + 1));
+            clubIconName.setFont(GUIConstants.FONT_TEXT);
+            clubIconName.setHorizontalAlignment(SwingConstants.CENTER);
+            clubIconPanel.add(clubIconName, BorderLayout.SOUTH);
+            clubIconPanel.setBackground(GUIConstants.WHITE);
+
+            clubsListPanel.add(clubIconPanel);
+        }
+
+        myClubsPanel.add(clubsListPanel, BorderLayout.CENTER);
+
+        // club announcements panel
+        JPanel announcementsPanel = new JPanel(new BorderLayout(0, 5));
+        announcementsPanel.setBorder(BorderFactory.createEmptyBorder(100,0,100,50));
+
+        JLabel announcementsTitle = new JLabel("Announcements");
+        announcementsTitle.setFont(GUIConstants.FONT_TITLE);
+        announcementsTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        announcementsPanel.add(announcementsTitle, BorderLayout.NORTH);
+
+        // Create a panel to hold all posts
+        JPanel postsContainer = new JPanel();
+        postsContainer.setLayout(new BoxLayout(postsContainer, BoxLayout.Y_AXIS));
+        postsContainer.setBackground(GUIConstants.WHITE);
+
+        // Add posts vertically
+        for (int i = 0; i < 3; i++) {
+            JPanel feedRow = new JPanel();
+            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
+            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.setMaximumSize(new Dimension(2000, 420));
+            feedRow.add(postPanel);
+
+            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.add(postTwo); // second post
+
+            PostPanel postThree = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            postThree.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.add(postThree); // second post
+
+            feedRow.add(Box.createHorizontalGlue());
+
+
+            postsContainer.add(feedRow);
+        }
+
+        // Create scroll pane for posts
+        JScrollPane scrollPane = new JScrollPane(postsContainer);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setBorder(null);
+        scrollPane.setPreferredSize(new Dimension(420, 400));
+
+        announcementsPanel.add(scrollPane, BorderLayout.CENTER);
+
+        headerPanel.add(myClubsPanel, BorderLayout.NORTH);
+        headerPanel.add(announcementsPanel, BorderLayout.SOUTH);
+
+        // explore clubs panel
+        JPanel exploreClubsPanel = new JPanel(new BorderLayout());
+
+        JLabel exploreTitle = new JLabel("Explore Clubs");
+        exploreTitle.setFont(GUIConstants.FONT_TITLE);
+        exploreTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        exploreClubsPanel.add(exploreTitle, BorderLayout.NORTH);
+
+        JPanel exploringPanel = new JPanel();
+        exploringPanel.setLayout(new BoxLayout(exploringPanel, BoxLayout.Y_AXIS));
+
+        for (int i = 0; i < 5; i++) {
+            JPanel explorePanel = new JPanel(new BorderLayout(5, 5));
+            explorePanel.setBackground(GUIConstants.WHITE);
+            explorePanel.setMaximumSize(new Dimension(370, 130));
+            explorePanel.setPreferredSize(new Dimension(370, 130));
+            explorePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            RoundImagePanel exploreRoundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
+            exploreRoundPanel.setPreferredSize(new Dimension(100, 100));
+
+            // Add a wrapper panel to maintain the round panel's size
+            JPanel imageWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+            imageWrapper.setBackground(GUIConstants.WHITE);
+            imageWrapper.add(exploreRoundPanel);
+            explorePanel.add(imageWrapper, BorderLayout.WEST);
+
+            JPanel exploreTextPanel = new JPanel();
+            exploreTextPanel.setLayout(new BoxLayout(exploreTextPanel, BoxLayout.Y_AXIS));
+            exploreTextPanel.setBackground(GUIConstants.WHITE);
+
+            JLabel exploreLabel = new JLabel("Club " + (i + 1));
+            exploreLabel.setFont(GUIConstants.FONT_TEXT);
+            exploreLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JLabel exploreDescription = new JLabel("<html><div style='width:200px'>" +
+                "Explore the wonders of Club " + (i + 1) + " and join the community!" +
+                "</div></html>");
+            exploreDescription.setFont(GUIConstants.SMALL_FONT_TEXT);
+            exploreDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            exploreTextPanel.add(exploreLabel);
+            exploreTextPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+            exploreTextPanel.add(exploreDescription);
+
+            explorePanel.add(exploreTextPanel);
+            exploringPanel.add(explorePanel);
+
+            if (i < 4) {
+                exploringPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+        exploreClubsPanel.add(exploringPanel, BorderLayout.CENTER);
+
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH);
+
+        mainPanel.add(headerPanel, BorderLayout.CENTER);
+        mainPanel.add(exploreClubsPanel, BorderLayout.EAST);
+
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        add(menuBar, BorderLayout.NORTH);
+        mainPanel.add(menuBar, BorderLayout.SOUTH);
+
+        this.add(mainPanel);
 
     }
 

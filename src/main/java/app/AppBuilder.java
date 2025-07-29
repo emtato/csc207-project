@@ -214,7 +214,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addClubHomePageView() {
-        clubHomePageView = new ClubHomePageView(viewManagerModel);
+        clubHomePageView = new ClubHomePageView(viewManagerModel, cardPanel);
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
     }
