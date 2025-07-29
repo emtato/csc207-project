@@ -1,6 +1,7 @@
 package view;
 
 
+import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ import java.beans.PropertyChangeListener;
 public class ManageFollowersView extends JPanel implements PropertyChangeListener {
     private final String viewName = "manage followers";
     private final ManageFollowersViewModel manageFollowersViewModel;
-    // TODO: declare controllers
+    private ManageFollowersController manageFollowersController;
 
     final JLabel title;
 
@@ -107,6 +108,7 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
+                        this.manageFollowersController.switchToProfileView();
                     }
                 }
         );
@@ -128,6 +130,8 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
         return viewName;
     }
 
-    // set controllers
+    public void setManageFollowersController(ManageFollowersController controller) {
+        this.manageFollowersController = controller;
+    }
 
 }
