@@ -231,8 +231,24 @@ public class PostView extends JPanel {
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
+
                     Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+
+                    int imgW = imageIcon.getIconWidth();
+                    int imgH = imageIcon.getIconHeight();
+
+                    int finalW = imgW;
+                    int finalH = imgH;
+                    float ratioW;
+                    if (imgW > 367) {
+                        finalW = 367;
+                        ratioW = imgW / 367f;
+                        finalH = (int) (imgH / ratioW);
+                    }
+
+                    img = img.getScaledInstance(finalW, finalH, Image.SCALE_SMOOTH);
                     ImageIcon scaledIcon = new ImageIcon(img);
+
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -285,6 +301,7 @@ public class PostView extends JPanel {
                     <br>""";
 
         }
+
         else {//modify this to make more sense later
             repice = null;
             mainContent = post.getDescription();

@@ -66,7 +66,6 @@ public class HomePageView extends JPanel {
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
         for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
-            feedRow.add(Box.createRigidArea(new Dimension(200, 10)));
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
             postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
@@ -90,8 +89,8 @@ public class HomePageView extends JPanel {
         mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        mainScrollPane.setPreferredSize(new Dimension(1000, 750));
+        mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        mainScrollPane.setPreferredSize(new Dimension(1300, 750));
         mainPanel.add(mainScrollPane, BorderLayout.CENTER);
 
         // bottom menu bar
