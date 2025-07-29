@@ -112,7 +112,7 @@ public class PostPanel extends JPanel {
 
         // middle
         postText.setEditable(false);
-       if (post instanceof Recipe) {
+        if (post instanceof Recipe) {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
             String mainContent = """
@@ -137,6 +137,11 @@ public class PostPanel extends JPanel {
         }
         else if (post.isImageVideo()) {
             System.out.println("cry");
+        }
+        else {
+            String description = post.getDescription();
+            postText.setText(description);
+            postText.setPreferredSize(new Dimension(500, 400));
         }
 
 

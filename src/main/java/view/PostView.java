@@ -150,7 +150,9 @@ public class PostView extends JPanel {
         else if (post.isImageVideo()) {
             System.out.println("cry");
         }
-
+        else {
+            postText.setText(post.getDescription());
+        }
         scrollPane = new JScrollPane(postText);
 
 
@@ -213,11 +215,11 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
+        this.post = newPost;
         if (newPost instanceof Recipe) {
 
             this.repice = (Recipe) newPost;
 
-            //redoing it hopefully
             //TODO
             String mainContent = """
                     <html>
@@ -250,23 +252,14 @@ public class PostView extends JPanel {
 
         else {
             repice = null;
-        }
-
-        title.setText(newPost.getTitle());
-        subtitle.setText(post.getUser().
-
-                getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
-
-        if (newPost instanceof Recipe) {
-            postText.setText(repice.getDescription() + "\n" + repice.getIngredients() + "\n" + repice.getSteps());
-        }
-        else {
             postText.setText(post.getDescription());
         }
 
+        title.setText(newPost.getTitle());
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
+
         //TODO: update comments for new post
         revalidate();
-
         repaint();
     }
 
