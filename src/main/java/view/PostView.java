@@ -191,6 +191,7 @@ public class PostView extends JPanel {
             this.repice = (Recipe) newPost;
 
             //redoing it hopefully
+            //TODO
             String mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
