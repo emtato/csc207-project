@@ -482,7 +482,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(profileView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
