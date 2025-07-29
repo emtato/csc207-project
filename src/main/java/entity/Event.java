@@ -1,13 +1,13 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class Event extends Post {
     private String location;
     private LocalDate date;
-    private Set<Account> participants;
-    private Set<String> foodPreferences;
+    private ArrayList<Account> participants;
+    private ArrayList<String> foodPreferences = new ArrayList<>();
 
     /**
      * @param user              The user who created the event post.
@@ -22,7 +22,7 @@ public class Event extends Post {
      *                    constructor for building recipe from scratch without a Post object
      */
 
-    public Event(Account user, long postID, String title, String description, String location, LocalDate date, Set<Account> participants, Set<String> foodPreferences) {
+    public Event(Account user, long postID, String title, String description, String location, LocalDate date, ArrayList<Account> participants, ArrayList<String> foodPreferences) {
         super(user, postID, title, description);
         this.location = location;
         this.date = date;
@@ -36,9 +36,9 @@ public class Event extends Post {
 
     public LocalDate getDate() {return date;}
 
-    public Set<Account> getParticipants() {return participants;}
+    public ArrayList<Account> getParticipants() {return participants;}
 
-    public Set<String> getFoodPreferences() {return foodPreferences;}
+    public ArrayList<String> getFoodPreferences() {return foodPreferences;}
 
     public void addParticipant(Account account) {participants.add(account);}
 
