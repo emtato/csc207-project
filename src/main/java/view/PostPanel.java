@@ -23,12 +23,12 @@ public class PostPanel extends JPanel {
 
     private Post post;
     private Recipe repice;
+    private JPanel cardPanel;
 
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
     private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
-    private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
@@ -46,8 +46,11 @@ public class PostPanel extends JPanel {
     private JPanel centerPanel;
     private JPanel rightPanel;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
+        this.post = post;
+        this.cardPanel = cardPanel;
+
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
@@ -154,11 +157,13 @@ public class PostPanel extends JPanel {
         }
         if (e.getSource() == viewFullPost) {
             viewManagerModel.setState("post view");
-            //PostView post = new PostView();
-            //post.displayPost()
-            //TODO: send information on which post has been expanded to postView
+
+            for (Component c : cardPanel.getComponents()) {
+                if (c instanceof PostView) {
+                    ((PostView) c).displayPost(this.post);   // push the chosen post into it
+                    break;
+                }
+            }
         }
-
     }
-
 }
