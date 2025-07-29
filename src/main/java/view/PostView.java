@@ -203,7 +203,7 @@ public class PostView extends JPanel {
             rightPanel.add(button);
             rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 680)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 400)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -225,6 +225,7 @@ public class PostView extends JPanel {
         maxBoxHeight = 739123617;
         if (post.isImageVideo()) {
             try {
+                //TODO: set 3 image max width to avoid overflow center panel
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
                 for (String imageURL : imageURLS) {
@@ -239,7 +240,7 @@ public class PostView extends JPanel {
                 }
                 centerPanel.add(imagePanel);
 
-                maxBoxHeight = 350;
+                maxBoxHeight = 150;
             }
             catch (MalformedURLException e) {
                 throw new RuntimeException(e);
@@ -248,8 +249,7 @@ public class PostView extends JPanel {
 
         postText.setEditable(false);
 
-
-        scrollPane.setPreferredSize(new Dimension(1400, Math.min(600, maxBoxHeight)));
+        scrollPane.setPreferredSize(new Dimension(1200, Math.min(600, maxBoxHeight)));
         centerPanel.add(scrollPane);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
@@ -375,7 +375,7 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
-            scrollPane.setSize(new Dimension(1400, Math.min(600, maxBoxHeight))); //YOPPP WORKS
+            scrollPane.setSize(new Dimension(1200, Math.min(600, maxBoxHeight))); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
 

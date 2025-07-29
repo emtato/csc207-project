@@ -57,23 +57,26 @@ public class PostPanel extends JPanel {
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel = new JPanel();
-       // topPanel.setAlignmentX();
+        // topPanel.setAlignmentX();
         bottomPanel.setLayout(new FlowLayout());
         centerPanel = new JPanel();
 
         // top
         title = new javax.swing.JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         topPanel.add(title); //TODO: fix datetime thing
         subtitle = new javax.swing.JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         javax.swing.JLabel tags = new JLabel("tags: " + post.getTags());
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
-
+        tags.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         topPanel.add(subtitle);
         topPanel.add(tags);
@@ -82,16 +85,39 @@ public class PostPanel extends JPanel {
         int maxBoxHeight = 739123617;
         if (post.isImageVideo()) {
             try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                imagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 ArrayList<String> imageURLS = post.getImageURLs();
-                for (String imageURL : imageURLS) {
+                for (int i = 0; i < Math.min(3, imageURLS.size()); i++) {
+                    String imageURL = imageURLS.get(i);
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
                     Image img = imageIcon.getImage().getScaledInstance(-1, 200, Image.SCALE_SMOOTH);
+
+                    int imgW = img.getWidth(this);
+                    int imgH = img.getHeight(this);
+
+                    int finalW = imgW;
+                    int finalH = imgH;
+                    float ratioW, ratioH;
+                    if (imgW > 150) {
+                        finalW = 150;
+                        ratioW = imgW / 150f;
+                        finalH = (int) (imgH / ratioW);
+                    }
+
+                    if (finalH > 200) {
+                        finalH = 200;
+                        ratioH = imgH / 200f;
+                        finalW = (int) (imgW / ratioH);
+                    }
+
+                    img = img.getScaledInstance(finalW, finalH, Image.SCALE_SMOOTH);
                     ImageIcon scaledIcon = new ImageIcon(img);
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+
                     imagePanel.add(image);
                 }
                 centerPanel.add(imagePanel);
