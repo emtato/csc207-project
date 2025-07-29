@@ -12,45 +12,68 @@ public class MenuBarPanel extends JPanel {
 
         Dimension buttonSize = new Dimension(GUIConstants.MAIN_BUTTON1_WIDTH, GUIConstants.MAIN_BUTTON1_HEIGHT);
 
-        JButton homeButton = new JButton("Home");
-        homeButton.setPreferredSize(buttonSize);
-        homeButton.setMaximumSize(buttonSize);
+        // Create home button with custom image
+        ImageIcon homeIcon = new ImageIcon(getClass().getResource("/images/home.png"));
+        Image homeImg = homeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton homeButton = new JButton(new ImageIcon(homeImg));
+        homeButton.setToolTipText("Home");
+        styleButton(homeButton, buttonSize);
 
-        JButton clubsButton = new JButton("Clubs");
-        clubsButton.setPreferredSize(buttonSize);
-        clubsButton.setMaximumSize(buttonSize);
+        // Create clubs button with system icon
+        ImageIcon clubsIcon = new ImageIcon(getClass().getResource("/images/toppng.com-white-person-icon-people-white-icon-abstract-backgrounds-436x368.png"));
+        Image clubImg = clubsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton clubsButton = new JButton(new ImageIcon(clubImg));
+        clubsButton.setToolTipText("Clubs");
+        styleButton(clubsButton, buttonSize);
 
-        JButton settingsButton = new JButton("Settings");
-        settingsButton.setPreferredSize(buttonSize);
-        settingsButton.setMaximumSize(buttonSize);
+        // Create settings button with system icon
+        ImageIcon settingsIcon = new ImageIcon(getClass().getResource("/images/[CITYPNG.COM]Settings White Outline Icon Download PNG - 1500x1500.png"));
+        Image settingsImg = settingsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton settingsButton = new JButton(new ImageIcon(settingsImg));
+        settingsButton.setToolTipText("Settings");
+        styleButton(settingsButton, buttonSize);
 
-        JButton exploreButton = new JButton("Explore");
-        exploreButton.setPreferredSize(buttonSize);
-        exploreButton.setMaximumSize(buttonSize);
+        // Create explore button with system icon
+        ImageIcon exploreIcon = new ImageIcon(getClass().getResource("/images/[CITYPNG.COM]Search Explore White Icon Transparent PNG - 4000x4000.png"));
+        Image exploreImg = exploreIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton exploreButton = new JButton(new ImageIcon(exploreImg));
+        exploreButton.setToolTipText("Explore");
+        styleButton(exploreButton, buttonSize);
 
-        JButton notifcationsButton = new JButton("Notifcations");
-        notifcationsButton.setPreferredSize(buttonSize);
-        notifcationsButton.setMaximumSize(buttonSize);
+        // Create notifications button with system icon
+        ImageIcon notificationsIcon = new ImageIcon(getClass().getResource("/images/appointment-reminders.png"));
+        Image notificationsImg = notificationsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton notificationsButton = new JButton(new ImageIcon(notificationsImg));
+        notificationsButton.setToolTipText("Notifications");
+        styleButton(notificationsButton, buttonSize);
 
+        // Add buttons to panel
+        add(Box.createHorizontalStrut(10));  // Add some padding
+        add(homeButton);
+        add(Box.createHorizontalStrut(5));
+        add(exploreButton);
+        add(Box.createHorizontalStrut(5));
+        add(notificationsButton);
+        add(Box.createHorizontalStrut(5));
+        add(clubsButton);
+        add(Box.createHorizontalStrut(5));
+        add(settingsButton);
+        add(Box.createHorizontalStrut(10));
 
         homeButton.addActionListener(e -> viewManagerModel.setState("homepage view"));
         clubsButton.addActionListener(e -> viewManagerModel.setState("club view"));
         settingsButton.addActionListener(e -> viewManagerModel.setState("settings"));
         exploreButton.addActionListener(e -> viewManagerModel.setState("explore view"));
-        notifcationsButton.addActionListener(e -> viewManagerModel.setState("notifications view"));
+        notificationsButton.addActionListener(e -> viewManagerModel.setState("notifications view"));
+    }
 
-//        add(Box.createRigidArea(new Dimension(10, 0)));
-
-        //the bar was overflowing horizontally for many menus and i couldnt find out why, width changed from 100-> 0 and
-        // that seems to have worked
-        add(homeButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(exploreButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(notifcationsButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(clubsButton);
-        add(Box.createRigidArea(new Dimension(0, 0)));
-        add(settingsButton);
+    private void styleButton(JButton button, Dimension size) {
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(true);
+        button.setFocusPainted(false);
+        button.setBackground(GUIConstants.RED);
+        button.setOpaque(true);
     }
 }
