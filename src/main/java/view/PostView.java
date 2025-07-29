@@ -96,6 +96,12 @@ public class PostView extends JPanel {
         topPanel.add(tags);
 
         // middle
+
+        // if has media:
+        if post.isImageVideo(){
+            
+        }
+        
         postText.setEditable(false);
         if (post instanceof Recipe || this.repice != null) {
             this.repice = (Recipe) post;
