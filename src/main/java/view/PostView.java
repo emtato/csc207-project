@@ -247,14 +247,13 @@ public class PostView extends JPanel {
 
         postText.setEditable(false);
 
-        JTextArea comments = new JTextArea();
-        scrollPane.add(comments);
+
         scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
         centerPanel.add(scrollPane);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
-        comments.setBackground(Color.PINK);
-        comments.setOpaque(true);
 
+        String mainContent = "";
+        String comments = "";
         if (newPost instanceof Recipe) {
 
             this.repice = (Recipe) newPost;
@@ -264,8 +263,9 @@ public class PostView extends JPanel {
             for (String ingredient : ingredients) {
                 ingredientsText += ingredient + "<br>";
             }
+
             System.out.println(ingredientsText);
-            String mainContent = """
+            mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
                         <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
@@ -277,23 +277,25 @@ public class PostView extends JPanel {
                     </ul>
                     <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
                     <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                          </p>
-                          </body>
-                        </html>
-                    """;
-            postText.setContentType("text/html");
-            postText.setText(mainContent);
+                    </p>
+                    <br>""";
 
-            // scrollPane.add(comments);
-
-            mainPanel.add(centerPanel, BorderLayout.CENTER);
-            this.add(mainPanel);
         }
-
-        else {
+        else{//modify this to make more sense later
             repice = null;
-            postText.setText(post.getDescription());
-        }
+            mainContent = post.getDescription();
+            }
+
+        mainContent+= """
+                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + this.post.getComments() + """
+                                          </body>
+                                        </html>
+    """;
+        postText.setContentType("text/html");
+        postText.setText(mainContent);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        this.add(mainPanel);
+
 
         title.setText(newPost.getTitle());
         subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
@@ -433,7 +435,7 @@ public class PostView extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
+        String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg")));
