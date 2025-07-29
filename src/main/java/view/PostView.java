@@ -105,8 +105,6 @@ public class PostView extends JPanel {
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
                 for (String imageURL : imageURLS) {
-
-
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
                     Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
@@ -117,7 +115,6 @@ public class PostView extends JPanel {
                     imagePanel.add(image);
                 }
                 centerPanel.add(imagePanel);
-
 
                 maxBoxHeight = 350;
             }

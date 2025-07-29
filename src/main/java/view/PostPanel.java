@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,6 +84,31 @@ public class PostPanel extends JPanel {
 
         topPanel.add(subtitle);
         topPanel.add(tags);
+
+        // if has media:
+        int maxBoxHeight = 739123617;
+        if (post.isImageVideo()) {
+            try {
+                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                ArrayList<String> imageURLS = post.getImageURLs();
+                for (String imageURL : imageURLS) {
+                    URL url = new URL(imageURL);
+                    ImageIcon imageIcon = new ImageIcon(url);
+                    Image img = imageIcon.getImage().getScaledInstance(-1, 250, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(img);
+                    JLabel image = new JLabel(scaledIcon);
+                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+                    imagePanel.add(image);
+                }
+                centerPanel.add(imagePanel);
+
+                maxBoxHeight = 5;
+            }
+            catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // middle
         postText.setEditable(false);

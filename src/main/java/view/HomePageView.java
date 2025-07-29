@@ -59,7 +59,8 @@ public class HomePageView extends JPanel {
         JPanel wrapperPanel = new JPanel(new BorderLayout());
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
-        for (int i = 0; i < 5; i++) {
+        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg")));
+        for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
