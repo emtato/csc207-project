@@ -17,6 +17,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Simplified PostPanel view to be embedded onto another view
+ * <p>
+ * This panel displays a summary of a Post or Recipe with user info, tags,
+ * and a short preview of the post content. it also provides action buttons
+ * to like, save, share, or view the full post
+ * </p>
+ */
 public class PostPanel extends JPanel {
 
     private final ViewManagerModel viewManagerModel;

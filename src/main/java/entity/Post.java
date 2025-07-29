@@ -18,6 +18,7 @@ public class Post {
     private String description;
     private Account user;
     private ArrayList<String> tags;
+    private ArrayList<String> imageURLs;
 
     private boolean isImageVideo;
     private boolean isReview;
@@ -132,10 +133,6 @@ public class Post {
         return isImageVideo;
     }
 
-    public void setImageVideo(boolean imageVideo) {
-        isImageVideo = imageVideo;
-    }
-
     public boolean isReview() {
         return isReview;
     }
@@ -181,6 +178,7 @@ public class Post {
 
     /**
      * Basic debugging toString method
+     *
      * @return postID, title, user
      */
     @Override
@@ -194,6 +192,21 @@ public class Post {
 
     public void setComments(HashMap<Integer, Comment> comments) {
         this.comments = comments;
+    }
+
+    public ArrayList<String> getImageURLs() {
+        return imageURLs;
+    }
+
+    /**
+     * sets image url of post. automatically updates post field for isImageVideo.
+     */
+    public void setImageURLs(ArrayList<String> imageURLs) {
+        this.imageURLs = imageURLs;
+        if (imageURLs != null && !imageURLs.isEmpty()) {
+            this.isImageVideo = true;
+        }
+        else this.isImageVideo = false;
     }
 }
 

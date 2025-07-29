@@ -3,16 +3,17 @@ package view;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.post_view.PostViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -98,10 +99,33 @@ public class PostView extends JPanel {
         // middle
 
         // if has media:
-        if post.isImageVideo(){
-            
+        int maxBoxHeight = 739123617;
+        if (post.isImageVideo()) {
+            try {
+                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                ArrayList<String> imageURLS = post.getImageURLs();
+                for (String imageURL : imageURLS) {
+
+
+                    URL url = new URL(imageURL);
+                    ImageIcon imageIcon = new ImageIcon(url);
+                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(img);
+                    JLabel image = new JLabel(scaledIcon);
+                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+                    imagePanel.add(image);
+                }
+                centerPanel.add(imagePanel);
+
+
+                maxBoxHeight = 350;
+            }
+            catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        
+
         postText.setEditable(false);
         if (post instanceof Recipe || this.repice != null) {
             this.repice = (Recipe) post;
@@ -135,7 +159,7 @@ public class PostView extends JPanel {
 
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1400, 850));
+        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
         centerPanel.add(scrollPane);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
@@ -381,6 +405,7 @@ public class PostView extends JPanel {
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile \n \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n hi\nhih\nhi\njo";
         Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
         trialpost.setTags(new ArrayList<>(Arrays.asList("glorpy", "beany")));
+        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg")));
 //        Post trialpost2 = new Post(new Account("chef", "secret123"), 123456789);
 //        trialpost2.setTitle(" salad");
 //        trialpost2.setRecipeObj(new Recipe(
