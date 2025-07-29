@@ -48,6 +48,7 @@ public class PostView extends JPanel {
     private JTextPane postText = new JTextPane();
     private JPanel centerPanel;
     private JScrollPane scrollPane;
+    private int maxBoxHeight;
     // top
     private final JLabel title;
     private final JLabel subtitle;
@@ -221,7 +222,7 @@ public class PostView extends JPanel {
         centerPanel.removeAll();
         this.post = newPost;
 
-        int maxBoxHeight = 739123617;
+        maxBoxHeight = 739123617;
         if (post.isImageVideo()) {
             try {
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -248,7 +249,7 @@ public class PostView extends JPanel {
         postText.setEditable(false);
 
 
-        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
+        scrollPane.setPreferredSize(new Dimension(1400, Math.min(600, maxBoxHeight)));
         centerPanel.add(scrollPane);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
@@ -374,7 +375,7 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
-            scrollPane.setSize(new Dimension(1400, 800)); //YOPPP WORKS
+            scrollPane.setSize(new Dimension(1400, Math.min(600, maxBoxHeight))); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
 
@@ -454,7 +455,7 @@ public class PostView extends JPanel {
 //                        "5. Toss the salad with dressing and garnish with fresh parsley.",
 //                new ArrayList<>(Arrays.asList("mediterranean", "middle eastern"))
 //        ));
-//     
+//
 //        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 

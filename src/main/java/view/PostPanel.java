@@ -1,8 +1,5 @@
 package view;
 
-import data_access.spoonacular.SpoonacularAPI;
-import entity.Account;
-import entity.Comment;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
@@ -11,13 +8,10 @@ import javax.swing.*;
 import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Simplified PostPanel view to be embedded onto another view
@@ -42,8 +36,6 @@ public class PostPanel extends JPanel {
     // middle
     private JTextPane postText = new JTextPane();
     // bottom
-
-    // right
     private RoundedButton likeButton = new RoundedButton("Like");
     private final RoundedButton saveButton = new RoundedButton("Add to list");
     private final RoundedButton shareButton = new RoundedButton("Share");
@@ -54,19 +46,20 @@ public class PostPanel extends JPanel {
 
     private boolean liked;
     private JPanel centerPanel;
-    private JPanel rightPanel;
+    private JPanel bottomPanel;
 
     public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
         this.cardPanel = cardPanel;
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        bottomPanel = new JPanel();
+       // topPanel.setAlignmentX();
+        bottomPanel.setLayout(new FlowLayout());
         centerPanel = new JPanel();
 
         // top
@@ -94,7 +87,7 @@ public class PostPanel extends JPanel {
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
-                    Image img = imageIcon.getImage().getScaledInstance(-1, 250, Image.SCALE_SMOOTH);
+                    Image img = imageIcon.getImage().getScaledInstance(-1, 200, Image.SCALE_SMOOTH);
                     ImageIcon scaledIcon = new ImageIcon(img);
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -112,6 +105,8 @@ public class PostPanel extends JPanel {
 
         // middle
         postText.setEditable(false);
+        postText.setPreferredSize(new Dimension(400, 400));
+        postText.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
@@ -141,23 +136,24 @@ public class PostPanel extends JPanel {
         else {
             String description = post.getDescription();
             postText.setText(description);
-            postText.setPreferredSize(new Dimension(500, 400));
+
         }
 
 
         centerPanel.add(postText);
+
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
-        // right
-        ArrayList<JButton> rightButtons = new ArrayList<>();
+        // bottom
+        ArrayList<JButton> bottomButtons = new ArrayList<>();
         if (liked) {
             likeButton.setText("unlike");
         }
-        rightButtons.add(likeButton);
-        rightButtons.add(saveButton);
-        rightButtons.add(shareButton);
-        rightButtons.add(viewFullPost);
-        for (JButton button : rightButtons) {
+        bottomButtons.add(likeButton);
+        bottomButtons.add(saveButton);
+        bottomButtons.add(shareButton);
+        bottomButtons.add(viewFullPost);
+        for (JButton button : bottomButtons) {
             button.setFont(text);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(e -> {
@@ -172,15 +168,14 @@ public class PostPanel extends JPanel {
                     System.out.println("NOOOOOO D:");
                 }
             });
-            rightPanel.add(button);
-            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            bottomPanel.add(button);
+            //bottomPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(rightPanel, BorderLayout.EAST);
+        add(topPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-        this.add(mainPanel);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
