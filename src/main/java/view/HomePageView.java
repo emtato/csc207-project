@@ -84,7 +84,7 @@ public class HomePageView extends JPanel {
         mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        mainScrollPane.setPreferredSize(new Dimension(1200, 800));
+        mainScrollPane.setPreferredSize(new Dimension(1000, 750));
         mainPanel.add(mainScrollPane, BorderLayout.CENTER);
 
         // bottom menu bar
