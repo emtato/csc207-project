@@ -36,15 +36,19 @@ public class HomePageView extends JPanel {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // top tabs to switch between feeds
-        Dimension buttonSize = new Dimension(450, GUIConstants.MAIN_BUTTON1_HEIGHT);
+        Dimension buttonSize = new Dimension(450, 40);
 
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
         JButton forYouButton = new JButton("For You");
         forYouButton.setPreferredSize(buttonSize);
+        forYouButton.setBorder(BorderFactory.createEmptyBorder());
         JButton followingButton = new JButton("Following");
+        followingButton.setBorder(BorderFactory.createEmptyBorder());
         followingButton.setPreferredSize(buttonSize);
         JButton tagsButton = new JButton("Tags");
         tagsButton.setPreferredSize(buttonSize);
+        tagsButton.setBorder(BorderFactory.createEmptyBorder());
 
         tabsPanel.add(forYouButton);
         tabsPanel.add(followingButton);
@@ -59,21 +63,24 @@ public class HomePageView extends JPanel {
         JPanel wrapperPanel = new JPanel(new BorderLayout());
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
-        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg")));
+        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
         for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
+            feedRow.add(Box.createRigidArea(new Dimension(200, 10)));
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
+            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
-            feedRow.add(new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel)); // second post
+            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());
-
-            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
-            feedRow.add(new JLabel("placeholder for clubs list", 22, Color.RED, 3)); // clubs
-            feedRow.add(Box.createHorizontalGlue());
+//commented out due to lack of horizontal space (to make window fit on all screen sizes)
+//            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
+//            feedRow.add(new JLabel("placeholder for clubs list", 22, Color.RED, 3)); // clubs
+//            feedRow.add(Box.createHorizontalGlue());
 
             feedPanel.add(feedRow);
             //feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
