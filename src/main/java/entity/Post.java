@@ -1,5 +1,7 @@
 package entity;
 
+import data_access.DataStorage;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class Post {
     private boolean isClub;
 
     private LocalDateTime dateTime;
-    private HashMap<Integer, Comment> comments;
+    private ArrayList<Comment> comments;
     private long likes = 0;
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
@@ -186,11 +188,14 @@ public class Post {
         return "PostID=" + postID + ", Title=" + title + ", User=" + user.getUsername();
     }
 
-    public HashMap<Integer, Comment> getComments() {
+    public ArrayList<Comment> getComments() {
+        DataStorage dataStorage = new DataStorage();
+        ArrayList<Comment> comments = dataStorage.getComments(postID);
+        this.comments = comments;
         return comments;
     }
 
-    public void setComments(HashMap<Integer, Comment> comments) {
+    public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
 

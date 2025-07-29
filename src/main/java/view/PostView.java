@@ -271,8 +271,11 @@ public class PostView extends JPanel {
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
         String mainContent = "";
-        String comments = "";
-
+        String commentsInView = "";
+        ArrayList<Comment> comments = post.getComments();
+        for(Comment comment: comments) {
+            commentsInView+= comment.getComment();
+        } //TODO actually finish this thing
         System.out.println("Post: " + post.getTitle());
 
         if (newPost instanceof Recipe) {
@@ -306,7 +309,7 @@ public class PostView extends JPanel {
         }
 
         mainContent += """
-                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + this.post.getComments() + """
+                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + commentsInView + """
                                                       </body>
                                                     </html>
                 """;
@@ -433,17 +436,17 @@ public class PostView extends JPanel {
                     commentButton.setOpaque(false);
                     xPresent = false;
 
-                    HashMap<Integer, Comment> map = post.getComments();
-                    if (map == null) {
-                        map = new HashMap<Integer, Comment>();
+                    ArrayList<Comment> lst = post.getComments();
+                    if (lst == null) {
+                        lst = new ArrayList<Comment>();
                     }
-                    //TODO: account user implementation, and send comment to scroll window
+                    //TODO: account user implementation
                     Account postingAccount = new Account("hi", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
-                    map.put(comment.getID(), comment);
-                    post.setComments(map);
+                    lst.add(comment);
+                    post.setComments(lst);
                     DataStorage dataStorage = new DataStorage();
-                    dataStorage.writeDataToFile(String.valueOf(post.getID()), postingAccount, mesage, LocalDateTime.now());
+                    dataStorage.writeDataToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                 }
             });
         }
