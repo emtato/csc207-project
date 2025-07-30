@@ -28,7 +28,8 @@ public class Post {
     private boolean isClub;
 
     private LocalDateTime dateTime;
-    private ArrayList<Comment> comments;
+    //can probably delete since comments are stored in JSON
+    //private ArrayList<Comment> comments;
     private long likes = 0;
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
@@ -191,12 +192,7 @@ public class Post {
     public ArrayList<Comment> getComments() {
         DataStorage dataStorage = new DataStorage();
         ArrayList<Comment> comments = dataStorage.getComments(postID);
-        this.comments = comments;
         return comments;
-    }
-
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
     }
 
     public ArrayList<String> getImageURLs() {
