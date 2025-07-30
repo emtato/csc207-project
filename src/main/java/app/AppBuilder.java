@@ -2,6 +2,7 @@ package app;
 
 import java.awt.CardLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -225,8 +226,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addMapView() {
-        ArrayList<String> Cuisines = new ArrayList<>();
-        Restaurant exampleRestaurant = new Restaurant("","","","",Cuisines);
+        Restaurant exampleRestaurant = new Restaurant(new ArrayList<String>(Arrays
+                .asList("French", "Italian", "Swiss")), "Toronto");
         mapViewModel = new MapViewModel();
         mapView = new MapView(mapViewModel, exampleRestaurant);
         //cardPanel.add(mapView, mapView.getViewName());

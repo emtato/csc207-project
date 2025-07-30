@@ -47,7 +47,7 @@ public class RestaurantMapper {
                 break;
         }
 
-        return new Restaurant(name, address, phone, location, cuisines);
+        return new Restaurant(cuisines, location);
 
     }
 }
