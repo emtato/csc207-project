@@ -21,4 +21,9 @@ public interface MapInputBoundary {
      * Switches to the Settings View.
      */
     void switchToSettingsView();
+
+    /**
+     * Switches to the Profile View.
+     */
+    void switchToProfileView();
 }

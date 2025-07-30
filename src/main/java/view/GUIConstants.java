@@ -16,12 +16,13 @@ public class GUIConstants {
 
     public static final String FONT = "Inter";
     public static final Font FONT_TEXT = new Font(FONT, Font.PLAIN, 25);
+    public static final Font SMALL_FONT_TEXT = new Font(FONT, Font.PLAIN, 18);
     public static final Font FONT_HEADER = new Font(FONT, Font.PLAIN, 35);
     public static final Font FONT_TITLE = new Font(FONT, Font.BOLD, 48);
 
     // MAIN PAGE
-    public static final int MAIN_BUTTON1_WIDTH = 350;
-    public static final int MAIN_BUTTON1_HEIGHT = 100;
+    public static final int MAIN_BUTTON1_WIDTH = 250;
+    public static final int MAIN_BUTTON1_HEIGHT = 75;
     public static final int MAIN_BUTTON2_SIDE = 125;
     public static final int FEED_WIDTH = 1050;
     public static final int FEED_HEIGHT = 925;

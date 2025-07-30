@@ -31,4 +31,9 @@ private final MapOutputBoundary mapOutputBoundary;
     public void switchToSettingsView() {
         mapOutputBoundary.switchToSettingsView();
     }
+
+    @Override
+    public void switchToProfileView() {
+        mapOutputBoundary.switchToProfileView();
+    }
 }

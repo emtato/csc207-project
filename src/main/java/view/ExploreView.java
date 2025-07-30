@@ -38,8 +38,9 @@ public class ExploreView extends JPanel {
     private Event cheeseMeetup = new Event(swissCheez, 1234567890, "Cheese Tasting",
             "Visit to local cheesemongers and farmers markets", "St Lawrence Market",
             LocalDate.of(2025, 8, 12), new ArrayList(), new ArrayList<String>());
-    private Restaurant cheeseVille = new Restaurant("CheeseVille", "14 Cheese Ave", "+1 1234567890",
-            "14 Cheese Ave", new ArrayList<String>(Arrays.asList("French", "Italian", "Swiss")));
+//    private Restaurant cheeseVille = new Restaurant("CheeseVille", "14 Cheese Ave", "+1 1234567890",
+//            "14 Cheese Ave", new ArrayList<String>(Arrays.asList("French", "Italian", "Swiss")));
+private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asList("French", "Italian", "Swiss")), "Toronto");
     private String blueCheeseSteps = "1. Get cheese \n" + "2. Cover it in blue food coloring diluted with milk \n" +
             "3. Make it stinky \n" + "4. Congrats you have blue cheese. Consume it.";
     private Recipe blueCheeseRecipe = new Recipe(swissCheez, 123454321, "DIY Blue Cheese",

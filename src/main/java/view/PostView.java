@@ -1,5 +1,6 @@
 package view;
 
+import data_access.DataStorage;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -231,8 +232,24 @@ public class PostView extends JPanel {
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
+
                     Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
+
+                    int imgW = imageIcon.getIconWidth();
+                    int imgH = imageIcon.getIconHeight();
+
+                    int finalW = imgW;
+                    int finalH = imgH;
+                    float ratioW;
+                    if (imgW > 367) {
+                        finalW = 367;
+                        ratioW = imgW / 367f;
+                        finalH = (int) (imgH / ratioW);
+                    }
+
+                    img = img.getScaledInstance(finalW, finalH, Image.SCALE_SMOOTH);
                     ImageIcon scaledIcon = new ImageIcon(img);
+
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -254,12 +271,13 @@ public class PostView extends JPanel {
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
         String mainContent = "";
-        String comments = "";
-
-        System.out.println("Post: " + post.getTitle());
+        String commentsInView = "";
+        ArrayList<Comment> comments = post.getComments();
+        for(Comment comment: comments) {
+            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>"+ comment.getDate() + "<br>" + comment.getComment();
+        }
 
         if (newPost instanceof Recipe) {
-            System.out.println("isrecipe1");
             this.repice = (Recipe) newPost;
 
             String ingredientsText = "";
@@ -267,8 +285,6 @@ public class PostView extends JPanel {
             for (String ingredient : ingredients) {
                 ingredientsText += ingredient + "<br>";
             }
-
-            System.out.println(ingredientsText);
             mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
@@ -285,13 +301,14 @@ public class PostView extends JPanel {
                     <br>""";
 
         }
+
         else {//modify this to make more sense later
             repice = null;
             mainContent = post.getDescription();
         }
 
         mainContent += """
-                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + this.post.getComments() + """
+                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + commentsInView + """
                                                       </body>
                                                     </html>
                 """;
@@ -417,14 +434,18 @@ public class PostView extends JPanel {
                     commentButton.setText("comment");
                     commentButton.setOpaque(false);
                     xPresent = false;
-                    HashMap<Integer, Comment> map = post.getComments();
-                    if (map == null) {
-                        map = new HashMap<Integer, Comment>();
+
+                    ArrayList<Comment> lst = post.getComments();
+                    if (lst == null) {
+                        lst = new ArrayList<Comment>();
                     }
-                    //TODO: account user implementation, and send comment to scroll window
-                    Comment comment = new Comment(new Account("hi", "bye"), mesage, LocalDateTime.now(), 0);
-                    map.put(comment.getID(), comment);
-                    post.setComments(map);
+                    //TODO: account user implementation
+                    Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
+                    Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
+                    lst.add(comment);
+                    post.setComments(lst);
+                    DataStorage dataStorage = new DataStorage();
+                    dataStorage.writeDataToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                 }
             });
         }
