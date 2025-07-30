@@ -1,11 +1,14 @@
 package view;
 
+import app.AppProperties;
 import data_access.places.GooglePlacesAPI;
 import data_access.places.RestaurantMapper;
 import entity.Restaurant;
 import interface_adapter.map.MapViewModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,9 +20,15 @@ public class MapView {
 
     public MapView(MapViewModel viewModel, Restaurant restaurant) {
         this.mapViewModel = viewModel;
-        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
+        //        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
+//        AppProperties appProps = new AppProperties();
+//        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
+
+        //GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(*apikey*));
+
 
         try {
+
             // Use name and location to search
             String query = restaurant.getName() + " near " + restaurant.getLocation();
             List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
@@ -49,5 +58,10 @@ public class MapView {
 
     public String getViewName() {
         return "map view";
+    }
+
+    public static void main(String[] args) {
+        MapView mapView = new MapView(new MapViewModel(), new Restaurant(new ArrayList<String>(Arrays
+                .asList("Spicy Foods", "Indian")), "Toronto"));
     }
 }

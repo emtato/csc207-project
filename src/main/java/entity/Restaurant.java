@@ -1,17 +1,18 @@
 package entity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Restaurant {
-    private final String name;
-    private final String address;
-    private final String phone;
+    private String name;
+    private String address;
+    private  String phone;
     private final String location;
     private final ArrayList<String> cuisines;
     private final ArrayList<entity.Review> reviews;
     private final String priceRange;
 
-    public Restaurant(String name, String address, String phone, String location, ArrayList<String> cuisines) {
+    public Restaurant(ArrayList<String> cuisines, String location) {
         this.name = name;
         this.address = address;
         this.phone = phone;
