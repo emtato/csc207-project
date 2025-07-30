@@ -13,6 +13,7 @@ import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -273,8 +274,9 @@ public class PostView extends JPanel {
         String mainContent = "";
         String commentsInView = "";
         ArrayList<Comment> comments = post.getComments();
-        for(Comment comment: comments) {
-            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>"+ comment.getDate() + "<br>" + comment.getComment();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        for (Comment comment : comments) {
+            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>" + comment.getDate().format(formatter) + "<br>" + comment.getComment();
         }
 
         if (newPost instanceof Recipe) {
@@ -302,9 +304,18 @@ public class PostView extends JPanel {
 
         }
 
-        else {//modify this to make more sense later
+
+        else { //general post display
+            String desc = post.getDescription();
+            mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + this.post.getDescription() + """ 
+                    </p>
+                    <br>""";
+
             repice = null;
-            mainContent = post.getDescription();
         }
 
         mainContent += """
@@ -321,7 +332,6 @@ public class PostView extends JPanel {
         title.setText(newPost.getTitle());
         subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
 
-        //TODO: update comments for new post
         revalidate();
         repaint();
 
@@ -443,13 +453,12 @@ public class PostView extends JPanel {
                     Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
-                    post.setComments(lst);
                     DataStorage dataStorage = new DataStorage();
                     dataStorage.writeDataToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    displayPost(post);
                 }
             });
         }
-
     }
 
     public String getViewName() {
