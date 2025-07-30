@@ -4,6 +4,7 @@ package view;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
 import interface_adapter.edit_profile.EditProfileViewModel;
+import interface_adapter.login.LoginState;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -11,8 +12,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -56,7 +55,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         profilePreviewPanel.setMaximumSize(new Dimension(200, 1030));
         profilePreviewPanel.setMinimumSize(new Dimension(200, 1030));
 
-        Image profilePictureImage =  new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+        //Image profilePictureImage = this.editProfileViewModel.getState().getProfilePicture();
+        Image profilePictureImage = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
         int newWidth = 200;
         int newHeight = 200;
         profilePictureImage = profilePictureImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
@@ -70,16 +70,16 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
 
         profilePreviewPanel.add(Box.createRigidArea(new Dimension(200, 50)));
 
-        displayName = new JLabel("Display Name");
+        displayName = new JLabel(this.editProfileViewModel.getState().getDisplayName());
         displayName.setAlignmentX(Component.LEFT_ALIGNMENT);
         profilePreviewPanel.add(displayName);
 
-        username = new JLabel("@Username");
+        username = new JLabel(this.editProfileViewModel.getState().getUsername());
         username.setAlignmentX(Component.LEFT_ALIGNMENT);
         profilePreviewPanel.add(username);
 
         bio = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,EditProfileViewModel.BIO_COL_NUM);
-        bio.setText("Bio.\n1234567890123456789012345678901234567890");
+        bio.setText(this.editProfileViewModel.getState().getBio());
         bio.setEditable(false);
         bio.setAlignmentX(Component.LEFT_ALIGNMENT);
         profilePreviewPanel.add(bio);
@@ -108,6 +108,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         editNamePanel.add(editNameLabel);
         editNamePanel.add(Box.createRigidArea(new Dimension(50, 50)));
         nameInputField = new JTextField();
+        nameInputField.setText(this.editProfileViewModel.getState().getNewDisplayName());
         nameInputField.setAlignmentX(Component.LEFT_ALIGNMENT);
         editNamePanel.add(nameInputField);
         editProfilePanel.add(editNamePanel);
@@ -120,6 +121,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         editBioPanel.add(Box.createRigidArea(new Dimension(50, 50)));
         bioInputField = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,EditProfileViewModel.BIO_COL_NUM);
         bioInputField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        bioInputField.setText(this.editProfileViewModel.getState().getNewBio());
         editBioPanel.add(bioInputField);
         editProfilePanel.add(editBioPanel);
 
@@ -159,10 +161,12 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // TODO: write code for the action listeners below
         nameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
+                final EditProfileState currentState = editProfileViewModel.getState();
+                currentState.setNewDisplayName(nameInputField.getText());
+                editProfileViewModel.setState(currentState);
             }
 
             @Override
@@ -184,6 +188,9 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         bioInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
+                final EditProfileState currentState = editProfileViewModel.getState();
+                currentState.setNewBio(bioInputField.getText());
+                editProfileViewModel.setState(currentState);
             }
 
             @Override
@@ -206,6 +213,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         uploadProfilePicture.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(uploadProfilePicture)) {
+                        //TODO
                     }
                 }
         );
@@ -213,6 +221,9 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         preferenceTagsField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
+                final EditProfileState currentState = editProfileViewModel.getState();
+                currentState.setNewPreferences(preferenceTagsField.getText());
+                editProfileViewModel.setState(currentState);
             }
 
             @Override
@@ -234,6 +245,15 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         saveChangesButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(saveChangesButton)) {
+                        final EditProfileState currentState = editProfileViewModel.getState();
+
+                        this.editProfileController.execute(
+                                currentState.getUsername(),
+                                currentState.getNewDisplayName(),
+                                currentState.getNewBio(),
+                                currentState.getNewProfilePicture(),
+                                currentState.getNewPreferences()
+                        );
                     }
                 }
         );
@@ -250,11 +270,27 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         this.add(mainPanel);
     }
 
-    // TODO: implement the propertyChange function and set controllers
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-
+        if (evt.getPropertyName().equals("username")) {
+            this.username.setText(this.editProfileViewModel.getState().getUsername());
+            this.displayName.setText(this.editProfileViewModel.getState().getDisplayName());
+            this.bio.setText(this.editProfileViewModel.getState().getBio());
+            this.preferenceTagsField.setText(this.editProfileViewModel.getState().getPreferences());
+            this.profilePicture.setImage(this.editProfileViewModel.getState().getProfilePicture());
+        }
+        if (evt.getPropertyName().equals("displayName")) {
+            this.displayName.setText(this.editProfileViewModel.getState().getDisplayName());
+        }
+        if (evt.getPropertyName().equals("bio")) {
+            this.bio.setText(this.editProfileViewModel.getState().getBio());
+        }
+        if (evt.getPropertyName().equals("preferences")) {
+            this.preferenceTagsField.setText(this.editProfileViewModel.getState().getPreferences());
+        }
+        if (evt.getPropertyName().equals("profilePicture")) {
+            this.profilePicture.setImage(
+                    new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage());
         }
     }
 

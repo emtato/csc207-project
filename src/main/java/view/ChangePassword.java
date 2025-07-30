@@ -77,7 +77,7 @@ public class ChangePassword {
                 }
                 // TODO: figure out parameter:
 //                ChangePasswordController change = new ChangePasswordController();
-//                if (change.execute(newPassword.getText(), user.getUsername())) {
+//                if (change.executeViewProfile(newPassword.getText(), user.getUsername())) {
 //                    new HomeView(user, database);
 //                    new Alert("Password changed successfully", frame);
 //                    frame.dispose();

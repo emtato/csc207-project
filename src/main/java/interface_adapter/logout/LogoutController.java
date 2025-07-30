@@ -22,7 +22,7 @@ public class LogoutController {
     public void execute(String username) {
         // Run the use case interactor for the logout use case
         // 1. instantiate the `LogoutInputData`, which should contain the username.
-        // 2. tell the Interactor to execute.
+        // 2. tell the Interactor to executeViewProfile.
         final LogoutInputData user = new LogoutInputData(username);
         logoutUseCaseInteractor.execute(user);
     }

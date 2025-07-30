@@ -1,6 +1,7 @@
 package interface_adapter.edit_profile;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
 import use_case.edit_profile.EditProfileOutputBoundary;
 import use_case.edit_profile.EditProfileOutputData;
@@ -23,7 +24,15 @@ public class EditProfilePresenter implements EditProfileOutputBoundary {
 
     @Override
     public void prepareSuccessView(EditProfileOutputData response) {
-        // TODO: On success, do somethings.
+        final EditProfileState editProfileState = editProfileViewModel.getState();
+        editProfileState.setDisplayName(response.getNewDisplayName());
+        editProfileState.setBio(response.getNewBio());
+        editProfileState.setProfilePicture(response.getNewProfilePicture());
+        editProfileState.setPreferences(response.getNewPreferences());
+        editProfileViewModel.firePropertyChanged("displayName");
+        editProfileViewModel.firePropertyChanged("bio");
+        editProfileViewModel.firePropertyChanged("profilePicture");
+        editProfileViewModel.firePropertyChanged("preferences");
     }
 
     @Override

@@ -2,7 +2,9 @@ package view;
 
 
 import interface_adapter.profile.ProfileController;
+import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
+import use_case.profile.SwitchToEditProfileViewOutputData;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -166,7 +168,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         editProfileButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(editProfileButton)) {
-                        this.profileController.switchToEditProfileView();
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.switchToEditProfileView(profileState.getUsername());
                     }
                 }
         );

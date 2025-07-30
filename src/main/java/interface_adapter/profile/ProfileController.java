@@ -2,6 +2,7 @@ package interface_adapter.profile;
 
 import use_case.profile.ProfileInputBoundary;
 import use_case.profile.ProfileInputData;
+import use_case.profile.SwitchToEditProfileViewInputData;
 
 /**
  * Controller for the Profile Use Case.
@@ -17,15 +18,16 @@ public class ProfileController {
      * Executes the Profile Use Case.
      */
     public void execute() {
-        final ProfileInputData profileInputData = new ProfileInputData();
-        profileUseCaseInteractor.execute(profileInputData);
+        final ProfileInputData profileInputData = new ProfileInputData("");
+        profileUseCaseInteractor.executeViewProfile(profileInputData);
     }
 
     /**
      * Executes the "switch to Edit Profile View" Use Case.
      */
-    public void switchToEditProfileView() {
-        profileUseCaseInteractor.switchToEditProfileView();
+    public void switchToEditProfileView(String username) {
+        final SwitchToEditProfileViewInputData inputData = new SwitchToEditProfileViewInputData(username);
+        profileUseCaseInteractor.switchToEditProfileView(inputData);
     }
 
     /**
