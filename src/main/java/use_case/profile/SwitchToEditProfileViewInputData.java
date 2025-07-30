@@ -1,13 +1,11 @@
 package use_case.profile;
 
-/**
- * The Input Data for the Profile Use Case.
- */
-public class ProfileInputData {
+public class SwitchToEditProfileViewInputData {
     private final String username;
-    public ProfileInputData(String username) {
+    public SwitchToEditProfileViewInputData(String username) {
         this.username = username;
     }
+
     public String getUsername() {
         return username;
     }

@@ -1,5 +1,7 @@
 package entity;
 
+import javax.swing.*;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.HashMap;
  * An implementation of the User interface.
  */
 public class Account implements User {
+    private Image profilePicture;
     private String username;
     private String password;
     private String name;
@@ -23,6 +26,8 @@ public class Account implements User {
     private HashMap<Long, Post> userPosts;
 
     public Account(String username, String password) {
+        // placeholder for profile picture for now
+        this.profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
         this.username = username;
         this.password = password;
         likesUsernames = new ArrayList<>();
@@ -33,7 +38,9 @@ public class Account implements User {
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
     }
+    public Image getProfilePicture() {return profilePicture;}
 
+    public void setProfilePicture(Image profilePicture) {this.profilePicture = profilePicture;}
 
     public String getUsername() {
         return username;
@@ -135,7 +142,6 @@ public class Account implements User {
     public void dislike(Post p) {
         likesUsernames.remove(p.getID());
     }
-
 
     public void setFriends(ArrayList<Account> friends) {
         followingAccounts = new ArrayList<>();

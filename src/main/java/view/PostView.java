@@ -328,7 +328,7 @@ public class PostView extends JPanel {
     }
 
     /**
-     * function to execute button presses
+     * function to executeViewProfile button presses
      *
      * @param e action event
      * @throws IOException          idk

@@ -3,6 +3,8 @@ package interface_adapter.edit_profile;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInputData;
 
+import java.awt.Image;
+
 /**
  * Controller for the Edit Profile Use Case.
  */
@@ -16,8 +18,10 @@ public class EditProfileController {
     /**
      * Executes the Edit Profile Use Case.
      */
-    public void execute() {
-        final EditProfileInputData editProfileInputData = new EditProfileInputData();
+    public void execute(String username, String newDisplayName, String newBio, Image newProfilePicture,
+                        String newPreferences) {
+        final EditProfileInputData editProfileInputData =
+                new EditProfileInputData(username, newDisplayName, newBio, newProfilePicture, newPreferences);
         editProfileUseCaseInteractor.execute(editProfileInputData);
     }
 

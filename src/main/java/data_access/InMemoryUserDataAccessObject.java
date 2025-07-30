@@ -1,5 +1,6 @@
 package data_access;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,5 +79,25 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     @Override
     public String loadNote(User user) throws DataAccessException {
         return notes.get(user.getName());
+    }
+
+    @Override
+    public void updateDisplayName(User user, String newDisplayName){
+
+    }
+
+    @Override
+    public void updateBio(User user, String newBio){
+
+    }
+
+    @Override
+    public void updateProfilePicture(User user, Image newProfilePicture){
+
+    }
+
+    @Override
+    public void updatePreferences(User user, String newPreferences){
+
     }
 }

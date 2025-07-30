@@ -20,7 +20,7 @@ public interface ProfileOutputBoundary {
     /**
      * Switches to the Edit Profile View.
      */
-    void switchToEditProfileView();
+    void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData);
 
     /**
      * Switches to the Manage Following View.

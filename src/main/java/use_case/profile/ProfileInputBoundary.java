@@ -5,15 +5,15 @@ package use_case.profile;
  */
 public interface ProfileInputBoundary {
     /**
-     * Executes the profile use case.
+     * Executes the profile use case; switches to the profile view.
      * @param profileInputData the input data
      */
-    void execute(ProfileInputData profileInputData);
+    void executeViewProfile(ProfileInputData profileInputData);
 
     /**
      * Switches to the Edit Profile View.
      */
-    void switchToEditProfileView();
+    void switchToEditProfileView(SwitchToEditProfileViewInputData profileInputData);
 
     /**
      * Switches to the Manage Following View.

@@ -1,5 +1,6 @@
 package data_access;
 
+import java.awt.*;
 import java.io.IOException;
 
 import org.json.JSONException;
@@ -244,5 +245,25 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void updateDisplayName(User user, String newDisplayName){
+
+    }
+
+    @Override
+    public void updateBio(User user, String newBio){
+
+    }
+
+    @Override
+    public void updateProfilePicture(User user, Image newProfilePicture){
+
+    }
+
+    @Override
+    public void updatePreferences(User user, String newPreferences){
+
     }
 }

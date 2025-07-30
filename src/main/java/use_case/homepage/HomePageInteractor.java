@@ -9,7 +9,7 @@ private final HomePageOutputBoundary homePageOutputBoundary;
     }
 
 //    @Override
-//    public void execute() {
+//    public void executeViewProfile() {
 //        final HomePageOutputData homePageOutputData = new HomePageOutputData();
 //    }
 
