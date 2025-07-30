@@ -21,10 +21,10 @@ public class MapView {
     public MapView(MapViewModel viewModel, Restaurant restaurant) {
         this.mapViewModel = viewModel;
         //        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
-//        AppProperties appProps = new AppProperties();
-//        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
+        AppProperties appProps = new AppProperties();
+        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
 
-        //GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(*apikey*));
+        //GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(apikeys.PLACES_API_KEY);
 
 
         try {
