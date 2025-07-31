@@ -103,14 +103,14 @@ public class CreateNewPostView extends JFrame {
         ingredientsList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea stepsField = new JTextArea("Enter steps to make the yum yum", 20, 80);
         stepsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea cuisinesField = new JTextArea("Enter cuisine separated by commas if u want", 1, 80);
+        JTextArea cuisinesField = new JTextArea("Enter cuisines and tags separated by commas if u want", 1, 80);
         cuisinesField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         textFIeldHints(titleField, "Enter post title");
         textFIeldHints(bodyField, "Enter recipe description");
         textFIeldHints(ingredientsList, "Enter list of ingredients separated by commas");
         textFIeldHints(stepsField, "Enter steps to make the yum yum");
-        textFIeldHints(cuisinesField, "Enter cuisine separated by commas if u want");
+        textFIeldHints(cuisinesField, "Enter cuisines and tags separated by commas if u want");
 
         contentPanel.add(titleField);
         contentPanel.add(bodyField);
@@ -129,7 +129,7 @@ public class CreateNewPostView extends JFrame {
                         String steps = stepsField.getText();
                         ArrayList<String> cuisines = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
                         Account user = new Account("r", "y");
-                        ArrayList<String> tags = new ArrayList<>(Arrays.asList(stepsField.getText().split(",")));
+                        ArrayList<String> tags = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
                         Recipe repice = new Recipe(user, 843417361846184L, title, body, ingredients, steps, cuisines);
 
                         System.out.println("repice obj creted");
@@ -138,7 +138,8 @@ public class CreateNewPostView extends JFrame {
                         map.put("ingredients", ingredients);
                         map.put("steps", new ArrayList(Arrays.asList(steps)));
                         map.put("cuisines", cuisines);
-                        dataStorage.writePost(1231343413, new Account("a", "b"), title, "recipe", body, map, tags);
+                        long postID = (long)(Math.random() * 1_000_000_000_000L);
+                        dataStorage.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags);
                         //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
                     }
 
