@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.*;
 
 
+import data_access.DataStorage;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
@@ -49,10 +50,20 @@ public class HomePageView extends JPanel {
         JButton tagsButton = new JButton("Tags");
         tagsButton.setPreferredSize(buttonSize);
         tagsButton.setBorder(BorderFactory.createEmptyBorder());
+        JButton createButton = new JButton("NEW POST??");
+        createButton.setPreferredSize(new Dimension(80, 30));
+        createButton.setBorder(BorderFactory.createEmptyBorder());
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    viewManagerModel.setState("create new post");
 
+            }
+        });
         tabsPanel.add(forYouButton);
         tabsPanel.add(followingButton);
         tabsPanel.add(tagsButton);
+        tabsPanel.add(createButton);
 
         mainPanel.add(tabsPanel, BorderLayout.NORTH);
 
@@ -64,7 +75,9 @@ public class HomePageView extends JPanel {
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
-        for (int i = 0; i < 3; i++) {
+        DataStorage dataStorage = new DataStorage();
+        ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
+        for (int i = 0; i < availablePosts.size(); i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
@@ -72,7 +85,8 @@ public class HomePageView extends JPanel {
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            Post post2 = dataStorage.getPost(availablePosts.get(i));
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());

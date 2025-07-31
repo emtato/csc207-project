@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -46,6 +48,7 @@ public class ClubHomePageView extends JPanel {
             // club icon
             JPanel clubIconPanel = new JPanel(new BorderLayout());
             clubIconPanel.setPreferredSize(new Dimension(150, 150));
+            clubIconPanel.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Make it look clickable
 
             RoundImagePanel roundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
             roundPanel.setPreferredSize(new Dimension(100, 100));
@@ -59,6 +62,25 @@ public class ClubHomePageView extends JPanel {
             clubIconName.setHorizontalAlignment(SwingConstants.CENTER);
             clubIconPanel.add(clubIconName, BorderLayout.SOUTH);
             clubIconPanel.setBackground(GUIConstants.WHITE);
+
+            clubIconPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    SpecificClubView specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
+                    cardPanel.add(specificClubView, specificClubView.getViewName());
+                    viewManagerModel.setState(specificClubView.getViewName());
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    clubIconPanel.setBackground(Color.LIGHT_GRAY);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    clubIconPanel.setBackground(GUIConstants.WHITE);
+                }
+            });
 
             clubsListPanel.add(clubIconPanel);
         }

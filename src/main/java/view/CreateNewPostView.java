@@ -1,8 +1,9 @@
 package view;
 
+import data_access.DataStorage;
 import entity.Account;
 import entity.Recipe;
-import interface_adapter.signup.SignupState;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,27 +17,25 @@ import java.awt.*;
 // This view is for the user to fill in information for their new post. It could be a recipe, an event, clubs or images
 // Emilia- recipes
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
-import static java.util.Arrays.asList;
 
-
-public class CreateNewPostView extends JFrame {
+public class CreateNewPostView extends JPanel {
     private final JPanel contentPanel;
-    private final JRadioButton recipes = new JRadioButton("Option 1");
+    private final ViewManagerModel viewManagerModel;
+    private final JRadioButton recipes = new JRadioButton("post new recipe :3 ");
     private final JRadioButton option2 = new JRadioButton("Option 2");
     private final JRadioButton option3 = new JRadioButton("Option 3");
-
-    public CreateNewPostView() {
-        setTitle("New Post Creator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private final String viewName = "create new post";
+    public CreateNewPostView(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -57,8 +56,11 @@ public class CreateNewPostView extends JFrame {
         topPanel.add(radioPanel);
         add(topPanel, BorderLayout.NORTH);
 
+        MenuBar menuBar = new MenuBar();
+
         contentPanel = new JPanel();
         add(contentPanel, BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.SOUTH);
 
         recipes.addActionListener(e -> {
             actionPerformed(e);
@@ -105,14 +107,14 @@ public class CreateNewPostView extends JFrame {
         ingredientsList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea stepsField = new JTextArea("Enter steps to make the yum yum", 20, 80);
         stepsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea cuisinesField = new JTextArea("Enter cuisine separated by commas if u want", 1, 80);
+        JTextArea cuisinesField = new JTextArea("Enter cuisines and tags separated by commas if u want", 1, 80);
         cuisinesField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         textFIeldHints(titleField, "Enter post title");
         textFIeldHints(bodyField, "Enter recipe description");
         textFIeldHints(ingredientsList, "Enter list of ingredients separated by commas");
         textFIeldHints(stepsField, "Enter steps to make the yum yum");
-        textFIeldHints(cuisinesField, "Enter cuisine separated by commas if u want");
+        textFIeldHints(cuisinesField, "Enter cuisines and tags separated by commas if u want");
 
         contentPanel.add(titleField);
         contentPanel.add(bodyField);
@@ -131,10 +133,19 @@ public class CreateNewPostView extends JFrame {
                         String steps = stepsField.getText();
                         ArrayList<String> cuisines = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
                         Account user = new Account("r", "y");
+                        ArrayList<String> tags = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
+                        Recipe repice = new Recipe(user, 843417361846184L, title, body, ingredients, steps, cuisines);
 
-                        Recipe repice = new Recipe(user,843417361846184L, title, body, ingredients, steps, cuisines);
                         System.out.println("repice obj creted");
-                        //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
+                        DataStorage dataStorage = new DataStorage();
+                        HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+                        map.put("ingredients", ingredients);
+                        map.put("steps", new ArrayList(Arrays.asList(steps)));
+                        map.put("cuisines", cuisines);
+                        long postID = (long)(Math.random() * 1_000_000_000_000L);
+                        dataStorage.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags);
+
+                        viewManagerModel.setState("homepage view");
                     }
 
                 }
@@ -186,8 +197,8 @@ public class CreateNewPostView extends JFrame {
 
     }
 
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(CreateNewPostView::new);
+    public String getViewName(){
+        return viewName;
     }
+
 }

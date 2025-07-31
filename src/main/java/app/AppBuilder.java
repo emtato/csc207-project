@@ -4,13 +4,13 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.*;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.manage_followers.ManageFollowersController;
@@ -68,6 +68,7 @@ import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
 import use_case.settings.SettingsOutputBoundary;
 import view.*;
+import view.map.MapView;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -94,6 +95,8 @@ public class AppBuilder {
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
+    private CreatePostViewModel createPostViewModel;
+    private CreateNewPostView createNewPostView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -118,6 +121,7 @@ public class AppBuilder {
     private ManageFollowersView manageFollowersView;
     private ManageFollowingView manageFollowingView;
     private MapViewModel mapViewModel;
+    private SpecificClubView specificClubView;
     private MapView mapView;
 
     public AppBuilder() {
@@ -138,6 +142,12 @@ public class AppBuilder {
     public AppBuilder addEventsView() {
         exploreEventsView = new ExploreEventsView(viewManagerModel);
         cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSpecificClubView() {
+        specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
+        cardPanel.add(specificClubView, specificClubView.getViewName());
         return this;
     }
 
@@ -216,6 +226,12 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        return this;
+    }
+    public AppBuilder addCreatePostView() {
+        createPostViewModel = new CreatePostViewModel();
+        createNewPostView = new CreateNewPostView(viewManagerModel);
+        cardPanel.add(createNewPostView, createNewPostView.getViewName());
         return this;
     }
 

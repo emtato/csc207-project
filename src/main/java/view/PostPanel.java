@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +29,7 @@ public class PostPanel extends JPanel {
     private Post post;
     private Recipe repice;
     private JPanel cardPanel;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 16);
@@ -69,7 +71,7 @@ public class PostPanel extends JPanel {
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         topPanel.add(title); //TODO: fix datetime thing
-        subtitle = new javax.swing.JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
+        subtitle = new javax.swing.JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
