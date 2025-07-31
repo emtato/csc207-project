@@ -1,6 +1,6 @@
 package view;
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -459,8 +459,8 @@ public class PostView extends JPanel {
                     Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
-                    DataStorage dataStorage = new DataStorage();
-                    dataStorage.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });

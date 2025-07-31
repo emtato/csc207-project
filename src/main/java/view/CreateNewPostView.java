@@ -1,6 +1,6 @@
 package view;
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
@@ -142,13 +142,13 @@ public class CreateNewPostView extends JPanel {
                         Recipe repice = new Recipe(user, 843417361846184L, title, body, ingredients, steps, cuisines);
 
                         System.out.println("repice obj creted");
-                        DataStorage dataStorage = new DataStorage();
+                        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
                         HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
                         map.put("ingredients", ingredients);
                         map.put("steps", new ArrayList(Arrays.asList(steps)));
                         map.put("cuisines", cuisines);
                         long postID = (long)(Math.random() * 1_000_000_000_000L);
-                        dataStorage.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags, imagesList);
+                        DBPostCommentLikesDataAccessObject.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags, imagesList);
 
                         viewManagerModel.setState("homepage view");
                         HomePageView homePageView = new HomePageView(viewManagerModel, new JPanel());

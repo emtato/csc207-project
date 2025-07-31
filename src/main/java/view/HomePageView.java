@@ -11,14 +11,11 @@ import java.util.Collections;
 import javax.swing.*;
 
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupViewModel;
 
 /**
  * The View for the Home Page.
@@ -97,8 +94,8 @@ public class HomePageView extends JPanel {
         feedPanel.removeAll();
         //TODO: refresh work properly after having made post
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
-        DataStorage dataStorage = new DataStorage();
-        ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
+        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+        ArrayList<Long> availablePosts = DBPostCommentLikesDataAccessObject.getAvailablePosts();
 
         int maxNumberOfDisplayingPosts = 10;
         int numberofPosts = Math.min(availablePosts.size(), 10);
@@ -116,7 +113,7 @@ public class HomePageView extends JPanel {
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            Post post2 = dataStorage.getPost(availablePosts.get(indicesRandomizer.get(i)));
+            Post post2 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(indicesRandomizer.get(i)));
             PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
