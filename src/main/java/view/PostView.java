@@ -226,6 +226,7 @@ public class PostView extends JPanel {
 
         maxBoxHeight = 739123617;
         if (post.isImageVideo()) {
+            System.out.println("isimage");
             try {
                 //TODO: set 3 image max width to avoid overflow center panel
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -319,7 +320,7 @@ public class PostView extends JPanel {
         }
 
         mainContent += """
-                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + commentsInView + """
+                <h2 style='font-size: 16pt; color: #333;'>Comments</h2> """ + commentsInView + """
                                                       </body>
                                                     </html>
                 """;
