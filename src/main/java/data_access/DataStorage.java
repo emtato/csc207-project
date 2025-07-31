@@ -318,18 +318,19 @@ public class DataStorage {
 
     public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
         JSONObject data = getJsonObject();
-//        JSONObject clubs;
-//        if (data.has("posts")) {
-//            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
-//        }
-//        else {
-//            posts = new JSONObject();
-//        }
+        JSONObject clubs;
+        if (data.has("clubs")) {
+            clubs = data.getJSONObject("clubs");
+        }
+        else {
+            clubs = new JSONObject();
+        }
         JSONObject newClub = new JSONObject();
         newClub.put("name", name);
         newClub.put("description", description);
         newClub.put("posts", posts);
-        data.put("posts", posts);
+        clubs.put(String.valueOf(clubID), newClub);
+        data.put("clubs", clubs);
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
