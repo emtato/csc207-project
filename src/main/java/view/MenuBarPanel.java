@@ -47,6 +47,13 @@ public class MenuBarPanel extends JPanel {
         notificationsButton.setToolTipText("Notifications");
         styleButton(notificationsButton, buttonSize);
 
+        // Create notifications button with system icon
+        ImageIcon profileIcon = new ImageIcon(getClass().getResource("/images/pngaaa.com-4877784.png"));
+        Image profileImg = profileIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JButton profileButton = new JButton(new ImageIcon(profileImg));
+        profileButton.setToolTipText("Profile");
+        styleButton(profileButton, buttonSize);
+
         // Add buttons to panel
         add(Box.createHorizontalStrut(10));  // Add some padding
         add(homeButton);
@@ -57,6 +64,8 @@ public class MenuBarPanel extends JPanel {
         add(Box.createHorizontalStrut(5));
         add(clubsButton);
         add(Box.createHorizontalStrut(5));
+        add(profileButton);
+        add(Box.createHorizontalStrut(5));
         add(settingsButton);
         add(Box.createHorizontalStrut(10));
 
@@ -65,6 +74,7 @@ public class MenuBarPanel extends JPanel {
         settingsButton.addActionListener(e -> viewManagerModel.setState("settings"));
         exploreButton.addActionListener(e -> viewManagerModel.setState("explore view"));
         notificationsButton.addActionListener(e -> viewManagerModel.setState("notifications view"));
+        profileButton.addActionListener(e -> viewManagerModel.setState("profile"));
     }
 
     private void styleButton(JButton button, Dimension size) {

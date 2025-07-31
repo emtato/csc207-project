@@ -48,7 +48,7 @@ public class ClubHomePageView extends JPanel {
             // club icon
             JPanel clubIconPanel = new JPanel(new BorderLayout());
             clubIconPanel.setPreferredSize(new Dimension(150, 150));
-            clubIconPanel.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Make it look clickable
+            clubIconPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             RoundImagePanel roundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
             roundPanel.setPreferredSize(new Dimension(100, 100));
