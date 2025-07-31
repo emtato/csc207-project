@@ -34,8 +34,17 @@ public class MapView {
             List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
 
             if (!results.isEmpty()) {
-                Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
-                updateViewModel(apiRestaurant);
+                List<Restaurant> restaurants = new ArrayList<>();
+                for (HashMap<String, Object> result : results) {
+                    Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
+                    restaurants.add(apiRestaurant);
+                    // FIXME: deletethis line:
+                    System.out.println(result.toString());
+                }
+                updateViewModel(restaurants.get(0));
+
+                //               Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
+ //               updateViewModel(apiRestaurant);
             } else {
                 updateViewModel(restaurant); // fallback
             }
