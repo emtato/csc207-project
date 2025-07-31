@@ -1,4 +1,4 @@
-package view;
+package view.map;
 
 import app.AppProperties;
 import data_access.places.GooglePlacesAPI;
@@ -30,7 +30,7 @@ public class MapView {
         try {
 
             // Use name and location to search
-            String query = restaurant.getName() + " near " + restaurant.getLocation();
+            String query = restaurant.getCuisines() + "food near " + restaurant.getLocation();
             List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
 
             if (!results.isEmpty()) {
