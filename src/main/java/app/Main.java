@@ -42,6 +42,7 @@ public class Main {
                 .addProfileUseCase()
                 .addPostView()
                 .addSpecificClubView()
+                .addCreatePostView()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();
