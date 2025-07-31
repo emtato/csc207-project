@@ -275,7 +275,9 @@ public class PostView extends JPanel {
         String commentsInView = "";
         ArrayList<Comment> comments = post.getComments();
         for (Comment comment : comments) {
-            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>" + comment.getDate().format(formatter) + "<br>" + comment.getComment();
+            commentsInView += "<h3><span style='font-weight:bold'>" + comment.getAccount().getUsername() +
+                    "</span> <span style='font-weight:normal'> on " + comment.getDate().format(formatter) +
+                    "</span></h3>" + comment.getComment();
         }
 
         if (newPost instanceof Recipe) {

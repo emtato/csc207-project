@@ -1,8 +1,8 @@
 package view;
 
+import data_access.DataStorage;
 import entity.Account;
 import entity.Recipe;
-import interface_adapter.signup.SignupState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,21 +16,19 @@ import java.awt.*;
 // This view is for the user to fill in information for their new post. It could be a recipe, an event, clubs or images
 // Emilia- recipes
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
-
-import static java.util.Arrays.asList;
 
 
 public class CreateNewPostView extends JFrame {
     private final JPanel contentPanel;
-    private final JRadioButton recipes = new JRadioButton("Option 1");
+    private final JRadioButton recipes = new JRadioButton("post new recipe :3 ");
     private final JRadioButton option2 = new JRadioButton("Option 2");
     private final JRadioButton option3 = new JRadioButton("Option 3");
 
@@ -131,9 +129,16 @@ public class CreateNewPostView extends JFrame {
                         String steps = stepsField.getText();
                         ArrayList<String> cuisines = new ArrayList<>(Arrays.asList(cuisinesField.getText().split(",")));
                         Account user = new Account("r", "y");
+                        ArrayList<String> tags = new ArrayList<>(Arrays.asList(stepsField.getText().split(",")));
+                        Recipe repice = new Recipe(user, 843417361846184L, title, body, ingredients, steps, cuisines);
 
-                        Recipe repice = new Recipe(user,843417361846184L, title, body, ingredients, steps, cuisines);
                         System.out.println("repice obj creted");
+                        DataStorage dataStorage = new DataStorage();
+                        HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+                        map.put("ingredients", ingredients);
+                        map.put("steps", new ArrayList(Arrays.asList(steps)));
+                        map.put("cuisines", cuisines);
+                        dataStorage.writePost(1231343413, new Account("a", "b"), title, "recipe", body, map, tags);
                         //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
                     }
 

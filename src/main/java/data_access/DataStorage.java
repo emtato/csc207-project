@@ -6,18 +6,18 @@ package data_access;/**
 
 import entity.Account;
 import entity.Comment;
+import entity.Post;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DataStorage {
     private String filePath = "src/main/java/data_access/data_storage.json";
@@ -185,5 +185,93 @@ public class DataStorage {
 
         JSONArray likedPosts = likeMap.getJSONArray(username);
         return likedPosts.toList().contains(postID);
+    }
+
+    /**
+     * not fully done implementing/ not capable of posting everything but a start. writes given post information to JSON.
+     *
+     * @param user        user who posted dis
+     * @param title       title of dis post
+     * @param postType    String, type of dis post (club, event, recipe,..)
+     * @param description String description
+     * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
+     * @param tags        tasg
+     */
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags) {
+        JSONObject data = getJsonObject();
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+        }
+        else {
+            posts = new JSONObject();
+        }
+        JSONObject newPost = new JSONObject();
+        newPost.put("user", user.getUsername());
+        newPost.put("title", title);
+        newPost.put("description", description);
+        newPost.put("type", postType);
+        JSONObject contentsJSONObject = new JSONObject(contents);
+        newPost.put("contents", contentsJSONObject);
+        newPost.put("tags", tags);
+        posts.put(String.valueOf(postID), newPost);
+        data.put("posts", posts);
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("i am sad :(", e);
+        }
+    }
+
+    /**
+     * Get post object from postID.
+     *
+     * @param postID unique post ID
+     * @return Post object
+     */
+    public Post getPost(long postID) {
+        JSONObject data = getJsonObject();
+
+        if (!data.has("posts")) {
+            return null;
+        }
+
+        JSONObject posts = data.getJSONObject("posts");
+        String parentPostID = String.valueOf(postID);
+
+        if (!posts.has(parentPostID)) {
+            return null;
+        }
+
+        JSONObject postObj = posts.getJSONObject(parentPostID);
+
+        String username = postObj.getString("user");
+        String title = postObj.getString("title");
+        String description = postObj.getString("description");
+
+        Account user = new Account(username, "password");
+        Post post = new Post(user, postID, title, description);
+
+        if (postObj.has("tags")) {
+            JSONArray tagArray = postObj.getJSONArray("tags");
+            ArrayList<String> tags = new ArrayList<>();
+            for (int i = 0; i < tagArray.length(); i++) {
+                tags.add(tagArray.getString(i));
+            }
+            post.setTags(tags);
+        }
+
+        if (postObj.has("contents")) {
+            JSONObject contents = postObj.getJSONObject("contents");
+            if (contents.has("recipe")) {
+                JSONObject recipe = contents.getJSONObject("recipe");
+
+            }
+        }
+
+
+        return post;
     }
 }
