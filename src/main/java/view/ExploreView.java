@@ -122,6 +122,7 @@ private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asL
                     viewManagerModel.setState("post view");
                     for (Component c : cardPanel.getComponents()) {
                         if (c instanceof PostView) {
+
                             ((PostView) c).displayPost(blueCheeseRecipe);
                             break;
                         }
@@ -162,6 +163,19 @@ private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asL
             JLabel eventDescription = new JLabel(cheeseMeetup.getDescription());
             JLabel eventPoster = new JLabel("Posted by: " + cheeseMeetup.getUser().getUsername());
             JButton viewEventButton = new JButton("View Event");
+            viewEventButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewManagerModel.setState("post view");
+                    for (Component c : cardPanel.getComponents()) {
+                        if (c instanceof PostView) {
+                            ((PostView) c).displayPost(cheeseMeetup);
+                            break;
+                        }
+                    }
+                }
+            });
+
             EventBox.add(eventTitle);
             EventBox.add(eventDescription);
             EventBox.add(eventPoster);

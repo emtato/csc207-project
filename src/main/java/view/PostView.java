@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import data_access.spoonacular.SpoonacularAPI;
+import entity.Event;
 import entity.Post;
 import entity.Recipe;
 /* Description:
@@ -63,6 +64,7 @@ public class PostView extends JPanel {
     private final RoundedButton saveButton = new RoundedButton("Add to list");
     private final RoundedButton shareButton = new RoundedButton("Share");
     private final RoundedButton commentButton = new RoundedButton("coment");
+    private final RoundedButton eventSignUpButton = new RoundedButton("Sign up");
 
 
     private final JPanel mainPanel;
@@ -184,6 +186,10 @@ public class PostView extends JPanel {
         if (post instanceof Recipe) {
             rightButtons.add(analyzeButton);
         }
+        if (post instanceof Event){
+            System.out.println("event button!!!");
+            rightButtons.add(eventSignUpButton);
+        }
         rightButtons.add(saveButton);
         rightButtons.add(shareButton);
         rightButtons.add(commentButton);
@@ -303,6 +309,10 @@ public class PostView extends JPanel {
                     </p>
                     <br>""";
 
+        }
+
+        else if (newPost instanceof Event){
+            System.out.println("eventtttt");
         }
 
         else { //general post display
