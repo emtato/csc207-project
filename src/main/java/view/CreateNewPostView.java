@@ -53,8 +53,11 @@ public class CreateNewPostView extends JPanel {
         topPanel.add(radioPanel);
         add(topPanel, BorderLayout.NORTH);
 
+        MenuBar menuBar = new MenuBar();
+
         contentPanel = new JPanel();
         add(contentPanel, BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.SOUTH);
 
         recipes.addActionListener(e -> {
             actionPerformed(e);

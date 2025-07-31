@@ -51,7 +51,7 @@ public class HomePageView extends JPanel {
         tagsButton.setPreferredSize(buttonSize);
         tagsButton.setBorder(BorderFactory.createEmptyBorder());
         JButton createButton = new JButton("NEW POST??");
-        createButton.setPreferredSize(buttonSize);
+        createButton.setPreferredSize(new Dimension(80, 30));
         createButton.setBorder(BorderFactory.createEmptyBorder());
         createButton.addActionListener(new ActionListener() {
             @Override
