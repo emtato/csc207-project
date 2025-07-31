@@ -3,6 +3,7 @@ package view;
 import data_access.DataStorage;
 import entity.Account;
 import entity.Recipe;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,11 +29,13 @@ import javax.swing.text.JTextComponent;
 
 public class CreateNewPostView extends JPanel {
     private final JPanel contentPanel;
+    private final ViewManagerModel viewManagerModel;
     private final JRadioButton recipes = new JRadioButton("post new recipe :3 ");
     private final JRadioButton option2 = new JRadioButton("Option 2");
     private final JRadioButton option3 = new JRadioButton("Option 3");
     private final String viewName = "create new post";
-    public CreateNewPostView() {
+    public CreateNewPostView(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -141,7 +144,8 @@ public class CreateNewPostView extends JPanel {
                         map.put("cuisines", cuisines);
                         long postID = (long)(Math.random() * 1_000_000_000_000L);
                         dataStorage.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags);
-                        //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
+
+                        viewManagerModel.setState("homepage view");
                     }
 
                 }
@@ -196,7 +200,5 @@ public class CreateNewPostView extends JPanel {
     public String getViewName(){
         return viewName;
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(CreateNewPostView::new);
-    }
+
 }

@@ -230,7 +230,7 @@ public class AppBuilder {
     }
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
-        createNewPostView = new CreateNewPostView();
+        createNewPostView = new CreateNewPostView(viewManagerModel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         return this;
     }
