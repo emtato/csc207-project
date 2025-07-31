@@ -26,15 +26,13 @@ import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
 
-public class CreateNewPostView extends JFrame {
+public class CreateNewPostView extends JPanel {
     private final JPanel contentPanel;
     private final JRadioButton recipes = new JRadioButton("post new recipe :3 ");
     private final JRadioButton option2 = new JRadioButton("Option 2");
     private final JRadioButton option3 = new JRadioButton("Option 3");
-
+    private final String viewName = "create new post";
     public CreateNewPostView() {
-        setTitle("New Post Creator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -192,7 +190,9 @@ public class CreateNewPostView extends JFrame {
 
     }
 
-
+    public String getViewName(){
+        return viewName;
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(CreateNewPostView::new);
     }

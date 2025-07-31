@@ -50,10 +50,20 @@ public class HomePageView extends JPanel {
         JButton tagsButton = new JButton("Tags");
         tagsButton.setPreferredSize(buttonSize);
         tagsButton.setBorder(BorderFactory.createEmptyBorder());
+        JButton createButton = new JButton("NEW POST??");
+        createButton.setPreferredSize(buttonSize);
+        createButton.setBorder(BorderFactory.createEmptyBorder());
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    viewManagerModel.setState("create new post");
 
+            }
+        });
         tabsPanel.add(forYouButton);
         tabsPanel.add(followingButton);
         tabsPanel.add(tagsButton);
+        tabsPanel.add(createButton);
 
         mainPanel.add(tabsPanel, BorderLayout.NORTH);
 

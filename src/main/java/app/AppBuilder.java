@@ -4,13 +4,13 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.*;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.manage_followers.ManageFollowersController;
@@ -94,6 +94,8 @@ public class AppBuilder {
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
+    private CreatePostViewModel createPostViewModel;
+    private CreateNewPostView createNewPostView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -223,6 +225,12 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        return this;
+    }
+    public AppBuilder addCreatePostView() {
+        createPostViewModel = new CreatePostViewModel();
+        createNewPostView = new CreateNewPostView();
+        cardPanel.add(createNewPostView, createNewPostView.getViewName());
         return this;
     }
 
