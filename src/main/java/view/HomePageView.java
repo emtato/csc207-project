@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.*;
 
 
+import data_access.DataStorage;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
@@ -64,6 +65,9 @@ public class HomePageView extends JPanel {
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
+        DataStorage dataStorage = new DataStorage();
+        ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
+
         for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));

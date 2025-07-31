@@ -274,4 +274,24 @@ public class DataStorage {
 
         return post;
     }
+
+    public ArrayList<Post> getPosts(Account user) {
+        return new ArrayList<Post>();
+    }
+
+    public ArrayList<Long> getAvailablePosts() {
+        JSONObject data = getJsonObject();
+
+        if (!data.has("posts")) {
+            return null;
+        }
+
+        JSONObject posts = data.getJSONObject("posts");
+        ArrayList<Long> postIDs = new ArrayList<>();
+        for (String key : posts.keySet()) {
+            long postID = Long.parseLong(key);
+            postIDs.add(postID);
+        }
+        return postIDs;
+    }
 }

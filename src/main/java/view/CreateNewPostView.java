@@ -138,7 +138,8 @@ public class CreateNewPostView extends JFrame {
                         map.put("ingredients", ingredients);
                         map.put("steps", new ArrayList(Arrays.asList(steps)));
                         map.put("cuisines", cuisines);
-                        dataStorage.writePost(1231343413, new Account("a", "b"), title, "recipe", body, map, tags);
+                        long postID = (long)(Math.random() * 1_000_000_000_000L);
+                        dataStorage.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags);
                         //TODO: send this somewher to db or sum????? idk help!! also associate this with actual account user nd stuff
                     }
 
