@@ -228,9 +228,9 @@ public class PostView extends JPanel {
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
-                //TODO: set 3 image max width to avoid overflow center panel
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
@@ -256,8 +256,13 @@ public class PostView extends JPanel {
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
+                    imagesRn++;
+                    if (imagesRn == 3) {
+                        break;
+                    }
                 }
                 centerPanel.add(imagePanel);
+
 
                 maxBoxHeight = 150;
             }

@@ -197,7 +197,6 @@ public class Post {
     }
 
     public ArrayList<String> getImageURLs() {
-        System.out.println("getImageURLs called " + this.imageURLs);
         return imageURLs;
     }
 
@@ -205,7 +204,6 @@ public class Post {
      * sets image url of post. automatically updates post field for isImageVideo.
      */
     public void setImageURLs(ArrayList<String> imageURLs) {
-        System.out.println("before " + imageURLs + " after setImageURLs " + imageURLs);
         this.imageURLs = imageURLs;
         if (imageURLs != null && !imageURLs.isEmpty()) {
             this.isImageVideo = true;
