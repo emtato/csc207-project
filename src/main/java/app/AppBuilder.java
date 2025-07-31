@@ -68,6 +68,7 @@ import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
 import use_case.settings.SettingsOutputBoundary;
 import view.*;
+import view.map.MapView;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
