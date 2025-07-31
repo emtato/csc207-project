@@ -52,6 +52,7 @@ private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asL
         this.viewManagerModel = viewManagerModel;
         this.setLayout(new BorderLayout(10, 10));
         this.cardPanel = cardPanel;
+        cheeseMeetup.addParticipant(swissCheez);
 
         JPanel topPanel = new JPanel();
         JLabel exploreLabel = new JLabel("Explore");

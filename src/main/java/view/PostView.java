@@ -313,6 +313,30 @@ public class PostView extends JPanel {
 
         else if (newPost instanceof Event){
             System.out.println("eventtttt");
+            ArrayList<Account> participants = ((Event) newPost).getParticipants();
+            String participantsUsernames = "";
+            for (Account participant : participants) {
+                participantsUsernames += participant.getUsername() + "<br>";
+            }
+            String foodPreferenceString = new String();
+            for (String food : ((Event) newPost).getFoodPreferences()) {
+                foodPreferenceString += food + "<br>";
+            }
+            mainContent = """
+                    <html>
+                      <body style='font-family: comic sans, sans-serif'>
+                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
+                        <p style='font-size: 14pt;'> """ + newPost.getDescription() + """ 
+                    </p>
+                    
+                    <h2 style='font-size: 16pt; color: #555;'>Participants</h2>
+                    <ul>""" + participantsUsernames + """
+                    </ul>
+                    <h2 style='font-size: 16pt; color: #555;'>Food Preferences</h2>
+                    <p>""" + foodPreferenceString.replace("\n", "<br>") + """
+                    </p>
+                    <br>""";
+
         }
 
         else { //general post display
