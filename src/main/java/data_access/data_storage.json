@@ -88,5 +88,28 @@
       "user": "a",
       "tags": ["idk js dont cook him"]
     }
+  },
+  "clubs": {
+    "12341325": {
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "members": ["JS javascuript", "jinufan333"],
+      "posts": ["123454321", "123134344413"],
+      "tags": ["blue cheese", "cooking", "food"]
+    },
+    "2435234": {
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "members": ["JS javascuript", "jinufan333"],
+      "posts": ["123454321", "123134344413"],
+      "tags": ["blue cheese", "cooking", "food"]
+    },
+    "3656252": {
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "members": ["JS javascuript", "jinufan333"],
+      "posts": ["123454321", "123134344413"],
+      "tags": ["blue cheese", "cooking", "food"]
+    }
   }
 }

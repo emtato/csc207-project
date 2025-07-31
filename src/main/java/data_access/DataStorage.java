@@ -315,4 +315,27 @@ public class DataStorage {
         }
         return postIDs;
     }
+
+    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
+        JSONObject data = getJsonObject();
+//        JSONObject clubs;
+//        if (data.has("posts")) {
+//            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+//        }
+//        else {
+//            posts = new JSONObject();
+//        }
+        JSONObject newClub = new JSONObject();
+        newClub.put("name", name);
+        newClub.put("description", description);
+        newClub.put("posts", posts);
+        data.put("posts", posts);
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("i am sad :(", e);
+        }
+    }
 }

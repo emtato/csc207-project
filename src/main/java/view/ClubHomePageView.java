@@ -148,7 +148,7 @@ public class ClubHomePageView extends JPanel {
         JPanel exploringPanel = new JPanel();
         exploringPanel.setLayout(new BoxLayout(exploringPanel, BoxLayout.Y_AXIS));
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             JPanel explorePanel = new JPanel(new BorderLayout(5, 5));
             explorePanel.setBackground(GUIConstants.WHITE);
             explorePanel.setMaximumSize(new Dimension(370, 130));
