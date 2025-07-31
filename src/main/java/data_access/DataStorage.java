@@ -4,10 +4,7 @@ package data_access;/**
  * ^ • ω • ^
  */
 
-import entity.Account;
-import entity.Comment;
-import entity.Post;
-import entity.Recipe;
+import entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -338,5 +335,23 @@ public class DataStorage {
         catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
+    }
+
+    public Club getClub(long clubID) {
+        // read existing data
+        JSONObject data = getJsonObject();
+
+        ArrayList<Object> list = getCommentArray(data, parentID);
+        JSONArray comments = (JSONArray) list.get(0);
+
+        ArrayList<Comment> commentList = new ArrayList<>();
+        for (int i = 0; i < comments.length(); i++) {
+            JSONObject obj = comments.getJSONObject(i);
+            Account user = new Account((String) obj.get("user"), "passwod");
+            String content = obj.getString("content");
+            LocalDateTime time = LocalDateTime.parse(obj.getString("time"));
+            commentList.add(new Comment(user, content, time, 0));
+        }
+        return commentList;
     }
 }
