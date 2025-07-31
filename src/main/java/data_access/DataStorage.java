@@ -354,7 +354,34 @@ public class DataStorage {
         JSONObject clubObj = clubs.getJSONObject(parentClubID);
         String name = clubObj.getString("name");
         String description = clubObj.getString("description");
+        ArrayList<Account> members = new ArrayList<>();
+        if (clubObj.has("members")) {
+            JSONArray memberArray = clubObj.getJSONArray("members");
+            for (int i = 0; i < memberArray.length(); i++) {
+                String username = memberArray.getString(i);
+                members.add(new Account(username, "password"));
+            }
+        }
+        ArrayList<Post> posts = new ArrayList<>();
+        if (clubObj.has("posts")) {
+            JSONArray postArray = clubObj.getJSONArray("posts");
+            for (int i = 0; i < postArray.length(); i++) {
+                JSONObject postObj = postArray.getJSONObject(i);
+                String username = postObj.getString("user");
+                String title = postObj.getString("title");
+                String desc = postObj.getString("description");
+                long postID = postObj.getLong("id");
+                Account user = new Account(username, "password");
+                Post post = new Post(user, postID, title, desc);
+                posts.add(post);
+            }
+        }
 
-        clubObj.editBio(description);
+        return new Club(name, description, members, new ArrayList<>(), posts) {
+            {
+                setDisplayName(name);
+                setDescription(description);
+            }
+        };
     }
 }
