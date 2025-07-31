@@ -1,6 +1,7 @@
 package view;
 
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
@@ -26,6 +27,7 @@ import java.beans.PropertyChangeListener;
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";
     private final ProfileViewModel profileViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private ProfileController profileController;
 
@@ -42,16 +44,10 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followersButton;
     private final JTextArea profileContent;
 
-    // TODO: reuse code for duplicate buttons
-    private final JButton homeButton;
-    private final JButton mapButton;
-    private final JButton notificationsButton;
-    private final JButton settingsButton;
-    private final JButton profileButton;
 
-
-    public ProfileView(ProfileViewModel profileViewModel) {
+    public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
         this.profileViewModel = profileViewModel;
+        this.viewManagerModel = viewManagerModel;
         this.profileViewModel.addPropertyChangeListener(this);
 
         title = new JLabel(ProfileViewModel.TITLE_LABEL);
@@ -144,24 +140,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileContentPanel.add(profileContent);
 
 
-        final JPanel generalButtons = new JPanel();
-        generalButtons.setAlignmentY(Component.CENTER_ALIGNMENT);
-
-        homeButton = new JButton("Home");
-        generalButtons.add(homeButton);
-
-        mapButton = new JButton("Map");
-        generalButtons.add(mapButton);
-
-        notificationsButton = new JButton("Notifications");
-        generalButtons.add(notificationsButton);
-
-        settingsButton = new JButton("Settings");
-        generalButtons.add(settingsButton);
-
-        profileButton = new JButton("Profile");
-        generalButtons.add(profileButton);
-
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         editProfileButton.addActionListener(
@@ -192,7 +170,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.add(title);
         this.add(mainPanel);
         this.add(profileContentPanel);
-        this.add(generalButtons);
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(menuBar, BorderLayout.SOUTH);
     }
 
     @Override

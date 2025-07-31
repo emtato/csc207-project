@@ -54,6 +54,11 @@ public class Account implements User {
         return password;
     }
 
+    @Override
+    public void setDisplayName(String newDisplayName) {
+
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -80,6 +85,11 @@ public class Account implements User {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    @Override
+    public void setPreferences(String newPreferences) {
+
     }
 
     public ArrayList<Long> getLikesUsernames() {
