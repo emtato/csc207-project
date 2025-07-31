@@ -102,8 +102,8 @@ public class SpecificClubView extends JPanel {
         eventsContainer.setBackground(GUIConstants.WHITE);
 
         // Add posts vertically in events
-        for (int i = 0; i < 3; i++) {
-            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400, cardPanel);
+        for (int i = 0; i < 5; i++) {
+            EventsPanel postPanel = new EventsPanel(viewManagerModel);
             postPanel.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
             postPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
             eventsContainer.add(postPanel);
@@ -162,6 +162,8 @@ public class SpecificClubView extends JPanel {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(feedPanel, BorderLayout.EAST);
+
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.CENTER);
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         mainPanel.add(menuBar, BorderLayout.SOUTH);
