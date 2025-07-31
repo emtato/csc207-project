@@ -17,4 +17,9 @@ public interface User {
      */
     String getPassword();
 
+    void setDisplayName(String newDisplayName);
+
+    void setBio(String newBio);
+
+    void setPreferences(String newPreferences);
 }
