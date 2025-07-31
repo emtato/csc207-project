@@ -67,7 +67,6 @@ public class HomePageView extends JPanel {
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
         DataStorage dataStorage = new DataStorage();
         ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
-
         for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
@@ -76,7 +75,8 @@ public class HomePageView extends JPanel {
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            Post post2 = dataStorage.getPost(availablePosts.get(i));
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());

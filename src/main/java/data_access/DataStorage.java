@@ -7,6 +7,7 @@ package data_access;/**
 import entity.Account;
 import entity.Comment;
 import entity.Post;
+import entity.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataStorage {
@@ -265,13 +267,32 @@ public class DataStorage {
 
         if (postObj.has("contents")) {
             JSONObject contents = postObj.getJSONObject("contents");
-            if (contents.has("recipe")) {
-                JSONObject recipe = contents.getJSONObject("recipe");
+            if (postObj.get("type").equals("recipe")) {
+
+                JSONArray ingredients = contents.getJSONArray("ingredients");
+                ArrayList<String> ingredientList = new ArrayList<>();
+                for (int i = 0; i < ingredients.length(); i++) {
+                    ingredientList.add(ingredients.getString(i));
+                }
+
+                JSONArray stepsArray = contents.getJSONArray("steps");
+                String steps = "";
+                for (int i = 0; i < stepsArray.length(); i++) {
+                    steps += stepsArray.getString(i) + "<br>";
+                }
+
+                String cuisines = contents.get("cuisines").toString();
+                if (cuisines.equals("Enter cuisine separated by commas if u want")) {
+                    cuisines = "";
+                }
+
+                return new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
+            }
+            else if (postObj.get("type").equals("other?")) {
 
             }
         }
-
-
         return post;
     }
 
