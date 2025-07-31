@@ -338,20 +338,23 @@ public class DataStorage {
     }
 
     public Club getClub(long clubID) {
-        // read existing data
         JSONObject data = getJsonObject();
 
-        ArrayList<Object> list = getCommentArray(data, parentID);
-        JSONArray comments = (JSONArray) list.get(0);
-
-        ArrayList<Comment> commentList = new ArrayList<>();
-        for (int i = 0; i < comments.length(); i++) {
-            JSONObject obj = comments.getJSONObject(i);
-            Account user = new Account((String) obj.get("user"), "passwod");
-            String content = obj.getString("content");
-            LocalDateTime time = LocalDateTime.parse(obj.getString("time"));
-            commentList.add(new Comment(user, content, time, 0));
+        if (!data.has("clubs")) {
+            return null;
         }
-        return commentList;
+
+        JSONObject clubs = data.getJSONObject("clubs");
+        String parentClubID = String.valueOf(clubID);
+
+        if (!clubs.has(parentClubID)) {
+            return null;
+        }
+
+        JSONObject clubObj = clubs.getJSONObject(parentClubID);
+        String name = clubObj.getString("name");
+        String description = clubObj.getString("description");
+
+        clubObj.editBio(description);
     }
 }
