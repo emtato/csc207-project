@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -37,6 +36,7 @@ public class PostView extends JPanel {
     private final String viewName = "post view";
     //private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
     private Post post;
     private Recipe repice;
@@ -87,7 +87,7 @@ public class PostView extends JPanel {
         title.setFont(fontTitle);
 
         topPanel.add(title); //TODO: fix datetime thing
-        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes"); // post author and date
+        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
         JLabel tags = new JLabel("tags: " + post.getTags());
@@ -274,9 +274,10 @@ public class PostView extends JPanel {
         String mainContent = "";
         String commentsInView = "";
         ArrayList<Comment> comments = post.getComments();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (Comment comment : comments) {
-            commentsInView += "<h3> <strong>" + comment.getAccount().getUsername() + "</h3></strong>" + comment.getDate().format(formatter) + "<br>" + comment.getComment();
+            commentsInView += "<h3><span style='font-weight:bold'>" + comment.getAccount().getUsername() +
+                    "</span> <span style='font-weight:normal'> on " + comment.getDate().format(formatter) +
+                    "</span></h3>" + comment.getComment();
         }
 
         if (newPost instanceof Recipe) {
@@ -304,7 +305,6 @@ public class PostView extends JPanel {
 
         }
 
-
         else { //general post display
             String desc = post.getDescription();
             mainContent = """
@@ -330,7 +330,7 @@ public class PostView extends JPanel {
 
 
         title.setText(newPost.getTitle());
-        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
+        subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         revalidate();
         repaint();
@@ -357,7 +357,7 @@ public class PostView extends JPanel {
                 likeButton.setText("like");
                 liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime() + " | " + post.getLikes() + " likes");
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == analyzeButton) {
@@ -454,7 +454,7 @@ public class PostView extends JPanel {
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
                     DataStorage dataStorage = new DataStorage();
-                    dataStorage.writeDataToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    dataStorage.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });
