@@ -4,6 +4,7 @@ import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInputData;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * Controller for the Edit Profile Use Case.
@@ -19,9 +20,9 @@ public class EditProfileController {
      * Executes the Edit Profile Use Case.
      */
     public void execute(String username, String newDisplayName, String newBio, Image newProfilePicture,
-                        String newPreferences) {
-        final EditProfileInputData editProfileInputData =
-                new EditProfileInputData(username, newDisplayName, newBio, newProfilePicture, newPreferences);
+                        ArrayList<String> newPreferences) {
+        final EditProfileInputData editProfileInputData = new EditProfileInputData(username, newDisplayName, newBio,
+                newProfilePicture, newPreferences);
         editProfileUseCaseInteractor.execute(editProfileInputData);
     }
 

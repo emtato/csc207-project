@@ -164,7 +164,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // TODO: write code for the action listeners for the buttons
         editProfileButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(editProfileButton)) {
@@ -196,11 +195,16 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.add(generalButtons);
     }
 
-    // TODO: implement the propertyChange function and set controllers
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-
+            profilePicture.setImage(profileViewModel.getState().getProfilePicture());
+            displayName.setText(profileViewModel.getState().getDisplayName());
+            username.setText(profileViewModel.getState().getUsername());
+            bio.setText(profileViewModel.getState().getBio());
+            following.setText(profileViewModel.getState().getNumFollowing()+" following");
+            followers.setText(profileViewModel.getState().getNumFollowers()+" followers");
+            profileContent.setText("");
         }
     }
 

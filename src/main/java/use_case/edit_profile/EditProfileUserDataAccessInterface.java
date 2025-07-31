@@ -3,6 +3,7 @@ package use_case.edit_profile;
 import entity.User;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * DAO for the Edit Profile Use Case.
@@ -34,11 +35,11 @@ public interface EditProfileUserDataAccessInterface {
      * @param user the user to save
      * @param newPreferences the new preferences to save
      */
-    void updatePreferences(User user, String newPreferences);
+    void updatePreferences(User user, ArrayList<String> newPreferences);
 
     //TODO
-    // this method overlaps with other data access interfaces, so maybe ill make another interface
-    // containing this method for other interfaces to extend
+    // this method overlaps with the one in the LoginUserDataAccessInterface but this is just an example
+    // so ill keep it for now and we can fix it later
     /**
      * Returns the user with the given username.
      * @param username the username to look up

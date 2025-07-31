@@ -17,8 +17,8 @@ public class ProfileController {
     /**
      * Executes the Profile Use Case.
      */
-    public void execute() {
-        final ProfileInputData profileInputData = new ProfileInputData("");
+    public void executeViewProfile(String username) {
+        final ProfileInputData profileInputData = new ProfileInputData(username);
         profileUseCaseInteractor.executeViewProfile(profileInputData);
     }
 

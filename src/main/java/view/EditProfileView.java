@@ -4,7 +4,7 @@ package view;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
 import interface_adapter.edit_profile.EditProfileViewModel;
-import interface_adapter.login.LoginState;
+import interface_adapter.profile.ProfileController;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -14,12 +14,14 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 // TODO: use constants for the hardcoded parts
 public class EditProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "edit profile";
     private final EditProfileViewModel editProfileViewModel;
     private EditProfileController editProfileController;
+    private ProfileController profileController;
 
     final JLabel title;
     private final ImageIcon profilePicture;
@@ -55,7 +57,6 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         profilePreviewPanel.setMaximumSize(new Dimension(200, 1030));
         profilePreviewPanel.setMinimumSize(new Dimension(200, 1030));
 
-        //Image profilePictureImage = this.editProfileViewModel.getState().getProfilePicture();
         Image profilePictureImage = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
         int newWidth = 200;
         int newHeight = 200;
@@ -98,8 +99,6 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         editProfilePanel.setMinimumSize(new Dimension(1200, 1030));
         editProfilePanel.setLayout(new BoxLayout(editProfilePanel, BoxLayout.Y_AXIS));
         editProfilePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        //editProfilePanel.setMaximumSize(new Dimension(500, 200));
-        //editProfilePanel.setMinimumSize(new Dimension(500, 200));
 
         final JPanel editNamePanel = new JPanel();
         editNamePanel.setLayout(new BoxLayout(editNamePanel, BoxLayout.X_AXIS));
@@ -140,7 +139,6 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         final JLabel preferenceTagsLabel = new JLabel(EditProfileViewModel.PREFERENCE_TAGS_LABEL);
         preferenceTagsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         preferenceTagsPanel.add(preferenceTagsLabel);
-        //preferenceTagsPanel.add(Box.createRigidArea(new Dimension(50, 50)));
         preferenceTagsField = new JTextArea(2,2);
         preferenceTagsField.setAlignmentX(Component.LEFT_ALIGNMENT);
         preferenceTagsPanel.add(preferenceTagsField);
@@ -222,7 +220,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
 
             private void documentListenerHelper() {
                 final EditProfileState currentState = editProfileViewModel.getState();
-                currentState.setNewPreferences(preferenceTagsField.getText());
+                currentState.setNewPreferences(new ArrayList<String>());
                 editProfileViewModel.setState(currentState);
             }
 
@@ -261,7 +259,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
-                        this.editProfileController.switchToProfileView();
+                        final EditProfileState currentState = editProfileViewModel.getState();
+                        this.profileController.executeViewProfile(currentState.getUsername());
                     }
                 }
         );
@@ -272,11 +271,11 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("username")) {
+        if (evt.getPropertyName().equals("state")) {
             this.username.setText(this.editProfileViewModel.getState().getUsername());
             this.displayName.setText(this.editProfileViewModel.getState().getDisplayName());
             this.bio.setText(this.editProfileViewModel.getState().getBio());
-            this.preferenceTagsField.setText(this.editProfileViewModel.getState().getPreferences());
+            this.preferenceTagsField.setText("");
             this.profilePicture.setImage(this.editProfileViewModel.getState().getProfilePicture());
         }
         if (evt.getPropertyName().equals("displayName")) {
@@ -286,11 +285,10 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
             this.bio.setText(this.editProfileViewModel.getState().getBio());
         }
         if (evt.getPropertyName().equals("preferences")) {
-            this.preferenceTagsField.setText(this.editProfileViewModel.getState().getPreferences());
+            this.preferenceTagsField.setText("");
         }
         if (evt.getPropertyName().equals("profilePicture")) {
-            this.profilePicture.setImage(
-                    new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage());
+            this.profilePicture.setImage(this.editProfileViewModel.getState().getProfilePicture());
         }
     }
 
@@ -301,5 +299,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
     public void setEditProfileController(EditProfileController controller) {
         this.editProfileController = controller;
     }
-
+    public void setProfileController(ProfileController controller) {
+        this.profileController = controller;
+    }
 }

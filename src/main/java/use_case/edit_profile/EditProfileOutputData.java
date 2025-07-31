@@ -1,6 +1,7 @@
 package use_case.edit_profile;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * Output Data for the Edit Profile Use Case.
@@ -9,9 +10,10 @@ public class EditProfileOutputData {
     private final String newDisplayName;
     private final String newBio;
     private final Image newProfilePicture;
-    private final String newPreferences;
+    private final ArrayList<String> newPreferences;
 
-    public EditProfileOutputData(String newDisplayName, String newBio, Image newProfilePicture, String newPreferences) {
+    public EditProfileOutputData(String newDisplayName, String newBio, Image newProfilePicture,
+                                 ArrayList<String> newPreferences) {
         this.newDisplayName = newDisplayName;
         this.newBio = newBio;
         this.newProfilePicture = newProfilePicture;
@@ -30,7 +32,7 @@ public class EditProfileOutputData {
         return newProfilePicture;
     }
 
-    public String getNewPreferences() {
+    public ArrayList<String> getNewPreferences() {
         return newPreferences;
     }
 }

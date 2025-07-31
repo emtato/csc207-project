@@ -418,6 +418,7 @@ public class AppBuilder {
                 new ProfileInteractor(userDataAccessObject, profileOutputBoundary);
         final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
+        editProfileView.setProfileController(profileController);
         return this;
     }
 
@@ -483,7 +484,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(profileView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

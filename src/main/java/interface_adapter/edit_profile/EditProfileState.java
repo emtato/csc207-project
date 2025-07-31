@@ -1,20 +1,22 @@
 package interface_adapter.edit_profile;
 
+import javax.swing.*;
 import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * The state for the Edit Profile View Model.
  */
 public class EditProfileState {
-    private String username;
-    private String displayName;
-    private String bio;
-    private Image profilePicture;
-    private String preferences;
+    private String username = "";
+    private String displayName = "";
+    private String bio = "";
+    private Image profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+    private ArrayList<String> preferences = new ArrayList<>();
     private String newDisplayName;
     private String newBio;
     private Image newProfilePicture;
-    private String newPreferences;
+    private ArrayList<String> newPreferences;
 
     public String getNewDisplayName() {
         return newDisplayName;
@@ -48,11 +50,11 @@ public class EditProfileState {
         this.username = username;
     }
 
-    public String getNewPreferences() {
+    public ArrayList<String> getNewPreferences() {
         return newPreferences;
     }
 
-    public void setNewPreferences(String newPreferences) {
+    public void setNewPreferences(ArrayList<String> newPreferences) {
         this.newPreferences = newPreferences;
     }
 
@@ -80,11 +82,11 @@ public class EditProfileState {
         this.profilePicture = profilePicture;
     }
 
-    public String getPreferences() {
+    public ArrayList<String> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(String preferences) {
+    public void setPreferences(ArrayList<String> preferences) {
         this.preferences = preferences;
     }
 }

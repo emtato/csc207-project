@@ -1,7 +1,6 @@
 package interface_adapter.edit_profile;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
 import use_case.edit_profile.EditProfileOutputBoundary;
 import use_case.edit_profile.EditProfileOutputData;
@@ -37,10 +36,6 @@ public class EditProfilePresenter implements EditProfileOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        final EditProfileState editProfileState = editProfileViewModel.getState();
-        // TODO: On failure, do something
-        //editProfileState.setUsernameError(error);
-        //editProfileViewModel.firePropertyChanged();
     }
 
     @Override

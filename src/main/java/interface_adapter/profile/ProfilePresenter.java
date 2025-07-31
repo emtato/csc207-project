@@ -11,6 +11,8 @@ import use_case.profile.ProfileOutputBoundary;
 import use_case.profile.ProfileOutputData;
 import use_case.profile.SwitchToEditProfileViewOutputData;
 
+import java.awt.*;
+
 /**
  * The Presenter for the Profile Use Case.
  */
@@ -35,25 +37,41 @@ public class ProfilePresenter implements ProfileOutputBoundary {
 
     @Override
     public void prepareSuccessView(ProfileOutputData response) {
-        // TODO: On success, do somethings.
+        final ProfileState profileState = profileViewModel.getState();
+        profileState.setUsername(response.getUsername());
+        profileState.setDisplayName(response.getDisplayName());
+        profileState.setProfilePicture(response.getProfilePicture());
+        profileState.setBio(response.getBio());
+        profileState.setNumFollowers(response.getNumFollowers());
+        profileState.setNumFollowing(response.getNumFollowing());
+        profileState.setPosts(response.getPosts());
+        profileViewModel.setState(profileState);
+        profileViewModel.firePropertyChanged();
+
+        viewManagerModel.setState(profileViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
-        final ProfileState profileState = profileViewModel.getState();
-        // TODO: On failure, do something
-        //profileState.setUsernameError(error);
-        //profileViewModel.firePropertyChanged();
     }
 
     @Override
     public void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData) {
-        final ProfileState profileState = profileViewModel.getState();
         final EditProfileState editProfileState = editProfileViewModel.getState();
 
-        if(!editProfileState.getUsername().equals(profileState.getUsername())) {
-            editProfileState.setUsername(profileState.getUsername());
-            editProfileViewModel.firePropertyChanged("username");
+        if(!editProfileState.getUsername().equals(outputData.getUsername())) {
+            editProfileState.setUsername(outputData.getUsername());
+            editProfileState.setDisplayName(outputData.getDisplayName());
+            editProfileState.setProfilePicture(outputData.getProfilePicture());
+            editProfileState.setBio(outputData.getBio());
+            editProfileState.setPreferences(outputData.getPreferences());
+            editProfileState.setNewDisplayName(outputData.getDisplayName());
+            editProfileState.setNewProfilePicture(outputData.getProfilePicture());
+            editProfileState.setNewBio(outputData.getBio());
+            editProfileState.setNewPreferences(outputData.getPreferences());
+
+            editProfileViewModel.firePropertyChanged();
         }
 
         viewManagerModel.setState(editProfileViewModel.getViewName());

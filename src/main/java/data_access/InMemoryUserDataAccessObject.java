@@ -1,9 +1,11 @@
 package data_access;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import entity.Post;
 import entity.User;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
@@ -16,6 +18,8 @@ import use_case.note.NoteDataAccessInterface;
 import use_case.profile.ProfileUserDataAccessInterface;
 import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+
+import javax.swing.*;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -47,6 +51,11 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
         users.put(user.getName(), user);
         System.out.println("User " + user.getName() + " has been saved");
+    }
+
+    @Override
+    public String getCurrentUserName() {
+        return "";
     }
 
     @Override
@@ -97,7 +106,43 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     }
 
     @Override
-    public void updatePreferences(User user, String newPreferences){
+    public void updatePreferences(User user, ArrayList<String> newPreferences) {
 
     }
+
+    @Override
+    public String getDisplayName(String username) {
+        return "";
+    }
+
+    @Override
+    public String getBio(String username) {
+        return "";
+    }
+
+    @Override
+    public Image getProfilePicture(String username) {
+        return new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+    }
+
+    @Override
+    public int getNumFollowers(String username) {
+        return 0;
+    }
+
+    @Override
+    public int getNumFollowing(String username) {
+        return 0;
+    }
+
+    @Override
+    public HashMap<Long, Post> getPosts(String username) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getPreferences(String username) {
+        return null;
+    }
+
 }

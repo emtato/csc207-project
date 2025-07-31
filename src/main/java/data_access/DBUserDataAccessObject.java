@@ -2,7 +2,10 @@ package data_access;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import entity.Post;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +27,8 @@ import use_case.note.NoteDataAccessInterface;
 import use_case.profile.ProfileUserDataAccessInterface;
 import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+
+import javax.swing.*;
 
 /**
  * The DAO for user data.
@@ -55,6 +60,11 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
+    public String getCurrentUserName() {
+        return "";
+    }
+
+    @Override
     public User get(String username) {
         // Make an API call to get the user object.
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -81,6 +91,41 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public String getDisplayName(String username) {
+        return "";
+    }
+
+    @Override
+    public String getBio(String username) {
+        return "";
+    }
+
+    @Override
+    public Image getProfilePicture(String username) {
+        return new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+    }
+
+    @Override
+    public int getNumFollowers(String username) {
+        return 0;
+    }
+
+    @Override
+    public int getNumFollowing(String username) {
+        return 0;
+    }
+
+    @Override
+    public HashMap<Long, Post> getPosts(String username) {
+        return new HashMap<Long, Post>();
+    }
+
+    @Override
+    public ArrayList<String> getPreferences(String username) {
+        return new ArrayList<String>();
     }
 
     @Override
@@ -263,7 +308,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
-    public void updatePreferences(User user, String newPreferences){
+    public void updatePreferences(User user, ArrayList<String> newPreferences){
 
     }
 }
