@@ -34,6 +34,21 @@ public class Club implements User{
         return password;
     }
 
+    @Override
+    public void setDisplayName(String newDisplayName) {
+
+    }
+
+    @Override
+    public void setBio(String newBio) {
+
+    }
+
+    @Override
+    public void setPreferences(String newPreferences) {
+
+    }
+
     public String getBio() {
         return bio;
     }

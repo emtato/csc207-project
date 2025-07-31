@@ -1,0 +1,17 @@
+{
+  "users": {
+    "example_user": {
+      "name": "example_user",
+      "password": "hashedPassword123",
+      "displayName": "Example User",
+      "bio": "This is an example user bio",
+      "preferences": "cooking, travel",
+      "followers": ["user1", "user2"],
+      "following": ["user3", "user4"]
+    }
+  },
+  "notes": {
+    "example_user": "This is an example note"
+  }
+}
+

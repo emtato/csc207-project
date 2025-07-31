@@ -3,13 +3,18 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.net.URL;
 
 class RoundImagePanel extends JPanel {
     private final Image image;
 
     public RoundImagePanel(String imagePath) {
         setOpaque(false);
-        ImageIcon icon = new ImageIcon(imagePath);
+        URL imageUrl = getClass().getClassLoader().getResource(imagePath);
+        if (imageUrl == null) {
+            throw new IllegalArgumentException("Could not find resource: " + imagePath);
+        }
+        ImageIcon icon = new ImageIcon(imageUrl);
         this.image = icon.getImage();
     }
 
