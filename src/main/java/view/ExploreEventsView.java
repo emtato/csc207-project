@@ -37,9 +37,9 @@ public class ExploreEventsView extends JPanel {
         this.setLayout(new BorderLayout());
 
         // set fonts
-        Font titleFont = new Font("Sans Serif", Font.BOLD, 20);
-        Font eventTitleFont = new Font("Sans Serif", Font.BOLD, 14);
-        Font eventDescFont = new Font("Sans Serif", Font.PLAIN, 10);
+        Font titleFont = new Font("Roboto", Font.BOLD, 20);
+        Font eventTitleFont = new Font("Roboto", Font.BOLD, 18);
+        Font eventDescFont = new Font("Roboto", Font.PLAIN, 15);
 
         // title
         JLabel title = new JLabel("Explore Events");
@@ -51,7 +51,7 @@ public class ExploreEventsView extends JPanel {
 
         // events grid
         JPanel eventsGrid = new JPanel();
-        eventsGrid.setLayout(new FlowLayout(FlowLayout.LEFT));
+        eventsGrid.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         for(int i = 0; i < 10; i++ ) {
             // event 1
@@ -68,6 +68,8 @@ public class ExploreEventsView extends JPanel {
 
             JPanel event = new JPanel();
             event.setLayout(new BoxLayout(event, BoxLayout.Y_AXIS));
+            event.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            event.setPreferredSize(new Dimension(600, 200));
             event.add(eventlabel);
             event.add(eventdate);
             event.add(eventlocation);
