@@ -21,15 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DataStorage {
+public class DBPostCommentLikesDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
-    public static void main(String[] args) {
-        long postId = 483958292l;
-        DataStorage dataStorage = new DataStorage();
-        dataStorage.writeCommentToFile(postId, new Account("bil", "bal"), "bol", LocalDateTime.now());
-
-    }
 
     /**
      * method to reduce duplicate code, retrieves JSONObject from file

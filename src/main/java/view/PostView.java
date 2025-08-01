@@ -1,6 +1,6 @@
 package view;
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -228,9 +228,9 @@ public class PostView extends JPanel {
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
-                //TODO: set 3 image max width to avoid overflow center panel
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
@@ -256,8 +256,13 @@ public class PostView extends JPanel {
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
+                    imagesRn++;
+                    if (imagesRn == 3) {
+                        break;
+                    }
                 }
                 centerPanel.add(imagePanel);
+
 
                 maxBoxHeight = 150;
             }
@@ -454,8 +459,8 @@ public class PostView extends JPanel {
                     Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
-                    DataStorage dataStorage = new DataStorage();
-                    dataStorage.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });

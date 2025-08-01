@@ -5,19 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 import javax.swing.*;
 
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupViewModel;
 
 /**
  * The View for the Home Page.
@@ -57,7 +55,7 @@ public class HomePageView extends JPanel {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    viewManagerModel.setState("create new post");
+                viewManagerModel.setState("create new post");
 
             }
         });
@@ -91,12 +89,23 @@ public class HomePageView extends JPanel {
 
         this.add(mainPanel);
     }
-    public void updateHomeFeed(){
+
+    public void updateHomeFeed() {
         feedPanel.removeAll();
+        //TODO: refresh work properly after having made post
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
-        DataStorage dataStorage = new DataStorage();
-        ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
-        for (int i = 0; i < availablePosts.size(); i++) {
+        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+        ArrayList<Long> availablePosts = DBPostCommentLikesDataAccessObject.getAvailablePosts();
+
+        int maxNumberOfDisplayingPosts = 10;
+        int numberofPosts = Math.min(availablePosts.size(), 10);
+        ArrayList<Integer> indicesRandomizer = new ArrayList<>();
+        for (int i = 0; i < numberofPosts; i++) {
+            indicesRandomizer.add(i);
+        }
+        Collections.shuffle(indicesRandomizer);
+
+        for (int i = 0; i < numberofPosts; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
@@ -104,7 +113,7 @@ public class HomePageView extends JPanel {
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            Post post2 = dataStorage.getPost(availablePosts.get(i));
+            Post post2 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(indicesRandomizer.get(i)));
             PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
