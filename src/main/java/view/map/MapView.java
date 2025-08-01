@@ -20,12 +20,9 @@ public class MapView {
 
     public MapView(MapViewModel viewModel, Restaurant restaurant) {
         this.mapViewModel = viewModel;
-        //        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
+        // GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
         AppProperties appProps = new AppProperties();
         GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
-
-        //GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(apikeys.PLACES_API_KEY);
-
 
         try {
 
@@ -36,9 +33,10 @@ public class MapView {
             if (!results.isEmpty()) {
                 List<Restaurant> restaurants = new ArrayList<>();
                 for (HashMap<String, Object> result : results) {
-                    Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
+                    // Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
+                    Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(results.size() - 1));
                     restaurants.add(apiRestaurant);
-                    // FIXME: deletethis line:
+                    // FIXME: delete this line:
                     System.out.println(result.toString());
                 }
                 updateViewModel(restaurants.get(0));
@@ -71,6 +69,6 @@ public class MapView {
 
     public static void main(String[] args) {
         MapView mapView = new MapView(new MapViewModel(), new Restaurant(new ArrayList<String>(Arrays
-                .asList("Spicy Foods", "Indian")), "Toronto"));
+                .asList("Indian", "Spicy Foods")), "Toronto"));
     }
 }
