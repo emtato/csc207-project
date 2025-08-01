@@ -1,10 +1,11 @@
 // src/main/java/view/MenuBarPanel.java
-package view;
+package view.UI_components;
 
 import javax.swing.*;
 import java.awt.*;
 
 import interface_adapter.ViewManagerModel;
+import view.GUIConstants;
 
 public class MenuBarPanel extends JPanel {
     public MenuBarPanel(ViewManagerModel viewManagerModel) {
