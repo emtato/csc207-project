@@ -1,5 +1,6 @@
 package entity;
 
+import data_access.DBPostCommentLikesDataAccessObject;
 import data_access.DataStorage;
 
 import java.time.LocalDateTime;
@@ -110,7 +111,7 @@ public class Review {
     }
 
     public ArrayList<Comment> getComments() {
-        DataStorage dataStorage = new DataStorage();
+        DBPostCommentLikesDataAccessObject dataStorage = new DBPostCommentLikesDataAccessObject();
         return dataStorage.getComments(reviewID);
     }
 }
