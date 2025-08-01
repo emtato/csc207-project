@@ -5,7 +5,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
-import use_case.profile.SwitchToEditProfileViewOutputData;
+import view.UI_components.MenuBarPanel;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -14,12 +14,8 @@ import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -102,7 +98,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileButtons.setMaximumSize(new Dimension(500, 200));
         profileButtons.setMinimumSize(new Dimension(500, 200));
 
-
         editProfileButton = new JButton(ProfileViewModel.EDIT_PROFILE_BUTTON_LABEL);
         editProfileButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         profileButtons.add(editProfileButton);
@@ -177,7 +172,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            profilePicture.setImage(profileViewModel.getState().getProfilePicture());
+            profilePicture.setImage(new ImageIcon(profileViewModel.getState().getProfilePictureUrl()).getImage());
             displayName.setText(profileViewModel.getState().getDisplayName());
             username.setText(profileViewModel.getState().getUsername());
             bio.setText(profileViewModel.getState().getBio());

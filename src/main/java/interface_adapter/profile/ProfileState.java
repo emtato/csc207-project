@@ -11,13 +11,13 @@ import java.util.HashMap;
  * The state for the Profile View Model.
  */
 public class ProfileState {
-    private String username = "username";
-    private String displayName = "display name";
-    private Image profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
-    private String bio = "bio";
+    private String username = "";
+    private String displayName = "";
+    private String profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
+    private String bio = "";
     private int numFollowers = 0;
     private int numFollowing = 0;
-    private HashMap<Long, Post> posts;
+    private HashMap<Long, Post> posts = new HashMap<>();
 
     public String getUsername() {
         return username;
@@ -35,12 +35,12 @@ public class ProfileState {
         this.displayName = displayName;
     }
 
-    public Image getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
-    public void setProfilePicture(Image profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getBio() {

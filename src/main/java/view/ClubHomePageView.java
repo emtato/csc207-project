@@ -11,6 +11,9 @@ import javax.swing.JLabel;
 import entity.Account;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
+import view.UI_components.MenuBarPanel;
+import view.UI_components.PostPanel;
+import view.UI_components.RoundImagePanel;
 
 
 /**

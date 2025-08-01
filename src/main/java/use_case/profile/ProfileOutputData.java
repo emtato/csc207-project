@@ -12,17 +12,18 @@ public class ProfileOutputData {
     private final String username;
     private final String displayName;
     private final String bio;
-    private final Image profilePicture;
+    private final String profilePictureUrl;
     private final int numFollowers;
     private final int numFollowing;
     private final HashMap<Long, Post> posts;
 
 
-    public ProfileOutputData(String username, String displayName, String bio, Image profilePicture, int numFollowers, int numFollowing, HashMap<Long, Post> posts) {
+    public ProfileOutputData(String username, String displayName, String bio, String profilePictureUrl,
+                             int numFollowers, int numFollowing, HashMap<Long, Post> posts) {
         this.username = username;
         this.displayName = displayName;
         this.bio = bio;
-        this.profilePicture = profilePicture;
+        this.profilePictureUrl = profilePictureUrl;
         this.numFollowers = numFollowers;
         this.numFollowing = numFollowing;
         this.posts = posts;
@@ -40,8 +41,8 @@ public class ProfileOutputData {
         return bio;
     }
 
-    public Image getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
     public int getNumFollowers() {

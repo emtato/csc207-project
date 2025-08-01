@@ -2,8 +2,6 @@ package view;
 
 import interface_adapter.ViewManagerModel;
 
-import interface_adapter.explore.ExploreViewModel;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import view.PostView;
+import view.UI_components.JFrame;
+import view.UI_components.MenuBarPanel;
 
 import javax.swing.*;
 
@@ -231,7 +230,7 @@ private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asL
 
     //test/////////////////////////////////////////////
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+        view.UI_components.JFrame frame = new view.UI_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new ExploreView(new ViewManagerModel(), cardPanel));
         frame.pack();

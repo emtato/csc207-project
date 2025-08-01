@@ -5,6 +5,7 @@ import entity.Post;
 import entity.User;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -17,8 +18,6 @@ import use_case.profile.ProfileUserDataAccessInterface;
 import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +25,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
+public class FileUserDataAccessObject implements
+        UserDataAccessInterface,
+        SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface,
@@ -85,7 +86,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         // Store account data
         userJson.put("username", account.getUsername());
         userJson.put("password", account.getPassword());
-        userJson.put("name", account.getName());
+        userJson.put("name", account.getUsername());
         userJson.put("email", account.getEmail());
         userJson.put("bio", account.getBio());
 
@@ -264,7 +265,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getName(), note);
+        notes.put(user.getUsername(), note);
         data.put("notes", notes);
 
         writeToFile(data);
@@ -280,7 +281,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getName(), null);
+        return notes.optString(user.getUsername(), null);
     }
 
     @Override
@@ -296,14 +297,14 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
-    public void updateProfilePicture(User user, Image newProfilePicture) {
-        // Note: Image handling would require additional implementation for serialization
+    public void updateProfilePictureUrl(User user, String newProfilePictureUrl) {
+        user.setProfilePictureUrl(newProfilePictureUrl);
         save(user);
     }
 
     @Override
-    public void updatePreferences(User user, String newPreferences) {
-        user.setPreferences(newPreferences);
+    public void updatePreferences(User user, ArrayList<String> newPreferences) {
+        user.setFoodPreferences(newPreferences);
         save(user);
     }
 }

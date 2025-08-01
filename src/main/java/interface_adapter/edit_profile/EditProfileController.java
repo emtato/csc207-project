@@ -19,15 +19,15 @@ public class EditProfileController {
     /**
      * Executes the Edit Profile Use Case.
      */
-    public void execute(String username, String newDisplayName, String newBio, Image newProfilePicture,
+    public void execute(String username, String newDisplayName, String newBio, String newProfilePictureUrl,
                         ArrayList<String> newPreferences) {
         final EditProfileInputData editProfileInputData = new EditProfileInputData(username, newDisplayName, newBio,
-                newProfilePicture, newPreferences);
+                newProfilePictureUrl, newPreferences);
         editProfileUseCaseInteractor.execute(editProfileInputData);
     }
 
     /**
-     * Executes the "switch to Edit Profile" Use Case.
+     * Executes the "switch to Profile View" Use Case.
      */
     public void switchToProfileView() {
         editProfileUseCaseInteractor.switchToProfileView();

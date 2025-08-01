@@ -10,15 +10,15 @@ public class SwitchToEditProfileViewOutputData{
     private final String username;
     private final String displayName;
     private final String bio;
-    private final Image profilePicture;
+    private final String profilePictureUrl;
     private final ArrayList<String> preferences;
 
-    public SwitchToEditProfileViewOutputData(String username, String displayName, String bio, Image profilePicture,
+    public SwitchToEditProfileViewOutputData(String username, String displayName, String bio, String profilePictureUrl,
                                              ArrayList<String> preferences) {
         this.username = username;
         this.displayName = displayName;
         this.bio = bio;
-        this.profilePicture = profilePicture;
+        this.profilePictureUrl = profilePictureUrl;
         this.preferences = preferences;
     }
 
@@ -30,8 +30,8 @@ public class SwitchToEditProfileViewOutputData{
         return bio;
     }
 
-    public Image getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
     public ArrayList<String> getPreferences() {

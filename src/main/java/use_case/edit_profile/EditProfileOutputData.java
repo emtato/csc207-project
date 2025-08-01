@@ -9,14 +9,14 @@ import java.util.ArrayList;
 public class EditProfileOutputData {
     private final String newDisplayName;
     private final String newBio;
-    private final Image newProfilePicture;
+    private final String newProfilePictureUrl;
     private final ArrayList<String> newPreferences;
 
-    public EditProfileOutputData(String newDisplayName, String newBio, Image newProfilePicture,
+    public EditProfileOutputData(String newDisplayName, String newBio, String newProfilePictureUrl,
                                  ArrayList<String> newPreferences) {
         this.newDisplayName = newDisplayName;
         this.newBio = newBio;
-        this.newProfilePicture = newProfilePicture;
+        this.newProfilePictureUrl = newProfilePictureUrl;
         this.newPreferences = newPreferences;
     }
 
@@ -28,8 +28,8 @@ public class EditProfileOutputData {
         return newBio;
     }
 
-    public Image getNewProfilePicture() {
-        return newProfilePicture;
+    public String getNewProfilePictureUrl() {
+        return newProfilePictureUrl;
     }
 
     public ArrayList<String> getNewPreferences() {

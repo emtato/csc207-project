@@ -15,9 +15,8 @@ import entity.Account;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupViewModel;
+import view.UI_components.MenuBarPanel;
+import view.UI_components.PostPanel;
 
 /**
  * The View for the Home Page.

@@ -30,7 +30,7 @@ public class Main {
                 .addSettingsView()
                 .addManageFollowersView()
                 .addManageFollowingView()
-                //.addSignupUseCase()
+                .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()

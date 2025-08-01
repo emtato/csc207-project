@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -33,16 +34,8 @@ import javax.swing.*;
 /**
  * The DAO for user data.
  */
-public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface,
-        LogoutUserDataAccessInterface,
-        NoteDataAccessInterface,
-        SettingsUserDataAccessInterface,
-        ProfileUserDataAccessInterface,
-        EditProfileUserDataAccessInterface,
-        ManageFollowingUserDataAccessInterface,
-        ManageFollowersUserDataAccessInterface {
+public class DBUserDataAccessObject {
+    /*
     private static final int CREDENTIAL_ERROR = 401;
     private static final int SUCCESS_CODE = 200;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -57,11 +50,6 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     public DBUserDataAccessObject(UserFactory userFactory) {
         this.userFactory = userFactory;
         // No need to do anything to reinitialize a user list! The data is the cloud that may be miles away.
-    }
-
-    @Override
-    public String getCurrentUserName() {
-        return "";
     }
 
     @Override
@@ -94,41 +82,6 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
-    public String getDisplayName(String username) {
-        return "";
-    }
-
-    @Override
-    public String getBio(String username) {
-        return "";
-    }
-
-    @Override
-    public Image getProfilePicture(String username) {
-        return new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
-    }
-
-    @Override
-    public int getNumFollowers(String username) {
-        return 0;
-    }
-
-    @Override
-    public int getNumFollowing(String username) {
-        return 0;
-    }
-
-    @Override
-    public HashMap<Long, Post> getPosts(String username) {
-        return new HashMap<Long, Post>();
-    }
-
-    @Override
-    public ArrayList<String> getPreferences(String username) {
-        return new ArrayList<String>();
-    }
-
-    @Override
     public boolean existsByName(String username) {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -156,7 +109,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         // POST METHOD
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
+        requestBody.put(USERNAME, user.getUsername());
         requestBody.put(PASSWORD, user.getPassword());
         final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
         final Request request = new Request.Builder()
@@ -189,7 +142,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         // POST METHOD
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
+        requestBody.put(USERNAME, user.getUsername());
         requestBody.put(PASSWORD, user.getPassword());
         final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
         final Request request = new Request.Builder()
@@ -232,7 +185,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         // POST METHOD
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
+        requestBody.put(USERNAME, user.getUsername());
         requestBody.put(PASSWORD, user.getPassword());
         final JSONObject extra = new JSONObject();
         extra.put("note", note);
@@ -267,7 +220,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     @Override
     public String loadNote(User user) throws DataAccessException {
         // Make an API call to get the user object.
-        final String username = user.getName();
+        final String username = user.getUsername();
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
                 .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
@@ -311,4 +264,6 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
     public void updatePreferences(User user, ArrayList<String> newPreferences){
 
     }
+
+     */
 }

@@ -1,4 +1,4 @@
-package view;
+package view.UI_components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.*;
  */
 
 
-class RoundedButton extends JButton {
+public class RoundedButton extends JButton {
     public RoundedButton(String label) {
         super(label);
         setOpaque(false);

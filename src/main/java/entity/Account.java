@@ -1,19 +1,16 @@
 package entity;
 
-import javax.swing.*;
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * An implementation of the User interface.
  */
 public class Account implements User {
-    private Image profilePicture;
+    private String profilePictureUrl;
     private String username;
     private String password;
-    private String name;
+    private String displayName;
     private String email;
     private String bio;
     private HashMap<String, Account> followerAccounts;
@@ -26,8 +23,7 @@ public class Account implements User {
     private HashMap<Long, Post> userPosts;
 
     public Account(String username, String password) {
-        // placeholder for profile picture for now
-        this.profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+        this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
         this.username = username;
         this.password = password;
         likesUsernames = new ArrayList<>();
@@ -38,9 +34,9 @@ public class Account implements User {
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
     }
-    public Image getProfilePicture() {return profilePicture;}
+    public String getProfilePictureUrl() {return profilePictureUrl;}
 
-    public void setProfilePicture(Image profilePicture) {this.profilePicture = profilePicture;}
+    public void setProfilePictureUrl(String profilePictureUrl) {this.profilePictureUrl = profilePictureUrl;}
 
     public String getUsername() {
         return username;
@@ -63,12 +59,12 @@ public class Account implements User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.displayName = name;
     }
 
     public String getEmail() {
@@ -85,11 +81,6 @@ public class Account implements User {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    @Override
-    public void setPreferences(String newPreferences) {
-
     }
 
     public ArrayList<Long> getLikesUsernames() {
@@ -140,7 +131,6 @@ public class Account implements User {
         this.foodPreferences = foodPreferences;
     }
 
-
     public boolean liked(Post p) {
         return likesUsernames.contains(p.getID());
     }
@@ -180,6 +170,14 @@ public class Account implements User {
         followingAccounts.remove(f.getUsername());
     }
 
+    public int getNumFollowers() {
+        return followerAccounts.size();
+    }
+
+    public int getNumFollowing() {
+        return followingAccounts.size();
+    }
+
     /**
      * Basic debugging toString method
      *
@@ -187,7 +185,7 @@ public class Account implements User {
      */
     @Override
     public String toString() {
-        return "Account username=" + username + ", password=" + password + ", name=" + name;
+        return "Account username=" + username + ", password=" + password + ", name=" + displayName;
     }
 
     public HashMap<Long, Post> getUserPosts() {

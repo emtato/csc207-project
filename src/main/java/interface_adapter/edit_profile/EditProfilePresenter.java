@@ -26,7 +26,7 @@ public class EditProfilePresenter implements EditProfileOutputBoundary {
         final EditProfileState editProfileState = editProfileViewModel.getState();
         editProfileState.setDisplayName(response.getNewDisplayName());
         editProfileState.setBio(response.getNewBio());
-        editProfileState.setProfilePicture(response.getNewProfilePicture());
+        editProfileState.setProfilePictureUrl(response.getNewProfilePictureUrl());
         editProfileState.setPreferences(response.getNewPreferences());
         editProfileViewModel.firePropertyChanged("displayName");
         editProfileViewModel.firePropertyChanged("bio");

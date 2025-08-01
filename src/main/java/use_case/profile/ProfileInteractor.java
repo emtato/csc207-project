@@ -21,28 +21,30 @@ public class ProfileInteractor implements ProfileInputBoundary{
     @Override
     public void executeViewProfile(ProfileInputData profileInputData) {
         final String username = profileInputData.getUsername();
-        final String displayName = userDataAccessObject.getDisplayName(username);
-        final String bio = userDataAccessObject.getBio(username);
-        final Image profilePicture = userDataAccessObject.getProfilePicture(username);
-        final int numFollowers = userDataAccessObject.getNumFollowers(username);
-        final int numFollowing = userDataAccessObject.getNumFollowing(username);
-        final HashMap<Long, Post> posts = userDataAccessObject.getPosts(username);
+        final User user = userDataAccessObject.get(username);
+        final String displayName = user.getDisplayName();
+        final String bio = user.getBio();
+        final String profilePictureUrl = user.getProfilePictureUrl();
+        final int numFollowers = user.getNumFollowers();
+        final int numFollowing = user.getNumFollowing();
+        final HashMap<Long, Post> posts = user.getUserPosts();
 
-        final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePicture,
+        final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePictureUrl,
                 numFollowers, numFollowing, posts);
         presenter.prepareSuccessView(profileOutputData);
     }
 
     @Override
-    public void switchToEditProfileView(SwitchToEditProfileViewInputData inputData) {
+    public void switchToEditProfileView(ProfileInputData inputData) {
         final String username = inputData.getUsername();
-        final String displayName = userDataAccessObject.getDisplayName(username);
-        final String bio = userDataAccessObject.getBio(username);
-        final Image profilePicture = userDataAccessObject.getProfilePicture(username);
-        final ArrayList<String> preferences = userDataAccessObject.getPreferences(username);
+        final User user = userDataAccessObject.get(username);
+        final String displayName = user.getDisplayName();
+        final String bio = user.getBio();
+        final String profilePictureUrl = user.getProfilePictureUrl();
+        final ArrayList<String> preferences = user.getFoodPreferences();
 
         final SwitchToEditProfileViewOutputData outputData = new SwitchToEditProfileViewOutputData(
-                username, displayName, bio, profilePicture, preferences);
+                username, displayName, bio, profilePictureUrl, preferences);
         presenter.switchToEditProfileView(outputData);
     }
 

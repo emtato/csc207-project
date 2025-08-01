@@ -11,11 +11,11 @@ public class EditProfileState {
     private String username = "";
     private String displayName = "";
     private String bio = "";
-    private Image profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+    private String profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
     private ArrayList<String> preferences = new ArrayList<>();
     private String newDisplayName;
     private String newBio;
-    private Image newProfilePicture;
+    private String newProfilePictureUrl;
     private ArrayList<String> newPreferences;
 
     public String getNewDisplayName() {
@@ -34,12 +34,12 @@ public class EditProfileState {
         this.newBio = newBio;
     }
 
-    public Image getNewProfilePicture() {
-        return newProfilePicture;
+    public String getNewProfilePictureUrl() {
+        return newProfilePictureUrl;
     }
 
-    public void setNewProfilePicture(Image newProfilePicture) {
-        this.newProfilePicture = newProfilePicture;
+    public void setNewProfilePictureUrl(String newProfilePictureUrl) {
+        this.newProfilePictureUrl = newProfilePictureUrl;
     }
 
     public String getUsername() {
@@ -74,12 +74,12 @@ public class EditProfileState {
         this.bio = bio;
     }
 
-    public Image getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
-    public void setProfilePicture(Image profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public ArrayList<String> getPreferences() {

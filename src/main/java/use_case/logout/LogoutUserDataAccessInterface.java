@@ -1,9 +1,11 @@
 package use_case.logout;
 
+import use_case.UserDataAccessInterface;
+
 /**
  * DAO for the Logout Use Case.
  */
-public interface LogoutUserDataAccessInterface {
+public interface LogoutUserDataAccessInterface extends UserDataAccessInterface {
 
     /**
      * Returns the username of the curren user of the application.

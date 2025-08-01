@@ -3,30 +3,20 @@ package view;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsController;
-import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
+import view.UI_components.MenuBarPanel;
 
 import javax.swing.*;
 import javax.swing.JLabel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 // TODO: use constants for the hardcoded parts
 public class SettingsView extends JPanel implements PropertyChangeListener {

@@ -1,4 +1,4 @@
-package view;
+package view.UI_components;
 
 import entity.Account;
 import entity.Event;

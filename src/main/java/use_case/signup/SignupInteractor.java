@@ -30,12 +30,12 @@ public class SignupInteractor implements SignupInputBoundary {
         }
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
-            System.out.println("Debug: Created user with name: " + user.getName());
+            System.out.println("Debug: Created user with name: " + user.getUsername());
 
             userDataAccessObject.save(user);
-            System.out.println("Debug: User exists after save: " + userDataAccessObject.existsByName(user.getName()));
+            System.out.println("Debug: User exists after save: " + userDataAccessObject.existsByName(user.getUsername()));
 
-            final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
+            final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }

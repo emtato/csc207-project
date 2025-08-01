@@ -28,7 +28,6 @@ public class Comment {
         this.likes = likes;
     }
 
-
     public Account getAccount() {
         return account;
     }

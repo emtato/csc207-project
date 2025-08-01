@@ -7,6 +7,7 @@ import java.util.Map;
 
 import entity.Post;
 import entity.User;
+import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -25,7 +26,9 @@ import javax.swing.*;
  * In-memory implementation of the DAO for storing user data. This implementation does
  * NOT persist data between runs of the program.
  */
-public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterface,
+public class InMemoryUserDataAccessObject implements
+        UserDataAccessInterface,
+        SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface,
@@ -49,13 +52,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     @Override
     public void save(User user) {
 
-        users.put(user.getName(), user);
-        System.out.println("User " + user.getName() + " has been saved");
-    }
-
-    @Override
-    public String getCurrentUserName() {
-        return "";
+        users.put(user.getUsername(), user);
+        System.out.println("User " + user.getUsername() + " has been saved");
     }
 
     @Override
@@ -66,7 +64,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     @Override
     public void changePassword(User user) {
         // Replace the old entry with the new password
-        users.put(user.getName(), user);
+        users.put(user.getUsername(), user);
     }
 
     @Override
@@ -81,13 +79,13 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     @Override
     public String saveNote(User user, String note) throws DataAccessException {
-        notes.put(user.getName(), note);
+        notes.put(user.getUsername(), note);
         return loadNote(user);
     }
 
     @Override
     public String loadNote(User user) throws DataAccessException {
-        return notes.get(user.getName());
+        return notes.get(user.getUsername());
     }
 
     @Override
@@ -101,7 +99,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     }
 
     @Override
-    public void updateProfilePicture(User user, Image newProfilePicture){
+    public void updateProfilePictureUrl(User user, String newProfilePictureUrl){
 
     }
 
@@ -109,40 +107,4 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     public void updatePreferences(User user, ArrayList<String> newPreferences) {
 
     }
-
-    @Override
-    public String getDisplayName(String username) {
-        return "";
-    }
-
-    @Override
-    public String getBio(String username) {
-        return "";
-    }
-
-    @Override
-    public Image getProfilePicture(String username) {
-        return new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
-    }
-
-    @Override
-    public int getNumFollowers(String username) {
-        return 0;
-    }
-
-    @Override
-    public int getNumFollowing(String username) {
-        return 0;
-    }
-
-    @Override
-    public HashMap<Long, Post> getPosts(String username) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<String> getPreferences(String username) {
-        return null;
-    }
-
 }

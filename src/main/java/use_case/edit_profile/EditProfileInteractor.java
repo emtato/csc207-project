@@ -6,7 +6,6 @@ public class EditProfileInteractor implements EditProfileInputBoundary{
     private final EditProfileUserDataAccessInterface userDataAccessObject;
     private final EditProfileOutputBoundary presenter;
 
-    //TODO: factories
     public EditProfileInteractor(EditProfileUserDataAccessInterface userDataAccessInterface,
                                  EditProfileOutputBoundary presenter) {
         this.userDataAccessObject = userDataAccessInterface;
@@ -19,14 +18,14 @@ public class EditProfileInteractor implements EditProfileInputBoundary{
             final User user = userDataAccessObject.get(editProfileInputData.getUsername());
             userDataAccessObject.updateDisplayName(user, editProfileInputData.getNewDisplayName());
             userDataAccessObject.updateBio(user, editProfileInputData.getNewBio());
-            userDataAccessObject.updateProfilePicture(user, editProfileInputData.getNewProfilePicture());
+            userDataAccessObject.updateProfilePictureUrl(user, editProfileInputData.getNewProfilePictureUrl());
             userDataAccessObject.updatePreferences(user, editProfileInputData.getNewPreferences());
 
             final EditProfileOutputData editProfileOutputData =
                     new EditProfileOutputData(
                             editProfileInputData.getNewDisplayName(),
                             editProfileInputData.getNewBio(),
-                            editProfileInputData.getNewProfilePicture(),
+                            editProfileInputData.getNewProfilePictureUrl(),
                             editProfileInputData.getNewPreferences());
             presenter.prepareSuccessView(editProfileOutputData);
         } else {

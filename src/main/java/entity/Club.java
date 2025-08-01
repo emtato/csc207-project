@@ -2,10 +2,9 @@ package entity;
 
 import java.util.ArrayList;
 
-public class Club implements User{
+public class Club{
     private final String name;
     private final String password;
-
     private String bio;
     private final ArrayList<Account> members = new ArrayList<>();
     private final ArrayList<String> foodPreferences = new ArrayList<>();
@@ -24,27 +23,22 @@ public class Club implements User{
         return this.bio;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
     public void setDisplayName(String newDisplayName) {
 
     }
 
-    @Override
     public void setBio(String newBio) {
 
     }
 
-    @Override
     public void setPreferences(String newPreferences) {
 
     }
@@ -61,5 +55,5 @@ public class Club implements User{
         return foodPreferences;
     }
 
-    public ArrayList<Post> getPosts() {return posts;}
+    public ArrayList<Post> getUserPosts() {return posts;}
 }
