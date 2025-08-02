@@ -2,10 +2,9 @@ package interface_adapter.profile;
 
 import use_case.profile.ProfileInputBoundary;
 import use_case.profile.ProfileInputData;
-import use_case.profile.SwitchToEditProfileViewInputData;
 
 /**
- * Controller for the Profile Use Case.
+ * Controller for the Profile related Use Cases.
  */
 public class ProfileController {
     private final ProfileInputBoundary profileUseCaseInteractor;
@@ -15,10 +14,10 @@ public class ProfileController {
     }
 
     /**
-     * Executes the Profile Use Case.
+     * Executes the View Profile Use Case.
      */
-    public void execute() {
-        final ProfileInputData profileInputData = new ProfileInputData("");
+    public void executeViewProfile(String username) {
+        final ProfileInputData profileInputData = new ProfileInputData(username);
         profileUseCaseInteractor.executeViewProfile(profileInputData);
     }
 
@@ -26,21 +25,23 @@ public class ProfileController {
      * Executes the "switch to Edit Profile View" Use Case.
      */
     public void switchToEditProfileView(String username) {
-        final SwitchToEditProfileViewInputData inputData = new SwitchToEditProfileViewInputData(username);
+        final ProfileInputData inputData = new ProfileInputData(username);
         profileUseCaseInteractor.switchToEditProfileView(inputData);
     }
 
     /**
      * Executes the "switch to Manage Following View" Use Case.
      */
-    public void switchToManageFollowingView() {
-        profileUseCaseInteractor.switchToManageFollowingView();
+    public void switchToManageFollowingView(String username) {
+        final ProfileInputData inputData = new ProfileInputData(username);
+        profileUseCaseInteractor.switchToManageFollowingView(inputData);
     }
 
     /**
      * Executes the "switch to Manage Followers View" Use Case.
      */
-    public void switchToManageFollowersView() {
-        profileUseCaseInteractor.switchToManageFollowersView();
+    public void switchToManageFollowersView(String username) {
+        final ProfileInputData inputData = new ProfileInputData(username);
+        profileUseCaseInteractor.switchToManageFollowersView(inputData);
     }
 }

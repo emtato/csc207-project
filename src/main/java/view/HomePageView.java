@@ -16,6 +16,8 @@ import entity.Account;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import view.ui_components.MenuBarPanel;
+import view.ui_components.PostPanel;
 
 /**
  * The View for the Home Page.

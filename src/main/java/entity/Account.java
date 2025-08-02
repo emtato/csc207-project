@@ -1,74 +1,73 @@
 package entity;
 
-import javax.swing.*;
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * An implementation of the User interface.
  */
 public class Account implements User {
-    private Image profilePicture;
+    private String profilePictureUrl;
     private String username;
     private String password;
-    private String name;
+    private String displayName;
     private String email;
     private String bio;
-    private HashMap<String, Account> followerAccounts;
-    private HashMap<String, Account> blockedAccounts;
+    private HashMap<String, User> followerAccounts;
+    private HashMap<String, User> followingAccounts;
+    private HashMap<String, User> blockedAccounts;
     private ArrayList<String> blockedTerms;
-    private ArrayList<Account> mutedAccounts;
+    private ArrayList<User> mutedAccounts;
     private ArrayList<String> foodPreferences;
     private ArrayList<Long> likesUsernames;
-    private ArrayList<String> followingAccounts;
     private HashMap<Long, Post> userPosts;
 
     public Account(String username, String password) {
-        // placeholder for profile picture for now
-        this.profilePicture = new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
+        this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
         this.username = username;
         this.password = password;
         likesUsernames = new ArrayList<>();
-        followingAccounts = new ArrayList<>();
+        followingAccounts = new HashMap<>();
         followerAccounts = new HashMap<>();
         blockedAccounts = new HashMap<>();
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
     }
-    public Image getProfilePicture() {return profilePicture;}
+    @Override
+    public String getProfilePictureUrl() {return profilePictureUrl;}
 
-    public void setProfilePicture(Image profilePicture) {this.profilePicture = profilePicture;}
+    @Override
+    public void setProfilePictureUrl(String profilePictureUrl) {this.profilePictureUrl = profilePictureUrl;}
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
     public void setDisplayName(String newDisplayName) {
-
+        this.displayName = newDisplayName;
     }
 
+    @Override
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getEmail() {
@@ -79,17 +78,14 @@ public class Account implements User {
         this.email = email;
     }
 
+    @Override
     public String getBio() {
         return bio;
     }
 
+    @Override
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    @Override
-    public void setPreferences(String newPreferences) {
-
     }
 
     public ArrayList<Long> getLikesUsernames() {
@@ -100,19 +96,21 @@ public class Account implements User {
         this.likesUsernames = likesUsernames;
     }
 
-    public HashMap<String, Account> getFollowerAccounts() {
+    @Override
+    public HashMap<String, User> getFollowerAccounts() {
         return followerAccounts;
     }
 
-    public void setFollowerAccounts(HashMap<String, Account> followerAccounts) {
+    @Override
+    public void setFollowerAccounts(HashMap<String, User> followerAccounts) {
         this.followerAccounts = followerAccounts;
     }
 
-    public HashMap<String, Account> getBlockedAccounts() {
+    public HashMap<String, User> getBlockedAccounts() {
         return blockedAccounts;
     }
 
-    public void setBlockedAccounts(HashMap<String, Account> blockedAccounts) {
+    public void setBlockedAccounts(HashMap<String, User> blockedAccounts) {
         this.blockedAccounts = blockedAccounts;
     }
 
@@ -124,22 +122,23 @@ public class Account implements User {
         this.blockedTerms = blockedTerms;
     }
 
-    public ArrayList<Account> getMutedAccounts() {
+    public ArrayList<User> getMutedAccounts() {
         return mutedAccounts;
     }
 
-    public void setMutedAccounts(ArrayList<Account> mutedAccounts) {
+    public void setMutedAccounts(ArrayList<User> mutedAccounts) {
         this.mutedAccounts = mutedAccounts;
     }
 
+    @Override
     public ArrayList<String> getFoodPreferences() {
         return foodPreferences;
     }
 
+    @Override
     public void setFoodPreferences(ArrayList<String> foodPreferences) {
         this.foodPreferences = foodPreferences;
     }
-
 
     public boolean liked(Post p) {
         return likesUsernames.contains(p.getID());
@@ -153,31 +152,43 @@ public class Account implements User {
         likesUsernames.remove(p.getID());
     }
 
-    public void setFriends(ArrayList<Account> friends) {
-        followingAccounts = new ArrayList<>();
-        for (Account account : friends) {
-            followingAccounts.add(account.getUsername());
+    public void setFriends(ArrayList<User> friends) {
+        followingAccounts = new HashMap<>();
+        for (User account : friends) {
+            followingAccounts.put(account.getUsername(), account);
         }
     }
 
-    public void setFollowingAccounts(ArrayList<String> followingAccounts) {
+    @Override
+    public void setFollowingAccounts(HashMap<String, User> followingAccounts) {
         this.followingAccounts = followingAccounts;
     }
 
-    public ArrayList<String> getFollowingAccounts() {
+    @Override
+    public HashMap<String, User> getFollowingAccounts() {
         return followingAccounts;
     }
 
-    public boolean isFriend(Account account) {
-        return followingAccounts.contains(account.getUsername());
+    public boolean isFriend(User account) {
+        return followingAccounts.containsKey(account.getUsername());
     }
 
-    public void addFriend(Account f) {
-        followingAccounts.add(f.getUsername());
+    public void addFriend(User f) {
+        followingAccounts.put(f.getUsername(), f);
     }
 
-    public void removeFriend(Account f) {
+    public void removeFriend(User f) {
         followingAccounts.remove(f.getUsername());
+    }
+
+    @Override
+    public int getNumFollowers() {
+        return followerAccounts.size();
+    }
+
+    @Override
+    public int getNumFollowing() {
+        return followingAccounts.size();
     }
 
     /**
@@ -187,13 +198,15 @@ public class Account implements User {
      */
     @Override
     public String toString() {
-        return "Account username=" + username + ", password=" + password + ", name=" + name;
+        return "Account username=" + username + ", password=" + password + ", name=" + displayName;
     }
 
+    @Override
     public HashMap<Long, Post> getUserPosts() {
         return userPosts;
     }
 
+    @Override
     public void setUserPosts(HashMap<Long, Post> userPosts) {
         this.userPosts = userPosts;
     }

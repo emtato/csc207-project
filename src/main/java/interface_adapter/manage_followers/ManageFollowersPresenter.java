@@ -23,15 +23,14 @@ public class ManageFollowersPresenter implements ManageFollowersOutputBoundary {
 
     @Override
     public void prepareSuccessView(ManageFollowersOutputData response) {
-        // TODO: On success, do somethings.
+        final ManageFollowersState manageFollowersState = manageFollowersViewModel.getState();
+        manageFollowersState.setFollowers(response.getFollowers());
+        manageFollowersViewModel.setState(manageFollowersState);
+        manageFollowersViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
-        final ManageFollowersState manageFollowersState = manageFollowersViewModel.getState();
-        // TODO: On failure, do something
-        //manageFollowersState.setUsernameError(error);
-        //manageFollowersViewModel.firePropertyChanged();
     }
 
     @Override

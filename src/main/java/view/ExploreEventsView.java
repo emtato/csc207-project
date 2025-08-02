@@ -5,11 +5,11 @@ import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 
-import interface_adapter.explore_events.ExploreEventsViewModel;
 import java.awt.*;
 
-import entity.Account;
 import entity.Event;
+import view.ui_components.JFrame;
+import view.ui_components.MenuBarPanel;
 
 import javax.swing.JLabel;
 
@@ -98,7 +98,7 @@ public class ExploreEventsView extends JPanel {
 ////  test  /////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+        view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new ExploreEventsView(new ViewManagerModel()));
         frame.pack();

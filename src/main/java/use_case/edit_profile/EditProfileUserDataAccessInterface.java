@@ -1,13 +1,14 @@
 package use_case.edit_profile;
 
 import entity.User;
+import use_case.UserDataAccessInterface;
 
-import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * DAO for the Edit Profile Use Case.
  */
-public interface EditProfileUserDataAccessInterface {
+public interface EditProfileUserDataAccessInterface extends UserDataAccessInterface {
     /**
      * Updates the display name.
      * @param user the user to save
@@ -24,25 +25,17 @@ public interface EditProfileUserDataAccessInterface {
 
     /**
      * Updates the profile picture.
-     * @param user the user to save
-     * @param newProfilePicture the new profile picture to save
+     *
+     * @param user                 the user to save
+     * @param newProfilePictureUrl the new profile picture url to save
      */
-    void updateProfilePicture(User user, Image newProfilePicture);
+    void updateProfilePictureUrl(User user, String newProfilePictureUrl);
 
     /**
      * Updates the user's preferences.
      * @param user the user to save
      * @param newPreferences the new preferences to save
      */
-    void updatePreferences(User user, String newPreferences);
+    void updatePreferences(User user, ArrayList<String> newPreferences);
 
-    //TODO
-    // this method overlaps with other data access interfaces, so maybe ill make another interface
-    // containing this method for other interfaces to extend
-    /**
-     * Returns the user with the given username.
-     * @param username the username to look up
-     * @return the user with the given username
-     */
-    User get(String username);
 }

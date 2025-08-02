@@ -5,6 +5,7 @@ import entity.Post;
 import entity.User;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -17,8 +18,6 @@ import use_case.profile.ProfileUserDataAccessInterface;
 import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +25,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
+public class FileUserDataAccessObject implements
+        UserDataAccessInterface,
+        SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface,
@@ -85,7 +86,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         // Store account data
         userJson.put("username", account.getUsername());
         userJson.put("password", account.getPassword());
-        userJson.put("name", account.getName());
+        userJson.put("name", account.getUsername());
         userJson.put("email", account.getEmail());
         userJson.put("bio", account.getBio());
 
@@ -110,7 +111,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
 
         // Store muted accounts (usernames only)
         JSONArray mutedAccountsJson = new JSONArray();
-        for (Account mutedAccount : account.getMutedAccounts()) {
+        for (User mutedAccount : account.getMutedAccounts()) {
             mutedAccountsJson.put(mutedAccount.getUsername());
         }
         userJson.put("mutedAccounts", mutedAccountsJson);
@@ -149,7 +150,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         Account account = new Account(userJson.getString("username"), userJson.getString("password"));
 
         // Set basic properties
-        account.setName(userJson.optString("name", ""));
+        account.setDisplayName(userJson.optString("name", ""));
         account.setEmail(userJson.optString("email", ""));
         account.setBio(userJson.optString("bio", ""));
 
@@ -164,10 +165,10 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         if (userJson.has("followingAccounts")) {
-            ArrayList<String> following = new ArrayList<>();
+            HashMap<String, User> following = new HashMap<>();
             JSONArray followingArray = userJson.getJSONArray("followingAccounts");
             for (int i = 0; i < followingArray.length(); i++) {
-                following.add(followingArray.getString(i));
+                following.put(followingArray.getString(i), get(followingArray.getString(i)));
             }
             account.setFollowingAccounts(following);
         }
@@ -196,7 +197,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         // create stub Account objects. Full account data would need to be loaded separately if needed.
 
         if (userJson.has("followerAccounts")) {
-            HashMap<String, Account> followers = new HashMap<>();
+            HashMap<String, User> followers = new HashMap<>();
             JSONObject followersJson = userJson.getJSONObject("followerAccounts");
             for (String key : followersJson.keySet()) {
                 String followerUsername = followersJson.getString(key);
@@ -206,7 +207,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         if (userJson.has("blockedAccounts")) {
-            HashMap<String, Account> blocked = new HashMap<>();
+            HashMap<String, User> blocked = new HashMap<>();
             JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
             for (String key : blockedJson.keySet()) {
                 String blockedUsername = blockedJson.getString(key);
@@ -216,7 +217,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         if (userJson.has("mutedAccounts")) {
-            ArrayList<Account> muted = new ArrayList<>();
+            ArrayList<User> muted = new ArrayList<>();
             JSONArray mutedArray = userJson.getJSONArray("mutedAccounts");
             for (int i = 0; i < mutedArray.length(); i++) {
                 muted.add(new Account(mutedArray.getString(i), ""));
@@ -264,7 +265,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getName(), note);
+        notes.put(user.getUsername(), note);
         data.put("notes", notes);
 
         writeToFile(data);
@@ -280,7 +281,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         }
 
         JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getName(), null);
+        return notes.optString(user.getUsername(), null);
     }
 
     @Override
@@ -296,14 +297,28 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
-    public void updateProfilePicture(User user, Image newProfilePicture) {
-        // Note: Image handling would require additional implementation for serialization
+    public void updateProfilePictureUrl(User user, String newProfilePictureUrl) {
+        user.setProfilePictureUrl(newProfilePictureUrl);
         save(user);
     }
 
     @Override
-    public void updatePreferences(User user, String newPreferences) {
-        user.setPreferences(newPreferences);
+    public void updatePreferences(User user, ArrayList<String> newPreferences) {
+        user.setFoodPreferences(newPreferences);
+        save(user);
+    }
+
+    @Override
+    public void removeFollower(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowerAccounts().remove(removedUsername);
+        save(user);
+    }
+
+    @Override
+    public void removeFollowing(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowingAccounts().remove(removedUsername);
         save(user);
     }
 }

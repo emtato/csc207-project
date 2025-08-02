@@ -27,6 +27,9 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import view.ui_components.JFrame;
+import view.ui_components.MenuBarPanel;
+import view.ui_components.RoundedButton;
 /* Description:
  * ^ • ω • ^
  */
@@ -482,7 +485,7 @@ public class PostView extends JPanel {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+        view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile";

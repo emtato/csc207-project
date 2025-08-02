@@ -1,8 +1,9 @@
-package view;
+package view.ui_components;
 
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import view.PostView;
 
 import javax.swing.*;
 import javax.swing.JLabel;

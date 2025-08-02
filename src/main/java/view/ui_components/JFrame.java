@@ -1,4 +1,6 @@
-package view;
+package view.ui_components;
+
+import view.GUIConstants;
 
 @SuppressWarnings("serial")
 public class JFrame extends javax.swing.JFrame {

@@ -14,11 +14,12 @@ public class ManageFollowersController {
     }
 
     /**
-     * Executes the Manage Followers Use Case.
+     * Executes the Remove Follower Use Case.
      */
-    public void execute() {
-        final ManageFollowersInputData manageFollowersInputData = new ManageFollowersInputData();
-        manageFollowersUseCaseInteractor.execute(manageFollowersInputData);
+    public void executeRemoveFollower(String username, String followerUsername) {
+        final ManageFollowersInputData manageFollowersInputData =
+                new ManageFollowersInputData(username, followerUsername);
+        manageFollowersUseCaseInteractor.executeRemoveFollower(manageFollowersInputData);
     }
 
     /**
@@ -27,4 +28,6 @@ public class ManageFollowersController {
     public void switchToProfileView() {
         manageFollowersUseCaseInteractor.switchToProfileView();
     }
+
+
 }

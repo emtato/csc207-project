@@ -7,9 +7,7 @@ import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
-import use_case.profile.ProfileOutputBoundary;
-import use_case.profile.ProfileOutputData;
-import use_case.profile.SwitchToEditProfileViewOutputData;
+import use_case.profile.*;
 
 /**
  * The Presenter for the Profile Use Case.
@@ -35,45 +33,58 @@ public class ProfilePresenter implements ProfileOutputBoundary {
 
     @Override
     public void prepareSuccessView(ProfileOutputData response) {
-        // TODO: On success, do somethings.
+        final ProfileState profileState = profileViewModel.getState();
+        profileState.setUsername(response.getUsername());
+        profileState.setDisplayName(response.getDisplayName());
+        profileState.setProfilePictureUrl(response.getProfilePictureUrl());
+        profileState.setBio(response.getBio());
+        profileState.setNumFollowers(response.getNumFollowers());
+        profileState.setNumFollowing(response.getNumFollowing());
+        profileState.setPosts(response.getPosts());
+        profileViewModel.setState(profileState);
+        profileViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
-        final ProfileState profileState = profileViewModel.getState();
-        // TODO: On failure, do something
-        //profileState.setUsernameError(error);
-        //profileViewModel.firePropertyChanged();
     }
 
     @Override
     public void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData) {
-        final ProfileState profileState = profileViewModel.getState();
         final EditProfileState editProfileState = editProfileViewModel.getState();
-
-        if(!editProfileState.getUsername().equals(profileState.getUsername())) {
-            editProfileState.setUsername(profileState.getUsername());
-            editProfileViewModel.firePropertyChanged("username");
-        }
-
+        editProfileState.setUsername(outputData.getUsername());
+        editProfileState.setDisplayName(outputData.getDisplayName());
+        editProfileState.setProfilePictureUrl(outputData.getProfilePictureUrl());
+        editProfileState.setBio(outputData.getBio());
+        editProfileState.setPreferences(outputData.getPreferences());
+        editProfileState.setNewDisplayName(outputData.getDisplayName());
+        editProfileState.setNewProfilePictureUrl(outputData.getProfilePictureUrl());
+        editProfileState.setNewBio(outputData.getBio());
+        editProfileState.setNewPreferences(outputData.getPreferences());
+        editProfileViewModel.setState(editProfileState);
+        editProfileViewModel.firePropertyChanged();
         viewManagerModel.setState(editProfileViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToManageFollowingView() {
-        final ProfileState profileState = profileViewModel.getState();
+    public void switchToManageFollowingView(SwitchToFollowingViewOutputData outputData) {
         final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
-        manageFollowingState.setUsername(profileState.getUsername());
+        manageFollowingState.setUsername(outputData.getUsername());
+        manageFollowingState.setFollowing(outputData.getFollowing());
+        manageFollowingViewModel.setState(manageFollowingState);
+        manageFollowingViewModel.firePropertyChanged();
         viewManagerModel.setState(manageFollowingViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToManageFollowersView() {
-        final ProfileState profileState = profileViewModel.getState();
+    public void switchToManageFollowersView(SwitchToFollowersViewOutputData outputData) {
         final ManageFollowersState manageFollowersState = manageFollowersViewModel.getState();
-        manageFollowersState.setUsername(profileState.getUsername());
+        manageFollowersState.setUsername(outputData.getUsername());
+        manageFollowersState.setFollowers(outputData.getFollowers());
+        manageFollowersViewModel.setState(manageFollowersState);
+        manageFollowersViewModel.firePropertyChanged();
         viewManagerModel.setState(manageFollowersViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

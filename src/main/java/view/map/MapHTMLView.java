@@ -1,11 +1,11 @@
 package view.map;
 
-import view.JFrame;
+import view.ui_components.JFrame;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MapHTMLView extends view.JFrame {
+public class MapHTMLView extends JFrame {
 
     // TODO: this is just an example. change later
     // FIXME: delete if unnecessary

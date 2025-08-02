@@ -1,6 +1,7 @@
 package interface_adapter.manage_following;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.profile.ProfileViewModel;
 import use_case.manage_following.ManageFollowingOutputBoundary;
 import use_case.manage_following.ManageFollowingOutputData;
@@ -23,15 +24,14 @@ public class ManageFollowingPresenter implements ManageFollowingOutputBoundary {
 
     @Override
     public void prepareSuccessView(ManageFollowingOutputData response) {
-        // TODO: On success, do somethings.
+        final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
+        manageFollowingState.setFollowing(response.getFollowing());
+        manageFollowingViewModel.setState(manageFollowingState);
+        manageFollowingViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
-        final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
-        // TODO: On failure, do something
-        //manageFollowingState.setUsernameError(error);
-        //manageFollowingViewModel.firePropertyChanged();
     }
 
     @Override

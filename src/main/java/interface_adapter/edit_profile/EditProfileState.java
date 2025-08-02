@@ -1,20 +1,20 @@
 package interface_adapter.edit_profile;
 
-import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * The state for the Edit Profile View Model.
  */
 public class EditProfileState {
-    private String username;
-    private String displayName;
-    private String bio;
-    private Image profilePicture;
-    private String preferences;
+    private String username = "";
+    private String displayName = "";
+    private String bio = "";
+    private String profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
+    private ArrayList<String> preferences = new ArrayList<>();
     private String newDisplayName;
     private String newBio;
-    private Image newProfilePicture;
-    private String newPreferences;
+    private String newProfilePictureUrl;
+    private ArrayList<String> newPreferences;
 
     public String getNewDisplayName() {
         return newDisplayName;
@@ -32,12 +32,12 @@ public class EditProfileState {
         this.newBio = newBio;
     }
 
-    public Image getNewProfilePicture() {
-        return newProfilePicture;
+    public String getNewProfilePictureUrl() {
+        return newProfilePictureUrl;
     }
 
-    public void setNewProfilePicture(Image newProfilePicture) {
-        this.newProfilePicture = newProfilePicture;
+    public void setNewProfilePictureUrl(String newProfilePictureUrl) {
+        this.newProfilePictureUrl = newProfilePictureUrl;
     }
 
     public String getUsername() {
@@ -48,11 +48,11 @@ public class EditProfileState {
         this.username = username;
     }
 
-    public String getNewPreferences() {
+    public ArrayList<String> getNewPreferences() {
         return newPreferences;
     }
 
-    public void setNewPreferences(String newPreferences) {
+    public void setNewPreferences(ArrayList<String> newPreferences) {
         this.newPreferences = newPreferences;
     }
 
@@ -72,19 +72,19 @@ public class EditProfileState {
         this.bio = bio;
     }
 
-    public Image getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
-    public void setProfilePicture(Image profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
-    public String getPreferences() {
+    public ArrayList<String> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(String preferences) {
+    public void setPreferences(ArrayList<String> preferences) {
         this.preferences = preferences;
     }
 }

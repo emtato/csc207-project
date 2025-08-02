@@ -1,11 +1,11 @@
-package view;
+package view.ui_components;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.net.URL;
 
-class RoundImagePanel extends JPanel {
+public class RoundImagePanel extends JPanel {
     private final Image image;
 
     public RoundImagePanel(String imagePath) {

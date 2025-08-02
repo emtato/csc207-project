@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
+import data_access.FileUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
@@ -38,6 +39,8 @@ import interface_adapter.profile.ProfilePresenter;
 import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
+import interface_adapter.signup.SignupController;
+import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
@@ -67,6 +70,9 @@ import use_case.profile.ProfileOutputBoundary;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
 import use_case.settings.SettingsOutputBoundary;
+import use_case.signup.SignupInputBoundary;
+import use_case.signup.SignupInteractor;
+import use_case.signup.SignupOutputBoundary;
 import view.*;
 import view.map.MapView;
 
@@ -91,7 +97,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-    //    private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    //private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
@@ -177,7 +183,7 @@ public class AppBuilder {
      */
     public AppBuilder addSignupView() {
         signupViewModel = new SignupViewModel();
-        signupView = new SignupView(signupViewModel);
+        signupView = new SignupView(signupViewModel, viewManagerModel);
         cardPanel.add(signupView, signupView.getViewName());
         return this;
     }
@@ -333,16 +339,16 @@ public class AppBuilder {
      *
      * @return this builder
      */
-//    public AppBuilder addSignupUseCase() {
-//        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-//                signupViewModel, loginViewModel);
-//        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-//                userDataAccessObject, signupOutputBoundary, userFactory);
-//
-//        final SignupController controller = new SignupController(userSignupInteractor);
-//        signupView.setSignupController(controller);
-//        return this;
-//    }
+    public AppBuilder addSignupUseCase() {
+        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
+                signupViewModel, loginViewModel);
+        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
+                userDataAccessObject, signupOutputBoundary, userFactory);
+
+        final SignupController controller = new SignupController(userSignupInteractor);
+        signupView.setSignupController(controller);
+        return this;
+    }
 
     /**
      * Adds the Login Use Case to the application.
@@ -351,7 +357,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+                loggedInViewModel, loginViewModel, profileViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -441,6 +447,9 @@ public class AppBuilder {
                 new ProfileInteractor(userDataAccessObject, profileOutputBoundary);
         final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
+        editProfileView.setProfileController(profileController);
+        manageFollowingView.setProfileController(profileController);
+        manageFollowersView.setProfileController(profileController);
         return this;
     }
 
@@ -506,7 +515,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
