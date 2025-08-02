@@ -25,18 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FileUserDataAccessObject implements
-        UserDataAccessInterface,
-        SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface,
-        LogoutUserDataAccessInterface,
-        NoteDataAccessInterface,
-        SettingsUserDataAccessInterface,
-        ProfileUserDataAccessInterface,
-        EditProfileUserDataAccessInterface,
-        ManageFollowingUserDataAccessInterface,
-        ManageFollowersUserDataAccessInterface {
+public class FileUserDataAccessObject implements UserDataAccessObject{
 
     private final String filePath = "src/main/java/data_access/user_data.json";
     private String currentUsername;

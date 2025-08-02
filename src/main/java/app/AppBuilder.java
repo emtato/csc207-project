@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
+import data_access.UserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.DBPostCommentLikesDataAccessObject;
@@ -93,19 +94,14 @@ import view.map.MapView;
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    // thought question: is the hard dependency below a problem?
-
-    //private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    //private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-    //        new InMemoryPostCommentLikesDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
             new DBPostCommentLikesDataAccessObject();
+
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;

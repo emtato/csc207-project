@@ -22,18 +22,7 @@ import use_case.signup.SignupUserDataAccessInterface;
  * In-memory implementation of the DAO for storing user data. This implementation does
  * NOT persist data between runs of the program.
  */
-public class InMemoryUserDataAccessObject implements
-        UserDataAccessInterface,
-        SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface,
-        LogoutUserDataAccessInterface,
-        NoteDataAccessInterface,
-        SettingsUserDataAccessInterface,
-        ProfileUserDataAccessInterface,
-        EditProfileUserDataAccessInterface,
-        ManageFollowingUserDataAccessInterface,
-        ManageFollowersUserDataAccessInterface {
+public class InMemoryUserDataAccessObject implements UserDataAccessObject {
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, String> notes = new HashMap<>();

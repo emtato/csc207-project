@@ -11,7 +11,6 @@ import entity.*;
  * NOT persist data between runs of the program.
  */
 public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
-    private String filePath = "src/main/java/data_access/data_storage.json";
     HashMap<Long, ArrayList<Comment>> commentsMap = new HashMap<>();
     HashMap<Long, Club> clubsMap = new HashMap<>();
     HashMap<Long, Post> postsMap = new HashMap<>();
