@@ -18,15 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DataStorage {
+public class DBPostCommentLikesDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
-    public static void main(String[] args) {
-        long postId = 483958292l;
-        DataStorage dataStorage = new DataStorage();
-        dataStorage.writeCommentToFile(postId, new Account("bil", "bal"), "bol", LocalDateTime.now());
-
-    }
 
     /**
      * method to reduce duplicate code, retrieves JSONObject from file
@@ -196,7 +190,7 @@ public class DataStorage {
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags) {
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
@@ -214,6 +208,7 @@ public class DataStorage {
         newPost.put("contents", contentsJSONObject);
         newPost.put("tags", tags);
         posts.put(String.valueOf(postID), newPost);
+        newPost.put("images", images);
         data.put("posts", posts);
 
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -252,7 +247,14 @@ public class DataStorage {
 
         Account user = new Account(username, "password");
         Post post = new Post(user, postID, title, description);
-
+        if (postObj.has("images")) {
+            JSONArray imagesJSONArray = postObj.getJSONArray("images");
+            ArrayList<String> imagesArray = new ArrayList<>();
+            for (int i = 0; i < imagesJSONArray.length(); i++) {
+                imagesArray.add(imagesJSONArray.getString(i));
+            }
+            post.setImageURLs(imagesArray);
+        }
         if (postObj.has("tags")) {
             JSONArray tagArray = postObj.getJSONArray("tags");
             ArrayList<String> tags = new ArrayList<>();
@@ -282,8 +284,9 @@ public class DataStorage {
                 if (cuisines.equals("Enter cuisine separated by commas if u want")) {
                     cuisines = "";
                 }
-
-                return new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                rep.setImageURLs(post.getImageURLs());
+                return rep;
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
             else if (postObj.get("type").equals("other?")) {
@@ -293,10 +296,16 @@ public class DataStorage {
         return post;
     }
 
+
     public ArrayList<Post> getPosts(Account user) {
         return new ArrayList<Post>();
     }
 
+    /**
+     * get a list of all postID's stored in database.
+     *
+     * @return ArrayList of long
+     */
     public ArrayList<Long> getAvailablePosts() {
         JSONObject data = getJsonObject();
 
