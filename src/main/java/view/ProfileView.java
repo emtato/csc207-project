@@ -1,25 +1,27 @@
 package view;
 
-
+import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
-import view.UI_components.MenuBarPanel;
+import view.ui_components.GeneralJLabel;
+import view.ui_components.LabelButtonPanel;
+import view.ui_components.MenuBarPanel;
+import view.ui_components.ProfilePictureLabel;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
-import javax.swing.ImageIcon;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
-// TODO: use constants for the hardcoded parts
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";
     private final ProfileViewModel profileViewModel;
@@ -27,9 +29,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
     private ProfileController profileController;
 
-    final JLabel title;
-    private final ImageIcon profilePicture;
-    private final JLabel profilePictureLabel;
+    private final ProfilePictureLabel profilePicture;
     private final JLabel displayName;
     private final JLabel username;
     private final JTextArea bio;
@@ -46,84 +46,68 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.viewManagerModel = viewManagerModel;
         this.profileViewModel.addPropertyChangeListener(this);
 
-        title = new JLabel(ProfileViewModel.TITLE_LABEL);
+        final JLabel title = new JLabel(ProfileViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setMinimumSize(new Dimension(1000, 50));
+        title.setFont(GUIConstants.FONT_TITLE);
+        title.setForeground(Color.RED);
 
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.setMaximumSize(new Dimension(1200, 300));
-        mainPanel.setMinimumSize(new Dimension(1200, 300));
+        final Dimension size = new Dimension(ProfileViewModel.MAIN_PANEL_WIDTH, ProfileViewModel.MAIN_PANEL_HEIGHT);
+        mainPanel.setMaximumSize(size);
+        mainPanel.setMinimumSize(size);
 
-        Image profilePictureImage =  new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
-        int newWidth = 200;
-        int newHeight = 200;
-        profilePictureImage = profilePictureImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-        profilePicture = new ImageIcon(profilePictureImage);
+        profilePicture = new ProfilePictureLabel(this.profileViewModel.getState().getProfilePictureUrl(),
+                ProfileViewModel.PFP_WIDTH, ProfileViewModel.PFP_HEIGHT);
+        profilePicture.setAlignmentX(Component.LEFT_ALIGNMENT);
+        mainPanel.add(profilePicture);
 
-        profilePictureLabel = new JLabel(profilePicture);
-        profilePictureLabel.setMaximumSize(new Dimension(200, 200));
-        profilePictureLabel.setMinimumSize(new Dimension(200, 200));
-        profilePictureLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        mainPanel.add(profilePictureLabel);
-
-        mainPanel.add(Box.createRigidArea(new Dimension(50, 200)));
+        mainPanel.add(Box.createRigidArea(new Dimension(GUIConstants.COMPONENT_GAP_SIZE, ProfileViewModel.PFP_HEIGHT)));
 
         final JPanel userInfoPanel = new JPanel();
         userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
-        userInfoPanel.setMaximumSize(new Dimension(500, 200));
-        userInfoPanel.setMinimumSize(new Dimension(500, 200));
         userInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        userInfoPanel.setBackground(Color.WHITE);
 
-        displayName = new JLabel("Display Name");
-        displayName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        displayName = new GeneralJLabel(this.profileViewModel.getState().getDisplayName(), GUIConstants.TEXT_SIZE,
+                GUIConstants.RED);
         userInfoPanel.add(displayName);
 
-        username = new JLabel("@Username");
-        username.setAlignmentX(Component.LEFT_ALIGNMENT);
+        username = new GeneralJLabel(this.profileViewModel.getState().getUsername(), GUIConstants.SMALL_TEXT_SIZE,
+                GUIConstants.RED);
         userInfoPanel.add(username);
 
-        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_COL_NUM);
-        bio.setText("Bio.\n1234567890123456789012345678901234567890");
+        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_ROW_NUM);
+        bio.setText(this.profileViewModel.getState().getBio());
         bio.setEditable(false);
-        bio.setAlignmentX(Component.LEFT_ALIGNMENT);
+        bio.setBackground(Color.PINK);
         userInfoPanel.add(bio);
         mainPanel.add(userInfoPanel);
 
 
         final JPanel profileButtons = new JPanel();
         profileButtons.setLayout(new BoxLayout(profileButtons, BoxLayout.Y_AXIS));
-        profileButtons.setAlignmentX(Component.LEFT_ALIGNMENT);
-        profileButtons.setMaximumSize(new Dimension(500, 200));
-        profileButtons.setMinimumSize(new Dimension(500, 200));
+        profileButtons.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         editProfileButton = new JButton(ProfileViewModel.EDIT_PROFILE_BUTTON_LABEL);
         editProfileButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        profileButtons.add(editProfileButton);
+        final JLabel label = new JLabel();
+        final LabelButtonPanel editButtonPanel = new LabelButtonPanel(label, editProfileButton);
+        profileButtons.add(editButtonPanel);
 
-        final JPanel followingPanel = new JPanel();
-        followingPanel.setLayout(new BoxLayout(followingPanel, BoxLayout.X_AXIS));
-        followingPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        following = new JLabel("10 Following");
+        following = new JLabel(this.profileViewModel.getState().getNumFollowing()+" Following");
         followingButton = new JButton(ProfileViewModel.FOLLOWING_BUTTON_LABEL);
-        followingPanel.add(following);
-        followingPanel.add(followingButton);
-        profileButtons.add(followingPanel);
+        final LabelButtonPanel followingButtonPanel = new LabelButtonPanel(following, followingButton);
+        profileButtons.add(followingButtonPanel);
 
-        final JPanel followersPanel = new JPanel();
-        followersPanel.setLayout(new BoxLayout(followersPanel, BoxLayout.X_AXIS));
-        followersPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        followers = new JLabel("10 Followers");
+        followers = new JLabel(this.profileViewModel.getState().getNumFollowers()+" Followers");
         followersButton = new JButton(ProfileViewModel.FOLLOWERS_BUTTON_LABEL);
-        followersPanel.add(followers);
-        followersPanel.add(followersButton);
-        profileButtons.add(followersPanel);
+        final LabelButtonPanel followersButtonPanel = new LabelButtonPanel(followers, followersButton);
+        profileButtons.add(followersButtonPanel);
 
         mainPanel.add(profileButtons);
-
 
         final JPanel profileContentPanel = new JPanel();
         profileContentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -149,7 +133,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         followersButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(followersButton)) {
-                        this.profileController.switchToManageFollowersView();
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.switchToManageFollowersView(profileState.getUsername());
                     }
                 }
         );
@@ -157,7 +142,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         followingButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(followingButton)) {
-                        this.profileController.switchToManageFollowingView();
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.switchToManageFollowingView(profileState.getUsername());
                     }
                 }
         );
@@ -172,7 +158,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            profilePicture.setImage(new ImageIcon(profileViewModel.getState().getProfilePictureUrl()).getImage());
+            profilePicture.updateIcon(this.profileViewModel.getState().getProfilePictureUrl());
             displayName.setText(profileViewModel.getState().getDisplayName());
             username.setText(profileViewModel.getState().getUsername());
             bio.setText(profileViewModel.getState().getBio());

@@ -8,6 +8,7 @@ import interface_adapter.ViewModel;
 public class ManageFollowingViewModel extends ViewModel<ManageFollowingState> {
 
     public static final String TITLE_LABEL = "Following";
+    public static final String REMOVE_LABEL = "Unfollow";
 
     public ManageFollowingViewModel() {
         super("manage following");

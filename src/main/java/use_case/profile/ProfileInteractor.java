@@ -1,10 +1,8 @@
 package use_case.profile;
 
-import entity.Account;
 import entity.Post;
 import entity.User;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,13 +47,21 @@ public class ProfileInteractor implements ProfileInputBoundary{
     }
 
     @Override
-    public void switchToManageFollowingView() {
-        presenter.switchToManageFollowingView();
+    public void switchToManageFollowingView(ProfileInputData inputData) {
+        final String username = inputData.getUsername();
+        final User user = userDataAccessObject.get(username);
+        final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
+        final SwitchToFollowingViewOutputData outputData = new SwitchToFollowingViewOutputData(username, following);
+        presenter.switchToManageFollowingView(outputData);
     }
 
     @Override
-    public void switchToManageFollowersView() {
-        presenter.switchToManageFollowersView();
+    public void switchToManageFollowersView(ProfileInputData inputData) {
+        final String username = inputData.getUsername();
+        final User user = userDataAccessObject.get(username);
+        final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
+        final SwitchToFollowersViewOutputData outputData = new SwitchToFollowersViewOutputData(username, followers);
+        presenter.switchToManageFollowersView(outputData);
     }
 
 }

@@ -19,7 +19,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
-import view.UI_components.LabelTextPanel;
+import view.ui_components.LabelTextPanel;
 
 /**
  * The View for when the user is logging into the program.

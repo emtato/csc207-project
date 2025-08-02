@@ -35,4 +35,8 @@ public class GUIConstants {
     public static final int FEED_WIDTH = 1050;
     public static final int FEED_HEIGHT = 925;
     public static final Font FONT_SIDE_MENU = new Font(FONT, Font.PLAIN, 48);
+
+    // FOLLOWING AND FOLLOWERS PAGES
+    public static final int PROFILE_PICTURE_WIDTH = 200;
+    public static final int PROFILE_PICTURE_HEIGHT = 200;
 }

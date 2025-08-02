@@ -1,30 +1,35 @@
 package view;
 
-
+import entity.User;
+import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingController;
+import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
+import interface_adapter.profile.ProfileController;
+import view.ui_components.UserInfoPanel;
 
-import javax.swing.*;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.BoxLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-// TODO: use constants for the hardcoded parts
 public class ManageFollowingView extends JPanel implements PropertyChangeListener {
     private final String viewName = "manage following";
     private final ManageFollowingViewModel manageFollowingViewModel;
     private ManageFollowingController manageFollowingController;
+    private ProfileController profileController;
 
     final JLabel title;
 
-    // TODO: make a 'follower' panel thing
-    private final ImageIcon profilePicture;
-    private final JLabel profilePictureLabel;
-    private final JLabel displayName;
-    private final JLabel username;
-    private final JButton unfollowButton;
+    private final JPanel mainPanel;
+    private final ArrayList<UserInfoPanel> followingPanels;
 
     private final JButton backButton;
 
@@ -33,77 +38,28 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         this.manageFollowingViewModel = manageFollowingViewModel;
         this.manageFollowingViewModel.addPropertyChangeListener(this);
 
-        title = new JLabel(manageFollowingViewModel.TITLE_LABEL);
+        title = new JLabel(ManageFollowingViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setMinimumSize(new Dimension(1000, 50));
+        title.setFont(GUIConstants.FONT_TITLE);
+        title.setForeground(GUIConstants.RED);
 
-        final JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.setMaximumSize(new Dimension(1200, 300));
-        mainPanel.setMinimumSize(new Dimension(1200, 300));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
 
-        final JPanel followingPanel = new JPanel();
-        followingPanel.setLayout(new BoxLayout(followingPanel, BoxLayout.X_AXIS));
-        followingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        followingPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        followingPanel.setMaximumSize(new Dimension(1200, 200));
-        followingPanel.setMinimumSize(new Dimension(1200, 200));
+        this.followingPanels = new ArrayList<>();
 
-        Image profilePictureImage =  new ImageIcon("src/main/java/view/temporary_sample_image.png").getImage();
-        int newWidth = 200;
-        int newHeight = 200;
-        profilePictureImage = profilePictureImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-        profilePicture = new ImageIcon(profilePictureImage);
-
-        profilePictureLabel = new JLabel(profilePicture);
-        profilePictureLabel.setMaximumSize(new Dimension(200, 200));
-        profilePictureLabel.setMinimumSize(new Dimension(200, 200));
-        profilePictureLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-        followingPanel.add(profilePictureLabel);
-
-        followingPanel.add(Box.createRigidArea(new Dimension(50, 200)));
-
-        final JPanel userInfoPanel = new JPanel();
-        userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
-        userInfoPanel.setMaximumSize(new Dimension(500, 200));
-        userInfoPanel.setMinimumSize(new Dimension(500, 200));
-        userInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        displayName = new JLabel("Display Name");
-        displayName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        userInfoPanel.add(displayName);
-
-        username = new JLabel("@Username");
-        username.setAlignmentX(Component.LEFT_ALIGNMENT);
-        userInfoPanel.add(username);
-
-        followingPanel.add(userInfoPanel);
-
-        unfollowButton = new JButton("Unfollow");
-        unfollowButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        unfollowButton.setAlignmentY(Component.TOP_ALIGNMENT);
-        followingPanel.add(unfollowButton);
-
-        mainPanel.add(followingPanel);
-
-        backButton = new JButton("Back");
+        backButton = new JButton("Back to Profile");
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        // TODO: write code for the action listeners for the buttons
-        unfollowButton.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(unfollowButton)) {
-                    }
-                }
-        );
 
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
+                        final ManageFollowingState currentState = manageFollowingViewModel.getState();
+                        this.profileController.executeViewProfile(currentState.getUsername());
                         this.manageFollowingController.switchToProfileView();
                     }
                 }
@@ -114,11 +70,31 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         this.add(backButton);
     }
 
-    // TODO: implement the propertyChange function and set controllers
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
+            this.followingPanels.clear();
+            mainPanel.removeAll();
+            final ArrayList<User> following = this.manageFollowingViewModel.getState().getFollowing();
+            for (User account : following) {
+                final JButton removeButton = new JButton(ManageFollowingViewModel.REMOVE_LABEL);
+                removeButton.addActionListener(
+                        event -> {
+                            if (event.getSource().equals(removeButton)) {
+                                this.manageFollowingController.executeUnfollow(
+                                        this.manageFollowingViewModel.getState().getUsername(), account.getUsername());
+                            }
+                        }
+                );
+                this.followingPanels.add(new UserInfoPanel(account.getProfilePictureUrl(), account.getUsername(),
+                        account.getDisplayName(), removeButton));
+            }
 
+            for (UserInfoPanel followingPanel : followingPanels) {
+                mainPanel.add(followingPanel);
+            }
+            mainPanel.revalidate();
+            mainPanel.repaint();
         }
     }
 
@@ -128,6 +104,9 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
 
     public void setManageFollowingController(ManageFollowingController controller) {
         this.manageFollowingController = controller;
+    }
+    public void setProfileController(ProfileController controller) {
+        this.profileController = controller;
     }
 
 }

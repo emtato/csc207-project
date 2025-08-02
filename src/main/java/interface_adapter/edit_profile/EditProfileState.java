@@ -1,7 +1,5 @@
 package interface_adapter.edit_profile;
 
-import javax.swing.*;
-import java.awt.Image;
 import java.util.ArrayList;
 
 /**

@@ -18,12 +18,10 @@ public interface ProfileInputBoundary {
     /**
      * Switches to the Manage Following View.
      */
-    void switchToManageFollowingView();
+    void switchToManageFollowingView(ProfileInputData profileInputData);
 
     /**
      * Switches to the ManageFollowers View.
      */
-    void switchToManageFollowersView();
-
-    // TODO: switching to the views for the buttons on the menu bar
+    void switchToManageFollowersView(ProfileInputData profileInputData);
 }

@@ -5,9 +5,9 @@ import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.profile.ProfileController;
-import view.UI_components.GeneralJLabel;
-import view.UI_components.LabelTextPanel;
-import view.UI_components.ProfilePictureLabel;
+import view.ui_components.GeneralJLabel;
+import view.ui_components.LabelTextPanel;
+import view.ui_components.ProfilePictureLabel;
 
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
@@ -259,8 +259,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
                         final EditProfileState currentState = editProfileViewModel.getState();
-                        this.editProfileController.switchToProfileView();
                         this.profileController.executeViewProfile(currentState.getUsername());
+                        this.editProfileController.switchToProfileView();
                     }
                 }
         );

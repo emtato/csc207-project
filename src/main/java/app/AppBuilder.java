@@ -176,7 +176,7 @@ public class AppBuilder {
      */
     public AppBuilder addSignupView() {
         signupViewModel = new SignupViewModel();
-        signupView = new SignupView(signupViewModel);
+        signupView = new SignupView(signupViewModel, viewManagerModel);
         cardPanel.add(signupView, signupView.getViewName());
         return this;
     }
@@ -441,6 +441,8 @@ public class AppBuilder {
         final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
         editProfileView.setProfileController(profileController);
+        manageFollowingView.setProfileController(profileController);
+        manageFollowersView.setProfileController(profileController);
         return this;
     }
 

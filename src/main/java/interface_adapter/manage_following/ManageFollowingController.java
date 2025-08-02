@@ -1,5 +1,6 @@
 package interface_adapter.manage_following;
 
+import use_case.manage_followers.ManageFollowersInputData;
 import use_case.manage_following.ManageFollowingInputBoundary;
 import use_case.manage_following.ManageFollowingInputData;
 
@@ -16,9 +17,10 @@ public class ManageFollowingController {
     /**
      * Executes the Manage Following Use Case.
      */
-    public void execute() {
-        final ManageFollowingInputData manageFollowingInputData = new ManageFollowingInputData();
-        manageFollowingUseCaseInteractor.execute(manageFollowingInputData);
+    public void executeUnfollow(String username, String followingUsername) {
+        final ManageFollowingInputData manageFollowingInputData =
+                new ManageFollowingInputData(username, followingUsername);
+        manageFollowingUseCaseInteractor.executeUnfollow(manageFollowingInputData);
     }
 
     /**

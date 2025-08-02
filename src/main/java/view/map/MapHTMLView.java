@@ -1,6 +1,6 @@
 package view.map;
 
-import view.UI_components.JFrame;
+import view.ui_components.JFrame;
 
 import javax.swing.*;
 import java.awt.*;

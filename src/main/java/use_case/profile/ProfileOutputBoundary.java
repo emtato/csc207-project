@@ -25,10 +25,10 @@ public interface ProfileOutputBoundary {
     /**
      * Switches to the Manage Following View.
      */
-    void switchToManageFollowingView();
+    void switchToManageFollowingView(SwitchToFollowingViewOutputData outputData);
 
     /**
      * Switches to the ManageFollowers View.
      */
-    void switchToManageFollowersView();
+    void switchToManageFollowersView(SwitchToFollowersViewOutputData outputData);
 }

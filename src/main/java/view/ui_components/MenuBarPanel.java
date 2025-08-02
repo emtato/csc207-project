@@ -1,5 +1,5 @@
 // src/main/java/view/MenuBarPanel.java
-package view.UI_components;
+package view.ui_components;
 
 import javax.swing.*;
 import java.awt.*;

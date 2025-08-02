@@ -4,7 +4,7 @@ package view;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsViewModel;
-import view.UI_components.MenuBarPanel;
+import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
 import javax.swing.JLabel;

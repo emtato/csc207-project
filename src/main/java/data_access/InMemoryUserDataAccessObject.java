@@ -1,11 +1,9 @@
 package data_access;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import entity.Post;
 import entity.User;
 import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
@@ -19,8 +17,6 @@ import use_case.note.NoteDataAccessInterface;
 import use_case.profile.ProfileUserDataAccessInterface;
 import use_case.settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
-
-import javax.swing.*;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -51,7 +47,6 @@ public class InMemoryUserDataAccessObject implements
 
     @Override
     public void save(User user) {
-
         users.put(user.getUsername(), user);
         System.out.println("User " + user.getUsername() + " has been saved");
     }
@@ -90,21 +85,39 @@ public class InMemoryUserDataAccessObject implements
 
     @Override
     public void updateDisplayName(User user, String newDisplayName){
-
+        user.setDisplayName(newDisplayName);
+        save(user);
     }
 
     @Override
     public void updateBio(User user, String newBio){
-
+        user.setBio(newBio);
+        save(user);
     }
 
     @Override
     public void updateProfilePictureUrl(User user, String newProfilePictureUrl){
-
+        user.setProfilePictureUrl(newProfilePictureUrl);
+        save(user);
     }
 
     @Override
     public void updatePreferences(User user, ArrayList<String> newPreferences) {
+        user.setFoodPreferences(newPreferences);
+        save(user);
+    }
 
+    @Override
+    public void removeFollower(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowerAccounts().remove(removedUsername);
+        save(user);
+    }
+
+    @Override
+    public void removeFollowing(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowingAccounts().remove(removedUsername);
+        save(user);
     }
 }

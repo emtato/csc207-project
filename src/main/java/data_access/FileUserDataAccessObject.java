@@ -111,7 +111,7 @@ public class FileUserDataAccessObject implements
 
         // Store muted accounts (usernames only)
         JSONArray mutedAccountsJson = new JSONArray();
-        for (Account mutedAccount : account.getMutedAccounts()) {
+        for (User mutedAccount : account.getMutedAccounts()) {
             mutedAccountsJson.put(mutedAccount.getUsername());
         }
         userJson.put("mutedAccounts", mutedAccountsJson);
@@ -150,7 +150,7 @@ public class FileUserDataAccessObject implements
         Account account = new Account(userJson.getString("username"), userJson.getString("password"));
 
         // Set basic properties
-        account.setName(userJson.optString("name", ""));
+        account.setDisplayName(userJson.optString("name", ""));
         account.setEmail(userJson.optString("email", ""));
         account.setBio(userJson.optString("bio", ""));
 
@@ -165,10 +165,10 @@ public class FileUserDataAccessObject implements
         }
 
         if (userJson.has("followingAccounts")) {
-            ArrayList<String> following = new ArrayList<>();
+            HashMap<String, User> following = new HashMap<>();
             JSONArray followingArray = userJson.getJSONArray("followingAccounts");
             for (int i = 0; i < followingArray.length(); i++) {
-                following.add(followingArray.getString(i));
+                following.put(followingArray.getString(i), get(followingArray.getString(i)));
             }
             account.setFollowingAccounts(following);
         }
@@ -197,7 +197,7 @@ public class FileUserDataAccessObject implements
         // create stub Account objects. Full account data would need to be loaded separately if needed.
 
         if (userJson.has("followerAccounts")) {
-            HashMap<String, Account> followers = new HashMap<>();
+            HashMap<String, User> followers = new HashMap<>();
             JSONObject followersJson = userJson.getJSONObject("followerAccounts");
             for (String key : followersJson.keySet()) {
                 String followerUsername = followersJson.getString(key);
@@ -207,7 +207,7 @@ public class FileUserDataAccessObject implements
         }
 
         if (userJson.has("blockedAccounts")) {
-            HashMap<String, Account> blocked = new HashMap<>();
+            HashMap<String, User> blocked = new HashMap<>();
             JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
             for (String key : blockedJson.keySet()) {
                 String blockedUsername = blockedJson.getString(key);
@@ -217,7 +217,7 @@ public class FileUserDataAccessObject implements
         }
 
         if (userJson.has("mutedAccounts")) {
-            ArrayList<Account> muted = new ArrayList<>();
+            ArrayList<User> muted = new ArrayList<>();
             JSONArray mutedArray = userJson.getJSONArray("mutedAccounts");
             for (int i = 0; i < mutedArray.length(); i++) {
                 muted.add(new Account(mutedArray.getString(i), ""));
@@ -305,6 +305,20 @@ public class FileUserDataAccessObject implements
     @Override
     public void updatePreferences(User user, ArrayList<String> newPreferences) {
         user.setFoodPreferences(newPreferences);
+        save(user);
+    }
+
+    @Override
+    public void removeFollower(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowerAccounts().remove(removedUsername);
+        save(user);
+    }
+
+    @Override
+    public void removeFollowing(String username, String removedUsername) {
+        User user = get(username);
+        user.getFollowingAccounts().remove(removedUsername);
         save(user);
     }
 }

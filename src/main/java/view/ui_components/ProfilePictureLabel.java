@@ -1,6 +1,4 @@
-package view.UI_components;
-
-import interface_adapter.edit_profile.EditProfileViewModel;
+package view.ui_components;
 
 import javax.swing.*;
 import java.awt.*;

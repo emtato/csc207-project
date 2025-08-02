@@ -17,8 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import view.UI_components.JFrame;
-import view.UI_components.MenuBarPanel;
+import view.ui_components.JFrame;
+import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
 
@@ -230,7 +230,7 @@ private Restaurant cheeseVille = new Restaurant(new ArrayList<String>(Arrays.asL
 
     //test/////////////////////////////////////////////
     public static void main(String[] args) {
-        view.UI_components.JFrame frame = new view.UI_components.JFrame();
+        view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new ExploreView(new ViewManagerModel(), cardPanel));
         frame.pack();

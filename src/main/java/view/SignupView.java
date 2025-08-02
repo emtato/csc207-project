@@ -16,16 +16,18 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
-import view.UI_components.LabelTextPanel;
+import view.ui_components.LabelTextPanel;
 
 /**
  * The View for the Signup Use Case.
  */
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "sign up";
+    private final ViewManagerModel viewManagerModel;
 
     private final SignupViewModel signupViewModel;
     private final JTextField usernameInputField = new JTextField(15);
@@ -34,10 +36,12 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private SignupController signupController;
 
     private final JButton signUp;
+    private final JButton logIn;
 
-    public SignupView(SignupViewModel signupViewModel) {
+    public SignupView(SignupViewModel signupViewModel, ViewManagerModel viewManagerModel) {
         this.signupViewModel = signupViewModel;
-        signupViewModel.addPropertyChangeListener(this);
+        this.signupViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
 
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -52,6 +56,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         final JPanel buttons = new JPanel();
         signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
+        logIn = new JButton("log in");
+        buttons.add(logIn);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -70,6 +76,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
+        logIn.addActionListener(e -> viewManagerModel.setState("log in"));
 
         addUsernameListener();
         addPasswordListener();

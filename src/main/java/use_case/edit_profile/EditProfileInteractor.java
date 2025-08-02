@@ -14,23 +14,19 @@ public class EditProfileInteractor implements EditProfileInputBoundary{
 
     @Override
     public void execute(EditProfileInputData editProfileInputData) {
-        if (true) {
-            final User user = userDataAccessObject.get(editProfileInputData.getUsername());
-            userDataAccessObject.updateDisplayName(user, editProfileInputData.getNewDisplayName());
-            userDataAccessObject.updateBio(user, editProfileInputData.getNewBio());
-            userDataAccessObject.updateProfilePictureUrl(user, editProfileInputData.getNewProfilePictureUrl());
-            userDataAccessObject.updatePreferences(user, editProfileInputData.getNewPreferences());
+        final User user = userDataAccessObject.get(editProfileInputData.getUsername());
+        userDataAccessObject.updateDisplayName(user, editProfileInputData.getNewDisplayName());
+        userDataAccessObject.updateBio(user, editProfileInputData.getNewBio());
+        userDataAccessObject.updateProfilePictureUrl(user, editProfileInputData.getNewProfilePictureUrl());
+        userDataAccessObject.updatePreferences(user, editProfileInputData.getNewPreferences());
 
-            final EditProfileOutputData editProfileOutputData =
-                    new EditProfileOutputData(
-                            editProfileInputData.getNewDisplayName(),
-                            editProfileInputData.getNewBio(),
-                            editProfileInputData.getNewProfilePictureUrl(),
-                            editProfileInputData.getNewPreferences());
-            presenter.prepareSuccessView(editProfileOutputData);
-        } else {
-            presenter.prepareFailView("error message");
-        }
+        final EditProfileOutputData editProfileOutputData =
+                new EditProfileOutputData(
+                        editProfileInputData.getNewDisplayName(),
+                        editProfileInputData.getNewBio(),
+                        editProfileInputData.getNewProfilePictureUrl(),
+                        editProfileInputData.getNewPreferences());
+        presenter.prepareSuccessView(editProfileOutputData);
     }
 
     @Override

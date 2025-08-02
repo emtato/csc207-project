@@ -32,14 +32,16 @@ public class ProfileController {
     /**
      * Executes the "switch to Manage Following View" Use Case.
      */
-    public void switchToManageFollowingView() {
-        profileUseCaseInteractor.switchToManageFollowingView();
+    public void switchToManageFollowingView(String username) {
+        final ProfileInputData inputData = new ProfileInputData(username);
+        profileUseCaseInteractor.switchToManageFollowingView(inputData);
     }
 
     /**
      * Executes the "switch to Manage Followers View" Use Case.
      */
-    public void switchToManageFollowersView() {
-        profileUseCaseInteractor.switchToManageFollowersView();
+    public void switchToManageFollowersView(String username) {
+        final ProfileInputData inputData = new ProfileInputData(username);
+        profileUseCaseInteractor.switchToManageFollowersView(inputData);
     }
 }
