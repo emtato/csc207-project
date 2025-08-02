@@ -217,6 +217,7 @@ public class DBPostCommentLikesDataAccessObject {
         newPost.put("title", title);
         newPost.put("description", description);
         newPost.put("type", postType);
+        newPost.put("likes", 0);
         JSONObject contentsJSONObject = new JSONObject(contents);
         newPost.put("contents", contentsJSONObject);
         newPost.put("tags", tags);

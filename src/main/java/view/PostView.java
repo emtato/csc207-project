@@ -228,9 +228,8 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
-        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
-        currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername()); //using account implementation of user
-        // havent implemented save user data to file yet
+         FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+        currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername());
 
         centerPanel.removeAll();
         liked = false;
