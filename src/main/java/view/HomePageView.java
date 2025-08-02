@@ -105,10 +105,15 @@ public class HomePageView extends JPanel {
         }
         Collections.shuffle(indicesRandomizer);
 
+        ArrayList<Integer> anotherIndicesRandomizer = new ArrayList<>(indicesRandomizer);
+        Collections.shuffle(anotherIndicesRandomizer);
+
         for (int i = 0; i < numberofPosts; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
-            PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
+            feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
+            Post post1 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(anotherIndicesRandomizer.get(i)));
+            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 1000, 400, cardPanel);
             postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
