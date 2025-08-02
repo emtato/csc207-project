@@ -21,6 +21,7 @@ public class Account implements User {
     private ArrayList<String> foodPreferences;
     private ArrayList<Long> likesUsernames;
     private HashMap<Long, Post> userPosts;
+    private boolean isPublic;
 
     public Account(String username, String password) {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
@@ -33,7 +34,18 @@ public class Account implements User {
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
+        isPublic = true;
     }
+    @Override
+    public boolean isPublic(){
+        return isPublic;
+    }
+
+    @Override
+    public void setPublic(boolean isPublic){
+        isPublic = isPublic;
+    }
+
     @Override
     public String getProfilePictureUrl() {return profilePictureUrl;}
 

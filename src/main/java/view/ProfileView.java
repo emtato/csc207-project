@@ -81,8 +81,11 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_ROW_NUM);
         bio.setText(this.profileViewModel.getState().getBio());
+        bio.setFont(GUIConstants.FONT_TEXT);
         bio.setEditable(false);
         bio.setBackground(Color.PINK);
+        bio.setLineWrap(true);
+        bio.setWrapStyleWord(true);
         userInfoPanel.add(bio);
         mainPanel.add(userInfoPanel);
 
