@@ -152,7 +152,7 @@ public class CreateNewPostView extends JPanel {
                         DBPostCommentLikesDataAccessObject.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags, imagesList);
 
                         viewManagerModel.setState("homepage view");
-                        HomePageView homePageView = new HomePageView(viewManagerModel, new JPanel());
+                        HomePageView homePageView = new HomePageView(viewManagerModel);
                         homePageView.updateHomeFeed();
                     }
 

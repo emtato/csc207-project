@@ -76,7 +76,7 @@ public class SpecificClubView extends JPanel {
 
         // Add posts vertically in announcements
         for (int i = 0; i < 3; i++) {
-            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400, cardPanel);
+            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400);
             postPanel.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
             postPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
             postsContainer.add(postPanel);
@@ -143,7 +143,7 @@ public class SpecificClubView extends JPanel {
 
             // Add three posts per row
             for (int j = 0; j < 2; j++) {
-                PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400, cardPanel);
+                PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400);
                 postPanel.setPreferredSize(new Dimension(500, 400));
                 rowPanel.add(postPanel);
             }
