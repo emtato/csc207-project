@@ -2,6 +2,7 @@ package view;
 
 import app.Session;
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
@@ -38,8 +39,12 @@ public class CreateNewPostView extends JPanel {
     private final JRadioButton option3 = new JRadioButton("Option 3");
     private final String viewName = "create new post";
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel) {
+    // TODO: delete this later
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
+
+    public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -163,16 +168,16 @@ public class CreateNewPostView extends JPanel {
                         }
 
                         System.out.println("repice obj creted");
-                        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+                        //DBPostCommentsLikesDataAccessObject postCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
                         HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
                         map.put("ingredients", ingredients);
                         map.put("steps", new ArrayList(Arrays.asList(steps)));
                         map.put("cuisines", cuisines);
                         long postID = (long) (Math.random() * 1_000_000_000_000L);
-                        DBPostCommentLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList);
+                        postCommentsLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList);
 
                         viewManagerModel.setState("homepage view");
-                        HomePageView homePageView = new HomePageView(viewManagerModel);
+                        HomePageView homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
                         homePageView.updateHomeFeed();
                     }
 

@@ -10,9 +10,9 @@ public class Club {
     private final ArrayList<String> foodPreferences = new ArrayList<>();
     private final ArrayList<Post> posts = new ArrayList<>();
 
-    public Club(String name, String bio, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts) {
+    public Club(String name, String description, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts) {
         this.name = name;
-        this.description = bio;
+        this.description = description;
         if (members != null) {
             this.members.addAll(members);
         }
