@@ -141,17 +141,20 @@ public class ClubHomePageView extends JPanel {
         headerPanel.add(announcementsPanel, BorderLayout.SOUTH);
 
         // explore clubs panel
-        JPanel exploreClubsPanel = new JPanel(new BorderLayout());
+        JPanel exploreClubsPanel = new JPanel();
+        exploreClubsPanel.setLayout(new BoxLayout(exploreClubsPanel, BoxLayout.Y_AXIS));
 
         JLabel exploreTitle = new JLabel("Explore Clubs");
         exploreTitle.setFont(GUIConstants.FONT_TITLE);
-        exploreTitle.setHorizontalAlignment(SwingConstants.LEFT);
-        exploreClubsPanel.add(exploreTitle, BorderLayout.NORTH);
+        exploreTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        exploreClubsPanel.add(exploreTitle);
+        exploreClubsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JPanel exploringPanel = new JPanel();
         exploringPanel.setLayout(new BoxLayout(exploringPanel, BoxLayout.Y_AXIS));
+        exploringPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             JPanel explorePanel = new JPanel(new BorderLayout(5, 5));
             explorePanel.setBackground(GUIConstants.WHITE);
             explorePanel.setMaximumSize(new Dimension(370, 130));
@@ -192,7 +195,32 @@ public class ClubHomePageView extends JPanel {
                 exploringPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             }
         }
-        exploreClubsPanel.add(exploringPanel, BorderLayout.CENTER);
+        exploreClubsPanel.add(exploringPanel);
+        exploreClubsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Small gap before create club button
+
+        JPanel createClubPanel = new JPanel(new BorderLayout());
+        createClubPanel.setPreferredSize(new Dimension(150, 100));
+        createClubPanel.setMaximumSize(new Dimension(370, 100));
+        createClubPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        createClubPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        createClubPanel.setBackground(GUIConstants.RED);
+
+        JLabel clubIconName = new JLabel("Create Club");
+        clubIconName.setFont(GUIConstants.FONT_HEADER);
+        clubIconName.setForeground(Color.WHITE);
+        clubIconName.setHorizontalAlignment(SwingConstants.CENTER);
+        createClubPanel.add(clubIconName, BorderLayout.CENTER);
+
+        createClubPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                CreateClubView createClubView = new CreateClubView(viewManagerModel);
+                cardPanel.add(createClubView, createClubView.getViewName());
+                viewManagerModel.setState(createClubView.getViewName());
+            }
+        });
+
+        exploreClubsPanel.add(createClubPanel);
 
         mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH);
 

@@ -8,6 +8,7 @@ import java.awt.*;
 public class MapHTMLView extends JFrame {
 
     // TODO: this is just an example. change later
+    // FIXME: delete if unnecessary
 
     public MapHTMLView() {
         setTitle("HTML Display Example");

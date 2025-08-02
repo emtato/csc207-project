@@ -5,12 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 import javax.swing.*;
 
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
@@ -26,6 +27,7 @@ public class HomePageView extends JPanel {
     private final String viewName = "homepage view";
     private final ViewManagerModel viewManagerModel;
     private final JPanel cardPanel;
+    private JPanel feedPanel;
     private String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile  hi\nhih\nhi\njo";
     private Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
     private Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
@@ -55,7 +57,7 @@ public class HomePageView extends JPanel {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    viewManagerModel.setState("create new post");
+                viewManagerModel.setState("create new post");
 
             }
         });
@@ -67,36 +69,13 @@ public class HomePageView extends JPanel {
         mainPanel.add(tabsPanel, BorderLayout.NORTH);
 
         // scrollable feed panel
-        JPanel feedPanel = new JPanel();
+        feedPanel = new JPanel();
         feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
 
         JPanel wrapperPanel = new JPanel(new BorderLayout());
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
 
-        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
-        DataStorage dataStorage = new DataStorage();
-        ArrayList<Long> availablePosts = dataStorage.getAvailablePosts();
-        for (int i = 0; i < availablePosts.size(); i++) {
-            JPanel feedRow = new JPanel();
-            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
-            PostPanel postPanel = new PostPanel(viewManagerModel, trialpost, 1000, 400, cardPanel);
-            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
-            feedRow.setMaximumSize(new Dimension(2000, 420));
-            feedRow.add(postPanel);
-
-            Post post2 = dataStorage.getPost(availablePosts.get(i));
-            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
-            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
-            feedRow.add(postTwo); // second post
-            feedRow.add(Box.createHorizontalGlue());
-//commented out due to lack of horizontal space (to make window fit on all screen sizes)
-//            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
-//            feedRow.add(new JLabel("placeholder for clubs list", 22, Color.RED, 3)); // clubs
-//            feedRow.add(Box.createHorizontalGlue());
-
-            feedPanel.add(feedRow);
-            //feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        updateHomeFeed();
 
         JScrollPane mainScrollPane = new JScrollPane(wrapperPanel);
         mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -112,6 +91,50 @@ public class HomePageView extends JPanel {
 
         this.add(mainPanel);
     }
+
+    public void updateHomeFeed() {
+        feedPanel.removeAll();
+        //TODO: refresh work properly after having made post
+        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
+        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+        ArrayList<Long> availablePosts = DBPostCommentLikesDataAccessObject.getAvailablePosts();
+
+        int maxNumberOfDisplayingPosts = 10;
+        int numberofPosts = Math.min(availablePosts.size(), 10);
+        ArrayList<Integer> indicesRandomizer = new ArrayList<>();
+        for (int i = 0; i < numberofPosts; i++) {
+            indicesRandomizer.add(i);
+        }
+        Collections.shuffle(indicesRandomizer);
+
+        ArrayList<Integer> anotherIndicesRandomizer = new ArrayList<>(indicesRandomizer);
+        Collections.shuffle(anotherIndicesRandomizer);
+
+        for (int i = 0; i < numberofPosts; i++) {
+            JPanel feedRow = new JPanel();
+            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
+            feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
+            Post post1 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(anotherIndicesRandomizer.get(i)));
+            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 1000, 400, cardPanel);
+            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.setMaximumSize(new Dimension(2000, 420));
+            feedRow.add(postPanel);
+
+            Post post2 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(indicesRandomizer.get(i)));
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
+            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            feedRow.add(postTwo); // second post
+            feedRow.add(Box.createHorizontalGlue());
+//commented out due to lack of horizontal space (to make window fit on all screen sizes)
+//            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
+//            feedRow.add(new JLabel("placeholder for clubs list", 22, Color.RED, 3)); // clubs
+//            feedRow.add(Box.createHorizontalGlue());
+
+            feedPanel.add(feedRow);
+            //feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+    }
+
 
     public String getViewName() {
         return viewName;

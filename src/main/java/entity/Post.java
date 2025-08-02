@@ -1,11 +1,10 @@
 package entity;
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Represents a generic social media post made by a user.
@@ -55,6 +54,7 @@ public class Post {
         this.isReview = false;
         this.isPublic = false;
         this.isClub = false;
+        this.imageURLs = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -190,8 +190,8 @@ public class Post {
     }
 
     public ArrayList<Comment> getComments() {
-        DataStorage dataStorage = new DataStorage();
-        ArrayList<Comment> comments = dataStorage.getComments(postID);
+        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+        ArrayList<Comment> comments = DBPostCommentLikesDataAccessObject.getComments(postID);
         return comments;
     }
 

@@ -2,25 +2,34 @@ package entity;
 
 import java.util.ArrayList;
 
-public class Club{
+public class Club {
     private final String name;
-    private final String password;
-    private String bio;
+
+    private String description;
     private final ArrayList<Account> members = new ArrayList<>();
     private final ArrayList<String> foodPreferences = new ArrayList<>();
     private final ArrayList<Post> posts = new ArrayList<>();
 
-    public Club(String name, String password) {
+    public Club(String name, String bio, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts) {
         this.name = name;
-        this.password = password;
+        this.description = bio;
+        if (members != null) {
+            this.members.addAll(members);
+        }
+        if (foodPreferences != null) {
+            this.foodPreferences.addAll(foodPreferences);
+        }
+        if (posts != null) {
+            this.posts.addAll(posts);
+        }
     }
 
     // Length of bio is less than 200 characters.
-    public String editBio(String bio) {
-        if (bio.length() <= 200) {
-            this.bio = bio;
+    public String editDescription(String description) {
+        if (description.length() <= 200) {
+            this.description = description;
         }
-        return this.bio;
+        return this.description;
     }
 
     public String getName() {
@@ -35,7 +44,7 @@ public class Club{
 
     }
 
-    public void setBio(String newBio) {
+    public void setDescription(String newBio) {
 
     }
 
@@ -43,8 +52,8 @@ public class Club{
 
     }
 
-    public String getBio() {
-        return bio;
+    public String getDescription() {
+        return description;
     }
 
     public ArrayList<Account> getMembers() {
@@ -55,5 +64,5 @@ public class Club{
         return foodPreferences;
     }
 
-    public ArrayList<Post> getUserPosts() {return posts;}
+    public ArrayList<Post> getPosts() {return posts;}
 }

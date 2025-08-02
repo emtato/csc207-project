@@ -4,10 +4,7 @@ package data_access;/**
  * ^ • ω • ^
  */
 
-import entity.Account;
-import entity.Comment;
-import entity.Post;
-import entity.Recipe;
+import entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,15 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DataStorage {
+public class DBPostCommentLikesDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
-    public static void main(String[] args) {
-        long postId = 483958292l;
-        DataStorage dataStorage = new DataStorage();
-        dataStorage.writeCommentToFile(postId, new Account("bil", "bal"), "bol", LocalDateTime.now());
-
-    }
 
     /**
      * method to reduce duplicate code, retrieves JSONObject from file
@@ -123,6 +114,12 @@ public class DataStorage {
         return commentList;
     }
 
+    /**
+     * keep a record of which account has liked which post
+     *
+     * @param user   current logged in user
+     * @param postID post ID currently being liked
+     */
     public void writeLikeToFile(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
@@ -161,6 +158,13 @@ public class DataStorage {
         }
     }
 
+    /**
+     * function to determine if the current user has liked post postID to keep track and avoid spamming likes
+     *
+     * @param user   current logged in user
+     * @param postID id of post being accessed
+     * @return boolean to indicate if the current user has liked postID
+     */
     public boolean postLikedyesNopls(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
@@ -199,7 +203,7 @@ public class DataStorage {
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags) {
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
@@ -217,6 +221,7 @@ public class DataStorage {
         newPost.put("contents", contentsJSONObject);
         newPost.put("tags", tags);
         posts.put(String.valueOf(postID), newPost);
+        newPost.put("images", images);
         data.put("posts", posts);
 
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -252,10 +257,20 @@ public class DataStorage {
         String username = postObj.getString("user");
         String title = postObj.getString("title");
         String description = postObj.getString("description");
+        long likeCount = postObj.getLong("likes");
 
         Account user = new Account(username, "password");
         Post post = new Post(user, postID, title, description);
+        post.setLikes(likeCount);
 
+        if (postObj.has("images")) {
+            JSONArray imagesJSONArray = postObj.getJSONArray("images");
+            ArrayList<String> imagesArray = new ArrayList<>();
+            for (int i = 0; i < imagesJSONArray.length(); i++) {
+                imagesArray.add(imagesJSONArray.getString(i));
+            }
+            post.setImageURLs(imagesArray);
+        }
         if (postObj.has("tags")) {
             JSONArray tagArray = postObj.getJSONArray("tags");
             ArrayList<String> tags = new ArrayList<>();
@@ -285,8 +300,8 @@ public class DataStorage {
                 if (cuisines.equals("Enter cuisine separated by commas if u want")) {
                     cuisines = "";
                 }
-
-                return new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                return rep;
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
             else if (postObj.get("type").equals("other?")) {
@@ -296,10 +311,51 @@ public class DataStorage {
         return post;
     }
 
+    /**
+     * function to update a post's likes in database. The system to update likes should be used when the
+     * user likes or unlikes a post, and thus -1 or 1 is passed as likeDifference
+     *
+     * @param postID         ID of the post we are updating likes on
+     * @param likeDifference integer -1 or 1.
+     */
+    public void updateLikesForPost(long postID, int likeDifference) {
+        JSONObject data = getJsonObject();
+        if (data.has("posts")) {
+            JSONObject posts = data.getJSONObject("posts");
+            if (posts.has(String.valueOf(postID))) {
+                JSONObject post = posts.getJSONObject(String.valueOf(postID));
+                int currentLikes = post.getInt("likes");
+                post.put("likes", currentLikes + likeDifference);
+                posts.put(String.valueOf(postID), post);
+                data.put("posts", posts);
+                try (FileWriter writer = new FileWriter(filePath)) {
+                    writer.write(data.toString(2));
+                }
+                catch (IOException e) {
+                    throw new RuntimeException("i am sad :(", e);
+                }
+            }
+            else {
+                throw new RuntimeException("bwahhh D: post not found");
+
+            }
+        }
+        else {
+            throw new RuntimeException("bwahhh D: post not found");
+
+        }
+    }
+
+
     public ArrayList<Post> getPosts(Account user) {
         return new ArrayList<Post>();
     }
 
+    /**
+     * get a list of all postID's stored in database.
+     *
+     * @return ArrayList of long
+     */
     public ArrayList<Long> getAvailablePosts() {
         JSONObject data = getJsonObject();
 
@@ -314,5 +370,77 @@ public class DataStorage {
             postIDs.add(postID);
         }
         return postIDs;
+    }
+
+    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
+        JSONObject data = getJsonObject();
+        JSONObject clubs;
+        if (data.has("clubs")) {
+            clubs = data.getJSONObject("clubs");
+        }
+        else {
+            clubs = new JSONObject();
+        }
+        JSONObject newClub = new JSONObject();
+        newClub.put("name", name);
+        newClub.put("description", description);
+        newClub.put("posts", posts);
+        clubs.put(String.valueOf(clubID), newClub);
+        data.put("clubs", clubs);
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("i am sad :(", e);
+        }
+    }
+
+    public Club getClub(long clubID) {
+        JSONObject data = getJsonObject();
+
+        if (!data.has("clubs")) {
+            return null;
+        }
+
+        JSONObject clubs = data.getJSONObject("clubs");
+        String parentClubID = String.valueOf(clubID);
+
+        if (!clubs.has(parentClubID)) {
+            return null;
+        }
+
+        JSONObject clubObj = clubs.getJSONObject(parentClubID);
+        String name = clubObj.getString("name");
+        String description = clubObj.getString("description");
+        ArrayList<Account> members = new ArrayList<>();
+        if (clubObj.has("members")) {
+            JSONArray memberArray = clubObj.getJSONArray("members");
+            for (int i = 0; i < memberArray.length(); i++) {
+                String username = memberArray.getString(i);
+                members.add(new Account(username, "password"));
+            }
+        }
+        ArrayList<Post> posts = new ArrayList<>();
+        if (clubObj.has("posts")) {
+            JSONArray postArray = clubObj.getJSONArray("posts");
+            for (int i = 0; i < postArray.length(); i++) {
+                JSONObject postObj = postArray.getJSONObject(i);
+                String username = postObj.getString("user");
+                String title = postObj.getString("title");
+                String desc = postObj.getString("description");
+                long postID = postObj.getLong("id");
+                Account user = new Account(username, "password");
+                Post post = new Post(user, postID, title, desc);
+                posts.add(post);
+            }
+        }
+
+        return new Club(name, description, members, new ArrayList<>(), posts) {
+            {
+                setDisplayName(name);
+                setDescription(description);
+            }
+        };
     }
 }

@@ -128,6 +128,7 @@ public class AppBuilder {
     private ManageFollowingView manageFollowingView;
     private MapViewModel mapViewModel;
     private SpecificClubView specificClubView;
+    private CreateClubView createClubView;
     private MapView mapView;
 
     public AppBuilder() {
@@ -154,6 +155,12 @@ public class AppBuilder {
     public AppBuilder addSpecificClubView() {
         specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
         cardPanel.add(specificClubView, specificClubView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addCreateClubView() {
+        createClubView = new CreateClubView(viewManagerModel);
+        cardPanel.add(createClubView, createClubView.getViewName());
         return this;
     }
 
@@ -223,7 +230,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPostView() {
-        Post trialpost = new Post(new Account("meow", "woof"), 483958292, "posttitle", "desc");
+        Post trialpost = new Post(new Account("meow", "woof"), 123134344413l, "posttitle", "desc");
         trialpost.setTitle("goon blean");
         trialpost.setDescription("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +

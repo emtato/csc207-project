@@ -1,6 +1,6 @@
 package view;
 
-import data_access.DataStorage;
+import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -89,7 +89,7 @@ public class PostView extends JPanel {
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title); //TODO: fix datetime thing
+        topPanel.add(title);
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -225,14 +225,21 @@ public class PostView extends JPanel {
      */
     public void displayPost(Post newPost) {
         centerPanel.removeAll();
+        liked = false;
+        likeButton.setText("like");
+        //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
+        DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
+        //refresh post info:
+        newPost = db.getPost(newPost.getID());
         this.post = newPost;
 
         maxBoxHeight = 739123617;
         if (post.isImageVideo()) {
+            System.out.println("isimage");
             try {
-                //TODO: set 3 image max width to avoid overflow center panel
                 JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
@@ -258,8 +265,13 @@ public class PostView extends JPanel {
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
                     centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
+                    imagesRn++;
+                    if (imagesRn == 3) {
+                        break;
+                    }
                 }
                 centerPanel.add(imagePanel);
+
 
                 maxBoxHeight = 150;
             }
@@ -322,7 +334,7 @@ public class PostView extends JPanel {
         }
 
         mainContent += """
-                <h2 style='font-size: 16pt; color: #444;'>Comments</h2> """ + commentsInView + """
+                <h2 style='font-size: 16pt; color: #333;'>Comments</h2> """ + commentsInView + """
                                                       </body>
                                                     </html>
                 """;
@@ -349,16 +361,20 @@ public class PostView extends JPanel {
      */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
+            DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
             if (!liked) {
                 System.out.println("me likey likey");
                 post.setLikes(post.getLikes() + 1);
                 likeButton.setText("unlike");
                 liked = true;
+                dao.updateLikesForPost(post.getID(), 1);
             }
             else {
                 post.setLikes(post.getLikes() - 1);
                 likeButton.setText("like");
                 liked = false;
+                dao.updateLikesForPost(post.getID(), -1);
+
             }
             subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
@@ -456,8 +472,8 @@ public class PostView extends JPanel {
                     Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
                     Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
-                    DataStorage dataStorage = new DataStorage();
-                    dataStorage.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });
