@@ -44,7 +44,7 @@ public class Account implements User {
 
     @Override
     public void setPublic(boolean isPublic){
-        isPublic = isPublic;
+        this.isPublic = isPublic;
     }
 
     @Override

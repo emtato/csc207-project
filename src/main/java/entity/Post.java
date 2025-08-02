@@ -20,6 +20,7 @@ public class Post {
     private Account user;
     private ArrayList<String> tags;
     private ArrayList<String> imageURLs;
+    private String type;
 
     private boolean isImageVideo;
     private boolean isReview;
@@ -208,6 +209,14 @@ public class Post {
             this.isImageVideo = true;
         }
         else this.isImageVideo = false;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 

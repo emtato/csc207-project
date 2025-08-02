@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBPostCommentLikesDataAccessObject {
+public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
     private String filePath = "src/main/java/data_access/data_storage.json";
 
 
@@ -70,7 +70,8 @@ public class DBPostCommentLikesDataAccessObject {
         return both;
     }
 
-    public void writeCommentToFile(long parentID, Account user, String contents, LocalDateTime timestamp) {
+    @Override
+    public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
         // read existing data
         JSONObject data = getJsonObject();
 
@@ -96,6 +97,7 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
+    @Override
     public ArrayList<Comment> getComments(long parentID) {
         // read existing data
         JSONObject data = getJsonObject();
@@ -114,13 +116,8 @@ public class DBPostCommentLikesDataAccessObject {
         return commentList;
     }
 
-    /**
-     * keep a record of which account has liked which post
-     *
-     * @param user   current logged in user
-     * @param postID post ID currently being liked
-     */
-    public void writeLikeToFile(Account user, long postID) {
+    @Override
+    public void addLike(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
 
@@ -158,14 +155,8 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
-    /**
-     * function to determine if the current user has liked post postID to keep track and avoid spamming likes
-     *
-     * @param user   current logged in user
-     * @param postID id of post being accessed
-     * @return boolean to indicate if the current user has liked postID
-     */
-    public boolean postLikedyesNopls(Account user, long postID) {
+    @Override
+    public boolean postIsLiked(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
 
@@ -203,6 +194,7 @@ public class DBPostCommentLikesDataAccessObject {
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
      */
+    @Override
     public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
         JSONObject data = getJsonObject();
         JSONObject posts;
@@ -233,12 +225,7 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
-    /**
-     * Get post object from postID.
-     *
-     * @param postID unique post ID
-     * @return Post object
-     */
+    @Override
     public Post getPost(long postID) {
         JSONObject data = getJsonObject();
 
@@ -312,13 +299,7 @@ public class DBPostCommentLikesDataAccessObject {
         return post;
     }
 
-    /**
-     * function to update a post's likes in database. The system to update likes should be used when the
-     * user likes or unlikes a post, and thus -1 or 1 is passed as likeDifference
-     *
-     * @param postID         ID of the post we are updating likes on
-     * @param likeDifference integer -1 or 1.
-     */
+    @Override
     public void updateLikesForPost(long postID, int likeDifference) {
         JSONObject data = getJsonObject();
         if (data.has("posts")) {
@@ -347,16 +328,7 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
-
-    public ArrayList<Post> getPosts(Account user) {
-        return new ArrayList<Post>();
-    }
-
-    /**
-     * get a list of all postID's stored in database.
-     *
-     * @return ArrayList of long
-     */
+    @Override
     public ArrayList<Long> getAvailablePosts() {
         JSONObject data = getJsonObject();
 

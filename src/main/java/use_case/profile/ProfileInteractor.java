@@ -1,5 +1,6 @@
 package use_case.profile;
 
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.User;
 
@@ -8,11 +9,14 @@ import java.util.HashMap;
 
 public class ProfileInteractor implements ProfileInputBoundary{
     private final ProfileUserDataAccessInterface userDataAccessObject;
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final ProfileOutputBoundary presenter;
 
     public ProfileInteractor(ProfileUserDataAccessInterface userDataAccessInterface,
+                            PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
                             ProfileOutputBoundary presenter) {
         this.userDataAccessObject = userDataAccessInterface;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.presenter = presenter;
     }
 

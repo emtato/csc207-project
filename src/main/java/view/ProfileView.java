@@ -82,7 +82,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         userInfoPanel.add(bio);
         mainPanel.add(userInfoPanel);
 
-
         final JPanel profileButtons = new JPanel();
         profileButtons.setLayout(new BoxLayout(profileButtons, BoxLayout.Y_AXIS));
         profileButtons.setAlignmentX(Component.RIGHT_ALIGNMENT);

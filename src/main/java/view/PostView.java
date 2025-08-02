@@ -1,6 +1,7 @@
 package view;
 
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Comment;
@@ -70,15 +71,17 @@ public class PostView extends JPanel {
     private final RoundedButton shareButton = new RoundedButton("Share");
     private final RoundedButton commentButton = new RoundedButton("coment");
 
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
-    public PostView(ViewManagerModel viewManagerModel, Post post) {
+    public PostView(ViewManagerModel viewManagerModel, Post post, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
 
         //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
 
         mainPanel = new JPanel(new BorderLayout());
@@ -235,9 +238,9 @@ public class PostView extends JPanel {
         liked = false;
         likeButton.setText("like");
         //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
-        DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
+        //DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
         //refresh post info:
-        newPost = db.getPost(newPost.getID());
+        newPost = this.postCommentsLikesDataAccessObject.getPost(newPost.getID());
         this.post = newPost;
 
         maxBoxHeight = 739123617;
@@ -368,19 +371,19 @@ public class PostView extends JPanel {
      */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
+            //DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
             if (!liked) {
                 System.out.println("me likey likey");
                 post.setLikes(post.getLikes() + 1);
                 likeButton.setText("unlike");
                 liked = true;
-                dao.updateLikesForPost(post.getID(), 1);
+                postCommentsLikesDataAccessObject.updateLikesForPost(post.getID(), 1);
             }
             else {
                 post.setLikes(post.getLikes() - 1);
                 likeButton.setText("like");
                 liked = false;
-                dao.updateLikesForPost(post.getID(), -1);
+                postCommentsLikesDataAccessObject.updateLikesForPost(post.getID(), -1);
 
             }
             subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
@@ -476,8 +479,8 @@ public class PostView extends JPanel {
                     }
                     Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
-                    DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
+                    //DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
+                    postCommentsLikesDataAccessObject.addComment(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });
@@ -488,6 +491,7 @@ public class PostView extends JPanel {
         return viewName;
     }
 
+    /*
     public static void main(String[] args) {
         view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -515,10 +519,13 @@ public class PostView extends JPanel {
 //        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 
-        frame.add(new PostView(new ViewManagerModel(), trialpost));
+        PostCommentsLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
+        frame.add(new PostView(new ViewManagerModel(), trialpost, dao));
 
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
     }
+
+     */
 }

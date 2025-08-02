@@ -7,8 +7,11 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
-import data_access.FileUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.InMemoryPostCommentLikesDataAccessObject;
+import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FileUserDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -97,8 +100,12 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-    private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
-    //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    //private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
+    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    //private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
+    //        new InMemoryPostCommentLikesDataAccessObject();
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
+            new DBPostCommentLikesDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -141,7 +148,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel);
+        homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -237,7 +244,7 @@ public class AppBuilder {
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
-        postView = new PostView(viewManagerModel, trialpost);
+        postView = new PostView(viewManagerModel, trialpost, postCommentsLikesDataAccessObject);
         cardPanel.add(postView, postView.getViewName());
         viewManagerModel.setPostView(postView);
         return this;
@@ -245,7 +252,8 @@ public class AppBuilder {
 
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
-        createNewPostView = new CreateNewPostView(viewManagerModel);
+        // TODO: add the use case and move the data access object out of the view and into the interactor
+        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         return this;
     }
@@ -447,7 +455,7 @@ public class AppBuilder {
         final ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(viewManagerModel,
                 profileViewModel, editProfileViewModel, manageFollowingViewModel, manageFollowersViewModel);
         final ProfileInputBoundary profileInteractor =
-                new ProfileInteractor(userDataAccessObject, profileOutputBoundary);
+                new ProfileInteractor(userDataAccessObject, postCommentsLikesDataAccessObject, profileOutputBoundary);
         final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
         editProfileView.setProfileController(profileController);
