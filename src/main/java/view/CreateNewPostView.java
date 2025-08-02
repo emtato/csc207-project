@@ -117,6 +117,16 @@ public class CreateNewPostView extends JPanel {
         JTextArea cuisinesArea = new JTextArea("Enter cuisines and tags separated by commas if u want", 1, 80);
         cuisinesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
+        //set wrapping
+        titleArea.setLineWrap(true);
+        titleArea.setWrapStyleWord(true);
+        bodyArea.setLineWrap(true);
+        bodyArea.setWrapStyleWord(true);
+        imagesArea.setLineWrap(true);
+        ingredientsListArea.setLineWrap(true);
+        stepsArea.setLineWrap(true);
+        stepsArea.setWrapStyleWord(true);
+
         textFIeldHints(titleArea, "Enter post title");
         textFIeldHints(bodyArea, "Enter recipe description");
         textFIeldHints(ingredientsListArea, "Enter list of ingredients separated by commas");
