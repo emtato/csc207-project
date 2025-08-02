@@ -26,15 +26,13 @@ public class HomePageView extends JPanel {
 
     private final String viewName = "homepage view";
     private final ViewManagerModel viewManagerModel;
-    private final JPanel cardPanel;
     private JPanel feedPanel;
     private String steps = "1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" + "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" + "3.serve upside-down on a warm tile  hi\nhih\nhi\njo";
     private Recipe trialpost = new Recipe(new Account("meow", "woof"), 483958292, "repice for glunking", "i made it for the tiger but the bird keeps taking it", new ArrayList<>(Arrays.asList("glorbles", "beans", "tile", "dandelion")), steps, new ArrayList<>(Arrays.asList("yeah")));
     private Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 
-    public HomePageView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
+    public HomePageView(ViewManagerModel viewManagerModel) {
         this.viewManagerModel = viewManagerModel;
-        this.cardPanel = cardPanel;
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // top tabs to switch between feeds
@@ -115,13 +113,13 @@ public class HomePageView extends JPanel {
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
             Post post1 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(anotherIndicesRandomizer.get(i)));
-            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 1000, 400, cardPanel);
+            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 1000, 400);
             postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
             Post post2 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(indicesRandomizer.get(i)));
-            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400, cardPanel);
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());

@@ -29,7 +29,6 @@ public class PostPanel extends JPanel {
 
     private Post post;
     private Recipe repice;
-    private JPanel cardPanel;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
     // fonts & styles
@@ -51,10 +50,10 @@ public class PostPanel extends JPanel {
     private JPanel centerPanel;
     private JPanel bottomPanel;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, JPanel cardPanel) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.cardPanel = cardPanel;
+
 
         setLayout(new BorderLayout());
 
@@ -224,12 +223,10 @@ public class PostPanel extends JPanel {
         if (e.getSource() == viewFullPost) {
             viewManagerModel.setState("post view");
 
-            for (Component c : cardPanel.getComponents()) {
-                if (c instanceof PostView) {
-                    ((PostView) c).displayPost(this.post);   // push the chosen post into it
-                    break;
-                }
-            }
+            PostView currentPostView = viewManagerModel.getPostView();
+            currentPostView.displayPost(this.post);   // push the chosen post into it
+
+
         }
     }
 }

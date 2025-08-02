@@ -465,7 +465,6 @@ public class PostView extends JPanel {
             postButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String mesage = commentsArea.getText();
-                    //TODO: send comment to whoever deals with this idk
                     centerPanel.remove(commentsArea);
                     rightPanel.remove(subRight);
                     commentButton.setText("comment");
@@ -476,9 +475,6 @@ public class PostView extends JPanel {
                     if (lst == null) {
                         lst = new ArrayList<Comment>();
                     }
-                    //TODO: account user implementation
-
-                    //password is irrelevant since we just need to display the logged in user username (unique)
                     Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
                     DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();

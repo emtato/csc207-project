@@ -141,7 +141,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel, cardPanel);
+        homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -239,6 +239,7 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        viewManagerModel.setPostView(postView);
         return this;
     }
 
