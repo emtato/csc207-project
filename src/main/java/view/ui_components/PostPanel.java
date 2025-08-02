@@ -128,8 +128,8 @@ public class PostPanel extends JPanel {
 
         // middle
         postText.setEditable(false);
-        postText.setPreferredSize(new Dimension(400, 400));
-        postText.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
+        postText.setPreferredSize(new Dimension(postWidth, postHeight));
+        postText.setMaximumSize(new Dimension(postWidth, Integer.MAX_VALUE));
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments

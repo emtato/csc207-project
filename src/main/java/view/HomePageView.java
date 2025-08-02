@@ -11,7 +11,9 @@ import java.util.Collections;
 import javax.swing.*;
 
 
+import app.Session;
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
@@ -113,14 +115,14 @@ public class HomePageView extends JPanel {
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
             Post post1 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(anotherIndicesRandomizer.get(i)));
-            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 1000, 400);
-            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400);
+            postPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
             Post post2 = DBPostCommentLikesDataAccessObject.getPost(availablePosts.get(indicesRandomizer.get(i)));
-            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 1000, 400);
-            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400);
+            postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());
 //commented out due to lack of horizontal space (to make window fit on all screen sizes)
