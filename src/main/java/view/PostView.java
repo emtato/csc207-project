@@ -86,7 +86,7 @@ public class PostView extends JPanel {
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title); //TODO: fix datetime thing
+        topPanel.add(title);
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -223,6 +223,7 @@ public class PostView extends JPanel {
     public void displayPost(Post newPost) {
         centerPanel.removeAll();
         liked = false;
+        likeButton.setText("like");
         //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
         DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
         //refresh post info:

@@ -15,6 +15,7 @@ public class Recipe extends Post {
     private String steps;
     private ArrayList<String> cuisines;
     private HashMap<String, String> restrictionsMap;
+
     /**
      * @param user        The user who created the recipe post.
      * @param postID      The unique ID for this post.
@@ -44,7 +45,7 @@ public class Recipe extends Post {
         map.put("weight watcher score", 0);
         map.put("health score", 0);
         map.put("spoonacular score", 0);
-        this.restrictionsMap =map;
+        this.restrictionsMap = map;
     }
 
     /**
@@ -58,9 +59,14 @@ public class Recipe extends Post {
     public Recipe(Post post, ArrayList<String> ingredients,
                   String steps, ArrayList<String> cuisines) {
         super(post.getUser(), post.getID(), post.getTitle(), post.getDescription());
+        this.setTags(post.getTags());
+        this.setImageURLs(post.getImageURLs());
+        this.setLikes(post.getLikes());
+        this.setDateTime(post.getDateTime());
         this.ingredients = ingredients;
         this.steps = steps;
         this.cuisines = cuisines;
+
     }
 
     /**
@@ -116,8 +122,6 @@ public class Recipe extends Post {
     public void setCuisines(ArrayList<String> cuisines) {
         this.cuisines = cuisines;
     }
-
-
 
 
     /**

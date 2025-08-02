@@ -138,7 +138,7 @@
       "type": "recipe",
       "user": "jinufan333",
       "tags": ["1. eat\n2.devour\n3.soul"],
-      "likes": 3
+      "likes": 6
     },
     "1238219318": {
       "contents": {
@@ -173,7 +173,7 @@
       "type": "recipe",
       "user": "a",
       "tags": ["Enter cuisines and tags separated by commas if u want"],
-      "likes": 2
+      "likes": 4
     }
   }
 }

@@ -301,7 +301,6 @@ public class DBPostCommentLikesDataAccessObject {
                     cuisines = "";
                 }
                 Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
-                rep.setImageURLs(post.getImageURLs());
                 return rep;
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
