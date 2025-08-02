@@ -45,4 +45,8 @@ public interface User {
 
     ArrayList<String> getFoodPreferences();
     void setFoodPreferences(ArrayList<String> newPreferences);
+
+
+    boolean isPublic();
+    void setPublic(boolean isPublic);
 }

@@ -120,4 +120,10 @@ public class InMemoryUserDataAccessObject implements
         user.getFollowingAccounts().remove(removedUsername);
         save(user);
     }
+
+    @Override
+    public void setPrivacy(User user,boolean isPublic){
+        user.setPublic(isPublic);
+        save(user);
+    }
 }

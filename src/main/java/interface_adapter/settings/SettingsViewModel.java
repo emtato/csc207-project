@@ -12,6 +12,8 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String ACCOUNT_PRIVACY_LABEL = "Account Privacy";
     public static final String ACCOUNT_PRIVACY_TOGGLE_ON = "PUBLIC";
     public static final String ACCOUNT_PRIVACY_TOGGLE_OFF = "PRIVATE";
+    public static final int SETTINGS_PANEL_WIDTH = 1200;
+    public static final int SETTINGS_PANEL_HEIGHT = 600;
 
     public SettingsViewModel() {
         super("settings");

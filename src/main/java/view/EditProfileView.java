@@ -78,6 +78,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         bio.setText(this.editProfileViewModel.getState().getBio());
         bio.setEditable(false);
         bio.setMaximumSize(new Dimension(EditProfileViewModel.PFP_WIDTH, EditProfileViewModel.PFP_HEIGHT));
+        bio.setLineWrap(true);
+        bio.setWrapStyleWord(true);
         profilePreviewPanel.add(bio);
 
         profilePreviewPanel.add(Box.createVerticalGlue());
@@ -108,6 +110,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         final JLabel editBioLabel = new JLabel(EditProfileViewModel.EDIT_BIO_LABEL);
         bioInputField = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,EditProfileViewModel.INPUT_FIELD_COL_NUM);
         bioInputField.setText(this.editProfileViewModel.getState().getNewBio());
+        bioInputField.setLineWrap(true);
+        bioInputField.setWrapStyleWord(true);
         final JPanel editBioPanel = new LabelTextPanel(editBioLabel, bioInputField);
         editProfilePanel.add(editBioPanel);
 

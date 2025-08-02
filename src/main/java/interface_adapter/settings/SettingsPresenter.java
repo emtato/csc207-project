@@ -19,15 +19,15 @@ public class SettingsPresenter implements SettingsOutputBoundary {
 
     @Override
     public void prepareSuccessView(SettingsOutputData response) {
-        // TODO: On success, do somethings.
+        final SettingsState settingsState = settingsViewModel.getState();
+        settingsState.setPublic(response.isPublic());
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
         final SettingsState settingsState = settingsViewModel.getState();
-        // TODO: On failure, do something
-        //settingsState.setUsernameError(error);
-        //settingsViewModel.firePropertyChanged();
     }
 
 }
