@@ -11,7 +11,9 @@ import java.util.Collections;
 import javax.swing.*;
 
 
+import app.Session;
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Post;
 import entity.Recipe;
