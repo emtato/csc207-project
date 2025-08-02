@@ -1,6 +1,7 @@
 package use_case.signup;
 
 import entity.Account;
+import entity.Post;
 import entity.User;
 import entity.UserFactory;
 
@@ -62,6 +63,11 @@ public class SignupInteractor implements SignupInputBoundary {
             test2.put("username!!!", userTest4);
             test2.put("username!!!!", userTest5);
             user.setFollowerAccounts(test2);
+
+            Post textPost = new Post((Account)user, 1L, "title", "description");
+            HashMap<Long, Post> map = new HashMap<>();
+            map.put(1L, textPost);
+            user.setUserPosts(map);
 
             userDataAccessObject.save(user);
             System.out.println("Debug: User exists after save: " + userDataAccessObject.existsByName(user.getUsername()));

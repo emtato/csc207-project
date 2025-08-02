@@ -13,12 +13,14 @@ public class ProfileViewModel extends ViewModel<ProfileState> {
     public static final String EDIT_PROFILE_BUTTON_LABEL = "Edit Profile";
     public static final String FOLLOWING_BUTTON_LABEL = "Following";
     public static final String FOLLOWERS_BUTTON_LABEL = "Followers";
-    public static final int CONTENT_ROW_NUM = 30;
-    public static final int CONTENT_COL_NUM = 100;
+    public static final int CONTENT_PANEL_WIDTH = 1200;
+    public static final int CONTENT_PANEL_HEIGHT = 250;
     public static final int PFP_WIDTH = 200;
     public static final int PFP_HEIGHT = 200;
     public static final int MAIN_PANEL_WIDTH = 1200;
     public static final int MAIN_PANEL_HEIGHT = 300;
+    public static final int POST_WIDTH = 1000;
+    public static final int POST_HEIGHT = 400;
 
     public ProfileViewModel() {
         super("profile");
