@@ -1,7 +1,6 @@
 package entity;
 
 import data_access.DBPostCommentLikesDataAccessObject;
-import data_access.DataStorage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

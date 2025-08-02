@@ -122,6 +122,7 @@ public class AppBuilder {
     private ManageFollowingView manageFollowingView;
     private MapViewModel mapViewModel;
     private SpecificClubView specificClubView;
+    private CreateClubView createClubView;
     private MapView mapView;
 
     public AppBuilder() {
@@ -148,6 +149,12 @@ public class AppBuilder {
     public AppBuilder addSpecificClubView() {
         specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
         cardPanel.add(specificClubView, specificClubView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addCreateClubView() {
+        createClubView = new CreateClubView(viewManagerModel);
+        cardPanel.add(createClubView, createClubView.getViewName());
         return this;
     }
 
@@ -499,7 +506,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(clubHomePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
