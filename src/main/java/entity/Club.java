@@ -36,10 +36,6 @@ public class Club {
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setDisplayName(String newDisplayName) {
 
     }
