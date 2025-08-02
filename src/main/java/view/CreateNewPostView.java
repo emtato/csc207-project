@@ -4,6 +4,7 @@ import data_access.DBPostCommentLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
 import java.awt.*;
