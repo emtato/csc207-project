@@ -6,6 +6,8 @@ import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
+import interface_adapter.settings.SettingsState;
+import interface_adapter.settings.SettingsViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
@@ -17,16 +19,19 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final LoggedInViewModel loggedInViewModel;
     private final ProfileViewModel profileViewModel;
+    private final SettingsViewModel settingsViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
                           LoggedInViewModel loggedInViewModel,
                           LoginViewModel loginViewModel,
-                          ProfileViewModel profileViewModel) {
+                          ProfileViewModel profileViewModel,
+                          SettingsViewModel settingsViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.profileViewModel = profileViewModel;
+        this.settingsViewModel = settingsViewModel;
     }
 
     @Override
@@ -49,7 +54,11 @@ public class LoginPresenter implements LoginOutputBoundary {
         profileState.setPosts(response.getPosts());
         profileViewModel.setState(profileState);
         this.profileViewModel.firePropertyChanged();
-
+        final SettingsState settingsState = settingsViewModel.getState();
+        settingsState.setUsername(response.getUsername());
+        settingsState.setPublic(response.isPublic());
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged();
 
         this.viewManagerModel.setState("homepage view");
         this.viewManagerModel.firePropertyChanged();

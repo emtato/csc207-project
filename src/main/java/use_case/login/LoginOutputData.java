@@ -17,10 +17,11 @@ public class LoginOutputData {
     private final int numFollowers;
     private final int numFollowing;
     private final HashMap<Long, Post> posts;
+    private final boolean isPublic;
     private final boolean useCaseFailed;
 
     public LoginOutputData(String username, String displayName, String profilePictureUrl, String bio, int numFollowers,
-                           int numFollowing, HashMap<Long, Post> posts, boolean useCaseFailed) {
+                           int numFollowing, HashMap<Long, Post> posts, boolean isPublic, boolean useCaseFailed) {
         this.username = username;
         this.displayName = displayName;
         this.profilePictureUrl = profilePictureUrl;
@@ -28,6 +29,7 @@ public class LoginOutputData {
         this.numFollowers = numFollowers;
         this.numFollowing = numFollowing;
         this.posts = posts;
+        this.isPublic = isPublic;
         this.useCaseFailed = useCaseFailed;
     }
 
@@ -61,5 +63,9 @@ public class LoginOutputData {
 
     public boolean isUseCaseFailed() {
         return useCaseFailed;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
     }
 }

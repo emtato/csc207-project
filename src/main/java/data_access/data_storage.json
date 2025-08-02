@@ -198,6 +198,29 @@
       "user": "a",
       "tags": ["Enter cuisines and tags separated by commas if u want"],
       "likes": 4
+    },
+    "766434793613": {
+      "images": [
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg"
+      ],
+      "contents": {
+        "ingredients": [
+          "bbrrt",
+          "rgw",
+          "rtgrgt"
+        ],
+        "steps": ["Enter steps to make the yum yum"],
+        "cuisines": ["Enter cuisines and tags separated by commas if u want"]
+      },
+      "description": "jjekn",
+      "title": "titititiit",
+      "type": "recipe",
+      "user": "a",
+      "tags": ["Enter cuisines and tags separated by commas if u want"],
+      "likes": 0
     }
   }
 }
