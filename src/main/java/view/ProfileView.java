@@ -1,7 +1,6 @@
 package view;
 
 import entity.Post;
-import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
@@ -21,7 +20,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final ProfileViewModel profileViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    private final JPanel cardPanel;
     private ProfileController profileController;
 
     private final ProfilePictureLabel profilePicture;
@@ -36,10 +34,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JPanel profileContent;
 
 
-    public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel, JPanel cardPanel) {
+    public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
         this.profileViewModel = profileViewModel;
         this.viewManagerModel = viewManagerModel;
-        this.cardPanel = cardPanel;
         this.profileViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel(ProfileViewModel.TITLE_LABEL);
@@ -165,7 +162,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
             for (Long key : posts.keySet()) {
                 final Post post = posts.get(key);
                 PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
-                        ProfileViewModel.POST_HEIGHT, cardPanel);
+                        ProfileViewModel.POST_HEIGHT);
                 profileContent.add(postPanel);
             }
         }

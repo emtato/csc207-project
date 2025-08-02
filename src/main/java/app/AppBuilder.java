@@ -98,7 +98,7 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
 
     private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
-    // private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    //private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -284,7 +284,7 @@ public class AppBuilder {
      */
     public AppBuilder addProfileView() {
         profileViewModel = new ProfileViewModel();
-        profileView = new ProfileView(profileViewModel, viewManagerModel, cardPanel);
+        profileView = new ProfileView(profileViewModel, viewManagerModel);
         cardPanel.add(profileView, profileView.getViewName());
         return this;
     }
