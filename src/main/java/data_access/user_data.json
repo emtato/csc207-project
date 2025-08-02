@@ -35,6 +35,15 @@
       "preferences": "cheese, corfee",
       "followers": ["user1", "user2"],
       "following": ["user3", "user4"]
+    },
+    "a": {
+      "name": "a",
+      "password": "a",
+      "displayName": "a",
+      "bio": "",
+      "preferences": "cheese, corfee",
+      "followers": ["user1", "user2"],
+      "following": ["user3", "user4"]
     }
 
   },
