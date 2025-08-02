@@ -114,6 +114,12 @@ public class DBPostCommentLikesDataAccessObject {
         return commentList;
     }
 
+    /**
+     * keep a record of which account has liked which post
+     *
+     * @param user   current logged in user
+     * @param postID post ID currently being liked
+     */
     public void writeLikeToFile(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
@@ -152,6 +158,13 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
+    /**
+     * function to determine if the current user has liked post postID to keep track and avoid spamming likes
+     *
+     * @param user   current logged in user
+     * @param postID id of post being accessed
+     * @return boolean to indicate if the current user has liked postID
+     */
     public boolean postLikedyesNopls(Account user, long postID) {
         JSONObject data;
         JSONObject likeMap;
@@ -244,9 +257,12 @@ public class DBPostCommentLikesDataAccessObject {
         String username = postObj.getString("user");
         String title = postObj.getString("title");
         String description = postObj.getString("description");
+        long likeCount = postObj.getLong("likes");
 
         Account user = new Account(username, "password");
         Post post = new Post(user, postID, title, description);
+        post.setLikes(likeCount);
+
         if (postObj.has("images")) {
             JSONArray imagesJSONArray = postObj.getJSONArray("images");
             ArrayList<String> imagesArray = new ArrayList<>();
@@ -294,6 +310,41 @@ public class DBPostCommentLikesDataAccessObject {
             }
         }
         return post;
+    }
+
+    /**
+     * function to update a post's likes in database. The system to update likes should be used when the
+     * user likes or unlikes a post, and thus -1 or 1 is passed as likeDifference
+     *
+     * @param postID         ID of the post we are updating likes on
+     * @param likeDifference integer -1 or 1.
+     */
+    public void updateLikesForPost(long postID, int likeDifference) {
+        JSONObject data = getJsonObject();
+        if (data.has("posts")) {
+            JSONObject posts = data.getJSONObject("posts");
+            if (posts.has(String.valueOf(postID))) {
+                JSONObject post = posts.getJSONObject(String.valueOf(postID));
+                int currentLikes = post.getInt("likes");
+                post.put("likes", currentLikes + likeDifference);
+                posts.put(String.valueOf(postID), post);
+                data.put("posts", posts);
+                try (FileWriter writer = new FileWriter(filePath)) {
+                    writer.write(data.toString(2));
+                }
+                catch (IOException e) {
+                    throw new RuntimeException("i am sad :(", e);
+                }
+            }
+            else {
+                throw new RuntimeException("bwahhh D: post not found");
+
+            }
+        }
+        else {
+            throw new RuntimeException("bwahhh D: post not found");
+
+        }
     }
 
 

@@ -352,16 +352,20 @@ public class PostView extends JPanel {
      */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
+            DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
             if (!liked) {
                 System.out.println("me likey likey");
                 post.setLikes(post.getLikes() + 1);
                 likeButton.setText("unlike");
                 liked = true;
+                dao.updateLikesForPost(post.getID(), 1);
             }
             else {
                 post.setLikes(post.getLikes() - 1);
                 likeButton.setText("like");
                 liked = false;
+                dao.updateLikesForPost(post.getID(), -1);
+
             }
             subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
