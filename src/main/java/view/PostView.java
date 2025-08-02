@@ -1,6 +1,7 @@
 package view;
 
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -30,6 +31,7 @@ import entity.Recipe;
 import view.ui_components.JFrame;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.RoundedButton;
+import app.Session;
 /* Description:
  * ^ • ω • ^
  */
@@ -37,6 +39,7 @@ import view.ui_components.RoundedButton;
 public class PostView extends JPanel {
 
     private final String viewName = "post view";
+    private Account currentLoggedInUser;
     //private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
@@ -72,6 +75,7 @@ public class PostView extends JPanel {
     //TODO: keep track of which posts liked to update this according to user and postID
 
     public PostView(ViewManagerModel viewManagerModel, Post post) {
+
         //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
@@ -224,6 +228,10 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
+        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+        currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername()); //using account implementation of user
+        // havent implemented save user data to file yet
+
         centerPanel.removeAll();
         liked = false;
         likeButton.setText("like");
@@ -469,11 +477,12 @@ public class PostView extends JPanel {
                         lst = new ArrayList<Comment>();
                     }
                     //TODO: account user implementation
-                    Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
-                    Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
+
+                    //password is irrelevant since we just need to display the logged in user username (unique)
+                    Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
                     lst.add(comment);
                     DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });
