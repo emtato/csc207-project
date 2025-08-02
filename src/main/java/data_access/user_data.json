@@ -8,7 +8,35 @@
       "preferences": "cooking, travel",
       "followers": ["user1", "user2"],
       "following": ["user3", "user4"]
+    },
+    "jinufan333" : {
+      "name": "emilia",
+      "password": "woofwoof",
+      "displayName": "jinufan333",
+      "bio": "professional gorper",
+      "preferences": "cooking, travel",
+      "followers": ["user1", "user2"],
+      "following": ["user3", "user4"]
+    },
+    "john pork of texus": {
+      "name": "johnathan",
+      "password": "oink",
+      "displayName": "john pork of texus",
+      "bio": "Defender of liberty and individual rights. Resisting expansion of government while advocating for personal freedom. MERICA! \uD83E\uDD85\uD83C\uDDFA\uD83C\uDDF8",
+      "preferences": "freedom, eating",
+      "followers": ["user1", "user2"],
+      "following": ["user3", "user4"]
+    },
+    "rotmaxxer": {
+      "name": "janya",
+      "password": "7-11 cookies are buy one get one free on thursdays for members",
+      "displayName": "rotmaxxer",
+      "bio": "",
+      "preferences": "cheese, corfee",
+      "followers": ["user1", "user2"],
+      "following": ["user3", "user4"]
     }
+
   },
   "notes": {
     "example_user": "This is an example note"
