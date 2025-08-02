@@ -222,6 +222,11 @@ public class PostView extends JPanel {
      */
     public void displayPost(Post newPost) {
         centerPanel.removeAll();
+        liked = false;
+        //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
+        DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
+        //refresh post info:
+        newPost = db.getPost(newPost.getID());
         this.post = newPost;
 
         maxBoxHeight = 739123617;

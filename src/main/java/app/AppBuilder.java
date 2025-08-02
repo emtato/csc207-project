@@ -224,7 +224,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPostView() {
-        Post trialpost = new Post(new Account("meow", "woof"), 483958292, "posttitle", "desc");
+        Post trialpost = new Post(new Account("meow", "woof"), 123134344413l, "posttitle", "desc");
         trialpost.setTitle("goon blean");
         trialpost.setDescription("1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n" +
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
@@ -506,7 +506,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(clubHomePageView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

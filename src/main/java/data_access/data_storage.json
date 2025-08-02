@@ -5,7 +5,8 @@
         "time": "2025-07-30T21:01:31.750358",
         "user": "john pork",
         "content": "wow! thank you for this excquisiite DIY BLue CHEwse recipe! my great uncle was in a really tough spot after losing the house and bertha took the kids, but this DIY BLUe CHese repice really cheered him up! he's been laughing maniacally for 3 days now! Cannot recommend this enough!!!"
-      }, {
+      },
+      {
         "time": "2025-07-30T21:02:17.100061",
         "user": "john pork",
         "content": "OMG SSWISSCHEEZ IM UR BIGGEST FAN PIN ME"
@@ -16,7 +17,8 @@
         "time": "2025-07-30T20:55:45.353889",
         "user": "jinufan333",
         "content": "forg"
-      }, {
+      },
+      {
         "time": "2025-07-30T21:48:38.220626",
         "user": "bil",
         "content": "bol"
@@ -27,36 +29,89 @@
         "time": "2025-07-30T20:57:41.607168",
         "user": "jinufan333",
         "content": "ILL BE YOUR IDOL KEEPING YOU IN CHECK KEEPING YOU OBSESSED PLAY ME ON REPEAT ENDLESSLY IN YOUR HEAD ANYTIME IT HURTS PLAY ANOTHER VERSE I CAN BE YOUR SANCTURAY "
-      }, {
+      },
+      {
         "time": "2025-07-30T20:59:18.436709",
         "user": "jinufan333",
         "content": "MORE THAN POWER MORE THAN GOLD YEAH YOU GAVE ME YOUR HEART NOW IM HERE FOR YOUR SOUL 🤭🫶🏻 IM THE  ONLY ONE WHO\"LL LOVE YOUR SINNSSSSSS "
-      }, {
+      },
+      {
         "time": "2025-07-30T21:02:44.702800",
         "user": "jinufan333",
         "content": "hhaha.... jinu.,, hahahhhrafakjdnfkj"
       }
     ],
-    "1238219318": [
-      {
-        "time": "2025-07-31T00:47:40.040976",
-        "user": "jinufan333",
-        "content": "instructions uclear he took my soul 1/5"
-      }
-    ],
-    "92815889284": [
-      {
-        "time": "2025-07-31T19:51:20.866718",
-        "user": "amansdali",
-        "content": "there should be more"
-      }
-    ]
+    "1238219318": [{
+      "time": "2025-07-31T00:47:40.040976",
+      "user": "jinufan333",
+      "content": "instructions uclear he took my soul 1/5"
+    }],
+    "92815889284": [{
+      "time": "2025-07-31T19:51:20.866718",
+      "user": "amansdali",
+      "content": "there should be more"
+    }]
+  },
+  "clubs": {
+    "2435234": {
+      "members": [
+        "JS javascuript",
+        "jinufan333"
+      ],
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "posts": [
+        "123454321",
+        "123134344413"
+      ],
+      "tags": [
+        "blue cheese",
+        "cooking",
+        "food"
+      ]
+    },
+    "12341325": {
+      "members": [
+        "JS javascuript",
+        "jinufan333"
+      ],
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "posts": [
+        "123454321",
+        "123134344413"
+      ],
+      "tags": [
+        "blue cheese",
+        "cooking",
+        "food"
+      ]
+    },
+    "3656252": {
+      "members": [
+        "JS javascuript",
+        "jinufan333"
+      ],
+      "name": "Blue Cheese Lovers",
+      "description": "A club for people who like to cook and eat blue cheese",
+      "posts": [
+        "123454321",
+        "123134344413"
+      ],
+      "tags": [
+        "blue cheese",
+        "cooking",
+        "food"
+      ]
+    }
   },
   "posts": {
     "123454321": {
       "contents": {
         "ingredients": [
-          "Cheese", "Blue food coloring", "Milk Stink"
+          "Cheese",
+          "Blue food coloring",
+          "Milk Stink"
         ],
         "steps": ["\n1. Get cheese\n2. Cover it in blue food coloring diluted with milk\n3. Make it stinky\n4. Congrats you have blue cheese. Consume it."],
         "cuisines": ["Enter cuisine separated by commas if u want"]
@@ -65,12 +120,15 @@
       "title": "DIY BLUE CHEESE RECIPE BY JS",
       "type": "recipe",
       "user": "JS javascuript",
-      "tags": [""]
+      "tags": [""],
+      "likes": 2
     },
     "123134344413": {
       "contents": {
         "ingredients": [
-          "blue cheese", " cat", " demon powder"
+          "blue cheese",
+          " cat",
+          " demon powder"
         ],
         "steps": ["1. eat\n2.devour\n3.soul"],
         "cuisines": ["yop"]
@@ -79,12 +137,14 @@
       "title": "WOOF ARF BARK BARK",
       "type": "recipe",
       "user": "jinufan333",
-      "tags": ["1. eat\n2.devour\n3.soul"]
+      "tags": ["1. eat\n2.devour\n3.soul"],
+      "likes": 3
     },
     "1238219318": {
       "contents": {
         "ingredients": [
-          "jinuhat", "jinu"
+          "jinuhat",
+          "jinu"
         ],
         "steps": ["idk js dont cook him"],
         "cuisines": ["tag"]
@@ -93,11 +153,15 @@
       "title": "titler",
       "type": "recipe",
       "user": "a",
-      "tags": ["idk js dont cook him"]
+      "tags": ["idk js dont cook him"],
+      "likes": 1
     },
     "92815889284": {
       "images": [
-        "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg"
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg",
+        "https://i.imgur.com/HWLQ74i.jpeg"
       ],
       "contents": {
         "ingredients": ["goofy dorg"],
@@ -108,30 +172,8 @@
       "title": "goob dog",
       "type": "recipe",
       "user": "a",
-      "tags": ["Enter cuisines and tags separated by commas if u want"]
-    }
-  },
-  "clubs": {
-    "12341325": {
-      "name": "Blue Cheese Lovers",
-      "description": "A club for people who like to cook and eat blue cheese",
-      "members": ["JS javascuript", "jinufan333"],
-      "posts": ["123454321", "123134344413"],
-      "tags": ["blue cheese", "cooking", "food"]
-    },
-    "2435234": {
-      "name": "Blue Cheese Lovers",
-      "description": "A club for people who like to cook and eat blue cheese",
-      "members": ["JS javascuript", "jinufan333"],
-      "posts": ["123454321", "123134344413"],
-      "tags": ["blue cheese", "cooking", "food"]
-    },
-    "3656252": {
-      "name": "Blue Cheese Lovers",
-      "description": "A club for people who like to cook and eat blue cheese",
-      "members": ["JS javascuript", "jinufan333"],
-      "posts": ["123454321", "123134344413"],
-      "tags": ["blue cheese", "cooking", "food"]
+      "tags": ["Enter cuisines and tags separated by commas if u want"],
+      "likes": 2
     }
   }
 }
