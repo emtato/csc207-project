@@ -281,7 +281,7 @@ public class AppBuilder {
      */
     public AppBuilder addProfileView() {
         profileViewModel = new ProfileViewModel();
-        profileView = new ProfileView(profileViewModel, viewManagerModel);
+        profileView = new ProfileView(profileViewModel, viewManagerModel, cardPanel);
         cardPanel.add(profileView, profileView.getViewName());
         return this;
     }

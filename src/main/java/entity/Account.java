@@ -34,6 +34,7 @@ public class Account implements User {
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
+        userPosts = new HashMap<>();
         isPublic = true;
     }
     @Override

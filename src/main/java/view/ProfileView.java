@@ -1,32 +1,27 @@
 package view;
 
+import entity.Post;
 import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
-import view.ui_components.GeneralJLabel;
-import view.ui_components.LabelButtonPanel;
-import view.ui_components.MenuBarPanel;
-import view.ui_components.ProfilePictureLabel;
+import view.ui_components.*;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
+import javax.swing.*;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";
     private final ProfileViewModel profileViewModel;
     private final ViewManagerModel viewManagerModel;
 
+    private final JPanel cardPanel;
     private ProfileController profileController;
 
     private final ProfilePictureLabel profilePicture;
@@ -38,12 +33,13 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followingButton;
     private final JLabel followers;
     private final JButton followersButton;
-    private final JTextArea profileContent;
+    private final JPanel profileContent;
 
 
-    public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
+    public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.profileViewModel = profileViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.cardPanel = cardPanel;
         this.profileViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel(ProfileViewModel.TITLE_LABEL);
@@ -79,7 +75,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
                 GUIConstants.RED);
         userInfoPanel.add(username);
 
-        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_ROW_NUM);
+        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_COL_NUM);
         bio.setText(this.profileViewModel.getState().getBio());
         bio.setFont(GUIConstants.FONT_TEXT);
         bio.setEditable(false);
@@ -114,12 +110,16 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         final JPanel profileContentPanel = new JPanel();
         profileContentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        profileContentPanel.setMaximumSize(new Dimension(1200, 250));
-        profileContentPanel.setMinimumSize(new Dimension(1200, 250));
+        final Dimension contentDimension = new Dimension(ProfileViewModel.CONTENT_PANEL_WIDTH,
+                ProfileViewModel.CONTENT_PANEL_HEIGHT);
+        profileContentPanel.setMaximumSize(contentDimension);
+        profileContentPanel.setMinimumSize(contentDimension);
+        profileContentPanel.setBackground(Color.WHITE);
 
-        profileContent = new JTextArea(ProfileViewModel.CONTENT_ROW_NUM,ProfileViewModel.CONTENT_COL_NUM);
-        profileContent.setText("Posts go here\nmore posts\n more posts/??? this is getting ridiculous");
-        profileContentPanel.add(profileContent);
+        profileContent = new JPanel();
+        refreshContent();
+        final JScrollPane contentScrollPane = new JScrollPane(profileContent);
+        profileContentPanel.add(contentScrollPane);
 
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -158,6 +158,19 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.add(menuBar, BorderLayout.SOUTH);
     }
 
+    private void refreshContent(){
+        profileContent.removeAll();
+        final HashMap<Long, Post> posts = this.profileViewModel.getState().getPosts();
+        if (posts.size() > 0) {
+            for (Long key : posts.keySet()) {
+                final Post post = posts.get(key);
+                PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
+                        ProfileViewModel.POST_HEIGHT, cardPanel);
+                profileContent.add(postPanel);
+            }
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
@@ -167,7 +180,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
             bio.setText(profileViewModel.getState().getBio());
             following.setText(profileViewModel.getState().getNumFollowing()+" following");
             followers.setText(profileViewModel.getState().getNumFollowers()+" followers");
-            profileContent.setText("");
+            refreshContent();
         }
     }
 
