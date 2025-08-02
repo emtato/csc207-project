@@ -65,6 +65,7 @@ public class SignupInteractor implements SignupInputBoundary {
             user.setFollowerAccounts(test2);
 
             Post textPost = new Post((Account)user, 1L, "title", "description");
+            textPost.setLikes(0);
             HashMap<Long, Post> map = new HashMap<>();
             map.put(1L, textPost);
             user.setUserPosts(map);
