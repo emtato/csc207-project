@@ -1,5 +1,6 @@
 package interface_adapter.login;
 
+import app.Session;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -40,6 +41,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         loggedInState.setUsername(response.getUsername());
         this.loggedInViewModel.setState(loggedInState);
         this.loggedInViewModel.firePropertyChanged();
+        Session.setCurrentUsername(response.getUsername());
 
         // Update state of other views
         final ProfileState profileState = profileViewModel.getState();

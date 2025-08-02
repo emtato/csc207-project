@@ -108,16 +108,16 @@ public class ClubHomePageView extends JPanel {
         for (int i = 0; i < 3; i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
-            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 1000, 400);
             postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
-            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400);
             postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
 
-            PostPanel postThree = new PostPanel(viewManagerModel, postex2, 1000, 400, cardPanel);
+            PostPanel postThree = new PostPanel(viewManagerModel, postex2, 1000, 400);
             postThree.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
             feedRow.add(postThree); // second post
 

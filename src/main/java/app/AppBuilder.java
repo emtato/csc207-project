@@ -97,8 +97,8 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
 
-    //private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject(userFactory);
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
+    // private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -141,7 +141,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel, cardPanel);
+        homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         return this;
     }
@@ -239,8 +239,10 @@ public class AppBuilder {
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
         postView = new PostView(viewManagerModel, trialpost);
         cardPanel.add(postView, postView.getViewName());
+        viewManagerModel.setPostView(postView);
         return this;
     }
+
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         createNewPostView = new CreateNewPostView(viewManagerModel);
@@ -249,6 +251,7 @@ public class AppBuilder {
     }
 
     // TODO: implement addMapView()
+
     /**
      * Adds Map View to the application
      *
@@ -510,12 +513,12 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login data_access.spoonacular.Example");
+        final JFrame application = new JFrame("HELLO :)");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

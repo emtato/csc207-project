@@ -147,7 +147,7 @@ public class FileUserDataAccessObject implements
         }
 
         JSONObject userJson = users.getJSONObject(username);
-        Account account = new Account(userJson.getString("username"), userJson.getString("password"));
+        Account account = new Account(userJson.getString("displayName"), userJson.getString("password"));
 
         // Set basic properties
         account.setDisplayName(userJson.optString("name", ""));
