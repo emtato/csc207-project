@@ -2,6 +2,7 @@ package view;
 
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logout.LogoutController;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
@@ -25,8 +26,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private final ViewManagerModel viewManagerModel;
 
     private SettingsController settingsController;
+    private LogoutController logoutController;
 
     private final JToggleButton accountPrivacyToggle;
+    private final JToggleButton notificationsToggle;
 
     public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
@@ -65,6 +68,44 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
         settingsPanel.add(privacyPanel);
 
+        final JLabel notificationsHeading = new GeneralJLabel(SettingsViewModel.NOTIFICATIONS_HEADING,
+                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        settingsPanel.add(notificationsHeading);
+
+        final JPanel notificationsPanel = new JPanel();
+        notificationsPanel.setLayout(new BoxLayout(notificationsPanel, BoxLayout.X_AXIS));
+        notificationsPanel.setBackground(GUIConstants.PINK);
+        final JLabel notificationsLabel = new JLabel(SettingsViewModel.NOTIFICATIONS_LABEL);
+        notificationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        notificationsLabel.setFont(GUIConstants.FONT_TEXT);
+        notificationsLabel.setForeground(GUIConstants.RED);
+        notificationsPanel.add(notificationsLabel);
+        notificationsPanel.add(Box.createHorizontalGlue());
+        notificationsToggle = new JToggleButton(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+        notificationsToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        notificationsPanel.add(notificationsToggle);
+
+        settingsPanel.add(notificationsPanel);
+
+        final JLabel logoutHeading = new GeneralJLabel(SettingsViewModel.LOGOUT_HEADING,
+                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        settingsPanel.add(logoutHeading);
+
+        final JPanel logoutPanel = new JPanel();
+        logoutPanel.setLayout(new BoxLayout(logoutPanel, BoxLayout.X_AXIS));
+        logoutPanel.setBackground(GUIConstants.PINK);
+        final JLabel logoutLabel = new JLabel(SettingsViewModel.LOGOUT_LABEL);
+        logoutLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        logoutLabel.setFont(GUIConstants.FONT_TEXT);
+        logoutLabel.setForeground(GUIConstants.RED);
+        logoutPanel.add(logoutLabel);
+        logoutPanel.add(Box.createHorizontalGlue());
+        final JButton logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
+        logoutButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        logoutPanel.add(logoutButton);
+
+        settingsPanel.add(logoutPanel);
+
         settingsPanel.add(Box.createVerticalGlue());
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -82,6 +123,29 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
             }
         });
 
+        notificationsToggle.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (notificationsToggle.isSelected()) {
+                    notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+                } else{
+                    notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
+                }
+                final SettingsState settingsState = settingsViewModel.getState();
+                settingsController.executeNotificationsToggle(settingsState.getUsername(),
+                        notificationsToggle.isSelected());
+            }
+        });
+
+        logoutButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(logoutButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.logoutController.execute(settingsState.getUsername());
+                    }
+                }
+        );
+
         this.add(title);
         this.add(settingsPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
@@ -90,7 +154,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
+        if (evt.getPropertyName().equals("privacy changed")) {
             SettingsState state = this.settingsViewModel.getState();
             this.accountPrivacyToggle.setSelected(state.isPublic());
             if (state.isPublic()) {
@@ -98,6 +162,16 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
             }
             else {
                 this.accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_OFF);
+            }
+        }
+        else if (evt.getPropertyName().equals("notifications changed")) {
+            SettingsState state = this.settingsViewModel.getState();
+            this.notificationsToggle.setSelected(state.isNotificationsEnabled());
+            if (state.isNotificationsEnabled()) {
+                this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+            }
+            else {
+                this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
             }
         }
     }
@@ -109,4 +183,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void setSettingsController(SettingsController controller) {
         this.settingsController = controller;
     }
+    public void setLogoutController(LogoutController controller) {
+        this.logoutController = controller;
+    }
+
 }

@@ -22,6 +22,7 @@ public class Account implements User {
     private ArrayList<Long> likesUsernames;
     private HashMap<Long, Post> userPosts;
     private boolean isPublic;
+    private boolean notificationsEnabled;
 
     public Account(String username, String password) {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
@@ -36,6 +37,7 @@ public class Account implements User {
         foodPreferences = new ArrayList<>();
         userPosts = new HashMap<>();
         isPublic = true;
+        notificationsEnabled = true;
     }
     @Override
     public boolean isPublic(){
@@ -222,5 +224,15 @@ public class Account implements User {
     @Override
     public void setUserPosts(HashMap<Long, Post> userPosts) {
         this.userPosts = userPosts;
+    }
+
+    @Override
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+
+    @Override
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
     }
 }

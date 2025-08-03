@@ -111,8 +111,14 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     }
 
     @Override
-    public void setPrivacy(User user,boolean isPublic){
+    public void setPrivacy(User user, boolean isPublic){
         user.setPublic(isPublic);
+        save(user);
+    }
+
+    @Override
+    public void setNotificationStatus(User user, boolean enabled){
+        user.setNotificationsEnabled(enabled);
         save(user);
     }
 }

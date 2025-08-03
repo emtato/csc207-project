@@ -9,4 +9,10 @@ public interface SettingsInputBoundary {
      * @param settingsInputData the input data
      */
     void executePrivacyToggle(SettingsInputData settingsInputData);
+
+    /**
+     * Executes the enable/disable notifications use case.
+     * @param settingsInputData the input data
+     */
+    void executeNotificationsToggle(SettingsInputData settingsInputData);
 }

@@ -6,6 +6,7 @@ package interface_adapter.settings;
 public class SettingsState {
     private String username;
     private boolean isPublic;
+    private boolean notificationsEnabled;
 
     public String getUsername() {
         return username;
@@ -19,7 +20,15 @@ public class SettingsState {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
     }
 }

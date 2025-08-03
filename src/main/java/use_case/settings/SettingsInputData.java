@@ -5,13 +5,13 @@ package use_case.settings;
  */
 public class SettingsInputData {
     private final String username;
-    private final boolean privacy;
-    public SettingsInputData(String username, boolean privacy) {
+    private final boolean isOn;
+    public SettingsInputData(String username, boolean isOn) {
         this.username = username;
-        this.privacy = privacy;
+        this.isOn = isOn;
     }
-    public boolean isPublic() {
-        return privacy;
+    public boolean isOn() {
+        return isOn;
     }
 
     public String getUsername() {

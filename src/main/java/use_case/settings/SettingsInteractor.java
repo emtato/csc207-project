@@ -15,8 +15,17 @@ public class SettingsInteractor implements SettingsInputBoundary{
     @Override
     public void executePrivacyToggle(SettingsInputData settingsInputData) {
         final User user = userDataAccessObject.get(settingsInputData.getUsername());
-        userDataAccessObject.setPrivacy(user, settingsInputData.isPublic());
-        final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.isPublic());
+        userDataAccessObject.setPrivacy(user, settingsInputData.isOn());
+        final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.isOn());
+        presenter.preparePrivacySuccessView(settingsOutputData);
+    }
+
+    @Override
+    public void executeNotificationsToggle(SettingsInputData settingsInputData) {
+        final User user = userDataAccessObject.get(settingsInputData.getUsername());
+        userDataAccessObject.setNotificationStatus(user, settingsInputData.isOn());
+        final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.isOn());
+        presenter.prepareNotificationsSuccessView(settingsOutputData);
     }
 
 }
