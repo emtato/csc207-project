@@ -8,8 +8,9 @@ import java.util.ArrayList;
  * The state for the Manage Following View Model.
  */
 public class ManageFollowingState {
-    private String username;
-    private ArrayList<User> following;
+    private String username = "";
+    private String otherUsername = "";
+    private ArrayList<User> following = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -25,5 +26,13 @@ public class ManageFollowingState {
 
     public void setFollowing(ArrayList<User> following) {
         this.following = following;
+    }
+
+    public String getOtherUsername() {
+        return otherUsername;
+    }
+
+    public void setOtherUsername(String otherUsername) {
+        this.otherUsername = otherUsername;
     }
 }

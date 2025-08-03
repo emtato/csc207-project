@@ -15,12 +15,21 @@ public class ManageFollowingController {
     }
 
     /**
-     * Executes the Manage Following Use Case.
+     * Executes the Unfollow Use Case.
      */
     public void executeUnfollow(String username, String followingUsername) {
         final ManageFollowingInputData manageFollowingInputData =
                 new ManageFollowingInputData(username, followingUsername);
         manageFollowingUseCaseInteractor.executeUnfollow(manageFollowingInputData);
+    }
+
+    /**
+     * Executes the Follow Use Case.
+     */
+    public void executeFollow(String username, String usernameToFollow) {
+        final ManageFollowingInputData manageFollowingInputData =
+                new ManageFollowingInputData(username, usernameToFollow);
+        manageFollowingUseCaseInteractor.executeFollow(manageFollowingInputData);
     }
 
     /**

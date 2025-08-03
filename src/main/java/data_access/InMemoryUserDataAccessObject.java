@@ -5,18 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
-import use_case.UserDataAccessInterface;
-import use_case.change_password.ChangePasswordUserDataAccessInterface;
-import use_case.edit_profile.EditProfileUserDataAccessInterface;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.logout.LogoutUserDataAccessInterface;
-import use_case.manage_followers.ManageFollowersUserDataAccessInterface;
-import use_case.manage_following.ManageFollowingUserDataAccessInterface;
 import use_case.note.DataAccessException;
-import use_case.note.NoteDataAccessInterface;
-import use_case.profile.ProfileUserDataAccessInterface;
-import use_case.settings.SettingsUserDataAccessInterface;
-import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -99,15 +88,21 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void removeFollower(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
         user.getFollowerAccounts().remove(removedUsername);
+        removedUser.getFollowingAccounts().remove(username);
         save(user);
+        save(removedUser);
     }
 
     @Override
     public void removeFollowing(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
+        removedUser.getFollowerAccounts().remove(username);
         user.getFollowingAccounts().remove(removedUsername);
         save(user);
+        save(removedUser);
     }
 
     @Override
@@ -121,4 +116,21 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
         user.setNotificationsEnabled(enabled);
         save(user);
     }
+
+    @Override
+    public boolean canFollow(String username, String otherUsername){
+        User user = get(username);
+        return users.containsKey(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername);
+    }
+
+    @Override
+    public void addFollowing(String username, String otherUsername) {
+        User user = get(username);
+        User followedUser = get(otherUsername);
+        user.getFollowingAccounts().put(otherUsername, followedUser);
+        followedUser.getFollowerAccounts().put(username, user);
+        save(followedUser);
+        save(user);
+    }
+
 }

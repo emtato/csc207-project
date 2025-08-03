@@ -322,5 +322,18 @@ public class FileUserDataAccessObject implements UserDataAccessObject{
         user.setNotificationsEnabled(enabled);
         save(user);
     }
+
+    @Override
+    public boolean canFollow(String username, String otherUsername){
+        // TODO: implement this
+        return true;
+    }
+
+    @Override
+    public void addFollowing(String username, String otherUsername){
+        User user = get(username);
+        user.getFollowingAccounts().put(otherUsername, get(otherUsername));
+        save(user);
+    }
 }
 
