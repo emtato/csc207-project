@@ -21,4 +21,13 @@ public class SettingsController {
         settingsUseCaseInteractor.executePrivacyToggle(settingsInputData);
     }
 
+    /**
+     * Executes the Change Notifications status Use Case.
+     */
+    public void executeNotificationsToggle(String username, boolean notificationsEnabled) {
+        final SettingsInputData settingsInputData = new SettingsInputData(username, notificationsEnabled);
+        settingsUseCaseInteractor.executeNotificationsToggle(settingsInputData);
+    }
+
+
 }

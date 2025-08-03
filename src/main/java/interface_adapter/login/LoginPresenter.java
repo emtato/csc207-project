@@ -57,9 +57,12 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.profileViewModel.firePropertyChanged();
         final SettingsState settingsState = settingsViewModel.getState();
         settingsState.setUsername(response.getUsername());
-        settingsState.setPublic(response.isPublic());
+        settingsState.setIsPublic(response.isPublic());
         settingsViewModel.setState(settingsState);
-        settingsViewModel.firePropertyChanged();
+        settingsViewModel.firePropertyChanged("privacy changed");
+        settingsState.setNotificationsEnabled(response.isNotificationsEnabled());
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged("notifications changed");
 
         this.viewManagerModel.setState("homepage view");
         this.viewManagerModel.firePropertyChanged();

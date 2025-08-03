@@ -405,6 +405,7 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        settingsView.setLogoutController(logoutController);
         return this;
     }
 

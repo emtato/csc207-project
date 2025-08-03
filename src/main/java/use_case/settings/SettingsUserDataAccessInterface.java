@@ -8,4 +8,5 @@ import use_case.UserDataAccessInterface;
  */
 public interface SettingsUserDataAccessInterface extends UserDataAccessInterface {
     void setPrivacy(User user, boolean privacy);
+    void setNotificationStatus(User user, boolean enabled);
 }
