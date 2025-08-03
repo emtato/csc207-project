@@ -58,7 +58,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
 
     @Override
     public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
-            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
+            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
         Post newPost = new Post(user, postID, title, description);
         newPost.setTitle(title);
         newPost.setType(postType);
