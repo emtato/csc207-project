@@ -2,6 +2,7 @@ package view;
 
 import app.Session;
 import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
@@ -24,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -168,17 +171,22 @@ public class CreateNewPostView extends JPanel {
                         }
 
                         System.out.println("repice obj creted");
-                        //DBPostCommentsLikesDataAccessObject postCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
                         HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
                         map.put("ingredients", ingredients);
                         map.put("steps", new ArrayList(Arrays.asList(steps)));
                         map.put("cuisines", cuisines);
                         long postID = (long) (Math.random() * 1_000_000_000_000L);
-                        postCommentsLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+                        LocalDateTime now = LocalDateTime.now();
+                        String time = now.format(formatter);
+                        postCommentsLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList, time);
 
                         viewManagerModel.setState("homepage view");
                         HomePageView homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
+                        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+                        fileUserDataAccessObject.writePostToFile(postID, Session.getCurrentUsername());
                         homePageView.updateHomeFeed();
+
                     }
 
                 }
