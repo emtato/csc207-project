@@ -218,37 +218,43 @@
       "tags": ["1. eat\n2.devour\n3.soul"],
       "likes": 6
     },
-    "1238219318": {
-      "contents": {
-        "ingredients": [
-          "jinuhat",
-          "jinu"
-        ],
-        "steps": ["idk js dont cook him"],
-        "cuisines": ["tag"]
-      },
-      "description": "jinu is the only thing i eat",
-      "time": "2025-05-05 10:30 AM",
-      "title": "titler",
-      "type": "recipe",
-      "user": "a",
-      "tags": ["idk js dont cook him"],
-      "likes": 1
-    },
-    "96137094387": {
+    "351781523783": {
       "images": [],
       "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["new pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLO"],
+        "ingredients": [
+          "coffee beans",
+          " milk",
+          " sugar"
+        ],
+        "steps": ["drink coffee"],
         "cuisines": []
       },
-      "description": "new pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLOnew pot HELLO",
-      "time": "2025-08-02 11:19 PM",
-      "title": "new pot HELLO",
+      "description": "recipie for happiness",
+      "time": "2025-08-03 06:37 PM",
+      "title": "Happiness",
       "type": "recipe",
-      "user": "a",
-      "likes": 1,
+      "user": "caf_feine666",
+      "likes": 0,
       "tags": []
+    },
+    "578232418276": {
+      "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
+      "contents": {
+        "ingredients": [
+          "1. Shot of espresso",
+          " 2: half a cup of milk",
+          " 3: one baby duck"
+        ],
+        "steps": ["1: Pour the espresso in a cup\n2: Use a milk steamer to froth the milk\n3: eat the duck"],
+        "cuisines": ["duck"]
+      },
+      "description": "Make a duck latte!!",
+      "time": "2025-08-03 06:25 PM",
+      "title": "duck latte :3",
+      "type": "recipe",
+      "user": "caf_feine666",
+      "likes": 1,
+      "tags": ["duck"]
     },
     "336385618700": {
       "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
@@ -285,30 +291,6 @@
       "tags": ["Enter cuisines and tags separated by commas if u want"],
       "likes": 4
     },
-    "766434793613": {
-      "images": [
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg"
-      ],
-      "contents": {
-        "ingredients": [
-          "bbrrt",
-          "rgw",
-          "rtgrgt"
-        ],
-        "steps": ["Enter steps to make the yum yum"],
-        "cuisines": ["Enter cuisines and tags separated by commas if u want"]
-      },
-      "description": "jjekn",
-      "time": "2025-12-25 00:32 AM",
-      "title": "titititiit",
-      "type": "recipe",
-      "user": "amansadadadali",
-      "tags": ["Enter cuisines and tags separated by commas if u want"],
-      "likes": 0
-    },
     "22327005866": {
       "images": [],
       "contents": {
@@ -319,41 +301,6 @@
       "description": "Enter recipe description",
       "time": "2025-08-03 05:52 PM",
       "title": "trial post again",
-      "type": "recipe",
-      "user": "jinufan333",
-      "likes": 0,
-      "tags": []
-    },
-    "235415702695": {
-      "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
-      "contents": {
-        "ingredients": [
-          "ingre1",
-          " ingredient2",
-          "ingredient3 ",
-          "     longspace"
-        ],
-        "steps": ["wfwerfwerwge"],
-        "cuisines": ["vewrvewrv"]
-      },
-      "description": "des",
-      "time": "2025-08-03 05:00 PM",
-      "title": "another test yippee",
-      "type": "recipe",
-      "user": "jinufan333",
-      "likes": 0,
-      "tags": ["vewrvewrv"]
-    },
-    "268697715916": {
-      "images": [],
-      "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["Enter steps to make the yum yum"],
-        "cuisines": []
-      },
-      "description": "123123123",
-      "time": "2025-08-03 06:10 PM",
-      "title": "another test",
       "type": "recipe",
       "user": "jinufan333",
       "likes": 0,

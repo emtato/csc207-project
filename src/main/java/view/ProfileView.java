@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
@@ -45,6 +44,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JLabel followers;
     private final JButton followersButton;
     private final JPanel profileContent;
+    private final JScrollPane profileContentPanel;
 
 
     public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
@@ -119,9 +119,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         profileContent = new JPanel();
         profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
-        refreshContent();
 
-        final JScrollPane profileContentPanel = new JScrollPane(profileContent);
+        profileContentPanel = new JScrollPane(profileContent);
         profileContentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         final Dimension contentDimension = new Dimension(ProfileViewModel.CONTENT_PANEL_WIDTH,
                 ProfileViewModel.CONTENT_PANEL_HEIGHT);
@@ -129,7 +128,20 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileContentPanel.setMinimumSize(contentDimension);
         profileContentPanel.setBackground(Color.WHITE);
 
+        refreshContent();
+
+        final JButton refreshButton = new JButton("Refresh");
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        refreshButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(refreshButton)) {
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.executeViewProfile(profileState.getUsername());
+                    }
+                }
+        );
 
         editProfileButton.addActionListener(
                 evt -> {
@@ -162,6 +174,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.add(mainPanel);
         this.add(profileContentPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(refreshButton);
         this.add(menuBar, BorderLayout.SOUTH);
     }
 
@@ -176,6 +189,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
                 profileContent.add(postPanel);
             }
         }
+
+        this.revalidate();
+        this.repaint();
     }
 
     @Override

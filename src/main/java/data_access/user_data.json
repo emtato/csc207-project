@@ -9,7 +9,7 @@
       "bio": "This is the user's bio where they can talk about themselves!",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": [],
+      "userPosts": [336385618700],
       "password": "hashedPassword123",
       "foodPreferences": [
         "cooking",
@@ -71,7 +71,7 @@
       "bio": "secret account to login easily",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": {},
+      "userPosts": [92815889284],
       "password": "a",
       "foodPreferences": [
         "cheese",
@@ -89,22 +89,29 @@
       "username": "a"
     },
     "caf_feine666": {
-      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
       "likesUsernames": [],
       "blockedAccounts": {},
       "displayName": "Latte",
       "bio": "i luv u a latte <3",
       "blockedTerms": [],
-      "notificationsEnabled": true,
-      "userPosts": [],
+      "notificationsEnabled": false,
+      "userPosts": [
+        578232418276,
+        351781523783
+      ],
       "password": "666666",
       "foodPreferences": [
         "coffee",
         "tea",
         "monster energy ultra strawberry dreams"
       ],
-      "followingAccounts": {},
-      "isPublic": true,
+      "followingAccounts": {"jinufan333": {
+        "profilePictureUrl": "https://img.wattpad.com/cover/396514319-256-k922675.jpg",
+        "displayName": "Emilia",
+        "username": "jinufan333"
+      }},
+      "isPublic": false,
       "mutedAccounts": [],
       "email": "",
       "followerAccounts": {},
@@ -144,9 +151,9 @@
       "blockedTerms": [],
       "notificationsEnabled": true,
       "userPosts": [
+        123134344413,
         799252343725,
-        22327005866,
-        268697715916
+        22327005866
       ],
       "password": "woofwoof",
       "foodPreferences": [""],
@@ -154,11 +161,18 @@
       "isPublic": true,
       "mutedAccounts": [],
       "email": "",
-      "followerAccounts": {"john pork of texus": {
-        "profilePictureUrl": "https://static.planetminecraft.com/files/image/minecraft/mod/2024/896/18241151-johnporkmeme_s.jpg",
-        "displayName": "Johnathan",
-        "username": "john pork of texus"
-      }},
+      "followerAccounts": {
+        "john pork of texus": {
+          "profilePictureUrl": "https://static.planetminecraft.com/files/image/minecraft/mod/2024/896/18241151-johnporkmeme_s.jpg",
+          "displayName": "Johnathan",
+          "username": "john pork of texus"
+        },
+        "caf_feine666": {
+          "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+          "displayName": "Latte",
+          "username": "caf_feine666"
+        }
+      },
       "username": "jinufan333"
     }
   }
