@@ -1,5 +1,21 @@
 package view;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
@@ -8,23 +24,6 @@ import interface_adapter.profile.ProfileController;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.LabelTextPanel;
 import view.ui_components.ProfilePictureLabel;
-
-import javax.swing.JLabel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-import java.awt.Component;
-import java.awt.Dimension;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EditProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "edit profile";

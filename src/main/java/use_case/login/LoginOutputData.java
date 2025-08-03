@@ -2,7 +2,6 @@ package use_case.login;
 
 import entity.Post;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

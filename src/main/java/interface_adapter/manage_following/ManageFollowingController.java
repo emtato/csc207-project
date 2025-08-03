@@ -1,6 +1,5 @@
 package interface_adapter.manage_following;
 
-import use_case.manage_followers.ManageFollowersInputData;
 import use_case.manage_following.ManageFollowingInputBoundary;
 import use_case.manage_following.ManageFollowingInputData;
 

@@ -1,25 +1,26 @@
 package view;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import entity.User;
-import interface_adapter.edit_profile.EditProfileState;
-import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.profile.ProfileController;
-import view.ui_components.LabelTextPanel;
 import view.ui_components.UserInfoPanel;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
-
-import java.util.ArrayList;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class ManageFollowingView extends JPanel implements PropertyChangeListener {
     private final String viewName = "manage following";
