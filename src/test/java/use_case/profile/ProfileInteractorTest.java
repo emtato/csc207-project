@@ -8,6 +8,7 @@ import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +45,7 @@ class ProfileInteractorTest {
                 assertEquals("", userRepository.get("Caf Feine").getDisplayName());
                 assertEquals(0, userRepository.get("Caf Feine").getNumFollowers());
                 assertEquals(0, userRepository.get("Caf Feine").getNumFollowing());
-                assertEquals(new HashMap<>(), userRepository.get("Caf Feine").getUserPosts());
+                assertEquals(new ArrayList<>(), userRepository.get("Caf Feine").getUserPosts());
             }
             @Override
             public void prepareFailView(String error) {
@@ -71,30 +72,31 @@ class ProfileInteractorTest {
 
     @Test
     void viewProfileCustomUserSuccessTest() {
-        ProfileInputData inputData = new ProfileInputData("Caf Feine");
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
-        InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
+        final ProfileInputData inputData = new ProfileInputData("Caf Feine");
+        final InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
 
         // Add Caf Feine to the user repository with custom account details
         final String username = "Caf Feine";
         final String password = "password";
         final String displayName = "Latte";
         final String bio = "I love you a latte!";
-        final HashMap<String, User> followerAccounts = new HashMap<>();
-        final HashMap<String, User> followingAccounts = new HashMap<>();
-        final HashMap<Long, Post> userPosts = new HashMap<>();
+        final ArrayList<Long> userPosts = new ArrayList<>();
         final String profilePictureUrl = "https://i.imgur.com/zEM4Z3S_d.webp?maxwidth=520&shape=thumb&fidelity=high";
-        UserFactory factory = new CreateAccount();
-        User user = factory.create(username, password);
+        final UserFactory factory = new CreateAccount();
+        final User user = factory.create(username, password);
         user.setDisplayName(displayName);
         user.setBio(bio);
         user.setProfilePictureUrl(profilePictureUrl);
-        user.setUserPosts(new HashMap<Long, Post>(userPosts));
+        user.setUserPosts(new ArrayList<>(userPosts));
         userRepository.save(user);
         final User user2 = factory.create("Decaf", "password123");
         userRepository.save(user2);
         userRepository.addFollowing(username, user2.getUsername());
         userRepository.addFollowing(user2.getUsername(), username);
+
+        final HashMap<String, User> followerAccounts = new HashMap<>();
+        final HashMap<String, User> followingAccounts = new HashMap<>();
         followerAccounts.put("Decaf", user2);
         followingAccounts.put("Decaf", user2);
 
@@ -108,7 +110,7 @@ class ProfileInteractorTest {
                 assertEquals(displayName, outputData.getDisplayName());
                 assertEquals(followerAccounts.size(), outputData.getNumFollowers());
                 assertEquals(followingAccounts.size(), outputData.getNumFollowing());
-                assertEquals(userPosts, outputData.getPosts());
+                assertEquals(userPosts, new ArrayList<>(outputData.getPosts().keySet()));
 
                 assertEquals(username, userRepository.get("Caf Feine").getUsername());
                 assertEquals(profilePictureUrl, userRepository.get("Caf Feine").getProfilePictureUrl());

@@ -1,5 +1,6 @@
 package use_case.login;
 
+import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CreateAccount;
 import entity.User;
@@ -12,8 +13,9 @@ class LoginInteractorTest {
 
     @Test
     void successTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
         UserFactory factory = new CreateAccount();
@@ -33,14 +35,15 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, successPresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
         UserFactory factory = new CreateAccount();
@@ -60,7 +63,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, successPresenter);
         assertEquals(null, userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
@@ -68,8 +71,9 @@ class LoginInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "wrong");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
 
         // For this failure test, we need to add Paul to the data access repository before we log in, and
         // the passwords should not match.
@@ -91,14 +95,15 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, failurePresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failureUserDoesNotExistTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
 
         // Add Paul to the repo so that when we check later they already exist
 
@@ -116,7 +121,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, failurePresenter);
         interactor.execute(inputData);
     }
 }
