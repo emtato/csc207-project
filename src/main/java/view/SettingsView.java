@@ -1,5 +1,20 @@
 package view;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logout.LogoutController;
@@ -8,17 +23,6 @@ import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.MenuBarPanel;
-
-import javax.swing.*;
-import javax.swing.JLabel;
-
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 
 public class SettingsView extends JPanel implements PropertyChangeListener {
     private final String viewName = "settings";
@@ -40,14 +44,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 GUIConstants.TITLE_SIZE, GUIConstants.RED);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final JPanel settingsPanel = new JPanel();
-        final Dimension settingsPanelDimension = new Dimension(SettingsViewModel.SETTINGS_PANEL_WIDTH,
-                SettingsViewModel.SETTINGS_PANEL_HEIGHT);
-        settingsPanel.setMaximumSize(settingsPanelDimension);
-        settingsPanel.setMinimumSize(settingsPanelDimension);
-        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
-        settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        settingsPanel.setBackground(GUIConstants.RED);
+        final JPanel settingsPanel = getSettingsPanel();
 
         final JLabel privacyHeading = new GeneralJLabel(SettingsViewModel.PRIVACY_HEADING,
                 GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
@@ -152,6 +149,19 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         this.add(menuBar);
     }
 
+    @NotNull
+    private static JPanel getSettingsPanel() {
+        final JPanel settingsPanel = new JPanel();
+        final Dimension settingsPanelDimension = new Dimension(SettingsViewModel.SETTINGS_PANEL_WIDTH,
+                SettingsViewModel.SETTINGS_PANEL_HEIGHT);
+        settingsPanel.setMaximumSize(settingsPanelDimension);
+        settingsPanel.setMinimumSize(settingsPanelDimension);
+        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
+        settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        settingsPanel.setBackground(GUIConstants.RED);
+        return settingsPanel;
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("privacy changed")) {
@@ -186,5 +196,4 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
     }
-
 }

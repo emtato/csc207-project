@@ -1,8 +1,6 @@
 package use_case.profile;
 
 import entity.Post;
-
-import java.awt.Image;
 import java.util.HashMap;
 
 /**

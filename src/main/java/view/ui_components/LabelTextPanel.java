@@ -1,11 +1,11 @@
 package view.ui_components;
 
-import view.GUIConstants;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+
+import view.GUIConstants;
 
 /**
  * A panel containing a label and a text field or text area.

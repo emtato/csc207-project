@@ -1,8 +1,7 @@
 package app;
 
+import java.awt.Dimension;
 import javax.swing.JFrame;
-import java.awt.*;
-
 
 /**
  * The Main class of our application.

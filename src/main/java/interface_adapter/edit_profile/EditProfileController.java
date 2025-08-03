@@ -3,7 +3,6 @@ package interface_adapter.edit_profile;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInputData;
 
-import java.awt.Image;
 import java.util.ArrayList;
 
 /**
