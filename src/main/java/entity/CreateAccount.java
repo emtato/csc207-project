@@ -6,7 +6,7 @@ package entity;
 public class CreateAccount implements UserFactory {
 
     @Override
-    public User create(String name, String password) {
-        return new Account(name, password);
+    public User create(String username, String password) {
+        return new Account(username, password);
     }
 }
