@@ -28,6 +28,9 @@ public class Account implements User {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
         this.username = username;
         this.password = password;
+        this.bio = "";
+        this.displayName = "";
+        this.email = "";
         likesUsernames = new ArrayList<>();
         followingAccounts = new HashMap<>();
         followerAccounts = new HashMap<>();
