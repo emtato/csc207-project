@@ -1,5 +1,7 @@
 package interface_adapter;
 
+import view.CreateNewPostView;
+import view.HomePageView;
 import view.PostView;
 
 /**
@@ -8,6 +10,8 @@ import view.PostView;
  */
 public class ViewManagerModel extends ViewModel<String> {
     private PostView postView;
+    private HomePageView homePageView;
+    private CreateNewPostView createNewPostView;
 
     public ViewManagerModel() {
         super("view manager");
@@ -15,14 +19,31 @@ public class ViewManagerModel extends ViewModel<String> {
     }
 
     public void setState(String newState) {
-       // System.out.println("[DEBUG] setState called with: " + newState);
+        // System.out.println("[DEBUG] setState called with: " + newState);
         super.setState(newState);
         this.firePropertyChanged("state");
     }
+
     public PostView getPostView() {
         return postView;
     }
+
     public void setPostView(PostView postView) {
         this.postView = postView;
     }
+
+    public HomePageView getHomePageView() {
+        return homePageView;
+    }
+
+    public void setHomePageView(HomePageView homePageView) {
+        this.homePageView = homePageView;
+    }
+    public CreateNewPostView getCreateNewPostView(){
+        return createNewPostView;
+    }
+    public void setCreateNewPostView(CreateNewPostView postView){
+        this.createNewPostView = postView;
+    }
 }
+

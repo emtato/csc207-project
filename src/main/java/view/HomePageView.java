@@ -60,6 +60,8 @@ public class HomePageView extends JPanel {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                CreateNewPostView createNewPostView = viewManagerModel.getCreateNewPostView();
+                createNewPostView.recipePostView();
                 viewManagerModel.setState("create new post");
 
             }
@@ -99,11 +101,10 @@ public class HomePageView extends JPanel {
         feedPanel.removeAll();
         //TODO: refresh work properly after having made post
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
-        //DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
         ArrayList<Long> availablePosts = this.postCommentsLikesDataAccessObject.getAvailablePosts();
 
         int maxNumberOfDisplayingPosts = 10;
-        int numberofPosts = Math.min(availablePosts.size(), 10);
+        int numberofPosts = Math.min(availablePosts.size(), maxNumberOfDisplayingPosts);
         ArrayList<Integer> indicesRandomizer = new ArrayList<>();
         for (int i = 0; i < numberofPosts; i++) {
             indicesRandomizer.add(i);

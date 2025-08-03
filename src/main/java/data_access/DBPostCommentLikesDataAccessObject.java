@@ -216,6 +216,8 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         newPost.put("tags", tags);
         posts.put(String.valueOf(postID), newPost);
         newPost.put("images", images);
+
+        //idk why this is necessary but it doesnt read a.m. it can only recognize AM
         if (time.charAt(time.length() - 4) == 'a') {
             String cutTime = time.substring(0, time.length() - 4) + "AM";
             newPost.put("time", cutTime);
@@ -224,6 +226,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             String cutTime = time.substring(0, time.length() - 4) + "PM";
             newPost.put("time", cutTime);
         }
+
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));

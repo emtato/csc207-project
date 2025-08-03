@@ -110,7 +110,8 @@ public class CreateNewPostView extends JPanel {
     }
 
 
-    private void recipePostView() {
+    public void recipePostView() {
+        contentPanel.removeAll();
         System.out.println(recipes.isSelected());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         JTextArea titleArea = new JTextArea("Enter post title", 2, 20);
@@ -179,12 +180,14 @@ public class CreateNewPostView extends JPanel {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
                         LocalDateTime now = LocalDateTime.now();
                         String time = now.format(formatter);
+                        //write to posts data
                         postCommentsLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList, time);
-
-                        viewManagerModel.setState("homepage view");
-                        HomePageView homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
+                        //write to user data
                         FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
                         fileUserDataAccessObject.writePostToFile(postID, Session.getCurrentUsername());
+
+                        viewManagerModel.setState("homepage view");
+                        HomePageView homePageView = viewManagerModel.getHomePageView();
                         homePageView.updateHomeFeed();
 
                     }
