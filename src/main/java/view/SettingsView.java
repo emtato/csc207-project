@@ -196,5 +196,4 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
     }
-
 }

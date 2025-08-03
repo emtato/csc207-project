@@ -1,5 +1,9 @@
 package view.ui_components;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
 
