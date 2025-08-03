@@ -227,6 +227,30 @@ public class PostView extends JPanel {
         this.add(mainPanel);
     }
 
+    public String wrapText(String text, int maxLength) {
+        String res = "";
+        String curWord = "";
+        int counter = 0;
+        for (int i = 0; i < text.length(); i++) {
+            counter++;
+            curWord += text.charAt(i);
+            if (text.charAt(i) == ' ') {
+                res += curWord;
+                curWord = "";
+            }
+            if (counter % maxLength == 0) {
+                res += "<br>";
+            }
+            if (curWord.length() > 50) {
+                res += curWord;
+                curWord = "";
+
+            }
+        }
+        res += curWord;
+        return res;
+    }
+
     /**
      * Display a new post in the current view to avoid having to recreate entire view every switch.
      *
@@ -302,6 +326,7 @@ public class PostView extends JPanel {
         }
 
         scrollPane.setPreferredSize(new Dimension(1200, 600));
+
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
@@ -313,13 +338,12 @@ public class PostView extends JPanel {
         commentsPanel.add(commentsHeader);
         commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
 
-
         ArrayList<Comment> comments = post.getComments();
         for (Comment comment : comments) {
             JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
             commentUser.setFont(subtite2);
 
-            JLabel commentContent = new JLabel(comment.getComment());
+            JLabel commentContent = new JLabel("<html>" + wrapText(comment.getComment(), 150) + "</html>");
             commentContent.setFont(commenter);
             commentContent.setForeground(Color.GRAY);
 
@@ -331,7 +355,6 @@ public class PostView extends JPanel {
 
         postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
         postText.add(Box.createRigidArea(new Dimension(10, 20)));
-        postText.setBackground(Color.PINK);
 
         if (newPost instanceof Recipe) {
             this.repice = (Recipe) newPost;
@@ -339,7 +362,7 @@ public class PostView extends JPanel {
             String ingredientsText = "";
             ArrayList<String> ingredients = this.repice.getIngredients();
             for (String ingredient : ingredients) {
-                ingredientsText += ingredient + "\n";
+                ingredientsText += ingredient.replace("\n", "<br>") + "<br>";
             }
 
             JLabel postDescriptionHeader = new JLabel("Description");
@@ -352,13 +375,13 @@ public class PostView extends JPanel {
             postStepsHeader.setFont(subtite);
             postStepsHeader.setForeground(Color.BLACK);
 
-            JLabel postDescription = new JLabel(this.post.getDescription());
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
             postDescription.setFont(text);
             postDescription.setForeground(Color.DARK_GRAY);
-            JLabel postIngredients = new JLabel(ingredientsText);
+            JLabel postIngredients = new JLabel("<html>" + wrapText(ingredientsText, 125) + "</html>");
             postIngredients.setFont(text);
             postIngredients.setForeground(Color.DARK_GRAY);
-            JLabel postSteps = new JLabel(this.repice.getSteps());
+            JLabel postSteps = new JLabel("<html>" + wrapText(this.repice.getSteps(), 125).replace("\n", "<br>") + "</html>");
             postSteps.setFont(text);
             postSteps.setForeground(Color.DARK_GRAY);
 
@@ -379,7 +402,7 @@ public class PostView extends JPanel {
             postDescriptionHeader.setFont(subtite);
             postDescriptionHeader.setForeground(Color.BLACK);
 
-            JLabel postDescription = new JLabel(this.post.getDescription());
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
             postDescription.setFont(text);
             postDescription.setForeground(Color.DARK_GRAY);
 
@@ -476,6 +499,9 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
+            commentsArea.setLineWrap(true);
+            commentsArea.setWrapStyleWord(true);
+
             scrollPane.setSize(new Dimension(1200, 600)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
@@ -533,7 +559,7 @@ public class PostView extends JPanel {
         return viewName;
     }
 
-    /*
+
     public static void main(String[] args) {
         view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -569,5 +595,5 @@ public class PostView extends JPanel {
         frame.setVisible(true);
     }
 
-     */
+
 }
