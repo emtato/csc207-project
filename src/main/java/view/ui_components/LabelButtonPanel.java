@@ -1,8 +1,10 @@
 package view.ui_components;
 
-import view.GUIConstants;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import javax.swing.*;
+import view.GUIConstants;
 
 /**
  * A panel containing a label and a button.

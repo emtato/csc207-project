@@ -1,18 +1,31 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
 import interface_adapter.profile.ProfileViewModel;
-import view.ui_components.*;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
+import view.ui_components.GeneralJLabel;
+import view.ui_components.LabelButtonPanel;
+import view.ui_components.MenuBarPanel;
+import view.ui_components.PostPanel;
+import view.ui_components.ProfilePictureLabel;
 
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";

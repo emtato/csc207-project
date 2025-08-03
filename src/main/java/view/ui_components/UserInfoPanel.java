@@ -1,10 +1,11 @@
 package view.ui_components;
 
-import view.GUIConstants;
-import javax.swing.JPanel;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
+import view.GUIConstants;
 
 public class UserInfoPanel extends JPanel {
     public UserInfoPanel(String profilePictureUrl, String username, String displayName, JButton button) {

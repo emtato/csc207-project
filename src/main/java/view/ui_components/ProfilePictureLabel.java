@@ -1,7 +1,5 @@
 package view.ui_components;
 
-import javax.swing.*;
-import java.awt.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
