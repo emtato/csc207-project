@@ -9,7 +9,7 @@
       "bio": "This is the user's bio where they can talk about themselves!",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": {},
+      "userPosts": [],
       "password": "hashedPassword123",
       "foodPreferences": [
         "cooking",
@@ -35,7 +35,7 @@
       "bio": "Defender of liberty and individual rights. Resisting expansion of government while advocating for personal freedom. MERICA! 🦅🇺🇸",
       "blockedTerms": [],
       "notificationsEnabled": true,
-      "userPosts": {},
+      "userPosts": [],
       "password": "oink",
       "foodPreferences": [
         "freedom",
@@ -71,7 +71,7 @@
       "bio": "i luv u a latte <3",
       "blockedTerms": [],
       "notificationsEnabled": true,
-      "userPosts": {},
+      "userPosts": [],
       "password": "666666",
       "foodPreferences": [
         "coffee",
@@ -93,7 +93,7 @@
       "bio": "",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": {},
+      "userPosts": [],
       "password": "7-11 cookies are buy one get one free on thursdays for members",
       "foodPreferences": [
         "cheese",
@@ -118,7 +118,11 @@
       "bio": "professional gorper",
       "blockedTerms": [],
       "notificationsEnabled": true,
-      "userPosts": {},
+      "userPosts": [
+        799252343725,
+        22327005866,
+        268697715916
+      ],
       "password": "woofwoof",
       "foodPreferences": [""],
       "followingAccounts": {},

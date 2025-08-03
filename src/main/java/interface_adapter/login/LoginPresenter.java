@@ -1,6 +1,7 @@
 package interface_adapter.login;
 
 import app.Session;
+import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -10,6 +11,8 @@ import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
+
+import java.util.HashMap;
 
 /**
  * The Presenter for the Login Use Case.

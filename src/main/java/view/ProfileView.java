@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
@@ -116,19 +117,17 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         mainPanel.add(profileButtons);
 
-        final JPanel profileContentPanel = new JPanel();
+        profileContent = new JPanel();
+        profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
+        refreshContent();
+
+        final JScrollPane profileContentPanel = new JScrollPane(profileContent);
         profileContentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         final Dimension contentDimension = new Dimension(ProfileViewModel.CONTENT_PANEL_WIDTH,
                 ProfileViewModel.CONTENT_PANEL_HEIGHT);
         profileContentPanel.setMaximumSize(contentDimension);
         profileContentPanel.setMinimumSize(contentDimension);
         profileContentPanel.setBackground(Color.WHITE);
-
-        profileContent = new JPanel();
-        refreshContent();
-        final JScrollPane contentScrollPane = new JScrollPane(profileContent);
-        profileContentPanel.add(contentScrollPane);
-
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -169,9 +168,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private void refreshContent(){
         profileContent.removeAll();
         final HashMap<Long, Post> posts = this.profileViewModel.getState().getPosts();
-        if (posts.size() > 0) {
-            for (Long key : posts.keySet()) {
-                final Post post = posts.get(key);
+        if (!posts.isEmpty()) {
+            for (Long id : posts.keySet()) {
+                final Post post = posts.get(id);
                 PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
                         ProfileViewModel.POST_HEIGHT);
                 profileContent.add(postPanel);

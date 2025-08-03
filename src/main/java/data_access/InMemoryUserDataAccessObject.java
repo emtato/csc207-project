@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
+import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.note.DataAccessException;
 
 /**
@@ -130,6 +131,13 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
         user.getFollowingAccounts().put(otherUsername, followedUser);
         followedUser.getFollowerAccounts().put(username, user);
         save(followedUser);
+        save(user);
+    }
+
+    @Override
+    public void addPost(long id, String username) {
+        User user = get(username);
+        user.getUserPosts().add(id);
         save(user);
     }
 

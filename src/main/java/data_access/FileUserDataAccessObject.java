@@ -124,14 +124,10 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
         // Store user posts
         if (account.getUserPosts() != null) {
-            JSONObject userPostsJson = new JSONObject();
-            for (Long postId : account.getUserPosts().keySet()) {
-                Post post = account.getUserPosts().get(postId);
-                JSONObject postJson = new JSONObject();
-                postJson.put("id", post.getID());
-                postJson.put("title", post.getTitle());
-                postJson.put("description", post.getDescription());
-                userPostsJson.put(String.valueOf(postId), postJson);
+            JSONArray userPostsJson = new JSONArray();
+
+            for (Long postId : account.getUserPosts()) {
+                userPostsJson.put(postId);
             }
             userJson.put("userPosts", userPostsJson);
         }
@@ -260,13 +256,10 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
         // Load user posts
         if (userJson.has("userPosts")) {
-            HashMap<Long, Post> posts = new HashMap<>();
-            JSONObject postsJson = userJson.getJSONObject("userPosts");
-            for (String postId : postsJson.keySet()) {
-                JSONObject postJson = postsJson.getJSONObject(postId);
-                Post post = new Post(account, postJson.getLong("id"),
-                        postJson.getString("title"), postJson.getString("description"));
-                posts.put(Long.parseLong(postId), post);
+            ArrayList<Long> posts = new ArrayList<>();
+            JSONArray postsJsonArray = userJson.getJSONArray("userPosts");
+            for (int i = 0; i < postsJsonArray.length(); i++) {
+                posts.add(postsJsonArray.getLong(i));
             }
             account.setUserPosts(posts);
         }
@@ -274,26 +267,11 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         return account;
     }
 
-    public void writePostToFile(long id, String username) {
-        JSONObject data = getJsonObject();
-        if (data.has("users")) {
-           JSONObject usersObj = data.getJSONObject("users");
-           if (usersObj.has(username)) {
-               JSONObject userJson = usersObj.getJSONObject(username);
-               JSONArray postsArray = userJson.getJSONArray("posts");
-               postsArray.put(id);
-               userJson.put("posts", postsArray);
-               usersObj.put(username, userJson);
-               data.put("users", usersObj);
-               writeToFile(data);
-           }
-           else{
-               System.out.println("User " + username + " does not exist");
-           }
-        }
-        else{
-            System.out.println("gaaaa");
-        }
+    @Override
+    public void addPost(long id, String username) {
+        User user = get(username);
+        user.getUserPosts().add(id);
+        save(user);
     }
 
     @Override
