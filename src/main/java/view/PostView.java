@@ -50,14 +50,17 @@ public class PostView extends JPanel {
 
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
-    private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
+    private final Font subtite = new Font("Roboto", Font.BOLD, 16);
+    private final Font subtite2 = new Font("Roboto", Font.BOLD, 14);
+    private final Font commenter = new Font("Roboto", Font.PLAIN, 14);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
     private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
     // middle
-    private JTextPane postText = new JTextPane();
+    private JPanel postText;
     private JPanel centerPanel;
     private JScrollPane scrollPane;
-    private int maxBoxHeight;
+    private JPanel wrapper;
+
     // top
     private final JLabel title;
     private final JLabel subtitle;
@@ -109,7 +112,6 @@ public class PostView extends JPanel {
         topPanel.add(tags);
 
         // middle
-        scrollPane = new JScrollPane(postText);
         displayPost(post);
 
         // PROBABLY CAN BE REMOVED, BUT I WANNA MAKE SURE DISPLAYPOST WORKS 100%
@@ -175,7 +177,7 @@ public class PostView extends JPanel {
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
-        centerPanel.add(scrollPane);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
@@ -225,13 +227,37 @@ public class PostView extends JPanel {
         this.add(mainPanel);
     }
 
+    public String wrapText(String text, int maxLength) {
+        String res = "";
+        String curWord = "";
+        int counter = 0;
+        for (int i = 0; i < text.length(); i++) {
+            counter++;
+            curWord += text.charAt(i);
+            if (text.charAt(i) == ' ') {
+                res += curWord;
+                curWord = "";
+            }
+            if (counter % maxLength == 0) {
+                res += "<br>";
+            }
+            if (curWord.length() > 50) {
+                res += curWord;
+                curWord = "";
+
+            }
+        }
+        res += curWord;
+        return res;
+    }
+
     /**
      * Display a new post in the current view to avoid having to recreate entire view every switch.
      *
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
-         FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
         currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername());
 
         centerPanel.removeAll();
@@ -243,12 +269,24 @@ public class PostView extends JPanel {
         newPost = this.postCommentsLikesDataAccessObject.getPost(newPost.getID());
         this.post = newPost;
 
-        maxBoxHeight = 739123617;
+        postText = new JPanel();
+        postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
+
+        wrapper = new JPanel(new BorderLayout());
+        wrapper.add(postText, BorderLayout.CENTER);
+        scrollPane = new JScrollPane(wrapper);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(1300, 750));
+        scrollPane.setBorder(null);
+
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                JPanel imagePanel = new JPanel();
+                imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
                 int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
@@ -273,37 +311,50 @@ public class PostView extends JPanel {
 
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
                     imagesRn++;
                     if (imagesRn == 3) {
                         break;
                     }
                 }
-                centerPanel.add(imagePanel);
+                wrapper.add(imagePanel, BorderLayout.NORTH);
 
-
-                maxBoxHeight = 150;
             }
             catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        postText.setEditable(false);
+        scrollPane.setPreferredSize(new Dimension(1200, 600));
 
-        scrollPane.setPreferredSize(new Dimension(1200, Math.min(600, maxBoxHeight)));
-        centerPanel.add(scrollPane);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
-        String mainContent = "";
-        String commentsInView = "";
+        JLabel commentsHeader = new JLabel("Comments");
+        commentsHeader.setFont(subtite);
+        commentsHeader.setForeground(Color.BLACK);
+
+        JPanel commentsPanel = new JPanel();
+        commentsPanel.add(commentsHeader);
+        commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
+
         ArrayList<Comment> comments = post.getComments();
         for (Comment comment : comments) {
-            commentsInView += "<h3><span style='font-weight:bold'>" + comment.getAccount().getUsername() +
-                    "</span> <span style='font-weight:normal'> on " + comment.getDate().format(formatter) +
-                    "</span></h3>" + comment.getComment();
+            JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
+            commentUser.setFont(subtite2);
+
+            JLabel commentContent = new JLabel("<html>" + wrapText(comment.getComment(), 150) + "</html>");
+            commentContent.setFont(commenter);
+            commentContent.setForeground(Color.GRAY);
+
+            commentsPanel.add(commentUser);
+            commentsPanel.add(Box.createRigidArea(new Dimension(10, 5)));
+            commentsPanel.add(commentContent);
+            commentsPanel.add(Box.createRigidArea(new Dimension(10, 12)));
         }
+
+        postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
+        postText.add(Box.createRigidArea(new Dimension(10, 20)));
 
         if (newPost instanceof Recipe) {
             this.repice = (Recipe) newPost;
@@ -311,45 +362,59 @@ public class PostView extends JPanel {
             String ingredientsText = "";
             ArrayList<String> ingredients = this.repice.getIngredients();
             for (String ingredient : ingredients) {
-                ingredientsText += ingredient + "<br>";
+                ingredientsText += ingredient.replace("\n", "<br>") + "<br>";
             }
-            mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
-                    </p>
-                    
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + ingredientsText + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                    </p>
-                    <br>""";
 
+            JLabel postDescriptionHeader = new JLabel("Description");
+            JLabel postIngredientsHeader = new JLabel("Ingredients");
+            JLabel postStepsHeader = new JLabel("Steps");
+            postDescriptionHeader.setFont(subtite);
+            postDescriptionHeader.setForeground(Color.BLACK);
+            postIngredientsHeader.setFont(subtite);
+            postIngredientsHeader.setForeground(Color.BLACK);
+            postStepsHeader.setFont(subtite);
+            postStepsHeader.setForeground(Color.BLACK);
+
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
+            postDescription.setFont(text);
+            postDescription.setForeground(Color.DARK_GRAY);
+            JLabel postIngredients = new JLabel("<html>" + wrapText(ingredientsText, 125) + "</html>");
+            postIngredients.setFont(text);
+            postIngredients.setForeground(Color.DARK_GRAY);
+            JLabel postSteps = new JLabel("<html>" + wrapText(this.repice.getSteps(), 125).replace("\n", "<br>") + "</html>");
+            postSteps.setFont(text);
+            postSteps.setForeground(Color.DARK_GRAY);
+
+            postText.add(postDescriptionHeader);
+            postText.add(postDescription);
+            postText.add(Box.createRigidArea(new Dimension(10, 12)));
+            postText.add(postIngredientsHeader);
+            postText.add(postIngredients);
+            postText.add(Box.createRigidArea(new Dimension(10, 12)));
+            postText.add(postStepsHeader);
+            postText.add(postSteps);
+            postText.add(Box.createRigidArea(new Dimension(10, 20)));
         }
 
         else { //general post display
-            String desc = post.getDescription();
-            mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.post.getDescription() + """ 
-                    </p>
-                    <br>""";
 
+            JLabel postDescriptionHeader = new JLabel("Description");
+            postDescriptionHeader.setFont(subtite);
+            postDescriptionHeader.setForeground(Color.BLACK);
+
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
+            postDescription.setFont(text);
+            postDescription.setForeground(Color.DARK_GRAY);
+
+
+            postText.add(postDescriptionHeader);
+            postText.add(postDescription);
+            postText.add(Box.createRigidArea(new Dimension(10, 20)));
             repice = null;
         }
+        postText.add(commentsPanel);
 
-        mainContent += """
-                <h2 style='font-size: 16pt; color: #333;'>Comments</h2> """ + commentsInView + """
-                                                      </body>
-                                                    </html>
-                """;
-        postText.setContentType("text/html");
-        postText.setText(mainContent);
+
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         this.add(mainPanel);
 
@@ -434,7 +499,10 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
-            scrollPane.setSize(new Dimension(1200, Math.min(600, maxBoxHeight))); //YOPPP WORKS
+            commentsArea.setLineWrap(true);
+            commentsArea.setWrapStyleWord(true);
+
+            scrollPane.setSize(new Dimension(1200, 600)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
 
@@ -491,7 +559,7 @@ public class PostView extends JPanel {
         return viewName;
     }
 
-    /*
+
     public static void main(String[] args) {
         view.ui_components.JFrame frame = new view.ui_components.JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -527,5 +595,5 @@ public class PostView extends JPanel {
         frame.setVisible(true);
     }
 
-     */
+
 }
