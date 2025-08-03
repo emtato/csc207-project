@@ -138,14 +138,13 @@
     "123454321": {
       "contents": {
         "ingredients": [
-          "Cheese",
-          "Blue food coloring",
-          "Milk Stink"
+          "Cheese", "Blue food coloring", "Milk Stink"
         ],
         "steps": ["\n1. Get cheese\n2. Cover it in blue food coloring diluted with milk\n3. Make it stinky\n4. Congrats you have blue cheese. Consume it."],
         "cuisines": ["Enter cuisine separated by commas if u want"]
       },
       "description": "How to make blue cheese at home in 4 easy steps\n",
+      "time": "2025-05-05 10:30 AM",
       "title": "DIY BLUE CHEESE RECIPE BY JS",
       "type": "recipe",
       "user": "JS javascuript",
@@ -155,14 +154,13 @@
     "123134344413": {
       "contents": {
         "ingredients": [
-          "blue cheese",
-          " cat",
-          " demon powder"
+          "blue cheese", " cat", " demon powder"
         ],
         "steps": ["1. eat\n2.devour\n3.soul"],
         "cuisines": ["yop"]
       },
       "description": "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance",
+      "time": "2025-05-05 10:30 AM",
       "title": "WOOF ARF BARK BARK",
       "type": "recipe",
       "user": "jinufan333",
@@ -172,44 +170,29 @@
     "860798449925": {
       "contents": {
         "ingredients": [
-          "wfwe",
-          "ewfwe",
-          "fwef"
+          "wfwe", "ewfwe", "fwef"
         ],
         "steps": ["afefejnkjnrajfnkj"],
         "cuisines": ["efawfjnawknfj"]
       },
       "description": "erafafraaf",
+      "time": "2025-05-05 10:30 AM",
       "title": "Title",
       "type": "recipe",
       "user": "a",
       "tags": ["efawfjnawknfj"],
       "likes": 4
     },
-    "21493881164": {
-      "images": [],
-      "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["Enter steps to make the yum yum"],
-        "cuisines": []
-      },
-      "description": "Enter recipe description",
-      "title": "testing testing 123",
-      "type": "recipe",
-      "user": "a",
-      "likes": 0,
-      "tags": []
-    },
     "1238219318": {
       "contents": {
         "ingredients": [
-          "jinuhat",
-          "jinu"
+          "jinuhat", "jinu"
         ],
         "steps": ["idk js dont cook him"],
         "cuisines": ["tag"]
       },
       "description": "jinu is the only thing i eat",
+      "time": "2025-05-05 10:30 AM",
       "title": "titler",
       "type": "recipe",
       "user": "a",
@@ -218,10 +201,7 @@
     },
     "92815889284": {
       "images": [
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg"
+        "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg"
       ],
       "contents": {
         "ingredients": ["goofy dorg"],
@@ -229,6 +209,7 @@
         "cuisines": ["Enter cuisines and tags separated by commas if u want"]
       },
       "description": "gorb",
+      "time": "2025-05-05 10:30 AM",
       "title": "goob dog",
       "type": "recipe",
       "user": "a",
@@ -237,21 +218,17 @@
     },
     "766434793613": {
       "images": [
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg",
-        "https://i.imgur.com/HWLQ74i.jpeg"
+        "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg", "https://i.imgur.com/HWLQ74i.jpeg"
       ],
       "contents": {
         "ingredients": [
-          "bbrrt",
-          "rgw",
-          "rtgrgt"
+          "bbrrt", "rgw", "rtgrgt"
         ],
         "steps": ["Enter steps to make the yum yum"],
         "cuisines": ["Enter cuisines and tags separated by commas if u want"]
       },
       "description": "jjekn",
+      "time": "2025-05-05 10:30 AM",
       "title": "titititiit",
       "type": "recipe",
       "user": "amansadadadali",
@@ -260,52 +237,34 @@
     },
     "362171472867": {
       "images": [
-        "https://i.imgur.com/eA9NeJ1.jpeg",
-        "https://i.imgur.com/wzX83Zc.jpeg",
-        "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg"
+        "https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg"
       ],
       "contents": {
         "ingredients": [
-          "glorbles",
-          "beans",
-          "tile",
-          "dandelion"
+          "glorbles", "beans", "tile", "dandelion"
         ],
         "steps": ["1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n2.sprinkle in 2 blinks of mystery flakes, scream gently\n3.serve upside-down on a warm tile\n"],
         "cuisines": []
       },
       "description": "i made it for the tiger but the bird keeps taking it",
+      "time": "2025-05-05 10:30 AM",
       "title": "repice for glunking",
       "type": "recipe",
       "user": "jinufan333",
       "tags": ["Enter cuisines and tags separated by commas if u want"],
-      "likes": 0
-    },
-    "151148898320": {
-      "images": [],
-      "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["Enter steps to make the yum yum"],
-        "cuisines": []
-      },
-      "description": "Enter recipe description",
-      "title": "new post",
-      "type": "recipe",
-      "user": "a",
-      "likes": 0,
-      "tags": []
+      "likes": 1
     },
     "188868779587": {
       "images": ["https://static.wikia.nocookie.net/fictspedia/images/e/e5/Maxresdefault.jpg/"],
       "contents": {
         "ingredients": [
-          "yum",
-          "yum"
+          "yum", "yum"
         ],
         "steps": ["1yum\n2. bonk"],
         "cuisines": []
       },
       "description": "Texas style BBQ ain\u2019t just food: it\u2019s a damn religion. Down here, we dont mess around with fancy sauces or fluff. It\u2019s all about the meat, slow-smoked low and slow over post oak wood \u2019til it\u2019s tender enough to fall apart if you so much as look at it wrong. ",
+      "time": "2025-05-05 10:30 AM",
       "title": "Tex style BBQ",
       "type": "recipe",
       "user": "john pork of texus",

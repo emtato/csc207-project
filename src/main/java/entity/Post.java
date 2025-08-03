@@ -2,6 +2,7 @@ package entity;
 
 import data_access.DBPostCommentLikesDataAccessObject;
 
+import java.util.Locale;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ public class Post {
     //private ArrayList<Comment> comments;
     private long likes = 0;
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
     /**
@@ -99,7 +101,7 @@ public class Post {
     }
 
     /**
-     * Returns the post's timestamp formatted as "yyyy-MM-dd  HH:mm:ss".
+     * Returns the post's timestamp formatted as "yyyy-MM-dd HH:mm AM/PM".
      *
      * @return Formatted timestamp string
      */
@@ -110,10 +112,10 @@ public class Post {
     /**
      * Sets the post's timestamp using a formatted datetime string.
      *
-     * @param dateTime A string representing datetime in "yyyy-MM-dd  HH:mm:ss" format
+     * @param dateTime A string representing datetime in "yyyy-MM-dd HH:mm AM/PM" format
      */
     public void setDateTimeFromString(String dateTime) {
-        this.dateTime = LocalDateTime.parse(dateTime, dateTimeFormatter);
+        this.dateTime = LocalDateTime.parse(dateTime.trim(), dateTimeFormatter);
     }
 
     /**

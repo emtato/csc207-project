@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FileUserDataAccessObject implements UserDataAccessObject{
+public class FileUserDataAccessObject implements UserDataAccessObject {
 
     private final String filePath = "src/main/java/data_access/user_data.json";
     private String currentUsername;
@@ -26,7 +26,8 @@ public class FileUserDataAccessObject implements UserDataAccessObject{
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             return new JSONObject(content);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return new JSONObject();
         }
     }
@@ -37,7 +38,8 @@ public class FileUserDataAccessObject implements UserDataAccessObject{
     private void writeToFile(JSONObject data) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Error writing to file", e);
         }
     }
@@ -210,13 +212,35 @@ public class FileUserDataAccessObject implements UserDataAccessObject{
             for (String postId : postsJson.keySet()) {
                 JSONObject postJson = postsJson.getJSONObject(postId);
                 Post post = new Post(account, postJson.getLong("id"),
-                    postJson.getString("title"), postJson.getString("description"));
+                        postJson.getString("title"), postJson.getString("description"));
                 posts.put(Long.parseLong(postId), post);
             }
             account.setUserPosts(posts);
         }
 
         return account;
+    }
+
+    public void writePostToFile(long id, String username) {
+        JSONObject data = getJsonObject();
+        if (data.has("users")) {
+           JSONObject usersObj = data.getJSONObject("users");
+           if (usersObj.has(username)) {
+               JSONObject userJson = usersObj.getJSONObject(username);
+               JSONArray postsArray = userJson.getJSONArray("posts");
+               postsArray.put(id);
+               userJson.put("posts", postsArray);
+               usersObj.put(username, userJson);
+               data.put("users", usersObj);
+               writeToFile(data);
+           }
+           else{
+               System.out.println("User " + username + " does not exist");
+           }
+        }
+        else{
+            System.out.println("gaaaa");
+        }
     }
 
     @Override
@@ -301,13 +325,13 @@ public class FileUserDataAccessObject implements UserDataAccessObject{
     }
 
     @Override
-    public void setPrivacy(User user, boolean isPublic){
+    public void setPrivacy(User user, boolean isPublic) {
         user.setPublic(isPublic);
         save(user);
     }
 
     @Override
-    public void setNotificationStatus(User user, boolean enabled){
+    public void setNotificationStatus(User user, boolean enabled) {
         user.setNotificationsEnabled(enabled);
         save(user);
     }

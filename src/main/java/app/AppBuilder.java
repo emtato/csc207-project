@@ -97,8 +97,8 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-
-    private final UserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
+   // private final UserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
             new DBPostCommentLikesDataAccessObject();
 

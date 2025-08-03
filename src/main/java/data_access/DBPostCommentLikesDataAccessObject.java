@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
 
@@ -193,9 +193,10 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      * @param description String description
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
+     * @param time
      */
     @Override
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
@@ -215,8 +216,15 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         newPost.put("tags", tags);
         posts.put(String.valueOf(postID), newPost);
         newPost.put("images", images);
+        if (time.charAt(time.length() - 4) == 'a') {
+            String cutTime = time.substring(0, time.length() - 4) + "AM";
+            newPost.put("time", cutTime);
+        }
+        else {
+            String cutTime = time.substring(0, time.length() - 4) + "PM";
+            newPost.put("time", cutTime);
+        }
         data.put("posts", posts);
-
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
         }
@@ -267,6 +275,8 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             }
             post.setTags(tags);
         }
+        String time = postObj.getString("time");
+        post.setDateTimeFromString(time);
 
         if (postObj.has("contents")) {
             JSONObject contents = postObj.getJSONObject("contents");
