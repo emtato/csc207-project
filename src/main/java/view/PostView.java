@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import use_case.comment.CommentPostInputData;
+import use_case.comment.CommentPostInteractor;
 import use_case.like_post.LikePostInputData;
 import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
@@ -78,6 +80,7 @@ public class PostView extends JPanel {
 
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private LikePostInteractor likePostInteractor;
+    private CommentPostInteractor commentPostInteractor;
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
@@ -89,6 +92,7 @@ public class PostView extends JPanel {
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
         this.likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
+        this.commentPostInteractor = new CommentPostInteractor(postCommentsLikesDataAccessObject);
 
         mainPanel = new JPanel(new BorderLayout());
 
@@ -527,10 +531,6 @@ public class PostView extends JPanel {
                     commentButton.setText("comment");
                     commentButton.setOpaque(false);
 
-//                          centerPanel.revalidate();
-//                          centerPanel.repaint();
-//                          rightPanel.revalidate();
-//                          rightPanel.repaint();
                     xPresent = false;
                 }
             });
@@ -543,14 +543,15 @@ public class PostView extends JPanel {
                     commentButton.setOpaque(false);
                     xPresent = false;
 
-                    ArrayList<Comment> lst = post.getComments();
-                    if (lst == null) {
-                        lst = new ArrayList<Comment>();
-                    }
-                    Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
-                    lst.add(comment);
-                    //DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-                    postCommentsLikesDataAccessObject.addComment(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
+//                    ArrayList<Comment> lst = post.getComments();
+//                    if (lst == null) {
+//                        lst = new ArrayList<Comment>();
+//                    }
+//                    Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
+//                    lst.add(comment);
+
+                    CommentPostInputData inputData = new CommentPostInputData(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
+                    commentPostInteractor.execute(inputData);
                     displayPost(post);
                 }
             });
