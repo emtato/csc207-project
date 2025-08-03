@@ -1,5 +1,6 @@
 package use_case.like_post;
 
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 
 /**
@@ -8,12 +9,11 @@ import entity.Post;
  * ^ • ω • ^
  */
 public class LikePostInteractor implements LikePostInputBoundary {
-    private final LikePostDataAccessInterface postDAO;
-    private final LikePostOutputBoundary presenter;
+    private final PostCommentsLikesDataAccessObject postDAO;
+    //private final LikePostOutputBoundary presenter;
 
-    public LikePostInteractor(LikePostDataAccessInterface postDAO, LikePostOutputBoundary presenter) {
+    public LikePostInteractor(PostCommentsLikesDataAccessObject postDAO) {
         this.postDAO = postDAO;
-        this.presenter = presenter;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class LikePostInteractor implements LikePostInputBoundary {
             postDAO.updateLikesForPost(post.getID(), -1);
         }
 
-        presenter.prepareSuccessView(post);
+        //presenter.prepareSuccessView(post);
     }
 }
