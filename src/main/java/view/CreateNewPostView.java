@@ -7,6 +7,9 @@ import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import use_case.create_post.CreatePostInputBoundary;
+import use_case.create_post.CreatePostInputData;
+import use_case.create_post.CreatePostInteractor;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -42,12 +45,12 @@ public class CreateNewPostView extends JPanel {
     private final JRadioButton option3 = new JRadioButton("Option 3");
     private final String viewName = "create new post";
 
-    // TODO: delete this later
-    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
+    private CreatePostInteractor createPostInteractor;
 
     public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
-        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
+
+        createPostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, new FileUserDataAccessObject());
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -152,48 +155,33 @@ public class CreateNewPostView extends JPanel {
 
         JButton okButton = new JButton("send it \uD83E\uDEE3");
         okButton.setFont(new Font("papyrus", Font.BOLD, 20));
-        okButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        String title = titleArea.getText();
-                        String body = bodyArea.getText();
-                        ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
-                        String steps = stepsArea.getText();
-                        ArrayList<String> cuisines = new ArrayList<>();
-                        ArrayList<String> tags = new ArrayList<>();
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String title = titleArea.getText();
+                String body = bodyArea.getText();
+                ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
+                String steps = stepsArea.getText();
+                //ArrayList<String> cuisines = new ArrayList<>();
+                ArrayList<String> tags = new ArrayList<>();
 
-                        if (!cuisinesArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
-                            cuisines = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
-                            tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
-                        }
-                        ArrayList<String> imagesList = new ArrayList<>();
-                        if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
-                            imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
-                        }
-
-                        System.out.println("repice obj creted");
-                        HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-                        map.put("ingredients", ingredients);
-                        map.put("steps", new ArrayList(Arrays.asList(steps)));
-                        map.put("cuisines", cuisines);
-                        long postID = (long) (Math.random() * 1_000_000_000_000L);
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
-                        LocalDateTime now = LocalDateTime.now();
-                        String time = now.format(formatter);
-                        //write to posts data
-                        postCommentsLikesDataAccessObject.writePost(postID, Session.getCurrentAccount(), title, "recipe", body, map, tags, imagesList, time);
-                        //write to user data
-                        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
-                        fileUserDataAccessObject.writePostToFile(postID, Session.getCurrentUsername());
-
-                        viewManagerModel.setState("homepage view");
-                        HomePageView homePageView = viewManagerModel.getHomePageView();
-                        homePageView.updateHomeFeed();
-
-                    }
-
+                if (!cuisinesArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
+                    //cuisines = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
+                    tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
                 }
-        );
+                ArrayList<String> imagesList = new ArrayList<>();
+                if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
+                    imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
+                }
+                //write to posts data
+                CreatePostInputData inputData = new CreatePostInputData(Session.getCurrentAccount(), title, "recipe", body, ingredients, steps, tags, imagesList);
+                createPostInteractor.execute(inputData);
+
+                viewManagerModel.setState("homepage view");
+                HomePageView homePageView = viewManagerModel.getHomePageView();
+                homePageView.updateHomeFeed();
+            }
+
+        });
         contentPanel.add(okButton);
 
 
