@@ -57,7 +57,8 @@ public class PostView extends JPanel {
     private JTextPane postText = new JTextPane();
     private JPanel centerPanel;
     private JScrollPane scrollPane;
-    private int maxBoxHeight;
+    private JPanel wrapper;
+
     // top
     private final JLabel title;
     private final JLabel subtitle;
@@ -109,7 +110,6 @@ public class PostView extends JPanel {
         topPanel.add(tags);
 
         // middle
-        scrollPane = new JScrollPane(postText);
         displayPost(post);
 
         // PROBABLY CAN BE REMOVED, BUT I WANNA MAKE SURE DISPLAYPOST WORKS 100%
@@ -175,7 +175,7 @@ public class PostView extends JPanel {
         JTextArea comments = new JTextArea();
         scrollPane.add(comments);
         scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
-        centerPanel.add(scrollPane);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
         comments.setBackground(Color.PINK);
         comments.setOpaque(true);
@@ -231,7 +231,7 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
-         FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
         currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername());
 
         centerPanel.removeAll();
@@ -243,12 +243,21 @@ public class PostView extends JPanel {
         newPost = this.postCommentsLikesDataAccessObject.getPost(newPost.getID());
         this.post = newPost;
 
-        maxBoxHeight = 739123617;
+        wrapper = new JPanel(new BorderLayout());
+        wrapper.add(postText, BorderLayout.CENTER);
+        scrollPane = new JScrollPane(wrapper);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(1300, 750));
+        scrollPane.setBorder(null);
+
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                JPanel imagePanel = new JPanel();
+                imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
                 int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
@@ -273,17 +282,14 @@ public class PostView extends JPanel {
 
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
                     imagesRn++;
                     if (imagesRn == 3) {
                         break;
                     }
                 }
-                centerPanel.add(imagePanel);
+                wrapper.add(imagePanel, BorderLayout.NORTH);
 
-
-                maxBoxHeight = 150;
             }
             catch (MalformedURLException e) {
                 throw new RuntimeException(e);
@@ -292,11 +298,11 @@ public class PostView extends JPanel {
 
         postText.setEditable(false);
 
-        scrollPane.setPreferredSize(new Dimension(1200, Math.min(600, maxBoxHeight)));
-        centerPanel.add(scrollPane);
+        scrollPane.setPreferredSize(new Dimension(1200, 600));
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
-        String mainContent = "";
+        String mainContent;
         String commentsInView = "";
         ArrayList<Comment> comments = post.getComments();
         for (Comment comment : comments) {
@@ -336,7 +342,7 @@ public class PostView extends JPanel {
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
                         <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.post.getDescription() + """ 
+                        <p style='font-size: 14pt;'> """ + desc + """ 
                     </p>
                     <br>""";
 
@@ -434,7 +440,7 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == commentButton && !xPresent) {
             JTextArea commentsArea = new JTextArea(2, 20);
-            scrollPane.setSize(new Dimension(1200, Math.min(600, maxBoxHeight))); //YOPPP WORKS
+            scrollPane.setSize(new Dimension(1200, 600)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.add(commentsArea);
 
