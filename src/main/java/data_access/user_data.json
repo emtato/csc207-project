@@ -2,87 +2,135 @@
   "notes": {"example_user": "This is an example note"},
   "users": {
     "example_user": {
-      "password": "hashedPassword123",
-      "preferences": "cooking, travel",
-      "followers": [
-        "user1",
-        "user2"
-      ],
+      "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
       "displayName": "Example User",
-      "following": [
-        "user3",
-        "user4"
+      "bio": "This is the user's bio where they can talk about themselves!",
+      "blockedTerms": [],
+      "notificationsEnabled": false,
+      "userPosts": {},
+      "password": "hashedPassword123",
+      "foodPreferences": [
+        "cooking",
+        "travel",
+        "food"
       ],
-      "name": "example_user",
-      "bio": "This is an example user bio",
-      "posts": []
+      "followingAccounts": {},
+      "isPublic": false,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {"john pork of texus": {
+        "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+        "displayName": "Johnathan",
+        "username": "john pork of texus"
+      }},
+      "username": "example_user"
     },
     "john pork of texus": {
-      "password": "oink",
-      "preferences": "freedom, eating",
-      "followers": [
-        "user1",
-        "user2"
-      ],
-      "displayName": "john pork of texus",
-      "following": [
-        "user3",
-        "user4"
-      ],
-      "name": "johnathan",
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
+      "displayName": "Johnathan",
       "bio": "Defender of liberty and individual rights. Resisting expansion of government while advocating for personal freedom. MERICA! 🦅🇺🇸",
-      "posts": [188868779587]
+      "blockedTerms": [],
+      "notificationsEnabled": true,
+      "userPosts": {},
+      "password": "oink",
+      "foodPreferences": [
+        "freedom",
+        "eating"
+      ],
+      "followingAccounts": {
+        "example_user": {
+          "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+          "displayName": "Example User",
+          "username": "example_user"
+        },
+        "jinufan333": {
+          "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+          "displayName": "Emilia",
+          "username": "jinufan333"
+        }
+      },
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {"rotmaxxer": {
+        "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+        "displayName": "rotmaxxer",
+        "username": "rotmaxxer"
+      }},
+      "username": "john pork of texus"
     },
-    "a": {
-      "password": "a",
-      "preferences": "cheese, corfee",
-      "followers": [
-        "user1",
-        "user2"
+    "caf_feine666": {
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
+      "displayName": "Latte",
+      "bio": "i luv u a latte <3",
+      "blockedTerms": [],
+      "notificationsEnabled": true,
+      "userPosts": {},
+      "password": "666666",
+      "foodPreferences": [
+        "coffee",
+        "tea",
+        "monster energy ultra strawberry dreams"
       ],
-      "displayName": "a",
-      "following": [
-        "user3",
-        "user4"
-      ],
-      "name": "a",
-      "bio": "",
-      "posts": [
-        664869007304,
-        96137094387
-      ]
+      "followingAccounts": {},
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {},
+      "username": "caf_feine666"
     },
     "rotmaxxer": {
-      "password": "7-11 cookies are buy one get one free on thursdays for members",
-      "preferences": "cheese, corfee",
-      "followers": [
-        "user1",
-        "user2"
-      ],
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
       "displayName": "rotmaxxer",
-      "following": [
-        "user3",
-        "user4"
-      ],
-      "name": "janya",
       "bio": "",
-      "posts": [528862940581]
+      "blockedTerms": [],
+      "notificationsEnabled": false,
+      "userPosts": {},
+      "password": "7-11 cookies are buy one get one free on thursdays for members",
+      "foodPreferences": [
+        "cheese",
+        "corfee"
+      ],
+      "followingAccounts": {"john pork of texus": {
+        "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+        "displayName": "Johnathan",
+        "username": "john pork of texus"
+      }},
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {},
+      "username": "rotmaxxer"
     },
     "jinufan333": {
-      "password": "woofwoof",
-      "preferences": "cooking, travel",
-      "followers": [
-        "user1",
-        "user2"
-      ],
-      "displayName": "jinufan333",
-      "following": [
-        "user3",
-        "user4"
-      ],
-      "name": "emilia",
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
+      "displayName": "Emilia",
       "bio": "professional gorper",
-      "posts": [362171472867]
+      "blockedTerms": [],
+      "notificationsEnabled": true,
+      "userPosts": {},
+      "password": "woofwoof",
+      "foodPreferences": [""],
+      "followingAccounts": {},
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {"john pork of texus": {
+        "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+        "displayName": "Johnathan",
+        "username": "john pork of texus"
+      }},
+      "username": "jinufan333"
     }
   }
 }
