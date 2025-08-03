@@ -66,33 +66,59 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         // Store account data
         userJson.put("username", account.getUsername());
         userJson.put("password", account.getPassword());
-        userJson.put("name", account.getUsername());
         userJson.put("email", account.getEmail());
         userJson.put("bio", account.getBio());
+        userJson.put("displayName", account.getDisplayName());
+        userJson.put("profilePictureUrl", account.getProfilePictureUrl());
+
+        // Store booleans
+        userJson.put("isPublic", account.isPublic());
+        userJson.put("notificationsEnabled", account.isNotificationsEnabled());
 
         // Store lists and maps
         userJson.put("likesUsernames", new JSONArray(account.getLikesUsernames()));
-        userJson.put("followingAccounts", new JSONArray(account.getFollowingAccounts()));
         userJson.put("blockedTerms", new JSONArray(account.getBlockedTerms()));
         userJson.put("foodPreferences", new JSONArray(account.getFoodPreferences()));
 
-        // Store maps (only store usernames, reconstruct objects on load)
+        // Store maps (only store username, display name, profile picture url reconstruct objects on load)
         JSONObject followerAccountsJson = new JSONObject();
         for (String key : account.getFollowerAccounts().keySet()) {
-            followerAccountsJson.put(key, account.getFollowerAccounts().get(key).getUsername());
+            JSONObject followerJson = new JSONObject();
+            followerJson.put("username", account.getFollowerAccounts().get(key).getUsername());
+            followerJson.put("displayName", account.getFollowerAccounts().get(key).getDisplayName());
+            followerJson.put("profilePictureUrl", account.getFollowerAccounts().get(key).getProfilePictureUrl());
+            followerAccountsJson.put(key, followerJson);
         }
         userJson.put("followerAccounts", followerAccountsJson);
 
+        JSONObject followingAccountsJson = new JSONObject();
+        for (String key : account.getFollowingAccounts().keySet()) {
+            JSONObject followingJson = new JSONObject();
+            followingJson.put("username", account.getFollowingAccounts().get(key).getUsername());
+            followingJson.put("displayName", account.getFollowingAccounts().get(key).getDisplayName());
+            followingJson.put("profilePictureUrl", account.getFollowingAccounts().get(key).getProfilePictureUrl());
+            followingAccountsJson.put(key, followingJson);
+        }
+        userJson.put("followingAccounts", followingAccountsJson);
+
         JSONObject blockedAccountsJson = new JSONObject();
         for (String key : account.getBlockedAccounts().keySet()) {
-            blockedAccountsJson.put(key, account.getBlockedAccounts().get(key).getUsername());
+            JSONObject blockedJson = new JSONObject();
+            blockedJson.put("username", account.getBlockedAccounts().get(key).getUsername());
+            blockedJson.put("displayName", account.getBlockedAccounts().get(key).getDisplayName());
+            blockedJson.put("profilePictureUrl", account.getBlockedAccounts().get(key).getProfilePictureUrl());
+            blockedAccountsJson.put(key, blockedJson);
         }
         userJson.put("blockedAccounts", blockedAccountsJson);
 
         // Store muted accounts (usernames only)
         JSONArray mutedAccountsJson = new JSONArray();
         for (User mutedAccount : account.getMutedAccounts()) {
-            mutedAccountsJson.put(mutedAccount.getUsername());
+            JSONObject mutedJSON = new JSONObject();
+            mutedJSON.put("username", account.getUsername());
+            mutedJSON.put("displayName", account.getDisplayName());
+            mutedJSON.put("profilePictureUrl", account.getProfilePictureUrl());
+            mutedAccountsJson.put(mutedJSON);
         }
         userJson.put("mutedAccounts", mutedAccountsJson);
 
@@ -127,12 +153,16 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         }
 
         JSONObject userJson = users.getJSONObject(username);
-        Account account = new Account(userJson.getString("displayName"), userJson.getString("password"));
+        Account account = new Account(userJson.getString("username"), userJson.getString("password"));
 
         // Set basic properties
-        account.setDisplayName(userJson.optString("name", ""));
+        account.setDisplayName(userJson.optString("displayName", ""));
         account.setEmail(userJson.optString("email", ""));
         account.setBio(userJson.optString("bio", ""));
+        account.setProfilePictureUrl(userJson.optString("profilePictureUrl",
+                "https://i.imgur.com/eA9NeJ1.jpeg"));
+        account.setPublic(userJson.optBoolean("isPublic", true));
+        account.setNotificationsEnabled(userJson.optBoolean("notificationsEnabled", true));
 
         // Load lists
         if (userJson.has("likesUsernames")) {
@@ -142,15 +172,6 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
                 likes.add(likesArray.getLong(i));
             }
             account.setLikesUsernames(likes);
-        }
-
-        if (userJson.has("followingAccounts")) {
-            HashMap<String, User> following = new HashMap<>();
-            JSONArray followingArray = userJson.getJSONArray("followingAccounts");
-            for (int i = 0; i < followingArray.length(); i++) {
-                following.put(followingArray.getString(i), get(followingArray.getString(i)));
-            }
-            account.setFollowingAccounts(following);
         }
 
         // Load blocked terms and food preferences
@@ -173,25 +194,51 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         }
 
         // Load maps and complex objects
-        // Note: For follower, blocked, and muted accounts, we only store usernames and
-        // create stub Account objects. Full account data would need to be loaded separately if needed.
+        // Note: For follower, following, blocked, and muted accounts, we only store usernames, display names, and
+        // profile picture urls, and create stub Account objects.
+        // Full account data would need to be loaded separately if needed.
 
         if (userJson.has("followerAccounts")) {
             HashMap<String, User> followers = new HashMap<>();
             JSONObject followersJson = userJson.getJSONObject("followerAccounts");
             for (String key : followersJson.keySet()) {
-                String followerUsername = followersJson.getString(key);
-                followers.put(key, new Account(followerUsername, ""));
+                String followerUsername = followersJson.getJSONObject(key).getString("username");
+                String followerDisplayName = followersJson.getJSONObject(key).getString("displayName");
+                String followerPictureUrl = followersJson.getJSONObject(key).getString("profilePictureUrl");
+                User follower = new Account(followerUsername, "");
+                follower.setDisplayName(followerDisplayName);
+                follower.setProfilePictureUrl(followerPictureUrl);
+                followers.put(key, follower);
             }
             account.setFollowerAccounts(followers);
+        }
+
+        if (userJson.has("followingAccounts")) {
+            HashMap<String, User> following = new HashMap<>();
+            JSONObject followingJson = userJson.getJSONObject("followingAccounts");
+            for (String key : followingJson.keySet()) {
+                String followingUsername = followingJson.getJSONObject(key).getString("username");
+                String followingDisplayName = followingJson.getJSONObject(key).getString("displayName");
+                String followingPictureUrl = followingJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToFollow = new Account(followingUsername, "");
+                accountToFollow.setDisplayName(followingDisplayName);
+                accountToFollow.setProfilePictureUrl(followingPictureUrl);
+                following.put(key, accountToFollow);
+            }
+            account.setFollowingAccounts(following);
         }
 
         if (userJson.has("blockedAccounts")) {
             HashMap<String, User> blocked = new HashMap<>();
             JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
             for (String key : blockedJson.keySet()) {
-                String blockedUsername = blockedJson.getString(key);
-                blocked.put(key, new Account(blockedUsername, ""));
+                String blockedUsername = blockedJson.getJSONObject(key).getString("username");
+                String blockedDisplayName = blockedJson.getJSONObject(key).getString("displayName");
+                String blockedPictureUrl = blockedJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToBlock = new Account(blockedUsername, "");
+                accountToBlock.setDisplayName(blockedDisplayName);
+                accountToBlock.setProfilePictureUrl(blockedPictureUrl);
+                blocked.put(key, accountToBlock);
             }
             account.setBlockedAccounts(blocked);
         }
@@ -200,7 +247,13 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             ArrayList<User> muted = new ArrayList<>();
             JSONArray mutedArray = userJson.getJSONArray("mutedAccounts");
             for (int i = 0; i < mutedArray.length(); i++) {
-                muted.add(new Account(mutedArray.getString(i), ""));
+                String mutedUsername = mutedArray.getJSONObject(i).getString("username");
+                String mutedDisplayName = mutedArray.getJSONObject(i).getString("displayName");
+                String mutedPictureUrl = mutedArray.getJSONObject(i).getString("profilePictureUrl");
+                User accountToMute = new Account(mutedUsername, "");
+                accountToMute.setDisplayName(mutedDisplayName);
+                accountToMute.setProfilePictureUrl(mutedPictureUrl);
+                muted.add(accountToMute);
             }
             account.setMutedAccounts(muted);
         }
@@ -313,15 +366,21 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void removeFollower(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
         user.getFollowerAccounts().remove(removedUsername);
+        removedUser.getFollowingAccounts().remove(username);
         save(user);
+        save(removedUser);
     }
 
     @Override
     public void removeFollowing(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
         user.getFollowingAccounts().remove(removedUsername);
+        removedUser.getFollowerAccounts().remove(username);
         save(user);
+        save(removedUser);
     }
 
     @Override
@@ -338,15 +397,23 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public boolean canFollow(String username, String otherUsername){
-        // TODO: implement this
-        return true;
+        if (get(username) != null && get(otherUsername) != null) {
+            User user = get(username);
+            return !user.getFollowingAccounts().containsKey(otherUsername) && !username.equals(otherUsername);
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
     public void addFollowing(String username, String otherUsername){
         User user = get(username);
-        user.getFollowingAccounts().put(otherUsername, get(otherUsername));
+        User followedUser = get(otherUsername);
+        user.getFollowingAccounts().put(otherUsername, followedUser);
+        followedUser.getFollowerAccounts().put(username, user);
         save(user);
+        save(followedUser);
     }
 }
 
