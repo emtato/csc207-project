@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import use_case.like_post.LikePostInputData;
+import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.RoundedButton;
@@ -75,7 +77,7 @@ public class PostView extends JPanel {
     private final RoundedButton commentButton = new RoundedButton("coment");
 
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
-
+    private LikePostInteractor likePostInteractor;
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
@@ -86,6 +88,7 @@ public class PostView extends JPanel {
         this.post = post;
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
+        this.likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
 
         mainPanel = new JPanel(new BorderLayout());
 
@@ -436,21 +439,20 @@ public class PostView extends JPanel {
      */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            //DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            LikePostInputData inputData = new LikePostInputData(post.getID(), isLiking);
+            likePostInteractor.execute(inputData);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
-                postCommentsLikesDataAccessObject.updateLikesForPost(post.getID(), 1);
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
-                postCommentsLikesDataAccessObject.updateLikesForPost(post.getID(), -1);
-
             }
+            liked = isLiking;
+
             subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
