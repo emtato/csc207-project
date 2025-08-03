@@ -146,6 +146,7 @@ public class AppBuilder {
     public AppBuilder addHomePageView() {
         homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(homePageView, homePageView.getViewName());
+        viewManagerModel.setHomePageView(homePageView);
         return this;
     }
 
@@ -251,6 +252,7 @@ public class AppBuilder {
         // TODO: add the use case and move the data access object out of the view and into the interactor
         createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
+        viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
     }
 

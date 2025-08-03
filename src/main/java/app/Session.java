@@ -24,10 +24,12 @@ public class Session {
     public static String getCurrentUsername() {
         return currentUsername;
     }
+
     public static void setCurrentAccount() {
         FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
         currentAccount = (Account) fileUserDataAccessObject.get(currentUsername);
     }
+
     public static Account getCurrentAccount() {
         return currentAccount;
     }
