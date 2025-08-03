@@ -286,6 +286,8 @@ public class PostView extends JPanel {
         scrollPane.setPreferredSize(new Dimension(1300, 700));
         scrollPane.setBorder(null);
 
+
+
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {

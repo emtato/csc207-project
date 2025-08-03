@@ -33,8 +33,8 @@ public interface User {
     HashMap<String, User> getFollowingAccounts();
     void setFollowingAccounts(HashMap<String, User> followingAccounts);
 
-    HashMap<Long, Post> getUserPosts();
-    void setUserPosts(HashMap<Long, Post> userPosts);
+    ArrayList<Long> getUserPosts();
+    void setUserPosts(ArrayList<Long> userPosts);
 
     /**
      * Returns the password of the user.

@@ -29,10 +29,14 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String profilePictureUrl = user.getProfilePictureUrl();
         final int numFollowers = user.getNumFollowers();
         final int numFollowing = user.getNumFollowing();
-        final HashMap<Long, Post> posts = user.getUserPosts();
+        final ArrayList<Long> posts = user.getUserPosts();
+        final HashMap<Long, Post> postsMap = new HashMap<>();
+        for (Long postId : posts) {
+            postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
+        }
 
         final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePictureUrl,
-                numFollowers, numFollowing, posts);
+                numFollowers, numFollowing, postsMap);
         presenter.prepareSuccessView(profileOutputData);
     }
 

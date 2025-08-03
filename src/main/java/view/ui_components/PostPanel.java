@@ -193,6 +193,7 @@ public class PostPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
     }
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {

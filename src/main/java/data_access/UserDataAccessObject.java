@@ -2,6 +2,7 @@ package data_access;
 
 import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.edit_profile.EditProfileUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -23,6 +24,7 @@ public interface UserDataAccessObject extends
         ProfileUserDataAccessInterface,
         EditProfileUserDataAccessInterface,
         ManageFollowingUserDataAccessInterface,
-        ManageFollowersUserDataAccessInterface {
+        ManageFollowersUserDataAccessInterface,
+        CreatePostDataAccessInterface {
 
 }
