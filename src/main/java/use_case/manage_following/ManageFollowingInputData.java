@@ -5,17 +5,17 @@ package use_case.manage_following;
  */
 public class ManageFollowingInputData {
     private final String username;
-    private final String unfollowedUsername;
-    public ManageFollowingInputData(String username, String unfollowedUsername) {
+    private final String otherUsername;
+    public ManageFollowingInputData(String username, String otherUsername) {
         this.username = username;
-        this.unfollowedUsername = unfollowedUsername;
+        this.otherUsername = otherUsername;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getUnfollowedUsername() {
-        return unfollowedUsername;
+    public String getOtherUsername() {
+        return otherUsername;
     }
 }

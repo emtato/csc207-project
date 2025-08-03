@@ -72,6 +72,7 @@ public class ProfilePresenter implements ProfileOutputBoundary {
         final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
         manageFollowingState.setUsername(outputData.getUsername());
         manageFollowingState.setFollowing(outputData.getFollowing());
+        manageFollowingState.setOtherUsername("Enter username to follow");
         manageFollowingViewModel.setState(manageFollowingState);
         manageFollowingViewModel.firePropertyChanged();
         viewManagerModel.setState(manageFollowingViewModel.getViewName());

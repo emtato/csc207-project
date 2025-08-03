@@ -12,4 +12,8 @@ public interface ManageFollowingUserDataAccessInterface extends UserDataAccessIn
      * @param removedUsername the user to remove
      */
     void removeFollowing(String currentUsername, String removedUsername);
+
+    boolean canFollow(String username, String otherUsername);
+
+    void addFollowing(String username, String otherUsername);
 }

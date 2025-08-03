@@ -1,9 +1,6 @@
 package use_case.manage_following;
 
 import entity.User;
-import use_case.manage_followers.ManageFollowersOutputBoundary;
-import use_case.manage_followers.ManageFollowersOutputData;
-import use_case.manage_followers.ManageFollowersUserDataAccessInterface;
 
 import java.util.ArrayList;
 
@@ -20,11 +17,27 @@ public class ManageFollowingInteractor implements ManageFollowingInputBoundary{
     @Override
     public void executeUnfollow(ManageFollowingInputData manageFollowingInputData) {
         userDataAccessObject.removeFollowing(manageFollowingInputData.getUsername(),
-                manageFollowingInputData.getUnfollowedUsername());
+                manageFollowingInputData.getOtherUsername());
         final User user = userDataAccessObject.get(manageFollowingInputData.getUsername());
         final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
         final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following);
         presenter.prepareSuccessView(outputData);
+    }
+
+    @Override
+    public void executeFollow(ManageFollowingInputData manageFollowingInputData) {
+        if (userDataAccessObject.canFollow(manageFollowingInputData.getUsername(),
+                manageFollowingInputData.getOtherUsername())){
+            userDataAccessObject.addFollowing(manageFollowingInputData.getUsername(),
+                    manageFollowingInputData.getOtherUsername());
+            final User user = userDataAccessObject.get(manageFollowingInputData.getUsername());
+            final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
+            final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following);
+            presenter.prepareSuccessView(outputData);
+        }
+        else {
+            presenter.prepareFailView("Error occurred while following user");
+        }
     }
 
     @Override

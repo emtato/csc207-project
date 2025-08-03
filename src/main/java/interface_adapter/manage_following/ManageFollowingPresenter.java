@@ -32,6 +32,10 @@ public class ManageFollowingPresenter implements ManageFollowingOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
+        final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
+        manageFollowingState.setOtherUsername(error);
+        manageFollowingViewModel.setState(manageFollowingState);
+        manageFollowingViewModel.firePropertyChanged();
     }
 
     @Override
