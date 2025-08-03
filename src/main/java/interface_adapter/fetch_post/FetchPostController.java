@@ -1,0 +1,35 @@
+package interface_adapter.fetch_post;/**
+ * Created by Emilia on 2025-08-03!
+ * Description:
+ * ^ • ω • ^
+ */
+
+import use_case.fetch_post.FetchPostInputBoundary;
+import entity.Post;
+import use_case.fetch_post.FetchPostInputData;
+import use_case.fetch_post.FetchPostInteractor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FetchPostController {
+    private final FetchPostInputBoundary interactor;
+
+    public FetchPostController(FetchPostInputBoundary interactor) {
+        this.interactor = interactor;
+    }
+
+    public void fetch(long postID) {
+        interactor.execute(new FetchPostInputData(postID));
+    }
+
+    public List<Post> getRandomFeedPosts(int count) {
+        return ((FetchPostInteractor) interactor).getRandomFeedPosts(count); //using one implementation only
+    }
+
+
+    public List<Long> getAvailablePostIDs() {
+        return ((FetchPostInteractor) interactor).getAvailablePostIDs();
+    }
+}
+

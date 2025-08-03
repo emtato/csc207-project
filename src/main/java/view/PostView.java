@@ -2,7 +2,6 @@ package view;
 
 import data_access.DBPostCommentLikesDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
-import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -29,8 +28,10 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import interface_adapter.fetch_post.FetchPostController;
 import use_case.comment.CommentPostInputData;
 import use_case.comment.CommentPostInteractor;
+import use_case.fetch_post.FetchPostInteractor;
 import use_case.like_post.LikePostInputData;
 import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
@@ -264,16 +265,13 @@ public class PostView extends JPanel {
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
-        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
-        currentLoggedInUser = (Account) fileUserDataAccessObject.get(Session.getCurrentUsername());
+        currentLoggedInUser = Session.getCurrentAccount();
 
         centerPanel.removeAll();
         liked = false;
         likeButton.setText("like");
+        xPresent = false;
         //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
-        //DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
-        //refresh post info:
-        newPost = this.postCommentsLikesDataAccessObject.getPost(newPost.getID());
         this.post = newPost;
 
         postText = new JPanel();
@@ -285,7 +283,7 @@ public class PostView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(1300, 750));
+        scrollPane.setPreferredSize(new Dimension(1300, 700));
         scrollPane.setBorder(null);
 
         if (post.isImageVideo()) {
@@ -331,8 +329,6 @@ public class PostView extends JPanel {
                 throw new RuntimeException(e);
             }
         }
-
-        scrollPane.setPreferredSize(new Dimension(1200, 600));
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
