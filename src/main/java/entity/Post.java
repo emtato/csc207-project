@@ -1,6 +1,6 @@
 package entity;
 
-import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FilePostCommentLikesDataAccessObject;
 
 import java.util.Locale;
 import java.time.LocalDateTime;
@@ -193,8 +193,8 @@ public class Post {
     }
 
     public ArrayList<Comment> getComments() {
-        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-        ArrayList<Comment> comments = DBPostCommentLikesDataAccessObject.getComments(postID);
+        FilePostCommentLikesDataAccessObject filePostCommentLikesDataAccessObject = new FilePostCommentLikesDataAccessObject();
+        ArrayList<Comment> comments = filePostCommentLikesDataAccessObject.getComments(postID);
         return comments;
     }
 

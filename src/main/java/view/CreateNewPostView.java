@@ -1,13 +1,9 @@
 package view;
 
 import app.Session;
-import data_access.DBPostCommentLikesDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
-import entity.Account;
-import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import use_case.create_post.CreatePostInputBoundary;
 import use_case.create_post.CreatePostInputData;
 import use_case.create_post.CreatePostInteractor;
 import view.ui_components.MenuBarPanel;
@@ -28,11 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 

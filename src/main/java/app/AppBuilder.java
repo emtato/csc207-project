@@ -8,9 +8,7 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 import data_access.UserDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.InMemoryPostCommentLikesDataAccessObject;
-import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FilePostCommentLikesDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.*;
@@ -104,7 +102,7 @@ public class AppBuilder {
     private final UserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
     //private final UserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            new DBPostCommentLikesDataAccessObject();
+            new FilePostCommentLikesDataAccessObject();
 
     private PostViewModel postViewModel;
     private PostView postView;

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
+public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
 
 
