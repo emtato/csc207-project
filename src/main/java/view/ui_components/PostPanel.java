@@ -1,8 +1,11 @@
 package view.ui_components;
 
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
+import use_case.like_post.LikePostInteractor;
 import view.PostView;
 
 import javax.swing.*;
@@ -49,10 +52,14 @@ public class PostPanel extends JPanel {
     private boolean liked;
     private JPanel centerPanel;
     private JPanel bottomPanel;
+    private LikePostController likePostController;
+    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
+        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
 
 
         setLayout(new BorderLayout());
@@ -198,18 +205,20 @@ public class PostPanel extends JPanel {
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            likePostController.likePost(post.getID(), isLiking);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            liked = isLiking;
+
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == saveButton) {

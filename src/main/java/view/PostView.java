@@ -35,6 +35,8 @@ import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
+import interface_adapter.like_post.LikePostController;
+import interface_adapter.write_comment.WriteCommentController;
 import use_case.analyze_recipe.AnalyzeRecipeInteractor;
 import use_case.analyze_recipe.SpoonacularAccessInterface;
 import use_case.comment.CommentPostInputData;
@@ -89,9 +91,10 @@ public class PostView extends JPanel {
     private final RoundedButton shareButton = new RoundedButton("Share");
     private final RoundedButton commentButton = new RoundedButton("coment");
 
+    //use cases
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
-    private LikePostInteractor likePostInteractor;
-    private CommentPostInteractor commentPostInteractor;
+    private LikePostController likePostController;
+    private WriteCommentController writeCommentController;
     private GetCommentsController getCommentsController;
     private final GetCommentsViewModel getCommentsViewModel = new GetCommentsViewModel();
     private AnalyzeRecipeController analyzeRecipeController;
@@ -110,8 +113,8 @@ public class PostView extends JPanel {
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
         this.spoonacularAPI = new SpoonacularAPI();
-        this.likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
-        this.commentPostInteractor = new CommentPostInteractor(postCommentsLikesDataAccessObject);
+        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
+        this.writeCommentController = new WriteCommentController(new CommentPostInteractor(postCommentsLikesDataAccessObject));
         this.getCommentsController = new GetCommentsController(
                 new GetCommentsInteractor(postCommentsLikesDataAccessObject,
                         new GetCommentsPresenter(getCommentsViewModel))
@@ -437,8 +440,7 @@ public class PostView extends JPanel {
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
             boolean isLiking = !liked;
-            LikePostInputData inputData = new LikePostInputData(post.getID(), isLiking);
-            likePostInteractor.execute(inputData);
+            likePostController.likePost(post.getID(), isLiking);
 
             if (isLiking) {
                 likeButton.setText("Unlike");
@@ -547,8 +549,7 @@ public class PostView extends JPanel {
 //                    Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
 //                    lst.add(comment);
 
-                    CommentPostInputData inputData = new CommentPostInputData(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
-                    commentPostInteractor.execute(inputData);
+                    writeCommentController.writeComment(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });

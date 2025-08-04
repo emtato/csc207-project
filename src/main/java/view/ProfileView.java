@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
@@ -45,6 +47,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followersButton;
     private final JPanel profileContent;
     private final JScrollPane profileContentPanel;
+    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject = FilePostCommentLikesDataAccessObject.getInstance();
 
 
     public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
@@ -185,7 +188,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
             for (Long id : posts.keySet()) {
                 final Post post = posts.get(id);
                 PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
-                        ProfileViewModel.POST_HEIGHT);
+                        ProfileViewModel.POST_HEIGHT, postCommentsLikesDataAccessObject);
                 profileContent.add(postPanel);
             }
         }
