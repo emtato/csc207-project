@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.Account;
-import entity.Post;
 import entity.User;
 import org.json.JSONObject;
 import org.json.JSONArray;
