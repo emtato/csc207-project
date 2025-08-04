@@ -127,13 +127,8 @@ public class HomePageView extends JPanel {
             postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());
-//commented out due to lack of horizontal space (to make window fit on all screen sizes)
-//            feedRow.add(Box.createRigidArea(new Dimension(20, 0))); // spacing
-//            feedRow.add(new JLabel("placeholder for clubs list", 22, Color.RED, 3)); // clubs
-//            feedRow.add(Box.createHorizontalGlue());
 
             feedPanel.add(feedRow);
-            //feedPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
     }
 
