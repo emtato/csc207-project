@@ -54,7 +54,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
      * @return JSONObject .
      */
     @NotNull
-    private JSONObject getJsonObject() throws Exception {
+    private JSONObject getJsonObject() throws DataAccessException {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -73,7 +73,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return data.getJSONObject(DATA_KEY);
             }
             else {
-                throw new Exception(responseBody.getString(MESSAGE));
+                throw new DataAccessException(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -86,7 +86,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
      *
      * @return JSONObject .
      */
-    private JSONObject getInfo() throws Exception {
+    private JSONObject getInfo() throws DataAccessException {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -105,7 +105,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return data;
             }
             else {
-                throw new Exception(responseBody.getString(MESSAGE));
+                throw new DataAccessException(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -116,7 +116,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     /**
      * Writes the JSON object to the "database"
      */
-    private boolean saveJSONObject(JSONObject data) throws Exception {
+    private boolean saveJSONObject(JSONObject data) throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
@@ -143,14 +143,14 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return true;
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
-                throw new Exception("message could not be found or password was incorrect");
+                throw new DataAccessException("message could not be found or password was incorrect");
             }
             else {
-                throw new Exception("database error: " + responseBody.getString(MESSAGE));
+                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
-            throw new Exception(ex.getMessage());
+            throw new DataAccessException(ex.getMessage());
         }
     }
 
@@ -160,7 +160,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (Exception ex) {}
+        catch (DataAccessException ex) {}
         return data.has("users") && data.getJSONObject("users").has(identifier);
     }
 
@@ -253,7 +253,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         users.put(account.getUsername(), userJson);
         try {
             saveJSONObject(data);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -265,7 +265,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (Exception ex) {}
+        catch (DataAccessException ex) {}
 
         if (!data.has("users")) {
             return null;
@@ -531,7 +531,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 System.out.println("User not found, delete unsuccessful");
             }
         }
-        catch (Exception e) {
+        catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
     }

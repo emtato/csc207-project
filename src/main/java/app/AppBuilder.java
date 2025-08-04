@@ -95,9 +95,9 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
+    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            FilePostCommentLikesDataAccessObject.getInstance();
+            DBPostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
