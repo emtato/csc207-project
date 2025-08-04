@@ -99,11 +99,9 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = new FileUserDataAccessObject();
-    //private final UserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            new FilePostCommentLikesDataAccessObject();
-
+            FilePostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -260,7 +258,7 @@ public class AppBuilder {
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         // TODO: add the use case and move the data access object out of the view and into the interactor
-        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject);
+        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;

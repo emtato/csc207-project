@@ -19,8 +19,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
+
+    private static PostCommentsLikesDataAccessObject instance;
+
     private String filePath = "src/main/java/data_access/data_storage.json";
 
+    private FilePostCommentLikesDataAccessObject() {
+    }
+
+    public static PostCommentsLikesDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new FilePostCommentLikesDataAccessObject();
+        }
+        return instance;
+    }
 
     /**
      * method to reduce duplicate code, retrieves JSONObject from file

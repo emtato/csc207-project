@@ -1,6 +1,7 @@
 package use_case.settings;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.CreateAccount;
 import entity.User;
 import entity.UserFactory;
@@ -13,7 +14,7 @@ class SettingsInteractorTest {
     void privacyToggleOffSuccessTest() {
         final boolean isPublic = false;
         SettingsInputData inputData = new SettingsInputData("Caf Feine", isPublic);
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
 
         // Add Caf Feine to the user repository.
         UserFactory factory = new CreateAccount();
@@ -46,12 +47,12 @@ class SettingsInteractorTest {
     @Test
     void notificationsToggleOffSuccessTest() {
         final boolean notificationsEnabled = false;
-        SettingsInputData inputData = new SettingsInputData("Caf Feine", notificationsEnabled);
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        SettingsInputData inputData = new SettingsInputData("Caf", notificationsEnabled);
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
 
-        // Add Caf Feine to the user repository.
+        // Add Caf to the user repository.
         UserFactory factory = new CreateAccount();
-        User user = factory.create("Caf Feine", "password");
+        User user = factory.create("Caf", "password");
         userRepository.save(user);
 
         // This creates a successPresenter that tests whether the test case is as we expect.
@@ -59,7 +60,7 @@ class SettingsInteractorTest {
             @Override
             public void prepareNotificationsSuccessView(SettingsOutputData outputData) {
                 assertEquals(notificationsEnabled, outputData.isOn());
-                assertEquals(notificationsEnabled, userRepository.get("Caf Feine").isNotificationsEnabled());
+                assertEquals(notificationsEnabled, userRepository.get("Caf").isNotificationsEnabled());
             }
 
             @Override

@@ -2,6 +2,8 @@ package use_case.profile;
 
 import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.CreateAccount;
 import entity.Post;
 import entity.User;
@@ -18,8 +20,8 @@ class ProfileInteractorTest {
     @Test
     void viewProfileSuccessTest() {
         ProfileInputData inputData = new ProfileInputData("Caf Feine");
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
-        InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
         // Add Caf Feine to the user repository.
         UserFactory factory = new CreateAccount();
@@ -72,12 +74,12 @@ class ProfileInteractorTest {
 
     @Test
     void viewProfileCustomUserSuccessTest() {
-        final ProfileInputData inputData = new ProfileInputData("Caf Feine");
-        final InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
-        final InMemoryPostCommentLikesDataAccessObject dataRepository = new InMemoryPostCommentLikesDataAccessObject();
+        final ProfileInputData inputData = new ProfileInputData("Caf");
+        final UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // Add Caf Feine to the user repository with custom account details
-        final String username = "Caf Feine";
+        // Add Caf to the user repository with custom account details
+        final String username = "Caf";
         final String password = "password";
         final String displayName = "Latte";
         final String bio = "I love you a latte!";
@@ -112,13 +114,13 @@ class ProfileInteractorTest {
                 assertEquals(followingAccounts.size(), outputData.getNumFollowing());
                 assertEquals(userPosts, new ArrayList<>(outputData.getPosts().keySet()));
 
-                assertEquals(username, userRepository.get("Caf Feine").getUsername());
-                assertEquals(profilePictureUrl, userRepository.get("Caf Feine").getProfilePictureUrl());
-                assertEquals(bio, userRepository.get("Caf Feine").getBio());
-                assertEquals(displayName, userRepository.get("Caf Feine").getDisplayName());
-                assertEquals(followerAccounts.size(), userRepository.get("Caf Feine").getNumFollowers());
-                assertEquals(followingAccounts.size(), userRepository.get("Caf Feine").getNumFollowing());
-                assertEquals(userPosts, userRepository.get("Caf Feine").getUserPosts());
+                assertEquals(username, userRepository.get("Caf").getUsername());
+                assertEquals(profilePictureUrl, userRepository.get("Caf").getProfilePictureUrl());
+                assertEquals(bio, userRepository.get("Caf").getBio());
+                assertEquals(displayName, userRepository.get("Caf").getDisplayName());
+                assertEquals(followerAccounts.size(), userRepository.get("Caf").getNumFollowers());
+                assertEquals(followingAccounts.size(), userRepository.get("Caf").getNumFollowing());
+                assertEquals(userPosts, userRepository.get("Caf").getUserPosts());
             }
             @Override
             public void prepareFailView(String error) {

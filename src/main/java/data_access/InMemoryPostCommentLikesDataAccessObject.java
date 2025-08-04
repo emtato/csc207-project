@@ -15,10 +15,22 @@ import java.util.HashMap;
  * NOT persist data between runs of the program.
  */
 public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+    private static PostCommentsLikesDataAccessObject instance;
+
     HashMap<Long, ArrayList<Comment>> commentsMap = new HashMap<>();
     HashMap<Long, Club> clubsMap = new HashMap<>();
     HashMap<Long, Post> postsMap = new HashMap<>();
     HashMap<Account, ArrayList<Long>> likesMap = new HashMap<>();
+
+    private InMemoryPostCommentLikesDataAccessObject() {
+    }
+
+    public static PostCommentsLikesDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new InMemoryPostCommentLikesDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
