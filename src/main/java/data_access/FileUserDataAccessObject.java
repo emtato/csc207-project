@@ -4,7 +4,6 @@ import entity.Account;
 import entity.User;
 import org.json.JSONObject;
 import org.json.JSONArray;
-import use_case.note.DataAccessException;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -298,34 +297,6 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void changePassword(User user) {
         save(user); // Since save() updates all user data
-    }
-
-    @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            data.put("notes", new JSONObject());
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getUsername(), note);
-        data.put("notes", notes);
-
-        writeToFile(data);
-        return note;
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            return null;
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getUsername(), null);
     }
 
     @Override

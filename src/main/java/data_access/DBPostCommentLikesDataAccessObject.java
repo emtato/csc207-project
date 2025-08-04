@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.note.DataAccessException;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         JSONObject data = new JSONObject();
         try {
             data = getJsonObject();
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -64,7 +63,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             saveJSONObject(data);
         }
-        catch (DataAccessException e) {
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -76,7 +75,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      * @return JSONObject .
      */
     @NotNull
-    private JSONObject getJsonObject() throws DataAccessException {
+    private JSONObject getJsonObject() throws Exception {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -102,7 +101,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 }
             }
             else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
+                throw new Exception(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -145,7 +144,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      *
      * @return JSONObject .
      */
-    private JSONObject getInfo() throws DataAccessException {
+    private JSONObject getInfo() throws Exception {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -164,7 +163,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 return data;
             }
             else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
+                throw new Exception(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -172,7 +171,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         }
     }
 
-    private boolean saveJSONObject(JSONObject data) throws DataAccessException {
+    private boolean saveJSONObject(JSONObject data) throws Exception {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
@@ -199,14 +198,14 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 return true;
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
-                throw new DataAccessException("message could not be found or password was incorrect");
+                throw new Exception("message could not be found or password was incorrect");
             }
             else {
-                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+                throw new Exception("database error: " + responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
     }
 
@@ -217,7 +216,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -238,7 +237,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             saveJSONObject(data);
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -251,7 +250,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -277,7 +276,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -308,7 +307,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             saveJSONObject(data);
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -359,7 +358,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -396,7 +395,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             saveJSONObject(data);
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -407,7 +406,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -489,7 +488,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -504,7 +503,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 try {
                     saveJSONObject(data);
                 }
-                catch (DataAccessException ex) {
+                catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
             }
@@ -525,7 +524,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 

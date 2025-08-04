@@ -16,7 +16,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import use_case.note.DataAccessException;
 
 
 /**
@@ -55,7 +54,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
      * @return JSONObject .
      */
     @NotNull
-    private JSONObject getJsonObject() throws DataAccessException {
+    private JSONObject getJsonObject() throws Exception {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -74,7 +73,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return data.getJSONObject(DATA_KEY);
             }
             else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
+                throw new Exception(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -87,7 +86,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
      *
      * @return JSONObject .
      */
-    private JSONObject getInfo() throws DataAccessException {
+    private JSONObject getInfo() throws Exception {
         // Make an API call to get the user object.
         final String username = DATABASE_USERNAME;
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -106,7 +105,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return data;
             }
             else {
-                throw new DataAccessException(responseBody.getString(MESSAGE));
+                throw new Exception(responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
@@ -117,7 +116,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     /**
      * Writes the JSON object to the "database"
      */
-    private boolean saveJSONObject(JSONObject data) throws DataAccessException {
+    private boolean saveJSONObject(JSONObject data) throws Exception {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
@@ -144,14 +143,14 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 return true;
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
-                throw new DataAccessException("message could not be found or password was incorrect");
+                throw new Exception("message could not be found or password was incorrect");
             }
             else {
-                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+                throw new Exception("database error: " + responseBody.getString(MESSAGE));
             }
         }
         catch (IOException | JSONException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
     }
 
@@ -161,7 +160,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {}
+        catch (Exception ex) {}
         return data.has("users") && data.getJSONObject("users").has(identifier);
     }
 
@@ -173,7 +172,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {}
+        catch (Exception ex) {}
 
         if (!data.has("users")) {
             data.put("users", new JSONObject());
@@ -254,7 +253,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         users.put(account.getUsername(), userJson);
         try {
             saveJSONObject(data);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -266,7 +265,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {}
+        catch (Exception ex) {}
 
         if (!data.has("users")) {
             return null;
@@ -419,34 +418,6 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     }
 
     @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            data.put("notes", new JSONObject());
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getUsername(), note);
-        data.put("notes", notes);
-
-        saveJSONObject(data);
-        return note;
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            return null;
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getUsername(), null);
-    }
-
-    @Override
     public void updateDisplayName(User user, String newDisplayName) {
         user.setDisplayName(newDisplayName);
         save(user);
@@ -560,7 +531,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
                 System.out.println("User not found, delete unsuccessful");
             }
         }
-        catch (DataAccessException e) {
+        catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
