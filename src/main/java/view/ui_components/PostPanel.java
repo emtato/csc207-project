@@ -1,11 +1,9 @@
 package view.ui_components;
 
-import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.like_post.LikePostController;
-import use_case.like_post.LikePostInteractor;
 import view.PostView;
 
 import javax.swing.*;
@@ -53,14 +51,12 @@ public class PostPanel extends JPanel {
     private JPanel centerPanel;
     private JPanel bottomPanel;
     private LikePostController likePostController;
-    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
+                     LikePostController likePostController) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
-        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
-
+        this.likePostController = likePostController;
 
         setLayout(new BorderLayout());
 
@@ -239,7 +235,6 @@ public class PostPanel extends JPanel {
 
             PostView currentPostView = viewManagerModel.getPostView();
             currentPostView.displayPost(this.post);   // push the chosen post into it
-
 
         }
     }

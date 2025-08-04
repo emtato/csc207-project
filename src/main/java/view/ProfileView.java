@@ -15,11 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.DBPostCommentLikesDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
 import interface_adapter.view_profile.ProfileController;
 import interface_adapter.view_profile.ProfileState;
 import interface_adapter.view_profile.ProfileViewModel;
@@ -35,6 +33,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final ViewManagerModel viewManagerModel;
 
     private ProfileController profileController;
+    private LikePostController likePostController;
 
     private final ProfilePictureLabel profilePicture;
     private final JLabel displayName;
@@ -47,9 +46,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followersButton;
     private final JPanel profileContent;
     private final JButton refreshButton;
-    // TODO: remove this dependency
-    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            DBPostCommentLikesDataAccessObject.getInstance();
 
     public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
         this.profileViewModel = profileViewModel;
@@ -252,9 +248,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         if (!posts.isEmpty()) {
             for (Long id : posts.keySet()) {
                 final Post post = posts.get(id);
-                // TODO: remove dependence on dao
                 PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
-                        ProfileViewModel.POST_HEIGHT, postCommentsLikesDataAccessObject);
+                        ProfileViewModel.POST_HEIGHT, likePostController);
                 profileContent.add(postPanel);
             }
         }
@@ -268,6 +263,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
     public void setProfileController(ProfileController controller) {
         this.profileController = controller;
+    }
+    public void setLikePostController(LikePostController controller) {
+        this.likePostController = controller;
     }
 
 }
