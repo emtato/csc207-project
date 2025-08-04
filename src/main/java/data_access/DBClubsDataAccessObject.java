@@ -44,9 +44,33 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
             clubs = new JSONObject();
         }
         JSONObject newClub = new JSONObject();
+        newClub.put("id", clubID);
+
+        // Handle null members list
+        JSONArray memberArray = new JSONArray();
+        if (members != null) {
+            for (Account member : members) {
+                if (member != null) {
+                    memberArray.put(member.getUsername());
+                }
+            }
+        }
+        newClub.put("members", memberArray);
         newClub.put("name", name);
         newClub.put("description", description);
-        newClub.put("posts", posts);
+
+        // Handle null posts list
+        JSONArray postArray = new JSONArray();
+        if (posts != null) {
+            for (Post post : posts) {
+                postArray.put(post.getID());
+            }
+        }
+        newClub.put("posts", postArray);
+
+        // Handle null tags list
+        newClub.put("tags", new JSONArray(tags != null ? tags : new ArrayList<>()));
+
         clubs.put(String.valueOf(clubID), newClub);
         data.put("clubs", clubs);
 
@@ -54,7 +78,7 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
             writer.write(data.toString(2));
         }
         catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+            throw new RuntimeException("Failed to write club data to file: " + e.getMessage(), e);
         }
     }
 
