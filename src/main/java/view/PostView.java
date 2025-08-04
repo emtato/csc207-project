@@ -28,10 +28,15 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import interface_adapter.analyze_recipe.AnalyzeRecipeController;
+import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
+import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
+import use_case.analyze_recipe.AnalyzeRecipeInteractor;
+import use_case.analyze_recipe.SpoonacularAccessInterface;
 import use_case.comment.CommentPostInputData;
 import use_case.comment.CommentPostInteractor;
 import use_case.fetch_post.FetchPostInteractor;
@@ -89,6 +94,10 @@ public class PostView extends JPanel {
     private CommentPostInteractor commentPostInteractor;
     private GetCommentsController getCommentsController;
     private final GetCommentsViewModel getCommentsViewModel = new GetCommentsViewModel();
+    private AnalyzeRecipeController analyzeRecipeController;
+    private AnalyzeRecipeViewModel analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
+    private SpoonacularAPI spoonacularAPI;
+
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
@@ -100,12 +109,14 @@ public class PostView extends JPanel {
         this.post = post;
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
+        this.spoonacularAPI = new SpoonacularAPI();
         this.likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
         this.commentPostInteractor = new CommentPostInteractor(postCommentsLikesDataAccessObject);
         this.getCommentsController = new GetCommentsController(
                 new GetCommentsInteractor(postCommentsLikesDataAccessObject,
                         new GetCommentsPresenter(getCommentsViewModel))
         );
+        this.analyzeRecipeController = new AnalyzeRecipeController(new AnalyzeRecipeInteractor((SpoonacularAccessInterface) spoonacularAPI, new AnalyzeRecipePresenter(analyzeRecipeViewModel)));
         mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -137,110 +148,41 @@ public class PostView extends JPanel {
         // middle
         displayPost(post);
 
-        // PROBABLY CAN BE REMOVED, BUT I WANNA MAKE SURE DISPLAYPOST WORKS 100%
-        /*
-        // if has media:
-        int maxBoxHeight = 739123617;
-        if (post.isImageVideo()) {
-            try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                ArrayList<String> imageURLS = post.getImageURLs();
-                for (String imageURL : imageURLS) {
-                    URL url = new URL(imageURL);
-                    ImageIcon imageIcon = new ImageIcon(url);
-                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
-                    ImageIcon scaledIcon = new ImageIcon(img);
-                    JLabel image = new JLabel(scaledIcon);
-                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-                    imagePanel.add(image);
-                }
-                centerPanel.add(imagePanel);
-
-                maxBoxHeight = 350;
-            }
-            catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        postText.setEditable(false);
-        if (post instanceof Recipe || this.repice != null) {
-            this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
-            String ingredientsText = "";
-            ArrayList<String> ingredients = this.repice.getIngredients();
-            for (String ingredient : ingredients) {
-                ingredientsText += ingredient + "<br>";
-            }
-            System.out.println(ingredientsText);
-            String mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """
-                    </p>
-
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + ingredientsText + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                          </p>
-                          </body>
-                        </html>
-                    """;
-            postText.setContentType("text/html");
-            postText.setText(mainContent);
-        }
-        else {
-            postText.setText(post.getDescription());
-        }
-
-        JTextArea comments = new JTextArea();
-        scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
-        comments.setBackground(Color.PINK);
-        comments.setOpaque(true);
-*/
-
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         menuBar.setPreferredSize(new Dimension(1200, 100));
 
         // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
-        if (liked) {
-            likeButton.setText("unlike");
-        }
-        rightButtons.add(likeButton);
-        if (post instanceof Recipe) {
-            rightButtons.add(analyzeButton);
-        }
-        rightButtons.add(saveButton);
-        rightButtons.add(shareButton);
-        rightButtons.add(commentButton);
-        for (JButton button : rightButtons) {
-            button.setFont(text);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.addActionListener(e -> {
-                try {
-                    actionPerformed(e);
-                }
-                catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                    System.out.println("NOOOOOO D:");
-                }
-            });
-            rightPanel.add(button);
-            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 540)));
+//        if (liked) {
+//            likeButton.setText("unlike");
+//        }
+//        rightButtons.add(likeButton);
+//        if (post instanceof Recipe) {
+//            rightButtons.add(analyzeButton);
+//        }
+//        rightButtons.add(saveButton);
+//        rightButtons.add(shareButton);
+//        rightButtons.add(commentButton);
+//        for (JButton button : rightButtons) {
+//            button.setFont(text);
+//            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+//            button.addActionListener(e -> {
+//                try {
+//                    actionPerformed(e);
+//                }
+//                catch (IOException ex) {
+//                    throw new RuntimeException(ex);
+//                }
+//                catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                    System.out.println("NOOOOOO D:");
+//                }
+//            });
+//            rightPanel.add(button);
+//            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//        }
+//        rightPanel.add(Box.createRigidArea(new Dimension(0, 540)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -377,6 +319,43 @@ public class PostView extends JPanel {
         postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
         postText.add(Box.createRigidArea(new Dimension(10, 20)));
 
+        //redraw right buttons
+        rightPanel.removeAll();
+        ArrayList<JButton> rightButtons = new ArrayList<>();
+        if (liked) {
+            likeButton.setText("unlike");
+        }
+        rightButtons.add(likeButton);
+        if (post instanceof Recipe) {
+            rightButtons.add(analyzeButton);
+        }
+        rightButtons.add(saveButton);
+        rightButtons.add(shareButton);
+        rightButtons.add(commentButton);
+        for (JButton button : rightButtons) {
+            button.setFont(text);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            for (ActionListener old : button.getActionListeners()) {
+                button.removeActionListener(old);
+            }
+            button.addActionListener(e -> {
+                try {
+                    actionPerformed(e);
+                }
+                catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                    System.out.println("NOOOOOO D:");
+                }
+            });
+            rightPanel.add(button);
+            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 500)));
+
+
         if (newPost instanceof Recipe) {
             this.repice = (Recipe) newPost;
 
@@ -476,8 +455,9 @@ public class PostView extends JPanel {
         }
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
-            SpoonacularAPI spon = new SpoonacularAPI();
-            this.repice.setRestrictionsMap(spon.callAPI(repice));
+            analyzeRecipeController.analyze(repice);
+
+            this.repice.setRestrictionsMap((HashMap<String, String>) analyzeRecipeViewModel.getResult());
             HashMap<String, String> result = this.repice.getRestrictionsMap();
             System.out.println(result);
             String resultDisplay = "";
