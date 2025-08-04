@@ -121,6 +121,22 @@
     }]
   },
   "clubs": {
+    "1754332018447": {
+      "members": [],
+      "name": "adsg",
+      "description": "asdgf",
+      "id": 1754332018447,
+      "posts": [],
+      "tags": ["asdfg"]
+    },
+    "1754332203250": {
+      "members": [],
+      "name": "asdf",
+      "description": "adfs",
+      "id": 1754332203250,
+      "posts": [],
+      "tags": ["adf"]
+    },
     "2435234": {
       "members": [
         "JS javascuript",

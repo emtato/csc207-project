@@ -89,6 +89,7 @@ public class AppBuilder {
     // static instance of an AppBuilder
     private static AppBuilder instance;
 
+    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject();
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
@@ -163,7 +164,9 @@ public class AppBuilder {
     }
 
     public AppBuilder addCreateClubView() {
-        createClubView = new CreateClubView(viewManagerModel);
+        String currentUsername = userDataAccessObject.getCurrentUsername();
+        Account currentUser = (Account) userDataAccessObject.get(currentUsername);
+        createClubView = new CreateClubView(viewManagerModel, clubsDataAccessObject, currentUser);
         cardPanel.add(createClubView, createClubView.getViewName());
         return this;
     }
@@ -498,7 +501,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(loginView.getViewName());
+        viewManagerModel.setState(createClubView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
