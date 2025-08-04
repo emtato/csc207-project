@@ -2,8 +2,6 @@ package interface_adapter.login;
 
 import app.Session;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.LoggedInState;
-import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.view_profile.ProfileState;
 import interface_adapter.view_profile.ProfileViewModel;
 import interface_adapter.toggle_settings.SettingsState;

@@ -111,7 +111,6 @@ public class AppBuilder {
     private ManageFollowersViewModel manageFollowersViewModel;
     private ManageFollowingViewModel manageFollowingViewModel;
     private LoginView loginView;
-    private NoteView noteView;
     private ClubHomePageView clubHomePageView;
     private NotificationsView notificationsView;
     private ExploreEventsView exploreEventsView;
