@@ -14,11 +14,20 @@ public class SettingsController {
     }
 
     /**
-     * Executes the Change Settings Use Case.
+     * Executes the Change Privacy Use Case.
      */
-    public void execute() {
-        final SettingsInputData settingsInputData = new SettingsInputData();
-        settingsUseCaseInteractor.execute(settingsInputData);
+    public void executePrivacyToggle(String username, boolean privacy) {
+        final SettingsInputData settingsInputData = new SettingsInputData(username, privacy);
+        settingsUseCaseInteractor.executePrivacyToggle(settingsInputData);
     }
+
+    /**
+     * Executes the Change Notifications status Use Case.
+     */
+    public void executeNotificationsToggle(String username, boolean notificationsEnabled) {
+        final SettingsInputData settingsInputData = new SettingsInputData(username, notificationsEnabled);
+        settingsUseCaseInteractor.executeNotificationsToggle(settingsInputData);
+    }
+
 
 }

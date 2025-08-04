@@ -33,8 +33,8 @@ public interface User {
     HashMap<String, User> getFollowingAccounts();
     void setFollowingAccounts(HashMap<String, User> followingAccounts);
 
-    HashMap<Long, Post> getUserPosts();
-    void setUserPosts(HashMap<Long, Post> userPosts);
+    ArrayList<Long> getUserPosts();
+    void setUserPosts(ArrayList<Long> userPosts);
 
     /**
      * Returns the password of the user.
@@ -45,4 +45,10 @@ public interface User {
 
     ArrayList<String> getFoodPreferences();
     void setFoodPreferences(ArrayList<String> newPreferences);
+
+    boolean isPublic();
+    void setPublic(boolean isPublic);
+
+    boolean isNotificationsEnabled();
+    void setNotificationsEnabled(boolean notificationsEnabled);
 }

@@ -1,8 +1,7 @@
 package app;
 
+import java.awt.Dimension;
 import javax.swing.JFrame;
-import java.awt.*;
-
 
 /**
  * The Main class of our application.
@@ -14,7 +13,7 @@ public class Main {
      * @param args unused arguments
      */
     public static void main(String[] args) {
-        final AppBuilder appBuilder = new AppBuilder();
+        final AppBuilder appBuilder = AppBuilder.getInstance();
         final JFrame application = appBuilder
                 .addLoginView()
                 .addSignupView()

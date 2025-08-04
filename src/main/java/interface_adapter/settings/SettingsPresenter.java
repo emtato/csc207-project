@@ -18,16 +18,24 @@ public class SettingsPresenter implements SettingsOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(SettingsOutputData response) {
-        // TODO: On success, do somethings.
+    public void preparePrivacySuccessView(SettingsOutputData response) {
+        final SettingsState settingsState = settingsViewModel.getState();
+        settingsState.setIsPublic(response.isOn());
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged("privacy changed");
+    }
+
+    @Override
+    public void prepareNotificationsSuccessView(SettingsOutputData response) {
+        final SettingsState settingsState = settingsViewModel.getState();
+        settingsState.setNotificationsEnabled(response.isOn());
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged("notifications changed");
     }
 
     @Override
     public void prepareFailView(String error) {
         final SettingsState settingsState = settingsViewModel.getState();
-        // TODO: On failure, do something
-        //settingsState.setUsernameError(error);
-        //settingsViewModel.firePropertyChanged();
     }
 
 }

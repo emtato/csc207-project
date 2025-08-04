@@ -20,12 +20,17 @@ public class Account implements User {
     private ArrayList<User> mutedAccounts;
     private ArrayList<String> foodPreferences;
     private ArrayList<Long> likesUsernames;
-    private HashMap<Long, Post> userPosts;
+    private ArrayList<Long> userPosts;
+    private boolean isPublic;
+    private boolean notificationsEnabled;
 
     public Account(String username, String password) {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
         this.username = username;
         this.password = password;
+        this.bio = "";
+        this.displayName = "";
+        this.email = "";
         likesUsernames = new ArrayList<>();
         followingAccounts = new HashMap<>();
         followerAccounts = new HashMap<>();
@@ -33,7 +38,20 @@ public class Account implements User {
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
+        userPosts = new ArrayList<>();
+        isPublic = true;
+        notificationsEnabled = true;
     }
+    @Override
+    public boolean isPublic(){
+        return isPublic;
+    }
+
+    @Override
+    public void setPublic(boolean isPublic){
+        this.isPublic = isPublic;
+    }
+
     @Override
     public String getProfilePictureUrl() {return profilePictureUrl;}
 
@@ -202,12 +220,22 @@ public class Account implements User {
     }
 
     @Override
-    public HashMap<Long, Post> getUserPosts() {
+    public ArrayList<Long> getUserPosts() {
         return userPosts;
     }
 
     @Override
-    public void setUserPosts(HashMap<Long, Post> userPosts) {
+    public void setUserPosts(ArrayList<Long> userPosts) {
         this.userPosts = userPosts;
+    }
+
+    @Override
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+
+    @Override
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
     }
 }

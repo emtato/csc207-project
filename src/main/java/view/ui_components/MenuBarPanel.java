@@ -21,21 +21,24 @@ public class MenuBarPanel extends JPanel {
         styleButton(homeButton, buttonSize);
 
         // Create clubs button with system icon
-        ImageIcon clubsIcon = new ImageIcon(getClass().getResource("/images/toppng.com-white-person-icon-people-white-icon-abstract-backgrounds-436x368.png"));
+        ImageIcon clubsIcon = new ImageIcon(getClass().getResource(
+                "/images/toppng.com-white-person-icon-people-white-icon-abstract-backgrounds-436x368.png"));
         Image clubImg = clubsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JButton clubsButton = new JButton(new ImageIcon(clubImg));
         clubsButton.setToolTipText("Clubs");
         styleButton(clubsButton, buttonSize);
 
         // Create settings button with system icon
-        ImageIcon settingsIcon = new ImageIcon(getClass().getResource("/images/[CITYPNG.COM]Settings White Outline Icon Download PNG - 1500x1500.png"));
+        ImageIcon settingsIcon = new ImageIcon(getClass().getResource(
+                "/images/[CITYPNG.COM]Settings White Outline Icon Download PNG - 1500x1500.png"));
         Image settingsImg = settingsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JButton settingsButton = new JButton(new ImageIcon(settingsImg));
         settingsButton.setToolTipText("Settings");
         styleButton(settingsButton, buttonSize);
 
         // Create explore button with system icon
-        ImageIcon exploreIcon = new ImageIcon(getClass().getResource("/images/[CITYPNG.COM]Search Explore White Icon Transparent PNG - 4000x4000.png"));
+        ImageIcon exploreIcon = new ImageIcon(getClass().getResource(
+                "/images/[CITYPNG.COM]Search Explore White Icon Transparent PNG - 4000x4000.png"));
         Image exploreImg = exploreIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JButton exploreButton = new JButton(new ImageIcon(exploreImg));
         exploreButton.setToolTipText("Explore");

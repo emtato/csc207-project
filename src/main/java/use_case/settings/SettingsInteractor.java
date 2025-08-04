@@ -1,10 +1,11 @@
 package use_case.settings;
 
+import entity.User;
+
 public class SettingsInteractor implements SettingsInputBoundary{
     private final SettingsUserDataAccessInterface userDataAccessObject;
     private final SettingsOutputBoundary presenter;
 
-    //TODO: factories
     public SettingsInteractor(SettingsUserDataAccessInterface userDataAccessInterface,
                              SettingsOutputBoundary presenter) {
         this.userDataAccessObject = userDataAccessInterface;
@@ -12,10 +13,19 @@ public class SettingsInteractor implements SettingsInputBoundary{
     }
 
     @Override
-    public void execute(SettingsInputData settingsInputData) {
-        //presenter.prepareFailView("error message");
-        //final SettingsOutputData settingsOutputData = new SettingsOutputData(data);
-        //presenter.prepareSuccessView(settingsOutputData);
+    public void executePrivacyToggle(SettingsInputData settingsInputData) {
+        final User user = userDataAccessObject.get(settingsInputData.getUsername());
+        userDataAccessObject.setPrivacy(user, settingsInputData.isOn());
+        final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.isOn());
+        presenter.preparePrivacySuccessView(settingsOutputData);
+    }
+
+    @Override
+    public void executeNotificationsToggle(SettingsInputData settingsInputData) {
+        final User user = userDataAccessObject.get(settingsInputData.getUsername());
+        userDataAccessObject.setNotificationStatus(user, settingsInputData.isOn());
+        final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.isOn());
+        presenter.prepareNotificationsSuccessView(settingsOutputData);
     }
 
 }

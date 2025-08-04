@@ -5,10 +5,14 @@ package use_case.settings;
  */
 public interface SettingsInputBoundary {
     /**
-     * Executes the change settings use case.
+     * Executes the change privacy use case.
      * @param settingsInputData the input data
      */
-    void execute(SettingsInputData settingsInputData);
+    void executePrivacyToggle(SettingsInputData settingsInputData);
 
-    // TODO: switching views for the menu bar
+    /**
+     * Executes the enable/disable notifications use case.
+     * @param settingsInputData the input data
+     */
+    void executeNotificationsToggle(SettingsInputData settingsInputData);
 }

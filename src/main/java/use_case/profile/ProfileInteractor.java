@@ -1,5 +1,6 @@
 package use_case.profile;
 
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.User;
 
@@ -8,11 +9,14 @@ import java.util.HashMap;
 
 public class ProfileInteractor implements ProfileInputBoundary{
     private final ProfileUserDataAccessInterface userDataAccessObject;
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final ProfileOutputBoundary presenter;
 
     public ProfileInteractor(ProfileUserDataAccessInterface userDataAccessInterface,
+                            PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
                             ProfileOutputBoundary presenter) {
         this.userDataAccessObject = userDataAccessInterface;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.presenter = presenter;
     }
 
@@ -25,10 +29,14 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String profilePictureUrl = user.getProfilePictureUrl();
         final int numFollowers = user.getNumFollowers();
         final int numFollowing = user.getNumFollowing();
-        final HashMap<Long, Post> posts = user.getUserPosts();
+        final ArrayList<Long> posts = user.getUserPosts();
+        final HashMap<Long, Post> postsMap = new HashMap<>();
+        for (Long postId : posts) {
+            postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
+        }
 
         final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePictureUrl,
-                numFollowers, numFollowing, posts);
+                numFollowers, numFollowing, postsMap);
         presenter.prepareSuccessView(profileOutputData);
     }
 

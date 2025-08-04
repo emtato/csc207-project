@@ -1,6 +1,5 @@
 package use_case.edit_profile;
 
-import java.awt.Image;
 import java.util.ArrayList;
 
 /**

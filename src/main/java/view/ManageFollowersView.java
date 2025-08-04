@@ -1,5 +1,15 @@
 package view;
 
+import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import entity.User;
 import interface_adapter.manage_followers.ManageFollowersController;
@@ -7,18 +17,6 @@ import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.profile.ProfileController;
 import view.ui_components.UserInfoPanel;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 public class ManageFollowersView extends JPanel implements PropertyChangeListener {
     private final String viewName = "manage followers";

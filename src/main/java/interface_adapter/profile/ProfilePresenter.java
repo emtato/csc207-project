@@ -2,12 +2,16 @@ package interface_adapter.profile;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.edit_profile.EditProfileState;
+import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import interface_adapter.edit_profile.EditProfileViewModel;
-import use_case.profile.*;
+import use_case.profile.ProfileOutputBoundary;
+import use_case.profile.ProfileOutputData;
+import use_case.profile.SwitchToEditProfileViewOutputData;
+import use_case.profile.SwitchToFollowingViewOutputData;
+import use_case.profile.SwitchToFollowersViewOutputData;
 
 /**
  * The Presenter for the Profile Use Case.
@@ -72,6 +76,7 @@ public class ProfilePresenter implements ProfileOutputBoundary {
         final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
         manageFollowingState.setUsername(outputData.getUsername());
         manageFollowingState.setFollowing(outputData.getFollowing());
+        manageFollowingState.setOtherUsername("Enter username to follow");
         manageFollowingViewModel.setState(manageFollowingState);
         manageFollowingViewModel.firePropertyChanged();
         viewManagerModel.setState(manageFollowingViewModel.getViewName());

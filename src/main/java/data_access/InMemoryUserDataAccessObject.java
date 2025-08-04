@@ -6,39 +6,31 @@ import java.util.Map;
 
 import entity.User;
 import use_case.UserDataAccessInterface;
-import use_case.change_password.ChangePasswordUserDataAccessInterface;
-import use_case.edit_profile.EditProfileUserDataAccessInterface;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.logout.LogoutUserDataAccessInterface;
-import use_case.manage_followers.ManageFollowersUserDataAccessInterface;
-import use_case.manage_following.ManageFollowingUserDataAccessInterface;
+import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.note.DataAccessException;
-import use_case.note.NoteDataAccessInterface;
-import use_case.profile.ProfileUserDataAccessInterface;
-import use_case.settings.SettingsUserDataAccessInterface;
-import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
  * NOT persist data between runs of the program.
  */
-public class InMemoryUserDataAccessObject implements
-        UserDataAccessInterface,
-        SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface,
-        LogoutUserDataAccessInterface,
-        NoteDataAccessInterface,
-        SettingsUserDataAccessInterface,
-        ProfileUserDataAccessInterface,
-        EditProfileUserDataAccessInterface,
-        ManageFollowingUserDataAccessInterface,
-        ManageFollowersUserDataAccessInterface {
+public class InMemoryUserDataAccessObject implements UserDataAccessObject {
+
+    private static UserDataAccessObject instance;
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, String> notes = new HashMap<>();
 
     private String currentUsername;
+
+    private InMemoryUserDataAccessObject() {
+    }
+
+    public static UserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new InMemoryUserDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public boolean existsByName(String identifier) {
@@ -110,14 +102,56 @@ public class InMemoryUserDataAccessObject implements
     @Override
     public void removeFollower(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
         user.getFollowerAccounts().remove(removedUsername);
+        removedUser.getFollowingAccounts().remove(username);
         save(user);
+        save(removedUser);
     }
 
     @Override
     public void removeFollowing(String username, String removedUsername) {
         User user = get(username);
+        User removedUser = get(removedUsername);
+        removedUser.getFollowerAccounts().remove(username);
         user.getFollowingAccounts().remove(removedUsername);
         save(user);
+        save(removedUser);
     }
+
+    @Override
+    public void setPrivacy(User user, boolean isPublic){
+        user.setPublic(isPublic);
+        save(user);
+    }
+
+    @Override
+    public void setNotificationStatus(User user, boolean enabled){
+        user.setNotificationsEnabled(enabled);
+        save(user);
+    }
+
+    @Override
+    public boolean canFollow(String username, String otherUsername){
+        User user = get(username);
+        return users.containsKey(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername);
+    }
+
+    @Override
+    public void addFollowing(String username, String otherUsername) {
+        User user = get(username);
+        User followedUser = get(otherUsername);
+        user.getFollowingAccounts().put(otherUsername, followedUser);
+        followedUser.getFollowerAccounts().put(username, user);
+        save(followedUser);
+        save(user);
+    }
+
+    @Override
+    public void addPost(long id, String username) {
+        User user = get(username);
+        user.getUserPosts().add(id);
+        save(user);
+    }
+
 }

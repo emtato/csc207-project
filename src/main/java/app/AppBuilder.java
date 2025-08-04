@@ -7,8 +7,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
-import data_access.FileUserDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
+import data_access.*;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -88,17 +87,18 @@ import view.map.MapView;
 //                  if your team decides to work with this as your starter code
 //                  for your final project this term.
 public class AppBuilder {
+
+    // static instance of an AppBuilder
+    private static AppBuilder instance;
+
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-
-    // thought question: is the hard dependency below a problem?
-
-    //private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject(userFactory);
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
+            DBPostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -131,8 +131,16 @@ public class AppBuilder {
     private CreateClubView createClubView;
     private MapView mapView;
 
-    public AppBuilder() {
+    private AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    // The static method that controls access to the singleton AppBuilder instance.
+    public static AppBuilder getInstance() {
+        if (AppBuilder.instance == null) {
+            AppBuilder.instance = new AppBuilder();
+        }
+        return AppBuilder.instance;
     }
 
     /**
@@ -141,8 +149,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel, cardPanel);
+        homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(homePageView, homePageView.getViewName());
+        viewManagerModel.setHomePageView(homePageView);
         return this;
     }
 
@@ -237,18 +246,23 @@ public class AppBuilder {
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
-        postView = new PostView(viewManagerModel, trialpost);
+        postView = new PostView(viewManagerModel, trialpost, postCommentsLikesDataAccessObject);
         cardPanel.add(postView, postView.getViewName());
+        viewManagerModel.setPostView(postView);
         return this;
     }
+
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
-        createNewPostView = new CreateNewPostView(viewManagerModel);
+        // TODO: add the use case and move the data access object out of the view and into the interactor
+        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
+        viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
     }
 
     // TODO: implement addMapView()
+
     /**
      * Adds Map View to the application
      *
@@ -357,9 +371,9 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel, profileViewModel);
+                loggedInViewModel, loginViewModel, profileViewModel, settingsViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
+                userDataAccessObject, postCommentsLikesDataAccessObject, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
@@ -398,6 +412,7 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        settingsView.setLogoutController(logoutController);
         return this;
     }
 
@@ -444,7 +459,7 @@ public class AppBuilder {
         final ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(viewManagerModel,
                 profileViewModel, editProfileViewModel, manageFollowingViewModel, manageFollowersViewModel);
         final ProfileInputBoundary profileInteractor =
-                new ProfileInteractor(userDataAccessObject, profileOutputBoundary);
+                new ProfileInteractor(userDataAccessObject, postCommentsLikesDataAccessObject, profileOutputBoundary);
         final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
         editProfileView.setProfileController(profileController);
@@ -510,12 +525,12 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login data_access.spoonacular.Example");
+        final JFrame application = new JFrame("HELLO :)");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(homePageView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

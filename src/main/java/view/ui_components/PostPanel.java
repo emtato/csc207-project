@@ -1,8 +1,11 @@
 package view.ui_components;
 
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
+import use_case.like_post.LikePostInteractor;
 import view.PostView;
 
 import javax.swing.*;
@@ -29,7 +32,6 @@ public class PostPanel extends JPanel {
 
     private Post post;
     private Recipe repice;
-    private JPanel cardPanel;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
     // fonts & styles
@@ -50,11 +52,15 @@ public class PostPanel extends JPanel {
     private boolean liked;
     private JPanel centerPanel;
     private JPanel bottomPanel;
+    private LikePostController likePostController;
+    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, JPanel cardPanel) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.cardPanel = cardPanel;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
+        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
+
 
         setLayout(new BorderLayout());
 
@@ -129,8 +135,8 @@ public class PostPanel extends JPanel {
 
         // middle
         postText.setEditable(false);
-        postText.setPreferredSize(new Dimension(400, 400));
-        postText.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
+        postText.setPreferredSize(new Dimension(postWidth, postHeight));
+        postText.setMaximumSize(new Dimension(postWidth, Integer.MAX_VALUE));
         if (post instanceof Recipe) {
             this.repice = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
@@ -194,22 +200,25 @@ public class PostPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
     }
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            likePostController.likePost(post.getID(), isLiking);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            liked = isLiking;
+
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == saveButton) {
@@ -224,12 +233,10 @@ public class PostPanel extends JPanel {
         if (e.getSource() == viewFullPost) {
             viewManagerModel.setState("post view");
 
-            for (Component c : cardPanel.getComponents()) {
-                if (c instanceof PostView) {
-                    ((PostView) c).displayPost(this.post);   // push the chosen post into it
-                    break;
-                }
-            }
+            PostView currentPostView = viewManagerModel.getPostView();
+            currentPostView.displayPost(this.post);   // push the chosen post into it
+
+
         }
     }
 }

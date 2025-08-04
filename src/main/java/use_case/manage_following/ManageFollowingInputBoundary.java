@@ -11,6 +11,12 @@ public interface ManageFollowingInputBoundary {
     void executeUnfollow(ManageFollowingInputData manageFollowingInputData);
 
     /**
+     * Executes the follow use case.
+     * @param manageFollowingInputData the input data
+     */
+    void executeFollow(ManageFollowingInputData manageFollowingInputData);
+
+    /**
      * Executes the switch to profile view use case.
      */
     void switchToProfileView();

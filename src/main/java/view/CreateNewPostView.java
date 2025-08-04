@@ -1,9 +1,12 @@
 package view;
 
-import data_access.DBPostCommentLikesDataAccessObject;
-import entity.Account;
-import entity.Recipe;
+import app.Session;
+import data_access.FileUserDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
+import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import use_case.create_post.CreatePostInputData;
+import use_case.create_post.CreatePostInteractor;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -20,9 +23,10 @@ import java.awt.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
@@ -34,8 +38,13 @@ public class CreateNewPostView extends JPanel {
     private final JRadioButton option2 = new JRadioButton("Option 2");
     private final JRadioButton option3 = new JRadioButton("Option 3");
     private final String viewName = "create new post";
-    public CreateNewPostView(ViewManagerModel viewManagerModel) {
+
+    private CreatePostInteractor createPostInteractor;
+
+    public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject, UserDataAccessObject userDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
+
+        createPostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject);
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -98,10 +107,11 @@ public class CreateNewPostView extends JPanel {
     }
 
 
-    private void recipePostView() {
+    public void recipePostView() {
+        contentPanel.removeAll();
         System.out.println(recipes.isSelected());
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        JTextArea titleArea = new JTextArea("Enter post title", 2,20);
+        JTextArea titleArea = new JTextArea("Enter post title", 2, 20);
         JTextArea bodyArea = new JTextArea("Enter recipe description", 6, 80);
         bodyArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea imagesArea = new JTextArea("Enter link to images, separated by commas, must end in .jpg, .png, etc", 3, 80);
@@ -112,6 +122,16 @@ public class CreateNewPostView extends JPanel {
         stepsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JTextArea cuisinesArea = new JTextArea("Enter cuisines and tags separated by commas if u want", 1, 80);
         cuisinesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        //set wrapping
+        titleArea.setLineWrap(true);
+        titleArea.setWrapStyleWord(true);
+        bodyArea.setLineWrap(true);
+        bodyArea.setWrapStyleWord(true);
+        imagesArea.setLineWrap(true);
+        ingredientsListArea.setLineWrap(true);
+        stepsArea.setLineWrap(true);
+        stepsArea.setWrapStyleWord(true);
 
         textFIeldHints(titleArea, "Enter post title");
         textFIeldHints(bodyArea, "Enter recipe description");
@@ -129,35 +149,33 @@ public class CreateNewPostView extends JPanel {
 
         JButton okButton = new JButton("send it \uD83E\uDEE3");
         okButton.setFont(new Font("papyrus", Font.BOLD, 20));
-        okButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        String title = titleArea.getText();
-                        String body = bodyArea.getText();
-                        ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
-                        String steps = stepsArea.getText();
-                        ArrayList<String> cuisines = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
-                        Account user = new Account("r", "y");
-                        ArrayList<String> tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
-                        ArrayList<String> imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
-                        Recipe repice = new Recipe(user, 843417361846184L, title, body, ingredients, steps, cuisines);
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String title = titleArea.getText();
+                String body = bodyArea.getText();
+                ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
+                String steps = stepsArea.getText();
+                //ArrayList<String> cuisines = new ArrayList<>();
+                ArrayList<String> tags = new ArrayList<>();
 
-                        System.out.println("repice obj creted");
-                        DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-                        HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-                        map.put("ingredients", ingredients);
-                        map.put("steps", new ArrayList(Arrays.asList(steps)));
-                        map.put("cuisines", cuisines);
-                        long postID = (long)(Math.random() * 1_000_000_000_000L);
-                        DBPostCommentLikesDataAccessObject.writePost(postID, new Account("a", "b"), title, "recipe", body, map, tags, imagesList);
-
-                        viewManagerModel.setState("homepage view");
-                        HomePageView homePageView = new HomePageView(viewManagerModel, new JPanel());
-                        homePageView.updateHomeFeed();
-                    }
-
+                if (!cuisinesArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
+                    //cuisines = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
+                    tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
                 }
-        );
+                ArrayList<String> imagesList = new ArrayList<>();
+                if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
+                    imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
+                }
+                //write to posts data
+                CreatePostInputData inputData = new CreatePostInputData(Session.getCurrentAccount(), title, "recipe", body, ingredients, steps, tags, imagesList);
+                createPostInteractor.execute(inputData);
+
+                viewManagerModel.setState("homepage view");
+                HomePageView homePageView = viewManagerModel.getHomePageView();
+                homePageView.updateHomeFeed();
+            }
+
+        });
         contentPanel.add(okButton);
 
 
@@ -173,15 +191,15 @@ public class CreateNewPostView extends JPanel {
 
         titleField.setForeground(Color.GRAY);
 
-        titleField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent e) {
+        titleField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e) {
                 if (titleField.getText().equals(hint)) {
                     titleField.setText("");
                     titleField.setForeground(Color.BLACK);
                 }
             }
 
-            public void focusLost(java.awt.event.FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 if (titleField.getText().isEmpty()) {
                     titleField.setForeground(Color.GRAY);
                     titleField.setText(hint);
@@ -205,7 +223,7 @@ public class CreateNewPostView extends JPanel {
 
     }
 
-    public String getViewName(){
+    public String getViewName() {
         return viewName;
     }
 

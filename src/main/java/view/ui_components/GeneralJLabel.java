@@ -1,9 +1,9 @@
 package view.ui_components;
 
-import view.GUIConstants;
-
 import java.awt.Color;
 import java.awt.Font;
+
+import view.GUIConstants;
 
 public class GeneralJLabel extends javax.swing.JLabel {
 

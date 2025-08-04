@@ -1,6 +1,24 @@
 package view;
 
-import entity.User;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
+import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfileState;
@@ -8,19 +26,8 @@ import interface_adapter.profile.ProfileViewModel;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.LabelButtonPanel;
 import view.ui_components.MenuBarPanel;
+import view.ui_components.PostPanel;
 import view.ui_components.ProfilePictureLabel;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 public class ProfileView extends JPanel implements PropertyChangeListener {
     private final String viewName = "profile";
@@ -38,7 +45,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followingButton;
     private final JLabel followers;
     private final JButton followersButton;
-    private final JTextArea profileContent;
+    private final JPanel profileContent;
+    private final JScrollPane profileContentPanel;
+    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject = FilePostCommentLikesDataAccessObject.getInstance();
 
 
     public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
@@ -79,13 +88,15 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
                 GUIConstants.RED);
         userInfoPanel.add(username);
 
-        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_ROW_NUM);
+        bio = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_COL_NUM);
         bio.setText(this.profileViewModel.getState().getBio());
+        bio.setFont(GUIConstants.FONT_TEXT);
         bio.setEditable(false);
         bio.setBackground(Color.PINK);
+        bio.setLineWrap(true);
+        bio.setWrapStyleWord(true);
         userInfoPanel.add(bio);
         mainPanel.add(userInfoPanel);
-
 
         final JPanel profileButtons = new JPanel();
         profileButtons.setLayout(new BoxLayout(profileButtons, BoxLayout.Y_AXIS));
@@ -109,17 +120,31 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         mainPanel.add(profileButtons);
 
-        final JPanel profileContentPanel = new JPanel();
+        profileContent = new JPanel();
+        profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
+
+        profileContentPanel = new JScrollPane(profileContent);
         profileContentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        profileContentPanel.setMaximumSize(new Dimension(1200, 250));
-        profileContentPanel.setMinimumSize(new Dimension(1200, 250));
+        final Dimension contentDimension = new Dimension(ProfileViewModel.CONTENT_PANEL_WIDTH,
+                ProfileViewModel.CONTENT_PANEL_HEIGHT);
+        profileContentPanel.setMaximumSize(contentDimension);
+        profileContentPanel.setMinimumSize(contentDimension);
+        profileContentPanel.setBackground(Color.WHITE);
 
-        profileContent = new JTextArea(ProfileViewModel.CONTENT_ROW_NUM,ProfileViewModel.CONTENT_COL_NUM);
-        profileContent.setText("Posts go here\nmore posts\n more posts/??? this is getting ridiculous");
-        profileContentPanel.add(profileContent);
+        refreshContent();
 
+        final JButton refreshButton = new JButton("Refresh");
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        refreshButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(refreshButton)) {
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.executeViewProfile(profileState.getUsername());
+                    }
+                }
+        );
 
         editProfileButton.addActionListener(
                 evt -> {
@@ -152,7 +177,24 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         this.add(mainPanel);
         this.add(profileContentPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(refreshButton);
         this.add(menuBar, BorderLayout.SOUTH);
+    }
+
+    private void refreshContent(){
+        profileContent.removeAll();
+        final HashMap<Long, Post> posts = this.profileViewModel.getState().getPosts();
+        if (!posts.isEmpty()) {
+            for (Long id : posts.keySet()) {
+                final Post post = posts.get(id);
+                PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
+                        ProfileViewModel.POST_HEIGHT, postCommentsLikesDataAccessObject);
+                profileContent.add(postPanel);
+            }
+        }
+
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
@@ -164,7 +206,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
             bio.setText(profileViewModel.getState().getBio());
             following.setText(profileViewModel.getState().getNumFollowing()+" following");
             followers.setText(profileViewModel.getState().getNumFollowers()+" followers");
-            profileContent.setText("");
+            refreshContent();
         }
     }
 

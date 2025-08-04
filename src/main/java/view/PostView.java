@@ -1,6 +1,7 @@
 package view;
 
-import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -27,9 +28,28 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import interface_adapter.analyze_recipe.AnalyzeRecipeController;
+import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
+import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
+import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.get_comments.GetCommentsController;
+import interface_adapter.get_comments.GetCommentsPresenter;
+import interface_adapter.get_comments.GetCommentsViewModel;
+import interface_adapter.like_post.LikePostController;
+import interface_adapter.write_comment.WriteCommentController;
+import use_case.analyze_recipe.AnalyzeRecipeInteractor;
+import use_case.analyze_recipe.SpoonacularAccessInterface;
+import use_case.comment.CommentPostInputData;
+import use_case.comment.CommentPostInteractor;
+import use_case.fetch_post.FetchPostInteractor;
+import use_case.get_comments.GetCommentsInteractor;
+import use_case.get_comments.GetCommentsOutputBoundary;
+import use_case.like_post.LikePostInputData;
+import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.RoundedButton;
+import app.Session;
 /* Description:
  * ^ • ω • ^
  */
@@ -37,6 +57,7 @@ import view.ui_components.RoundedButton;
 public class PostView extends JPanel {
 
     private final String viewName = "post view";
+    private Account currentLoggedInUser;
     //private final PostViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
@@ -46,14 +67,17 @@ public class PostView extends JPanel {
 
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 20);
-    private final Font subtite = new Font("Roboto", Font.PLAIN, 16);
+    private final Font subtite = new Font("Roboto", Font.BOLD, 16);
+    private final Font subtite2 = new Font("Roboto", Font.BOLD, 14);
+    private final Font commenter = new Font("Roboto", Font.PLAIN, 14);
     private final Font text = new Font("Roboto", Font.PLAIN, 15);
     private final Font whimsy = new Font("papyrus", Font.BOLD, 20);
     // middle
-    private JTextPane postText = new JTextPane();
+    private JPanel postText;
     private JPanel centerPanel;
     private JScrollPane scrollPane;
-    private int maxBoxHeight;
+    private JPanel wrapper;
+
     // top
     private final JLabel title;
     private final JLabel subtitle;
@@ -67,20 +91,40 @@ public class PostView extends JPanel {
     private final RoundedButton shareButton = new RoundedButton("Share");
     private final RoundedButton commentButton = new RoundedButton("coment");
 
+    //use cases
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
+    private LikePostController likePostController;
+    private WriteCommentController writeCommentController;
+    private GetCommentsController getCommentsController;
+    private final GetCommentsViewModel getCommentsViewModel = new GetCommentsViewModel();
+    private AnalyzeRecipeController analyzeRecipeController;
+    private AnalyzeRecipeViewModel analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
+    private SpoonacularAPI spoonacularAPI;
 
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
-    public PostView(ViewManagerModel viewManagerModel, Post post) {
+
+    public PostView(ViewManagerModel viewManagerModel, Post post, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
+
         //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.post = post;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
-
+        this.spoonacularAPI = new SpoonacularAPI();
+        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
+        this.writeCommentController = new WriteCommentController(new CommentPostInteractor(postCommentsLikesDataAccessObject));
+        this.getCommentsController = new GetCommentsController(
+                new GetCommentsInteractor(postCommentsLikesDataAccessObject,
+                        new GetCommentsPresenter(getCommentsViewModel))
+        );
+        this.analyzeRecipeController = new AnalyzeRecipeController(new AnalyzeRecipeInteractor((SpoonacularAccessInterface) spoonacularAPI, new AnalyzeRecipePresenter(analyzeRecipeViewModel)));
         mainPanel = new JPanel(new BorderLayout());
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel splitTop = new JPanel();
+        splitTop.setLayout(new BoxLayout(splitTop, BoxLayout.Y_AXIS));
         rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         centerPanel = new JPanel();
@@ -89,7 +133,7 @@ public class PostView extends JPanel {
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title);
+        splitTop.add(title);
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -98,81 +142,14 @@ public class PostView extends JPanel {
         tags.setForeground(Color.LIGHT_GRAY);
 
 
-        topPanel.add(subtitle);
-        topPanel.add(tags);
+        splitTop.add(subtitle);
+        splitTop.add(tags);
+
+        topPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        topPanel.add(splitTop);
 
         // middle
-        scrollPane = new JScrollPane(postText);
         displayPost(post);
-
-        // PROBABLY CAN BE REMOVED, BUT I WANNA MAKE SURE DISPLAYPOST WORKS 100%
-        /*
-        // if has media:
-        int maxBoxHeight = 739123617;
-        if (post.isImageVideo()) {
-            try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                ArrayList<String> imageURLS = post.getImageURLs();
-                for (String imageURL : imageURLS) {
-                    URL url = new URL(imageURL);
-                    ImageIcon imageIcon = new ImageIcon(url);
-                    Image img = imageIcon.getImage().getScaledInstance(-1, 450, Image.SCALE_SMOOTH);
-                    ImageIcon scaledIcon = new ImageIcon(img);
-                    JLabel image = new JLabel(scaledIcon);
-                    image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-                    imagePanel.add(image);
-                }
-                centerPanel.add(imagePanel);
-
-                maxBoxHeight = 350;
-            }
-            catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        postText.setEditable(false);
-        if (post instanceof Recipe || this.repice != null) {
-            this.repice = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
-            String ingredientsText = "";
-            ArrayList<String> ingredients = this.repice.getIngredients();
-            for (String ingredient : ingredients) {
-                ingredientsText += ingredient + "<br>";
-            }
-            System.out.println(ingredientsText);
-            String mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """
-                    </p>
-
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + ingredientsText + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                          </p>
-                          </body>
-                        </html>
-                    """;
-            postText.setContentType("text/html");
-            postText.setText(mainContent);
-        }
-        else {
-            postText.setText(post.getDescription());
-        }
-
-        JTextArea comments = new JTextArea();
-        scrollPane.add(comments);
-        scrollPane.setPreferredSize(new Dimension(1400, Math.min(850, maxBoxHeight)));
-        centerPanel.add(scrollPane);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
-        comments.setBackground(Color.PINK);
-        comments.setOpaque(true);
-*/
 
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
@@ -180,35 +157,35 @@ public class PostView extends JPanel {
 
         // right
         ArrayList<JButton> rightButtons = new ArrayList<>();
-        if (liked) {
-            likeButton.setText("unlike");
-        }
-        rightButtons.add(likeButton);
-        if (post instanceof Recipe) {
-            rightButtons.add(analyzeButton);
-        }
-        rightButtons.add(saveButton);
-        rightButtons.add(shareButton);
-        rightButtons.add(commentButton);
-        for (JButton button : rightButtons) {
-            button.setFont(text);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.addActionListener(e -> {
-                try {
-                    actionPerformed(e);
-                }
-                catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                    System.out.println("NOOOOOO D:");
-                }
-            });
-            rightPanel.add(button);
-            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 400)));
+//        if (liked) {
+//            likeButton.setText("unlike");
+//        }
+//        rightButtons.add(likeButton);
+//        if (post instanceof Recipe) {
+//            rightButtons.add(analyzeButton);
+//        }
+//        rightButtons.add(saveButton);
+//        rightButtons.add(shareButton);
+//        rightButtons.add(commentButton);
+//        for (JButton button : rightButtons) {
+//            button.setFont(text);
+//            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+//            button.addActionListener(e -> {
+//                try {
+//                    actionPerformed(e);
+//                }
+//                catch (IOException ex) {
+//                    throw new RuntimeException(ex);
+//                }
+//                catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                    System.out.println("NOOOOOO D:");
+//                }
+//            });
+//            rightPanel.add(button);
+//            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//        }
+//        rightPanel.add(Box.createRigidArea(new Dimension(0, 540)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -218,27 +195,64 @@ public class PostView extends JPanel {
         this.add(mainPanel);
     }
 
+    public String wrapText(String text, int maxLength) {
+        String res = "";
+        String curWord = "";
+        int counter = 0;
+        for (int i = 0; i < text.length(); i++) {
+            counter++;
+            curWord += text.charAt(i);
+            if (text.charAt(i) == ' ') {
+                res += curWord;
+                curWord = "";
+            }
+            if (counter % maxLength == 0) {
+                res += "<br>";
+            }
+            if (curWord.length() > 50) {
+                res += curWord;
+                curWord = "";
+
+            }
+        }
+        res += curWord;
+        return res;
+    }
+
     /**
      * Display a new post in the current view to avoid having to recreate entire view every switch.
      *
      * @param newPost new post object
      */
     public void displayPost(Post newPost) {
+        currentLoggedInUser = Session.getCurrentAccount();
+
         centerPanel.removeAll();
         liked = false;
         likeButton.setText("like");
+        xPresent = false;
         //TODO: UPDATE THIS TO RETRIEVE IF LIKED BY CURRENT USER
-        DBPostCommentLikesDataAccessObject db = new DBPostCommentLikesDataAccessObject();
-        //refresh post info:
-        newPost = db.getPost(newPost.getID());
         this.post = newPost;
 
-        maxBoxHeight = 739123617;
+        postText = new JPanel();
+        postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
+
+        wrapper = new JPanel(new BorderLayout());
+        wrapper.add(postText, BorderLayout.CENTER);
+        scrollPane = new JScrollPane(wrapper);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(1300, 700));
+        scrollPane.setBorder(null);
+
+
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
-                JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 ArrayList<String> imageURLS = post.getImageURLs();
+                JPanel imagePanel = new JPanel();
+                imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
                 int imagesRn = 0;
                 for (String imageURL : imageURLS) {
                     URL url = new URL(imageURL);
@@ -263,37 +277,87 @@ public class PostView extends JPanel {
 
                     JLabel image = new JLabel(scaledIcon);
                     image.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
                     imagePanel.add(image);
                     imagesRn++;
                     if (imagesRn == 3) {
                         break;
                     }
                 }
-                centerPanel.add(imagePanel);
+                wrapper.add(imagePanel, BorderLayout.NORTH);
 
-
-                maxBoxHeight = 150;
             }
             catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        postText.setEditable(false);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        scrollPane.setPreferredSize(new Dimension(1200, Math.min(600, maxBoxHeight)));
-        centerPanel.add(scrollPane);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
+        JLabel commentsHeader = new JLabel("Comments");
+        commentsHeader.setFont(subtite);
+        commentsHeader.setForeground(Color.BLACK);
 
-        String mainContent = "";
-        String commentsInView = "";
-        ArrayList<Comment> comments = post.getComments();
+        JPanel commentsPanel = new JPanel();
+
+        commentsPanel.add(commentsHeader);
+
+        commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
+
+        getCommentsController.getComments(post.getID());
+        ArrayList<Comment> comments = new ArrayList<>(getCommentsViewModel.getComments());
         for (Comment comment : comments) {
-            commentsInView += "<h3><span style='font-weight:bold'>" + comment.getAccount().getUsername() +
-                    "</span> <span style='font-weight:normal'> on " + comment.getDate().format(formatter) +
-                    "</span></h3>" + comment.getComment();
+            JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
+            commentUser.setFont(subtite2);
+
+            JLabel commentContent = new JLabel("<html>" + wrapText(comment.getComment(), 150) + "</html>");
+            commentContent.setFont(commenter);
+            commentContent.setForeground(Color.GRAY);
+
+            commentsPanel.add(commentUser);
+            commentsPanel.add(Box.createRigidArea(new Dimension(10, 5)));
+            commentsPanel.add(commentContent);
+            commentsPanel.add(Box.createRigidArea(new Dimension(10, 12)));
         }
+
+        postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
+        postText.add(Box.createRigidArea(new Dimension(10, 20)));
+
+        //redraw right buttons
+        rightPanel.removeAll();
+        ArrayList<JButton> rightButtons = new ArrayList<>();
+        if (liked) {
+            likeButton.setText("unlike");
+        }
+        rightButtons.add(likeButton);
+        if (post instanceof Recipe) {
+            rightButtons.add(analyzeButton);
+        }
+        rightButtons.add(saveButton);
+        rightButtons.add(shareButton);
+        rightButtons.add(commentButton);
+        for (JButton button : rightButtons) {
+            button.setFont(text);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            for (ActionListener old : button.getActionListeners()) {
+                button.removeActionListener(old);
+            }
+            button.addActionListener(e -> {
+                try {
+                    actionPerformed(e);
+                }
+                catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                    System.out.println("NOOOOOO D:");
+                }
+            });
+            rightPanel.add(button);
+            rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 500)));
+
 
         if (newPost instanceof Recipe) {
             this.repice = (Recipe) newPost;
@@ -301,45 +365,59 @@ public class PostView extends JPanel {
             String ingredientsText = "";
             ArrayList<String> ingredients = this.repice.getIngredients();
             for (String ingredient : ingredients) {
-                ingredientsText += ingredient + "<br>";
+                ingredientsText += ingredient.replace("\n", "<br>") + "<br>";
             }
-            mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
-                    </p>
-                    
-                    <h2 style='font-size: 16pt; color: #555;'>Ingredients</h2>
-                    <ul>""" + ingredientsText + """
-                    </ul>
-                    <h2 style='font-size: 16pt; color: #555;'>Steps</h2>
-                    <p>""" + this.repice.getSteps().replace("\n", "<br>") + """
-                    </p>
-                    <br>""";
 
+            JLabel postDescriptionHeader = new JLabel("Description");
+            JLabel postIngredientsHeader = new JLabel("Ingredients");
+            JLabel postStepsHeader = new JLabel("Steps");
+            postDescriptionHeader.setFont(subtite);
+            postDescriptionHeader.setForeground(Color.BLACK);
+            postIngredientsHeader.setFont(subtite);
+            postIngredientsHeader.setForeground(Color.BLACK);
+            postStepsHeader.setFont(subtite);
+            postStepsHeader.setForeground(Color.BLACK);
+
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
+            postDescription.setFont(text);
+            postDescription.setForeground(Color.DARK_GRAY);
+            JLabel postIngredients = new JLabel("<html>" + wrapText(ingredientsText, 125) + "</html>");
+            postIngredients.setFont(text);
+            postIngredients.setForeground(Color.DARK_GRAY);
+            JLabel postSteps = new JLabel("<html>" + wrapText(this.repice.getSteps(), 125).replace("\n", "<br>") + "</html>");
+            postSteps.setFont(text);
+            postSteps.setForeground(Color.DARK_GRAY);
+
+            postText.add(postDescriptionHeader);
+            postText.add(postDescription);
+            postText.add(Box.createRigidArea(new Dimension(10, 12)));
+            postText.add(postIngredientsHeader);
+            postText.add(postIngredients);
+            postText.add(Box.createRigidArea(new Dimension(10, 12)));
+            postText.add(postStepsHeader);
+            postText.add(postSteps);
+            postText.add(Box.createRigidArea(new Dimension(10, 20)));
         }
 
         else { //general post display
-            String desc = post.getDescription();
-            mainContent = """
-                    <html>
-                      <body style='font-family: comic sans, sans-serif'>
-                        <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.post.getDescription() + """ 
-                    </p>
-                    <br>""";
 
+            JLabel postDescriptionHeader = new JLabel("Description");
+            postDescriptionHeader.setFont(subtite);
+            postDescriptionHeader.setForeground(Color.BLACK);
+
+            JLabel postDescription = new JLabel("<html>" + wrapText(this.post.getDescription(), 125) + "</html>");
+            postDescription.setFont(text);
+            postDescription.setForeground(Color.DARK_GRAY);
+
+
+            postText.add(postDescriptionHeader);
+            postText.add(postDescription);
+            postText.add(Box.createRigidArea(new Dimension(10, 20)));
             repice = null;
         }
+        postText.add(commentsPanel);
 
-        mainContent += """
-                <h2 style='font-size: 16pt; color: #333;'>Comments</h2> """ + commentsInView + """
-                                                      </body>
-                                                    </html>
-                """;
-        postText.setContentType("text/html");
-        postText.setText(mainContent);
+
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         this.add(mainPanel);
 
@@ -361,28 +439,27 @@ public class PostView extends JPanel {
      */
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            DBPostCommentLikesDataAccessObject dao = new DBPostCommentLikesDataAccessObject();
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            likePostController.likePost(post.getID(), isLiking);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
-                dao.updateLikesForPost(post.getID(), 1);
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
-                dao.updateLikesForPost(post.getID(), -1);
-
             }
+            liked = isLiking;
+
             subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == analyzeButton) {
             System.out.println("hmmmm \uD83E\uDD13");
-            SpoonacularAPI spon = new SpoonacularAPI();
-            this.repice.setRestrictionsMap(spon.callAPI(repice));
+            analyzeRecipeController.analyze(repice);
+
+            this.repice.setRestrictionsMap((HashMap<String, String>) analyzeRecipeViewModel.getResult());
             HashMap<String, String> result = this.repice.getRestrictionsMap();
             System.out.println(result);
             String resultDisplay = "";
@@ -423,10 +500,16 @@ public class PostView extends JPanel {
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource() == commentButton && !xPresent) {
-            JTextArea commentsArea = new JTextArea(2, 20);
-            scrollPane.setSize(new Dimension(1200, Math.min(600, maxBoxHeight))); //YOPPP WORKS
+            JPanel commentsPanel = new JPanel();
+            commentsPanel.setLayout(new FlowLayout());
+            JTextArea commentsArea = new JTextArea(2, 100);
+            commentsArea.setLineWrap(true);
+            commentsArea.setWrapStyleWord(true);
+            commentsPanel.add(commentsArea, BorderLayout.CENTER);
+
+            scrollPane.setSize(new Dimension(1200, 560)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-            centerPanel.add(commentsArea);
+            centerPanel.add(commentsPanel);
 
             commentButton.setOpaque(true);
             commentButton.setText("");
@@ -447,33 +530,26 @@ public class PostView extends JPanel {
                     commentButton.setText("comment");
                     commentButton.setOpaque(false);
 
-//                          centerPanel.revalidate();
-//                          centerPanel.repaint();
-//                          rightPanel.revalidate();
-//                          rightPanel.repaint();
                     xPresent = false;
                 }
             });
             postButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String mesage = commentsArea.getText();
-                    //TODO: send comment to whoever deals with this idk
                     centerPanel.remove(commentsArea);
                     rightPanel.remove(subRight);
                     commentButton.setText("comment");
                     commentButton.setOpaque(false);
                     xPresent = false;
 
-                    ArrayList<Comment> lst = post.getComments();
-                    if (lst == null) {
-                        lst = new ArrayList<Comment>();
-                    }
-                    //TODO: account user implementation
-                    Account postingAccount = new Account("jinufan333", "bye"); //TODO: current logged in account link to comment
-                    Comment comment = new Comment(postingAccount, mesage, LocalDateTime.now(), 0);
-                    lst.add(comment);
-                    DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-                    DBPostCommentLikesDataAccessObject.writeCommentToFile(post.getID(), postingAccount, mesage, LocalDateTime.now());
+//                    ArrayList<Comment> lst = post.getComments();
+//                    if (lst == null) {
+//                        lst = new ArrayList<Comment>();
+//                    }
+//                    Comment comment = new Comment(currentLoggedInUser, mesage, LocalDateTime.now(), 0);
+//                    lst.add(comment);
+
+                    writeCommentController.writeComment(post.getID(), currentLoggedInUser, mesage, LocalDateTime.now());
                     displayPost(post);
                 }
             });
@@ -483,6 +559,7 @@ public class PostView extends JPanel {
     public String getViewName() {
         return viewName;
     }
+
 
     public static void main(String[] args) {
         view.ui_components.JFrame frame = new view.ui_components.JFrame();
@@ -511,10 +588,13 @@ public class PostView extends JPanel {
 //        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 
-        frame.add(new PostView(new ViewManagerModel(), trialpost));
+        PostCommentsLikesDataAccessObject dao = FilePostCommentLikesDataAccessObject.getInstance();
+        frame.add(new PostView(new ViewManagerModel(), trialpost, dao));
 
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
     }
+
+
 }

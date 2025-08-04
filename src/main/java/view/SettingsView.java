@@ -1,140 +1,188 @@
 package view;
 
-
-import interface_adapter.ViewManagerModel;
-import interface_adapter.settings.SettingsController;
-import interface_adapter.settings.SettingsViewModel;
-import view.ui_components.MenuBarPanel;
-
-import javax.swing.*;
-import javax.swing.JLabel;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-// TODO: use constants for the hardcoded parts
+import org.jetbrains.annotations.NotNull;
+
+import interface_adapter.ViewManagerModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.settings.SettingsController;
+import interface_adapter.settings.SettingsState;
+import interface_adapter.settings.SettingsViewModel;
+import view.ui_components.GeneralJLabel;
+import view.ui_components.MenuBarPanel;
+
 public class SettingsView extends JPanel implements PropertyChangeListener {
     private final String viewName = "settings";
     private final SettingsViewModel settingsViewModel;
     private final ViewManagerModel viewManagerModel;
 
     private SettingsController settingsController;
+    private LogoutController logoutController;
 
-    final JLabel title;
-    private final JLabel header;
-    private final JLabel privacyLabel;
-    private final JLabel privacyHeading;
     private final JToggleButton accountPrivacyToggle;
-
-    // TODO: reuse code for duplicate buttons
-    private final JButton homeButton;
-    private final JButton mapButton;
-    private final JButton notificationsButton;
-    private final JButton settingsButton;
-    private final JButton profileButton;
+    private final JToggleButton notificationsToggle;
 
     public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
         this.viewManagerModel = viewManagerModel;
         this.settingsViewModel.addPropertyChangeListener(this);
 
-        title = new JLabel(SettingsViewModel.TITLE_LABEL);
+        final JLabel title = new GeneralJLabel(SettingsViewModel.TITLE_LABEL,
+                GUIConstants.TITLE_SIZE, GUIConstants.RED);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setMinimumSize(new Dimension(1000, 50));
 
-        final JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        mainPanel.setMaximumSize(new Dimension(1500, 1030));
-        mainPanel.setMinimumSize(new Dimension(1500, 1030));
+        final JPanel settingsPanel = getSettingsPanel();
 
-        final JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
-        leftPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        leftPanel.setMaximumSize(new Dimension(200, 1030));
-        leftPanel.setMinimumSize(new Dimension(200, 1030));
-
-        header = new JLabel("Settings");
-        header.setAlignmentX(Component.LEFT_ALIGNMENT);
-        leftPanel.add(header);
-
-        mainPanel.add(leftPanel);
-        mainPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-
-        final JPanel settingsPanel = new JPanel();
-        settingsPanel.setMaximumSize(new Dimension(1200, 1030));
-        settingsPanel.setMinimumSize(new Dimension(1200, 1030));
-        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
-        settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        privacyHeading = new JLabel(SettingsViewModel.PRIVACY_HEADING);
+        final JLabel privacyHeading = new GeneralJLabel(SettingsViewModel.PRIVACY_HEADING,
+                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
         settingsPanel.add(privacyHeading);
 
         final JPanel privacyPanel = new JPanel();
         privacyPanel.setLayout(new BoxLayout(privacyPanel, BoxLayout.X_AXIS));
-
-        privacyLabel = new JLabel(SettingsViewModel.ACCOUNT_PRIVACY_LABEL);
+        privacyPanel.setBackground(GUIConstants.PINK);
+        final JLabel privacyLabel = new JLabel(SettingsViewModel.ACCOUNT_PRIVACY_LABEL);
         privacyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        privacyLabel.setFont(GUIConstants.FONT_TEXT);
+        privacyLabel.setForeground(GUIConstants.RED);
         privacyPanel.add(privacyLabel);
-
         privacyPanel.add(Box.createHorizontalGlue());
-
         accountPrivacyToggle = new JToggleButton(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
         accountPrivacyToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
         privacyPanel.add(accountPrivacyToggle);
 
-        mainPanel.add(privacyPanel);
+        settingsPanel.add(privacyPanel);
 
-        final JPanel generalButtons = new JPanel();
-        generalButtons.setAlignmentY(Component.CENTER_ALIGNMENT);
+        final JLabel notificationsHeading = new GeneralJLabel(SettingsViewModel.NOTIFICATIONS_HEADING,
+                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        settingsPanel.add(notificationsHeading);
 
-        homeButton = new JButton("Home");
-        generalButtons.add(homeButton);
+        final JPanel notificationsPanel = new JPanel();
+        notificationsPanel.setLayout(new BoxLayout(notificationsPanel, BoxLayout.X_AXIS));
+        notificationsPanel.setBackground(GUIConstants.PINK);
+        final JLabel notificationsLabel = new JLabel(SettingsViewModel.NOTIFICATIONS_LABEL);
+        notificationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        notificationsLabel.setFont(GUIConstants.FONT_TEXT);
+        notificationsLabel.setForeground(GUIConstants.RED);
+        notificationsPanel.add(notificationsLabel);
+        notificationsPanel.add(Box.createHorizontalGlue());
+        notificationsToggle = new JToggleButton(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+        notificationsToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        notificationsPanel.add(notificationsToggle);
 
-        mapButton = new JButton("Map");
-        generalButtons.add(mapButton);
+        settingsPanel.add(notificationsPanel);
 
-        notificationsButton = new JButton("Notifications");
-        generalButtons.add(notificationsButton);
+        final JLabel logoutHeading = new GeneralJLabel(SettingsViewModel.LOGOUT_HEADING,
+                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        settingsPanel.add(logoutHeading);
 
-        settingsButton = new JButton("Settings");
-        generalButtons.add(settingsButton);
+        final JPanel logoutPanel = new JPanel();
+        logoutPanel.setLayout(new BoxLayout(logoutPanel, BoxLayout.X_AXIS));
+        logoutPanel.setBackground(GUIConstants.PINK);
+        final JLabel logoutLabel = new JLabel(SettingsViewModel.LOGOUT_LABEL);
+        logoutLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        logoutLabel.setFont(GUIConstants.FONT_TEXT);
+        logoutLabel.setForeground(GUIConstants.RED);
+        logoutPanel.add(logoutLabel);
+        logoutPanel.add(Box.createHorizontalGlue());
+        final JButton logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
+        logoutButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        logoutPanel.add(logoutButton);
 
-        profileButton = new JButton("Profile");
-        generalButtons.add(profileButton);
+        settingsPanel.add(logoutPanel);
+
+        settingsPanel.add(Box.createVerticalGlue());
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        // TODO: write code for the action listeners below
 
         accountPrivacyToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (accountPrivacyToggle.isSelected()) {
-                    System.out.println("Toggle Button is ON");
+                    accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
                 } else{
-                    System.out.println("Toggle Button is OFF");
+                    accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_OFF);
                 }
+                final SettingsState settingsState = settingsViewModel.getState();
+                settingsController.executePrivacyToggle(settingsState.getUsername(), accountPrivacyToggle.isSelected());
             }
         });
 
+        notificationsToggle.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (notificationsToggle.isSelected()) {
+                    notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+                } else{
+                    notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
+                }
+                final SettingsState settingsState = settingsViewModel.getState();
+                settingsController.executeNotificationsToggle(settingsState.getUsername(),
+                        notificationsToggle.isSelected());
+            }
+        });
+
+        logoutButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(logoutButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.logoutController.execute(settingsState.getUsername());
+                    }
+                }
+        );
+
         this.add(title);
-        this.add(mainPanel);
-        this.add(generalButtons);
+        this.add(settingsPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        add(menuBar, BorderLayout.NORTH);
+        this.add(menuBar);
     }
 
-    // TODO: implement the propertyChange function and set controllers
+    @NotNull
+    private static JPanel getSettingsPanel() {
+        final JPanel settingsPanel = new JPanel();
+        final Dimension settingsPanelDimension = new Dimension(SettingsViewModel.SETTINGS_PANEL_WIDTH,
+                SettingsViewModel.SETTINGS_PANEL_HEIGHT);
+        settingsPanel.setMaximumSize(settingsPanelDimension);
+        settingsPanel.setMinimumSize(settingsPanelDimension);
+        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
+        settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        settingsPanel.setBackground(GUIConstants.RED);
+        return settingsPanel;
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-
+        if (evt.getPropertyName().equals("privacy changed")) {
+            SettingsState state = this.settingsViewModel.getState();
+            this.accountPrivacyToggle.setSelected(state.isPublic());
+            if (state.isPublic()) {
+                this.accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
+            }
+            else {
+                this.accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_OFF);
+            }
+        }
+        else if (evt.getPropertyName().equals("notifications changed")) {
+            SettingsState state = this.settingsViewModel.getState();
+            this.notificationsToggle.setSelected(state.isNotificationsEnabled());
+            if (state.isNotificationsEnabled()) {
+                this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
+            }
+            else {
+                this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
+            }
         }
     }
 
@@ -144,5 +192,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
     public void setSettingsController(SettingsController controller) {
         this.settingsController = controller;
+    }
+    public void setLogoutController(LogoutController controller) {
+        this.logoutController = controller;
     }
 }
