@@ -515,7 +515,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(homePageView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
