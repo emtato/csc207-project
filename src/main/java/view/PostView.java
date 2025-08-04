@@ -341,7 +341,7 @@ public class PostView extends JPanel {
         commentsPanel.add(commentsHeader);
         commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
 
-        ArrayList<Comment> comments = post.getComments();
+        ArrayList<Comment> comments = postCommentsLikesDataAccessObject.getComments(post.getID());
         for (Comment comment : comments) {
             JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
             commentUser.setFont(subtite2);

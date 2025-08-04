@@ -192,12 +192,6 @@ public class Post {
         return "PostID=" + postID + ", Title=" + title + ", User=" + user.getUsername();
     }
 
-    public ArrayList<Comment> getComments() {
-        FilePostCommentLikesDataAccessObject filePostCommentLikesDataAccessObject = new FilePostCommentLikesDataAccessObject();
-        ArrayList<Comment> comments = filePostCommentLikesDataAccessObject.getComments(postID);
-        return comments;
-    }
-
     public ArrayList<String> getImageURLs() {
         return imageURLs;
     }
