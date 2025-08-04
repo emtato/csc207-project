@@ -17,7 +17,9 @@ import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.like_post.LikePostController;
 import use_case.fetch_post.FetchPostInteractor;
+import use_case.like_post.LikePostInteractor;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.PostPanel;
 
@@ -46,7 +48,7 @@ public class HomePageView extends JPanel {
         Dimension buttonSize = new Dimension(450, 40);
 
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        //TODO: implement liking post link to DB
+
         JButton forYouButton = new JButton("For You");
         forYouButton.setPreferredSize(buttonSize);
         forYouButton.setBorder(BorderFactory.createEmptyBorder());
@@ -115,13 +117,13 @@ public class HomePageView extends JPanel {
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
             feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
             Post post1 = randomFeedPosts.get(i);
-            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400);
+            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400, postCommentsLikesDataAccessObject);
             postPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
             feedRow.setMaximumSize(new Dimension(2000, 420));
             feedRow.add(postPanel);
 
             Post post2 = randomFeedPosts2.get(i);
-            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400);
+            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400, postCommentsLikesDataAccessObject);
             postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
             feedRow.add(postTwo); // second post
             feedRow.add(Box.createHorizontalGlue());
