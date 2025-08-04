@@ -205,18 +205,20 @@ public class PostPanel extends JPanel {
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            likePostController.likePost(post.getID(), isLiking);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            liked = isLiking;
+
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == saveButton) {
