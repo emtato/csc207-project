@@ -127,20 +127,4 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         return new ArrayList<>(postsMap.keySet());
     }
 
-    @Override
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description,
-                          ArrayList<Post> posts, ArrayList<String> tags) {
-        Club club = new Club(name, description, members, tags, posts);
-        clubsMap.put(clubID, club);
-    }
-
-    @Override
-    public Club getClub(long clubID) {
-        if(!clubsMap.containsKey(clubID)) {
-            return null;
-        }
-        else{
-            return clubsMap.get(clubID);
-        }
-    }
 }

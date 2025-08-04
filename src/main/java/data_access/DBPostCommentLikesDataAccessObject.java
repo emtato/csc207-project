@@ -1,47 +1,86 @@
-package data_access;/**
- * Created by Emilia on 2025-07-29!
- * Description:
- * ^ • ω • ^
- */
+package data_access;
 
 import entity.*;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import use_case.note.DataAccessException;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBPostCommentLikesDataAccessObject {
-    private String filePath = "src/main/java/data_access/data_storage.json";
+public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+    private static PostCommentsLikesDataAccessObject instance;
 
+    private final String DATABASE_USERNAME = "csc207munchablesusername";
+    private final String DATABASE_PASSWORD = "csc207munchablespassword";
+    private final String DATA_KEY = "postcommentlikes";
+    private static final int CREDENTIAL_ERROR = 401;
+    private static final int SUCCESS_CODE = 200;
+    private static final String CONTENT_TYPE_LABEL = "Content-Type";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String STATUS_CODE_LABEL = "status_code";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String MESSAGE = "message";
 
-    /**
-     * method to reduce duplicate code, retrieves JSONObject from file
-     *
-     * @return JSONObject of data_storage.json.
-     */
-    @NotNull
-    private JSONObject getJsonObject() {
-        JSONObject data;
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            data = new JSONObject(content);
+    private DBPostCommentLikesDataAccessObject() {
+    }
+
+    public static PostCommentsLikesDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new DBPostCommentLikesDataAccessObject();
         }
-        catch (IOException e) {
-            data = new JSONObject();
-        }
-        return data;
+        return instance;
     }
 
     /**
-     * reduce duplicate code for get comments in data_storage.JSON
+     * method to reduce duplicate code, retrieves JSONObject of post, comment, like data from database
+     *
+     * @return JSONObject .
+     */
+    @NotNull
+    private JSONObject getJsonObject() throws DataAccessException {
+        // Make an API call to get the user object.
+        final String username = DATABASE_USERNAME;
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+                final JSONObject data = userJSONObject.getJSONObject("info");
+                if (data.has(DATA_KEY)) {
+                    return data.getJSONObject(DATA_KEY);
+                }
+                else{
+                    data.put(DATA_KEY, new JSONObject());
+                    saveJSONObject(data.getJSONObject(DATA_KEY));
+                    return data.getJSONObject(DATA_KEY);
+                }
+            }
+            else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * reduce duplicate code for geting comments
      *
      * @param data     JSONObject data from entire file
      * @param parentID post ID of the post the comment is posted on
@@ -70,9 +109,86 @@ public class DBPostCommentLikesDataAccessObject {
         return both;
     }
 
-    public void writeCommentToFile(long parentID, Account user, String contents, LocalDateTime timestamp) {
+    /**
+     * helper method for saveJSONObject, retrieves JSONObject of all info from database
+     *
+     * @return JSONObject .
+     */
+    private JSONObject getInfo() throws DataAccessException {
+        // Make an API call to get the user object.
+        final String username = DATABASE_USERNAME;
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+                final JSONObject data = userJSONObject.getJSONObject("info");
+                return data;
+            }
+            else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private boolean saveJSONObject(JSONObject data) throws DataAccessException {
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        // POST METHOD
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put(USERNAME, DATABASE_USERNAME);
+        requestBody.put(PASSWORD, DATABASE_PASSWORD);
+        final JSONObject info = getInfo();
+        info.put(DATA_KEY, data);
+        requestBody.put("info", info);
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
+                .method("PUT", body)
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                return true;
+            }
+            else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
+                throw new DataAccessException("message could not be found or password was incorrect");
+            }
+            else {
+                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp)  {
         // read existing data
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         ArrayList<Object> list = getCommentArray(data, parentID);
         JSONArray comments = (JSONArray) list.get(0);
@@ -88,17 +204,25 @@ public class DBPostCommentLikesDataAccessObject {
         commentsMap.put(String.valueOf(parentID), comments);
         data.put("comments", commentsMap);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        try {
+            saveJSONObject(data);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
+
     }
 
+    @Override
     public ArrayList<Comment> getComments(long parentID) {
         // read existing data
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         ArrayList<Object> list = getCommentArray(data, parentID);
         JSONArray comments = (JSONArray) list.get(0);
@@ -114,17 +238,17 @@ public class DBPostCommentLikesDataAccessObject {
         return commentList;
     }
 
-    /**
-     * keep a record of which account has liked which post
-     *
-     * @param user   current logged in user
-     * @param postID post ID currently being liked
-     */
-    public void writeLikeToFile(Account user, long postID) {
-        JSONObject data;
+    @Override
+    public void addLike(Account user, long postID) {
+        JSONObject data = new JSONObject();
         JSONObject likeMap;
 
-        data = getJsonObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
@@ -150,31 +274,24 @@ public class DBPostCommentLikesDataAccessObject {
         likeMap.put(username, likedPosts);
         data.put("likes", likeMap);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        try {
+            saveJSONObject(data);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    /**
-     * function to determine if the current user has liked post postID to keep track and avoid spamming likes
-     *
-     * @param user   current logged in user
-     * @param postID id of post being accessed
-     * @return boolean to indicate if the current user has liked postID
-     */
-    public boolean postLikedyesNopls(Account user, long postID) {
-        JSONObject data;
+    @Override
+    public boolean postIsLiked(Account user, long postID) {
+        JSONObject data = new JSONObject();
         JSONObject likeMap;
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            data = new JSONObject(content);
+            data = new JSONObject();
         }
-        catch (IOException e) {
-            return false;
+        catch (JSONException ex) {
+            System.out.println(ex.getMessage());
         }
 
         if (data.has("likes")) {
@@ -202,9 +319,19 @@ public class DBPostCommentLikesDataAccessObject {
      * @param description String description
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
+     * @param time
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images) {
-        JSONObject data = getJsonObject();
+    @Override
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
+            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         JSONObject posts;
         if (data.has("posts")) {
             posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
@@ -217,29 +344,41 @@ public class DBPostCommentLikesDataAccessObject {
         newPost.put("title", title);
         newPost.put("description", description);
         newPost.put("type", postType);
+        newPost.put("likes", 0);
         JSONObject contentsJSONObject = new JSONObject(contents);
         newPost.put("contents", contentsJSONObject);
         newPost.put("tags", tags);
         posts.put(String.valueOf(postID), newPost);
         newPost.put("images", images);
-        data.put("posts", posts);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        //idk why this is necessary but it doesnt read a.m. it can only recognize AM
+        if (time.charAt(time.length() - 4) == 'a') {
+            String cutTime = time.substring(0, time.length() - 4) + "AM";
+            newPost.put("time", cutTime);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        else {
+            String cutTime = time.substring(0, time.length() - 4) + "PM";
+            newPost.put("time", cutTime);
+        }
+
+        data.put("posts", posts);
+        try {
+            saveJSONObject(data);
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    /**
-     * Get post object from postID.
-     *
-     * @param postID unique post ID
-     * @return Post object
-     */
+    @Override
     public Post getPost(long postID) {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (!data.has("posts")) {
             return null;
@@ -279,6 +418,8 @@ public class DBPostCommentLikesDataAccessObject {
             }
             post.setTags(tags);
         }
+        String time = postObj.getString("time");
+        post.setDateTimeFromString(time);
 
         if (postObj.has("contents")) {
             JSONObject contents = postObj.getJSONObject("contents");
@@ -311,15 +452,16 @@ public class DBPostCommentLikesDataAccessObject {
         return post;
     }
 
-    /**
-     * function to update a post's likes in database. The system to update likes should be used when the
-     * user likes or unlikes a post, and thus -1 or 1 is passed as likeDifference
-     *
-     * @param postID         ID of the post we are updating likes on
-     * @param likeDifference integer -1 or 1.
-     */
+    @Override
     public void updateLikesForPost(long postID, int likeDifference) {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         if (data.has("posts")) {
             JSONObject posts = data.getJSONObject("posts");
             if (posts.has(String.valueOf(postID))) {
@@ -328,11 +470,11 @@ public class DBPostCommentLikesDataAccessObject {
                 post.put("likes", currentLikes + likeDifference);
                 posts.put(String.valueOf(postID), post);
                 data.put("posts", posts);
-                try (FileWriter writer = new FileWriter(filePath)) {
-                    writer.write(data.toString(2));
+                try {
+                    saveJSONObject(data);
                 }
-                catch (IOException e) {
-                    throw new RuntimeException("i am sad :(", e);
+                catch (DataAccessException ex) {
+                    System.out.println(ex.getMessage());
                 }
             }
             else {
@@ -346,21 +488,18 @@ public class DBPostCommentLikesDataAccessObject {
         }
     }
 
-
-    public ArrayList<Post> getPosts(Account user) {
-        return new ArrayList<Post>();
-    }
-
-    /**
-     * get a list of all postID's stored in database.
-     *
-     * @return ArrayList of long
-     */
+    @Override
     public ArrayList<Long> getAvailablePosts() {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (!data.has("posts")) {
-            return null;
+            return new ArrayList<>();
         }
 
         JSONObject posts = data.getJSONObject("posts");
