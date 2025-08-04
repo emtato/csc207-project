@@ -1,17 +1,13 @@
 package use_case.manage_following;
 
-import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.CreateAccount;
-import entity.Post;
 import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
-import use_case.profile.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;

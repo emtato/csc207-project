@@ -1,7 +1,7 @@
-package interface_adapter.settings;
+package interface_adapter.toggle_settings;
 
-import use_case.settings.SettingsInputBoundary;
-import use_case.settings.SettingsInputData;
+import use_case.toggle_settings.SettingsInputBoundary;
+import use_case.toggle_settings.SettingsInputData;
 
 /**
  * Controller for the Change Settings Use Case.

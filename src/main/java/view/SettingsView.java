@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.logout.LogoutController;
-import interface_adapter.settings.SettingsController;
-import interface_adapter.settings.SettingsState;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.toggle_settings.SettingsController;
+import interface_adapter.toggle_settings.SettingsState;
+import interface_adapter.toggle_settings.SettingsViewModel;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.MenuBarPanel;
 

@@ -1,4 +1,4 @@
-package use_case.settings;
+package use_case.toggle_settings;
 
 import entity.User;
 import use_case.UserDataAccessInterface;

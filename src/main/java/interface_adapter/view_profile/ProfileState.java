@@ -1,4 +1,4 @@
-package interface_adapter.profile;
+package interface_adapter.view_profile;
 
 
 import entity.Post;

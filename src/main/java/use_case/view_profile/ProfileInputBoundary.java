@@ -1,4 +1,4 @@
-package use_case.profile;
+package use_case.view_profile;
 
 /**
  * Input Boundary for actions done on the profile menu.

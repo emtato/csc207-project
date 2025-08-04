@@ -1,4 +1,4 @@
-package use_case.settings;
+package use_case.toggle_settings;
 
 /**
  * Input Boundary for actions which are related to changing the settings.

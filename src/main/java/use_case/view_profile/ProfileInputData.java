@@ -1,4 +1,4 @@
-package use_case.profile;
+package use_case.view_profile;
 
 /**
  * The Input Data for the Profile Use Case.

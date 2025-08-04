@@ -1,4 +1,4 @@
-package interface_adapter.settings;
+package interface_adapter.toggle_settings;
 
 import interface_adapter.ViewModel;
 

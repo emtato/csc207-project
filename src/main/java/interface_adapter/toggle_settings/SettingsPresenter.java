@@ -1,8 +1,8 @@
-package interface_adapter.settings;
+package interface_adapter.toggle_settings;
 
 import interface_adapter.ViewManagerModel;
-import use_case.settings.SettingsOutputBoundary;
-import use_case.settings.SettingsOutputData;
+import use_case.toggle_settings.SettingsOutputBoundary;
+import use_case.toggle_settings.SettingsOutputData;
 
 /**
  * The Presenter for the Change Settings Use Case.

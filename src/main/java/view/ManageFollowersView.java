@@ -15,7 +15,7 @@ import entity.User;
 import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
-import interface_adapter.profile.ProfileController;
+import interface_adapter.view_profile.ProfileController;
 import view.ui_components.UserInfoPanel;
 
 public class ManageFollowersView extends JPanel implements PropertyChangeListener {

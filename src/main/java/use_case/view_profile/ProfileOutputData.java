@@ -1,4 +1,4 @@
-package use_case.profile;
+package use_case.view_profile;
 
 import entity.Post;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package use_case.settings;
+package use_case.toggle_settings;
 
 /**
  * The output boundary for the Change Settings Use Case.

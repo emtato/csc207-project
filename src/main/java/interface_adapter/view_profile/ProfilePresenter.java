@@ -1,4 +1,4 @@
-package interface_adapter.profile;
+package interface_adapter.view_profile;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.edit_profile.EditProfileState;
@@ -7,11 +7,11 @@ import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import use_case.profile.ProfileOutputBoundary;
-import use_case.profile.ProfileOutputData;
-import use_case.profile.SwitchToEditProfileViewOutputData;
-import use_case.profile.SwitchToFollowingViewOutputData;
-import use_case.profile.SwitchToFollowersViewOutputData;
+import use_case.view_profile.ProfileOutputBoundary;
+import use_case.view_profile.ProfileOutputData;
+import use_case.view_profile.SwitchToEditProfileViewOutputData;
+import use_case.view_profile.SwitchToFollowingViewOutputData;
+import use_case.view_profile.SwitchToFollowersViewOutputData;
 
 /**
  * The Presenter for the Profile Use Case.

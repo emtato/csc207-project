@@ -1,4 +1,4 @@
-package use_case.settings;
+package use_case.toggle_settings;
 
 /**
  * The Input Data for the Settings Use Case.

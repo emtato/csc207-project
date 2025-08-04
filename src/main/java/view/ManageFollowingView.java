@@ -19,7 +19,7 @@ import entity.User;
 import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import interface_adapter.profile.ProfileController;
+import interface_adapter.view_profile.ProfileController;
 import view.ui_components.UserInfoPanel;
 
 public class ManageFollowingView extends JPanel implements PropertyChangeListener {

@@ -10,8 +10,8 @@ import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.manage_followers.ManageFollowersUserDataAccessInterface;
 import use_case.manage_following.ManageFollowingUserDataAccessInterface;
 import use_case.note.NoteDataAccessInterface;
-import use_case.profile.ProfileUserDataAccessInterface;
-import use_case.settings.SettingsUserDataAccessInterface;
+import use_case.view_profile.ProfileUserDataAccessInterface;
+import use_case.toggle_settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public interface UserDataAccessObject extends

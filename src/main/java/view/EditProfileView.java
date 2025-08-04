@@ -20,7 +20,7 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfileState;
 import interface_adapter.edit_profile.EditProfileViewModel;
-import interface_adapter.profile.ProfileController;
+import interface_adapter.view_profile.ProfileController;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.LabelTextPanel;
 import view.ui_components.ProfilePictureLabel;

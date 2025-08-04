@@ -1,7 +1,7 @@
-package interface_adapter.profile;
+package interface_adapter.view_profile;
 
-import use_case.profile.ProfileInputBoundary;
-import use_case.profile.ProfileInputData;
+import use_case.view_profile.ProfileInputBoundary;
+import use_case.view_profile.ProfileInputData;
 
 /**
  * Controller for the Profile related Use Cases.

@@ -1,4 +1,4 @@
-package use_case.settings;
+package use_case.toggle_settings;
 
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessObject;

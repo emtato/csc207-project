@@ -1,11 +1,10 @@
-package use_case.profile;
+package use_case.view_profile;
 
 import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.CreateAccount;
-import entity.Post;
 import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
