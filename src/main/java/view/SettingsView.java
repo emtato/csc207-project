@@ -7,12 +7,18 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.JButton;
+import javax.swing.JPasswordField;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
+import javax.swing.Box;
 
 import interface_adapter.change_password.ChangePasswordController;
-import interface_adapter.edit_profile.EditProfileState;
 import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
@@ -45,39 +51,55 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         this.settingsViewModel = settingsViewModel;
         this.viewManagerModel = viewManagerModel;
         this.settingsViewModel.addPropertyChangeListener(this);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // add title
         final JLabel title = new GeneralJLabel(SettingsViewModel.TITLE_LABEL,
                 GUIConstants.TITLE_SIZE, GUIConstants.RED);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(title);
 
+        // add settings panel
         final JPanel settingsPanel = getSettingsPanel();
 
         accountPrivacyToggle = new JToggleButton(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
-        createNewPanel(settingsPanel, SettingsViewModel.PRIVACY_HEADING, SettingsViewModel.ACCOUNT_PRIVACY_LABEL,
+        addNewPanel(settingsPanel, SettingsViewModel.PRIVACY_HEADING, SettingsViewModel.ACCOUNT_PRIVACY_LABEL,
                 accountPrivacyToggle);
 
         notificationsToggle = new JToggleButton(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
-        createNewPanel(settingsPanel, SettingsViewModel.NOTIFICATIONS_HEADING,SettingsViewModel.NOTIFICATIONS_LABEL,
+        addNewPanel(settingsPanel, SettingsViewModel.NOTIFICATIONS_HEADING,SettingsViewModel.NOTIFICATIONS_LABEL,
                 notificationsToggle);
 
         logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
-        createNewPanel(settingsPanel, SettingsViewModel.LOGOUT_HEADING, SettingsViewModel.LOGOUT_LABEL, logoutButton);
+        addNewPanel(settingsPanel, SettingsViewModel.LOGOUT_HEADING, SettingsViewModel.LOGOUT_LABEL, logoutButton);
 
         deleteAccountButton = new JButton(SettingsViewModel.DELETE_BUTTON_LABEL);
-        createNewPanel(settingsPanel, SettingsViewModel.DELETE_HEADING, SettingsViewModel.DELETE_LABEL,
+        addNewPanel(settingsPanel, SettingsViewModel.DELETE_HEADING, SettingsViewModel.DELETE_LABEL,
                 deleteAccountButton);
 
         passwordField = new JPasswordField();
-        createNewPanel(settingsPanel, SettingsViewModel.PASSWORD_HEADING, SettingsViewModel.PASSWORD_LABEL,
+        addNewPanel(settingsPanel, SettingsViewModel.PASSWORD_HEADING, SettingsViewModel.PASSWORD_LABEL,
                 passwordField);
 
         changePasswordButton = new JButton(SettingsViewModel.PASSWORD_BUTTON_LABEL);
         settingsPanel.add(changePasswordButton);
-
         settingsPanel.add(Box.createVerticalGlue());
+        this.add(settingsPanel);
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // add a menu bar
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(menuBar);
 
+        // add listeners
+        addPrivacyToggleListener();
+        addNotificationsToggleListener();
+        addLogoutButtonListener();
+        addDeleteAccountButtonListener();
+        addChangePasswordButtonListener();
+        addPasswordFieldDocumentListener();
+    }
+
+    private void addPrivacyToggleListener(){
         accountPrivacyToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -90,7 +112,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 settingsController.executePrivacyToggle(settingsState.getUsername(), accountPrivacyToggle.isSelected());
             }
         });
+    }
 
+    private void addNotificationsToggleListener(){
         notificationsToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -104,7 +128,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                         notificationsToggle.isSelected());
             }
         });
+    }
 
+    private void addLogoutButtonListener(){
         logoutButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(logoutButton)) {
@@ -113,7 +139,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+    }
 
+    private void addDeleteAccountButtonListener(){
         deleteAccountButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(deleteAccountButton)) {
@@ -122,7 +150,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+    }
 
+    private void addChangePasswordButtonListener(){
         changePasswordButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(changePasswordButton)) {
@@ -132,7 +162,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+    }
 
+    private void addPasswordFieldDocumentListener(){
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
@@ -156,14 +188,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 documentListenerHelper();
             }
         });
-
-        this.add(title);
-        this.add(settingsPanel);
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        this.add(menuBar);
     }
 
-    private void createNewPanel(JPanel parentPanel, String header, String label, JComponent component) {
+    private void addNewPanel(JPanel parentPanel, String header, String label, JComponent component) {
         final JLabel newHeading = new GeneralJLabel(header, GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
         parentPanel.add(newHeading);
 

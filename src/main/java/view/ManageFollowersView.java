@@ -34,23 +34,33 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
     public ManageFollowersView(ManageFollowersViewModel manageFollowersViewModel) {
         this.manageFollowersViewModel = manageFollowersViewModel;
         this.manageFollowersViewModel.addPropertyChangeListener(this);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         title = new JLabel(ManageFollowersViewModel.TITLE_LABEL);
+        mainPanel = new JPanel();
+        followersPanels = new ArrayList<>();
+        backButton = new JButton(ManageFollowersViewModel.BACK_LABEL);
+
+        createUIComponents();
+    }
+
+    private void createUIComponents() {
+
+        // add title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(GUIConstants.FONT_TITLE);
         title.setForeground(GUIConstants.RED);
+        this.add(title);
 
-        mainPanel = new JPanel();
+        // add main panel as scroll pane
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
+        this.add(scrollPane);
 
-        this.followersPanels = new ArrayList<>();
-
-        backButton = new JButton("Back to Profile");
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // add back button and add action listener to the back button
+        this.add(backButton);
 
         backButton.addActionListener(
                 evt -> {
@@ -61,37 +71,37 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
                     }
                 }
         );
+    }
 
-        this.add(title);
-        this.add(scrollPane);
-        this.add(backButton);
+    private void refreshScreen(ManageFollowersState state) {
+        this.followersPanels.clear();
+        mainPanel.removeAll();
+        final ArrayList<User> followers = state.getFollowers();
+        for (User account : followers) {
+            final JButton removeButton = new JButton(ManageFollowersViewModel.REMOVE_LABEL);
+            removeButton.addActionListener(
+                    event -> {
+                        if (event.getSource().equals(removeButton)) {
+                            this.manageFollowersController.executeRemoveFollower(
+                                    state.getUsername(), account.getUsername());
+                        }
+                    }
+            );
+            this.followersPanels.add(new UserInfoPanel(account.getProfilePictureUrl(), account.getUsername(),
+                    account.getDisplayName(), removeButton));
+        }
+
+        for (UserInfoPanel followerPanel : followersPanels) {
+            mainPanel.add(followerPanel);
+        }
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            this.followersPanels.clear();
-            mainPanel.removeAll();
-            final ArrayList<User> followers = this.manageFollowersViewModel.getState().getFollowers();
-            for (User account : followers) {
-                final JButton removeButton = new JButton(ManageFollowersViewModel.REMOVE_LABEL);
-                removeButton.addActionListener(
-                        event -> {
-                            if (event.getSource().equals(removeButton)) {
-                                this.manageFollowersController.executeRemoveFollower(
-                                        this.manageFollowersViewModel.getState().getUsername(), account.getUsername());
-                            }
-                        }
-                );
-                this.followersPanels.add(new UserInfoPanel(account.getProfilePictureUrl(), account.getUsername(),
-                        account.getDisplayName(), removeButton));
-            }
-
-            for (UserInfoPanel followerPanel : followersPanels) {
-                mainPanel.add(followerPanel);
-            }
-            mainPanel.revalidate();
-            mainPanel.repaint();
+            refreshScreen(this.manageFollowersViewModel.getState());
         }
     }
 
