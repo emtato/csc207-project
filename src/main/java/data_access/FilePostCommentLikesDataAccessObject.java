@@ -34,6 +34,29 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         return instance;
     }
 
+    @Override
+    public void deletePost(long postID){
+        final JSONObject data = getJsonObject();
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+            if (posts.has(String.valueOf(postID))) {
+                posts.remove(String.valueOf(postID));
+            }
+        }
+        else {
+            posts = new JSONObject();
+        }
+
+        data.put("posts", posts);
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("i am sad :(", e);
+        }
+    }
+
     /**
      * method to reduce duplicate code, retrieves JSONObject from file
      *

@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.note.DataAccessException;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,36 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             instance = new DBPostCommentLikesDataAccessObject();
         }
         return instance;
+    }
+
+    @Override
+    public void deletePost(long postID){
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+            if (posts.has(String.valueOf(postID))) {
+                posts.remove(String.valueOf(postID));
+            }
+        }
+        else {
+            posts = new JSONObject();
+        }
+
+        data.put("posts", posts);
+        try {
+            saveJSONObject(data);
+        }
+        catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**

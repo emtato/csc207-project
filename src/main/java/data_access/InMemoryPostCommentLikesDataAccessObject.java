@@ -33,6 +33,11 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     }
 
     @Override
+    public void deletePost(long postID){
+        postsMap.remove(postID);
+    }
+
+    @Override
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
         Comment comment = new Comment(user, contents, timestamp, 0);
         if (commentsMap.containsKey(parentID)) {

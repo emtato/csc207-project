@@ -14,6 +14,13 @@ public interface PostCommentsLikesDataAccessObject {
     public ArrayList<Comment> getComments(long parentID);
 
     /**
+     * deletes a post given a post ID
+     *
+     * @param postID post ID to delete
+     */
+    public void deletePost(long postID);
+
+    /**
      * keep a record of which account has liked which post
      *
      * @param user   current logged in user

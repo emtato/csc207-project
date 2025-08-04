@@ -7,16 +7,12 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
@@ -31,9 +27,12 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
     private SettingsController settingsController;
     private LogoutController logoutController;
+    private DeleteAccountController deleteAccountController;
 
     private final JToggleButton accountPrivacyToggle;
     private final JToggleButton notificationsToggle;
+    private final JButton logoutButton;
+    private final JButton deleteAccountButton;
 
     public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
@@ -46,62 +45,20 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
         final JPanel settingsPanel = getSettingsPanel();
 
-        final JLabel privacyHeading = new GeneralJLabel(SettingsViewModel.PRIVACY_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(privacyHeading);
-
-        final JPanel privacyPanel = new JPanel();
-        privacyPanel.setLayout(new BoxLayout(privacyPanel, BoxLayout.X_AXIS));
-        privacyPanel.setBackground(GUIConstants.PINK);
-        final JLabel privacyLabel = new JLabel(SettingsViewModel.ACCOUNT_PRIVACY_LABEL);
-        privacyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        privacyLabel.setFont(GUIConstants.FONT_TEXT);
-        privacyLabel.setForeground(GUIConstants.RED);
-        privacyPanel.add(privacyLabel);
-        privacyPanel.add(Box.createHorizontalGlue());
         accountPrivacyToggle = new JToggleButton(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
-        accountPrivacyToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        privacyPanel.add(accountPrivacyToggle);
+        createNewPanel(settingsPanel, SettingsViewModel.PRIVACY_HEADING, SettingsViewModel.ACCOUNT_PRIVACY_LABEL,
+                accountPrivacyToggle);
 
-        settingsPanel.add(privacyPanel);
-
-        final JLabel notificationsHeading = new GeneralJLabel(SettingsViewModel.NOTIFICATIONS_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(notificationsHeading);
-
-        final JPanel notificationsPanel = new JPanel();
-        notificationsPanel.setLayout(new BoxLayout(notificationsPanel, BoxLayout.X_AXIS));
-        notificationsPanel.setBackground(GUIConstants.PINK);
-        final JLabel notificationsLabel = new JLabel(SettingsViewModel.NOTIFICATIONS_LABEL);
-        notificationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        notificationsLabel.setFont(GUIConstants.FONT_TEXT);
-        notificationsLabel.setForeground(GUIConstants.RED);
-        notificationsPanel.add(notificationsLabel);
-        notificationsPanel.add(Box.createHorizontalGlue());
         notificationsToggle = new JToggleButton(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
-        notificationsToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        notificationsPanel.add(notificationsToggle);
+        createNewPanel(settingsPanel, SettingsViewModel.NOTIFICATIONS_HEADING,SettingsViewModel.NOTIFICATIONS_LABEL,
+                notificationsToggle);
 
-        settingsPanel.add(notificationsPanel);
+        logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
+        createNewPanel(settingsPanel, SettingsViewModel.LOGOUT_HEADING, SettingsViewModel.LOGOUT_LABEL, logoutButton);
 
-        final JLabel logoutHeading = new GeneralJLabel(SettingsViewModel.LOGOUT_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(logoutHeading);
-
-        final JPanel logoutPanel = new JPanel();
-        logoutPanel.setLayout(new BoxLayout(logoutPanel, BoxLayout.X_AXIS));
-        logoutPanel.setBackground(GUIConstants.PINK);
-        final JLabel logoutLabel = new JLabel(SettingsViewModel.LOGOUT_LABEL);
-        logoutLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        logoutLabel.setFont(GUIConstants.FONT_TEXT);
-        logoutLabel.setForeground(GUIConstants.RED);
-        logoutPanel.add(logoutLabel);
-        logoutPanel.add(Box.createHorizontalGlue());
-        final JButton logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
-        logoutButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        logoutPanel.add(logoutButton);
-
-        settingsPanel.add(logoutPanel);
+        deleteAccountButton = new JButton(SettingsViewModel.DELETE_BUTTON_LABEL);
+        createNewPanel(settingsPanel, SettingsViewModel.DELETE_HEADING, SettingsViewModel.DELETE_LABEL,
+                deleteAccountButton);
 
         settingsPanel.add(Box.createVerticalGlue());
 
@@ -143,10 +100,38 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        deleteAccountButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(deleteAccountButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.deleteAccountController.execute(settingsState.getUsername());
+                    }
+                }
+        );
+
         this.add(title);
         this.add(settingsPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         this.add(menuBar);
+    }
+
+    private void createNewPanel(JPanel parentPanel, String header, String label, AbstractButton button) {
+        final JLabel newHeading = new GeneralJLabel(header, GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        parentPanel.add(newHeading);
+
+        final JPanel subPanel = new JPanel();
+        subPanel.setLayout(new BoxLayout(subPanel, BoxLayout.X_AXIS));
+        subPanel.setBackground(GUIConstants.PINK);
+        final JLabel newLabel = new JLabel(label);
+        newLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        newLabel.setFont(GUIConstants.FONT_TEXT);
+        newLabel.setForeground(GUIConstants.RED);
+        subPanel.add(newLabel);
+        subPanel.add(Box.createHorizontalGlue());
+        button.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        subPanel.add(button);
+
+        parentPanel.add(subPanel);
     }
 
     @NotNull
@@ -195,5 +180,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     }
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
+    }
+    public void setDeleteAccountController(DeleteAccountController controller) {
+        this.deleteAccountController = controller;
     }
 }
