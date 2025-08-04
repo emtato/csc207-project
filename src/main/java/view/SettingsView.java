@@ -137,7 +137,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
             private void documentListenerHelper() {
                 final SettingsState currentState = settingsViewModel.getState();
-                currentState.setNewPassword(passwordField.getText());
+                currentState.setNewPassword(new String(passwordField.getPassword()));
                 settingsViewModel.setState(currentState);
             }
 
