@@ -3,6 +3,7 @@ package view;
 import app.Session;
 import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
+import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import use_case.create_post.CreatePostInputData;
 import use_case.create_post.CreatePostInteractor;
@@ -40,10 +41,10 @@ public class CreateNewPostView extends JPanel {
 
     private CreatePostInteractor createPostInteractor;
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
+    public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject, UserDataAccessObject userDataAccessObject) {
         this.viewManagerModel = viewManagerModel;
 
-        createPostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, new FileUserDataAccessObject());
+        createPostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject);
         setSize(1300, 800);
         setLayout(new BorderLayout());
 

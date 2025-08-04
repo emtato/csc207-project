@@ -1,11 +1,11 @@
 package use_case.manage_followers;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.CreateAccount;
 import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
-import use_case.manage_following.*;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class ManageFollowersInteractorTest {
 
         // Add users to the user repository and add a following from user2 to user1
         ManageFollowersInputData inputData = new ManageFollowersInputData(username, username2);
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
         userRepository.save(user);
         userRepository.save(user2);
         userRepository.addFollowing(username2, username);

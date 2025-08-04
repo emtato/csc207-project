@@ -1,6 +1,7 @@
 package use_case.edit_profile;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.CreateAccount;
 import entity.User;
 import entity.UserFactory;
@@ -33,7 +34,7 @@ public class EditProfileInteractorTest {
                 newProfilePictureUrl, newPreferences);
 
         // Add user to the repository
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
         userRepository.save(user);
 
         // This creates a successPresenter that tests whether the test case is as we expect.

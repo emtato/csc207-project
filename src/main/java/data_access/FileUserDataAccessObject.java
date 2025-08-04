@@ -16,8 +16,20 @@ import java.util.HashMap;
 
 public class FileUserDataAccessObject implements UserDataAccessObject {
 
+    private static UserDataAccessObject instance;
+
     private final String filePath = "src/main/java/data_access/user_data.json";
     private String currentUsername;
+
+    private FileUserDataAccessObject() {
+    }
+
+    public static UserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new FileUserDataAccessObject();
+        }
+        return instance;
+    }
 
     /**
      * Gets the JSON object from the file, creating an empty one if the file doesn't exist

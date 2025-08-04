@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
+import use_case.UserDataAccessInterface;
 import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.note.DataAccessException;
 
@@ -14,10 +15,22 @@ import use_case.note.DataAccessException;
  */
 public class InMemoryUserDataAccessObject implements UserDataAccessObject {
 
+    private static UserDataAccessObject instance;
+
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, String> notes = new HashMap<>();
 
     private String currentUsername;
+
+    private InMemoryUserDataAccessObject() {
+    }
+
+    public static UserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new InMemoryUserDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public boolean existsByName(String identifier) {
