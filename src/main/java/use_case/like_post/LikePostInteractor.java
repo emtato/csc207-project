@@ -22,10 +22,8 @@ public class LikePostInteractor implements LikePostInputBoundary {
         Post post = postDAO.getPost(inputData.getPostId());
 
         if (inputData.isLiking()) {
-            post.setLikes(post.getLikes() + 1);
             postDAO.updateLikesForPost(post.getID(), 1);
         } else {
-            post.setLikes(post.getLikes() - 1);
             postDAO.updateLikesForPost(post.getID(), -1);
         }
 
