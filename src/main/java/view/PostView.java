@@ -108,8 +108,9 @@ public class PostView extends JPanel {
         );
         mainPanel = new JPanel(new BorderLayout());
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel splitTop = new JPanel();
+        splitTop.setLayout(new BoxLayout(splitTop, BoxLayout.Y_AXIS));
         rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         centerPanel = new JPanel();
@@ -118,7 +119,7 @@ public class PostView extends JPanel {
         title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
         title.setFont(fontTitle);
 
-        topPanel.add(title);
+        splitTop.add(title);
         subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
@@ -127,8 +128,11 @@ public class PostView extends JPanel {
         tags.setForeground(Color.LIGHT_GRAY);
 
 
-        topPanel.add(subtitle);
-        topPanel.add(tags);
+        splitTop.add(subtitle);
+        splitTop.add(tags);
+
+        topPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        topPanel.add(splitTop);
 
         // middle
         displayPost(post);
@@ -236,7 +240,7 @@ public class PostView extends JPanel {
             rightPanel.add(button);
             rightPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 400)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 540)));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -343,14 +347,15 @@ public class PostView extends JPanel {
         }
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 
         JLabel commentsHeader = new JLabel("Comments");
         commentsHeader.setFont(subtite);
         commentsHeader.setForeground(Color.BLACK);
 
         JPanel commentsPanel = new JPanel();
+
         commentsPanel.add(commentsHeader);
+
         commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
 
         getCommentsController.getComments(post.getID());
@@ -513,13 +518,16 @@ public class PostView extends JPanel {
             JOptionPane.showMessageDialog(null, "here is the id of ths post share that or something \n" + post.getID(), "nerd", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource() == commentButton && !xPresent) {
-            JTextArea commentsArea = new JTextArea(2, 20);
+            JPanel commentsPanel = new JPanel();
+            commentsPanel.setLayout(new FlowLayout());
+            JTextArea commentsArea = new JTextArea(2, 100);
             commentsArea.setLineWrap(true);
             commentsArea.setWrapStyleWord(true);
+            commentsPanel.add(commentsArea, BorderLayout.CENTER);
 
-            scrollPane.setSize(new Dimension(1200, 600)); //YOPPP WORKS
+            scrollPane.setSize(new Dimension(1200, 560)); //YOPPP WORKS
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-            centerPanel.add(commentsArea);
+            centerPanel.add(commentsPanel);
 
             commentButton.setOpaque(true);
             commentButton.setText("");
