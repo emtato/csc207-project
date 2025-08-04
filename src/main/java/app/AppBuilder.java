@@ -7,10 +7,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JFrame;
 
-import data_access.UserDataAccessObject;
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.FileUserDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
+import data_access.*;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -99,9 +96,9 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
+    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            FilePostCommentLikesDataAccessObject.getInstance();
+            DBPostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
