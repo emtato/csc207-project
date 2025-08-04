@@ -11,6 +11,9 @@ public class ManageFollowingViewModel extends ViewModel<ManageFollowingState> {
     public static final String REMOVE_LABEL = "Unfollow";
     public static final int PANEL_WIDTH = 500;
     public static final int PANEL_HEIGHT = 700;
+    public static final String BACK_BUTTON_LABEL = "Back to Profile";
+    public static final String INPUT_PROMPT = "Enter username to follow";
+    public static final String FOLLOW_BUTTON_LABEL = "Follow";
 
     public ManageFollowingViewModel() {
         super("manage following");
