@@ -4,9 +4,10 @@ package interface_adapter.toggle_settings;
  * The state for the Settings View Model.
  */
 public class SettingsState {
-    private String username;
-    private boolean isPublic;
-    private boolean notificationsEnabled;
+    private String username = "";
+    private boolean isPublic = true;
+    private boolean notificationsEnabled = true;
+    private String newPassword = "";
 
     public String getUsername() {
         return username;
@@ -30,5 +31,13 @@ public class SettingsState {
 
     public void setNotificationsEnabled(boolean notificationsEnabled) {
         this.notificationsEnabled = notificationsEnabled;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }
