@@ -8,13 +8,23 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 import data_access.*;
+import data_access.spoonacular.SpoonacularAPI;
 import entity.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.analyze_recipe.AnalyzeRecipeController;
+import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
+import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
+import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.fetch_post.FetchPostPresenter;
+import interface_adapter.get_comments.GetCommentsController;
+import interface_adapter.get_comments.GetCommentsPresenter;
+import interface_adapter.get_comments.GetCommentsViewModel;
+import interface_adapter.like_post.LikePostController;
 import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersPresenter;
 import interface_adapter.manage_following.ManageFollowingController;
@@ -40,15 +50,29 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
+import interface_adapter.write_comment.WriteCommentController;
+import use_case.analyze_recipe.AnalyzeRecipeInputBoundary;
+import use_case.analyze_recipe.AnalyzeRecipeInteractor;
+import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.comment.CommentPostInputBoundary;
+import use_case.comment.CommentPostInteractor;
 import use_case.delete_account.DeleteAccountInputBoundary;
 import use_case.delete_account.DeleteAccountInteractor;
 import use_case.delete_account.DeleteAccountOutputBoundary;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInteractor;
 import use_case.edit_profile.EditProfileOutputBoundary;
+import use_case.fetch_post.FetchPostInputBoundary;
+import use_case.fetch_post.FetchPostInteractor;
+import use_case.fetch_post.FetchPostOutputBoundary;
+import use_case.get_comments.GetCommentsInputBoundary;
+import use_case.get_comments.GetCommentsInteractor;
+import use_case.get_comments.GetCommentsOutputBoundary;
+import use_case.like_post.LikePostInputBoundary;
+import use_case.like_post.LikePostInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -95,11 +119,13 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
+    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            DBPostCommentLikesDataAccessObject.getInstance();
+            FilePostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
+    private GetCommentsViewModel getCommentsViewModel;
+    private AnalyzeRecipeViewModel analyzeRecipeViewModel;
     private CreatePostViewModel createPostViewModel;
     private CreateNewPostView createNewPostView;
     private SignupView signupView;
@@ -218,8 +244,10 @@ public class AppBuilder {
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
+        getCommentsViewModel = new GetCommentsViewModel();
+        analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
-        postView = new PostView(viewManagerModel, trialpost, postCommentsLikesDataAccessObject);
+        postView = new PostView(viewManagerModel, trialpost, getCommentsViewModel, analyzeRecipeViewModel);
         cardPanel.add(postView, postView.getViewName());
         viewManagerModel.setPostView(postView);
         return this;
@@ -486,6 +514,83 @@ public class AppBuilder {
         final DeleteAccountController deleteAccountController =
                 new DeleteAccountController(deleteAccountInteractor);
         settingsView.setDeleteAccountController(deleteAccountController);
+        return this;
+    }
+
+    /**
+     * Adds the Like Post Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addLikePostUseCase() {
+        //final LikePostOutputBoundary likePostOutputBoundary = new LikePostPresenter(viewManagerModel);
+        final LikePostInputBoundary likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
+        final LikePostController likePostController =
+                new LikePostController(likePostInteractor);
+        postView.setLikePostController(likePostController);
+        homePageView.setLikePostController(likePostController);
+        profileView.setLikePostController(likePostController);
+        clubHomePageView.setLikePostController(likePostController);
+        specificClubView.setLikePostController(likePostController);
+        return this;
+    }
+
+    /**
+     * Adds the Write Comment Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addWriteCommentUseCase() {
+        //final WriteCommentOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter(viewManagerModel);
+        final CommentPostInputBoundary writeCommentInteractor =
+                new CommentPostInteractor(postCommentsLikesDataAccessObject);
+        final WriteCommentController writeCommentController =
+                new WriteCommentController(writeCommentInteractor);
+        postView.setWriteCommentController(writeCommentController);
+        return this;
+    }
+
+    /**
+     * Adds the Get Comments Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addGetCommentsUseCase() {
+        final GetCommentsOutputBoundary getCommentsOutputBoundary = new GetCommentsPresenter(getCommentsViewModel);
+        final GetCommentsInputBoundary getCommentsInteractor =
+                new GetCommentsInteractor(postCommentsLikesDataAccessObject, getCommentsOutputBoundary);
+        final GetCommentsController getCommentsController =
+                new GetCommentsController(getCommentsInteractor);
+        postView.setGetCommentsController(getCommentsController);
+        return this;
+    }
+
+    /**
+     * Adds the Analyze Recipe Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addAnalyzeRecipeUseCase() {
+        final AnalyzeRecipeOutputBoundary analyzeRecipeOutputBoundary =
+                new AnalyzeRecipePresenter(analyzeRecipeViewModel);
+        final AnalyzeRecipeInputBoundary analyzeRecipeInteractor =
+                new AnalyzeRecipeInteractor(new SpoonacularAPI(), analyzeRecipeOutputBoundary);
+        final AnalyzeRecipeController analyzeRecipeController =
+                new AnalyzeRecipeController(analyzeRecipeInteractor);
+        postView.setAnalyzeRecipeController(analyzeRecipeController);
+        return this;
+    }
+
+    /**
+     * Adds the Fetch Post Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addFetchPostUseCase() {
+        //final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
+        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject);
+        final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
+        homePageView.setFetchPostController(fetchPostController);
         return this;
     }
 

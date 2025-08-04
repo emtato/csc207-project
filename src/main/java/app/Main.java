@@ -27,6 +27,10 @@ public class Main {
                 .addSettingsView()
                 .addManageFollowersView()
                 .addManageFollowingView()
+                .addPostView()
+                .addSpecificClubView()
+                .addCreateClubView()
+                .addCreatePostView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
@@ -37,10 +41,11 @@ public class Main {
                 .addManageFollowersUseCase()
                 .addManageFollowingUseCase()
                 .addProfileUseCase()
-                .addPostView()
-                .addSpecificClubView()
-                .addCreateClubView()
-                .addCreatePostView()
+                .addLikePostUseCase()
+                .addWriteCommentUseCase()
+                .addGetCommentsUseCase()
+                .addAnalyzeRecipeUseCase()
+                .addFetchPostUseCase()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();
