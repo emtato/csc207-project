@@ -11,6 +11,8 @@ import data_access.*;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.delete_account.DeleteAccountController;
+import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.manage_followers.ManageFollowersController;
@@ -45,6 +47,9 @@ import interface_adapter.settings.SettingsViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.delete_account.DeleteAccountInputBoundary;
+import use_case.delete_account.DeleteAccountInteractor;
+import use_case.delete_account.DeleteAccountOutputBoundary;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInteractor;
 import use_case.edit_profile.EditProfileOutputBoundary;
@@ -96,9 +101,9 @@ public class AppBuilder {
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
+    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            DBPostCommentLikesDataAccessObject.getInstance();
+            FilePostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
     private CreatePostViewModel createPostViewModel;
@@ -516,6 +521,23 @@ public class AppBuilder {
         final ManageFollowersController manageFollowersController =
                 new ManageFollowersController(manageFollowersInteractor);
         manageFollowersView.setManageFollowersController(manageFollowersController);
+        return this;
+    }
+
+    /**
+     * Adds the Delete Account Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addDeleteAccountUseCase() {
+        final DeleteAccountOutputBoundary deleteAccountOutputBoundary = new DeleteAccountPresenter(
+                viewManagerModel, loginViewModel);
+        final DeleteAccountInputBoundary deleteAccountInteractor =
+                new DeleteAccountInteractor(userDataAccessObject, postCommentsLikesDataAccessObject,
+                        deleteAccountOutputBoundary);
+        final DeleteAccountController deleteAccountController =
+                new DeleteAccountController(deleteAccountInteractor);
+        settingsView.setDeleteAccountController(deleteAccountController);
         return this;
     }
 

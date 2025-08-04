@@ -32,6 +32,7 @@ public class Main {
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
+                .addDeleteAccountUseCase()
                 .addLogoutUseCase()
                 .addNoteUseCase()
                 .addEditProfileUseCase()

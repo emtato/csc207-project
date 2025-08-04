@@ -21,6 +21,9 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String LOGOUT_LABEL = "Logout";
     public static final String LOGOUT_BUTTON_LABEL = "Logout";
     public static final String LOGOUT_HEADING = "Logout";
+    public static final String DELETE_LABEL = "Delete Your Account";
+    public static final String DELETE_BUTTON_LABEL = "Delete";
+    public static final String DELETE_HEADING = "Delete Account";
 
     public SettingsViewModel() {
         super("settings");

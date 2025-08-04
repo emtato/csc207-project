@@ -404,5 +404,44 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         save(user);
         save(followedUser);
     }
+
+    @Override
+    public void deleteAccount(String username) {
+        JSONObject data = getJsonObject();
+
+        if (!data.has("users")) {
+            data.put("users", new JSONObject());
+        }
+
+        JSONObject users = data.getJSONObject("users");
+        if (users.has(username)) {
+            JSONObject user = users.getJSONObject(username);
+
+            JSONObject followingAccounts = user.getJSONObject("followingAccounts");
+            for (String followedAccountUsername : followingAccounts.keySet()) {
+                JSONObject fullFollowedAccount = users.getJSONObject(followedAccountUsername);
+                JSONObject followedAccountFollowerMap = fullFollowedAccount.getJSONObject("followerAccounts");
+                followedAccountFollowerMap.remove(username);
+                fullFollowedAccount.put("followerAccounts", followedAccountFollowerMap);
+                users.put(followedAccountUsername, fullFollowedAccount);
+            }
+
+            JSONObject followerAccounts = user.getJSONObject("followerAccounts");
+            for (String followerAccountUsername : followerAccounts.keySet()) {
+                JSONObject fullFollowerAccount = users.getJSONObject(followerAccountUsername);
+                JSONObject followerAccountFollowingMap = fullFollowerAccount.getJSONObject("followingAccounts");
+                followerAccountFollowingMap.remove(username);
+                fullFollowerAccount.put("followingAccounts", followerAccountFollowingMap);
+                users.put(followerAccountUsername, fullFollowerAccount);
+            }
+
+            users.remove(username);
+            data.put("users", users);
+            writeToFile(data);
+        }
+        else {
+            System.out.println("User not found, delete unsuccessful");
+        }
+    }
 }
 

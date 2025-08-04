@@ -99,6 +99,10 @@ public class PostPanel extends JPanel {
                 ArrayList<String> imageURLS = post.getImageURLs();
                 for (int i = 0; i < Math.min(3, imageURLS.size()); i++) {
                     String imageURL = imageURLS.get(i);
+                    if (!imageURL.startsWith("http://") && !imageURL.startsWith("https://")) {
+                        System.out.println("Invalid image URL: " + imageURL);
+                        continue; // skip invalid URLs
+                    }
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
                     Image img = imageIcon.getImage().getScaledInstance(-1, 200, Image.SCALE_SMOOTH);

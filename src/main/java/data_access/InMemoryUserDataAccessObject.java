@@ -154,4 +154,17 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
         save(user);
     }
 
+    @Override
+    public void deleteAccount(String username) {
+        User user = get(username);
+        for (User followedAccount : user.getFollowingAccounts().values()) {
+            followedAccount.getFollowerAccounts().remove(username);
+            save(followedAccount);
+        }
+        for (User follower : user.getFollowerAccounts().values()) {
+            follower.getFollowingAccounts().remove(username);
+            save(follower);
+        }
+        users.remove(username);
+    }
 }
