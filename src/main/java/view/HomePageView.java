@@ -46,7 +46,7 @@ public class HomePageView extends JPanel {
         Dimension buttonSize = new Dimension(450, 40);
 
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-
+        //TODO: implement liking post link to DB
         JButton forYouButton = new JButton("For You");
         forYouButton.setPreferredSize(buttonSize);
         forYouButton.setBorder(BorderFactory.createEmptyBorder());
