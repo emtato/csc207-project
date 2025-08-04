@@ -23,7 +23,6 @@ import interface_adapter.map.MapViewModel;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
-import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -32,9 +31,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import interface_adapter.note.NoteController;
-import interface_adapter.note.NotePresenter;
-import interface_adapter.note.NoteViewModel;
 import interface_adapter.view_profile.ProfileController;
 import interface_adapter.view_profile.ProfilePresenter;
 import interface_adapter.view_profile.ProfileViewModel;
@@ -65,9 +61,6 @@ import use_case.manage_followers.ManageFollowersOutputBoundary;
 import use_case.manage_following.ManageFollowingInputBoundary;
 import use_case.manage_following.ManageFollowingInteractor;
 import use_case.manage_following.ManageFollowingOutputBoundary;
-import use_case.note.NoteInputBoundary;
-import use_case.note.NoteInteractor;
-import use_case.note.NoteOutputBoundary;
 import use_case.view_profile.ProfileInputBoundary;
 import use_case.view_profile.ProfileInteractor;
 import use_case.view_profile.ProfileOutputBoundary;
@@ -111,14 +104,11 @@ public class AppBuilder {
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-    private NoteViewModel noteViewModel;
     private ProfileViewModel profileViewModel;
     private EditProfileViewModel editProfileViewModel;
-    private LoggedInViewModel loggedInViewModel;
     private SettingsViewModel settingsViewModel;
     private ManageFollowersViewModel manageFollowersViewModel;
     private ManageFollowingViewModel manageFollowingViewModel;
-    private LoggedInView loggedInView;
     private LoginView loginView;
     private NoteView noteView;
     private ClubHomePageView clubHomePageView;
@@ -211,30 +201,6 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel, viewManagerModel);
         cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the LoggedIn View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addLoggedInView() {
-        loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
-        cardPanel.add(loggedInView, loggedInView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the Note View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addNoteView() {
-        noteViewModel = new NoteViewModel();
-        noteView = new NoteView(noteViewModel);
-        cardPanel.add(noteView, noteView.getViewName());
         return this;
     }
 
@@ -376,7 +342,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel, profileViewModel, settingsViewModel);
+                loginViewModel, profileViewModel, settingsViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, postCommentsLikesDataAccessObject, loginOutputBoundary);
 
@@ -392,14 +358,14 @@ public class AppBuilder {
      */
     public AppBuilder addChangePasswordUseCase() {
         final ChangePasswordOutputBoundary changePasswordOutputBoundary =
-                new ChangePasswordPresenter(loggedInViewModel);
+                new ChangePasswordPresenter(settingsViewModel);
 
         final ChangePasswordInputBoundary changePasswordInteractor =
                 new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
 
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
-        loggedInView.setChangePasswordController(changePasswordController);
+        settingsView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -409,33 +375,13 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, loginViewModel);
 
         final LogoutInputBoundary logoutInteractor =
                 new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-        loggedInView.setLogoutController(logoutController);
         settingsView.setLogoutController(logoutController);
-        return this;
-    }
-
-    /**
-     * Adds the Note Use Case to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addNoteUseCase() {
-        final NoteOutputBoundary noteOutputBoundary = new NotePresenter(viewManagerModel,
-                noteViewModel, loggedInViewModel);
-
-        final NoteInputBoundary noteInteractor =
-                new NoteInteractor(userDataAccessObject, noteOutputBoundary, userFactory);
-
-        final NoteController noteController = new NoteController(noteInteractor);
-        noteView.setNoteController(noteController);
-        loggedInView.setNoteController(noteController);
         return this;
     }
 

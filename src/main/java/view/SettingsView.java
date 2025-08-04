@@ -8,7 +8,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.edit_profile.EditProfileState;
 import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
@@ -28,11 +32,14 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private SettingsController settingsController;
     private LogoutController logoutController;
     private DeleteAccountController deleteAccountController;
+    private ChangePasswordController changePasswordController;
 
     private final JToggleButton accountPrivacyToggle;
     private final JToggleButton notificationsToggle;
     private final JButton logoutButton;
     private final JButton deleteAccountButton;
+    private final JButton changePasswordButton;
+    private final JPasswordField passwordField;
 
     public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
@@ -59,6 +66,13 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         deleteAccountButton = new JButton(SettingsViewModel.DELETE_BUTTON_LABEL);
         createNewPanel(settingsPanel, SettingsViewModel.DELETE_HEADING, SettingsViewModel.DELETE_LABEL,
                 deleteAccountButton);
+
+        passwordField = new JPasswordField();
+        createNewPanel(settingsPanel, SettingsViewModel.PASSWORD_HEADING, SettingsViewModel.PASSWORD_LABEL,
+                passwordField);
+
+        changePasswordButton = new JButton(SettingsViewModel.PASSWORD_BUTTON_LABEL);
+        settingsPanel.add(changePasswordButton);
 
         settingsPanel.add(Box.createVerticalGlue());
 
@@ -109,13 +123,47 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        changePasswordButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(changePasswordButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.changePasswordController.execute(settingsState.getUsername(),
+                                settingsState.getNewPassword());
+                    }
+                }
+        );
+
+        passwordField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void documentListenerHelper() {
+                final SettingsState currentState = settingsViewModel.getState();
+                currentState.setNewPassword(passwordField.getText());
+                settingsViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+
         this.add(title);
         this.add(settingsPanel);
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         this.add(menuBar);
     }
 
-    private void createNewPanel(JPanel parentPanel, String header, String label, AbstractButton button) {
+    private void createNewPanel(JPanel parentPanel, String header, String label, JComponent component) {
         final JLabel newHeading = new GeneralJLabel(header, GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
         parentPanel.add(newHeading);
 
@@ -128,8 +176,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         newLabel.setForeground(GUIConstants.RED);
         subPanel.add(newLabel);
         subPanel.add(Box.createHorizontalGlue());
-        button.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        subPanel.add(button);
+        component.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        subPanel.add(component);
 
         parentPanel.add(subPanel);
     }
@@ -169,6 +217,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
             }
         }
+        else if (evt.getPropertyName().equals("password changed")) {
+            SettingsState state = this.settingsViewModel.getState();
+            this.passwordField.setText(state.getNewPassword());
+        }
     }
 
     public String getViewName() {
@@ -183,5 +235,8 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     }
     public void setDeleteAccountController(DeleteAccountController controller) {
         this.deleteAccountController = controller;
+    }
+    public void setChangePasswordController(ChangePasswordController changePasswordController) {
+        this.changePasswordController = changePasswordController;
     }
 }

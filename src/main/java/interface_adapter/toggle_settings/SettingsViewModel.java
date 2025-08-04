@@ -24,6 +24,9 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String DELETE_LABEL = "Delete Your Account";
     public static final String DELETE_BUTTON_LABEL = "Delete";
     public static final String DELETE_HEADING = "Delete Account";
+    public static final String PASSWORD_LABEL = "Enter New Password: ";
+    public static final String PASSWORD_BUTTON_LABEL = "Change Password";
+    public static final String PASSWORD_HEADING = "Change Password";
 
     public SettingsViewModel() {
         super("settings");
