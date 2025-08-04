@@ -13,7 +13,7 @@ public class Main {
      * @param args unused arguments
      */
     public static void main(String[] args) {
-        final AppBuilder appBuilder = new AppBuilder();
+        final AppBuilder appBuilder = AppBuilder.getInstance();
         final JFrame application = appBuilder
                 .addLoginView()
                 .addSignupView()

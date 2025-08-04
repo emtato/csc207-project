@@ -92,6 +92,10 @@ import view.map.MapView;
 //                  if your team decides to work with this as your starter code
 //                  for your final project this term.
 public class AppBuilder {
+
+    // static instance of an AppBuilder
+    private static AppBuilder instance;
+
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
@@ -134,8 +138,16 @@ public class AppBuilder {
     private CreateClubView createClubView;
     private MapView mapView;
 
-    public AppBuilder() {
+    private AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    // The static method that controls access to the singleton AppBuilder instance.
+    public static AppBuilder getInstance() {
+        if (AppBuilder.instance == null) {
+            AppBuilder.instance = new AppBuilder();
+        }
+        return AppBuilder.instance;
     }
 
     /**
