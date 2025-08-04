@@ -2,9 +2,11 @@ package view;
 
 import interface_adapter.ViewManagerModel;
 import data_access.DBClubsDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Club;
 import entity.Post;
+import org.json.JSONObject;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -14,17 +16,25 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 public class CreateClubView extends JPanel {
     private final String viewName = "create club view";
     private final ViewManagerModel viewManagerModel;
     private final DBClubsDataAccessObject clubsDAO;
     private final Account currentUser;
+    private ArrayList<Account> members = new ArrayList<>();
+    private final FileUserDataAccessObject userDataAccessObject = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
 
     public CreateClubView(ViewManagerModel viewManagerModel, DBClubsDataAccessObject clubsDAO, Account currentUser) {
         this.viewManagerModel = viewManagerModel;
         this.clubsDAO = clubsDAO;
         this.currentUser = currentUser;
+        if (currentUser != null) {
+            members.add(currentUser);
+        }
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -52,6 +62,90 @@ public class CreateClubView extends JPanel {
         contentPanel.add(imagesArea);
         contentPanel.add(tagsArea);
 
+        JPanel memberPanel = new JPanel();
+        memberPanel.setLayout(new BoxLayout(memberPanel, BoxLayout.X_AXIS));
+
+        JButton addMembersButton = new JButton("Add Members");
+        JLabel memberCountLabel = new JLabel(members.size() + " members");
+
+        addMembersButton.addActionListener(e -> {
+            if (currentUser == null) {
+                JOptionPane.showMessageDialog(this, "Please log in to add members to the club");
+                return;
+            }
+
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Add Members");
+            dialog.setModal(true);
+            dialog.setLayout(new BorderLayout());
+
+            JPanel memberListPanel = new JPanel();
+            memberListPanel.setLayout(new BoxLayout(memberListPanel, BoxLayout.Y_AXIS));
+
+            ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+
+            try {
+                String content = new String(Files.readAllBytes(Paths.get("src/main/java/data_access/user_data.json")));
+                JSONObject data = new JSONObject(content);
+                if (data.has("users")) {
+                    JSONObject users = data.getJSONObject("users");
+                    for (String username : users.keySet()) {
+                        if (!username.equals(currentUser.getUsername())) {
+                            JCheckBox checkBox = new JCheckBox(username);
+                            // Pre-select if user is already a member
+                            checkBox.setSelected(members.stream().anyMatch(m -> m.getUsername().equals(username)));
+                            checkBoxes.add(checkBox);
+                            memberListPanel.add(checkBox);
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error loading users: " + ex.getMessage());
+                return;
+            }
+
+            if (checkBoxes.isEmpty()) {
+                JLabel noUsersLabel = new JLabel("No other users available to add");
+                noUsersLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                memberListPanel.add(noUsersLabel);
+            }
+
+            JScrollPane scrollPane = new JScrollPane(memberListPanel);
+            dialog.add(scrollPane, BorderLayout.CENTER);
+
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(ev -> {
+                members.clear();
+                if (currentUser != null) {
+                    members.add(currentUser);
+                }
+
+                for (JCheckBox checkBox : checkBoxes) {
+                    if (checkBox.isSelected()) {
+                        Account member = (Account) userDataAccessObject.get(checkBox.getText());
+                        if (member != null) {
+                            members.add(member);
+                        }
+                    }
+                }
+
+                memberCountLabel.setText(members.size() + " members");
+                dialog.dispose();
+            });
+
+            dialog.add(okButton, BorderLayout.SOUTH);
+            dialog.setSize(300, 400);
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+        });
+
+        memberPanel.add(addMembersButton);
+        memberPanel.add(Box.createHorizontalStrut(10));
+        memberPanel.add(memberCountLabel);
+
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(memberPanel);
+
         JButton createButton = new JButton("Create Club");
         createButton.addActionListener(e -> {
             String title = titleArea.getText();
@@ -66,13 +160,6 @@ public class CreateClubView extends JPanel {
 
             ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsText.split("\\s*,\\s*")));
 
-            ArrayList<Account> members = new ArrayList<>();
-            // Only add the current user if not null
-            if (currentUser != null) {
-                members.add(currentUser);
-            }
-
-            // Create empty posts list
             ArrayList<Post> posts = new ArrayList<>();
 
             // Generate a unique club ID using current timestamp
@@ -82,6 +169,11 @@ public class CreateClubView extends JPanel {
                 clubsDAO.writeClub(clubId, members, title, description, posts, tags);
                 JOptionPane.showMessageDialog(this, "Club created successfully!");
                 clearFields(titleArea, bodyArea, tagsArea, imagesArea);
+                members.clear();
+                if (currentUser != null) {
+                    members.add(currentUser);
+                }
+                memberCountLabel.setText(members.size() + " members");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error creating club: " + ex.getMessage());
             }
