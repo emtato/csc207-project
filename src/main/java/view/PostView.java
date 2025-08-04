@@ -28,8 +28,15 @@ import javax.swing.JPanel;
 import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
+import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.get_comments.GetCommentsController;
+import interface_adapter.get_comments.GetCommentsPresenter;
+import interface_adapter.get_comments.GetCommentsViewModel;
 import use_case.comment.CommentPostInputData;
 import use_case.comment.CommentPostInteractor;
+import use_case.fetch_post.FetchPostInteractor;
+import use_case.get_comments.GetCommentsInteractor;
+import use_case.get_comments.GetCommentsOutputBoundary;
 import use_case.like_post.LikePostInputData;
 import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
@@ -80,8 +87,11 @@ public class PostView extends JPanel {
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private LikePostInteractor likePostInteractor;
     private CommentPostInteractor commentPostInteractor;
+    private GetCommentsController getCommentsController;
+    private final GetCommentsViewModel getCommentsViewModel = new GetCommentsViewModel();
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
+
 
     public PostView(ViewManagerModel viewManagerModel, Post post, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
 
@@ -92,7 +102,10 @@ public class PostView extends JPanel {
         this.repice = null;
         this.likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
         this.commentPostInteractor = new CommentPostInteractor(postCommentsLikesDataAccessObject);
-
+        this.getCommentsController = new GetCommentsController(
+                new GetCommentsInteractor(postCommentsLikesDataAccessObject,
+                        new GetCommentsPresenter(getCommentsViewModel))
+        );
         mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel();
@@ -285,7 +298,6 @@ public class PostView extends JPanel {
         scrollPane.setBorder(null);
 
 
-
         if (post.isImageVideo()) {
             System.out.println("isimage");
             try {
@@ -341,7 +353,8 @@ public class PostView extends JPanel {
         commentsPanel.add(commentsHeader);
         commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
 
-        ArrayList<Comment> comments = postCommentsLikesDataAccessObject.getComments(post.getID());
+        getCommentsController.getComments(post.getID());
+        ArrayList<Comment> comments = new ArrayList<>(getCommentsViewModel.getComments());
         for (Comment comment : comments) {
             JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
             commentUser.setFont(subtite2);
