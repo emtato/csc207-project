@@ -3,7 +3,7 @@ package app;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.note.DataAccessException;
+//import use_case.note.DataAccessException;
 
 import java.io.IOException;
 

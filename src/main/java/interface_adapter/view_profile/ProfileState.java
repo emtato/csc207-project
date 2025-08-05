@@ -70,6 +70,12 @@ public class ProfileState {
     }
 
     public void setPosts(HashMap<Long, Post> posts) {
+        if (posts == null) {
+            this.posts = new HashMap<>();
+            return;
+        }
+        // Remove any null posts from the HashMap
+        posts.values().removeIf(post -> post == null);
         this.posts = posts;
     }
 }
