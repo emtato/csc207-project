@@ -197,7 +197,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addExploreView() {
-        exploreView = new ExploreView(viewManagerModel, cardPanel);
+        exploreView = new ExploreView(viewManagerModel, postCommentsLikesDataAccessObject);
         cardPanel.add(exploreView, exploreView.getViewName());
         return this;
     }

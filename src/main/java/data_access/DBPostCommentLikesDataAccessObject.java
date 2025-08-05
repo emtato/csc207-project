@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.*;
+import java.time.LocalDate;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -475,8 +476,24 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 return rep;
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
-            else if (postObj.get("type").equals("other?")) {
+            else if (postObj.get("type").equals("event")) {
+                JSONArray locationArray = contents.getJSONArray("location");
+                String location = locationArray.getString(0);
+                JSONArray dateArray = contents.getJSONArray("date");
+                String dateString = dateArray.getString(0);
+                LocalDate date = LocalDate.parse(dateString);
+                JSONArray participantsArray = contents.getJSONArray("participants");
+                ArrayList<String> participantsList = new ArrayList<>();
+                for (int i = 0; i < participantsArray.length(); i++) {
+                    participantsList.add(participantsArray.getString(i));
+                }
+                JSONArray foodPreferences = contents.getJSONArray("foodPreferences");
+                ArrayList<String> foodPreferencesList = new ArrayList<>();
+                for (int i = 0; i < foodPreferences.length(); i++) {
+                    foodPreferencesList.add(foodPreferences.getString(i));
+                }
 
+                Event event = new Event(post, location, date, participantsList, foodPreferencesList);
             }
         }
         return post;
