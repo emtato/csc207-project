@@ -6,7 +6,9 @@ package use_case.create_post;/**
 
 import data_access.UserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
+import entity.Account;
 import entity.Club;
+import entity.Post;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +41,16 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             // Convert club names/IDs to Club objects
             ArrayList<Club> clubs = new ArrayList<>();
             for (String clubName : inputData.getClubs()) {
-                clubs.add(new Club(clubName, "", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+                // Create a new club with minimal data and a random ID since this is temporary
+                clubs.add(new Club(
+                    clubName,                    // name
+                    "",                         // description
+                    new ArrayList<Account>(),   // members
+                    new ArrayList<String>(),    // foodPreferences
+                    new ArrayList<Post>(),      // posts
+                    System.currentTimeMillis(), // temporary unique ID
+                    new ArrayList<String>()     // tags
+                ));
             }
 
             long postID = (long) (Math.random() * 1_000_000_000_000L);

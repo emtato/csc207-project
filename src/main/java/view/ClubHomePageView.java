@@ -10,12 +10,18 @@ import javax.swing.JLabel;
 
 import data_access.*;
 import entity.Account;
+import entity.Club;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.like_post.LikePostController;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.PostPanel;
 import view.ui_components.RoundImagePanel;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -38,8 +44,29 @@ public class ClubHomePageView extends JPanel {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        // Initial setup
+        JPanel mainPanel = createMainPanel();
+        this.add(mainPanel);
 
+        // Add a component listener to refresh when shown
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                refresh();
+            }
+        });
+    }
+
+    // Add a refresh method
+    public void refresh() {
+        this.removeAll();
+        this.add(createMainPanel());
+        this.revalidate();
+        this.repaint();
+    }
+
+    private JPanel createMainPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel headerPanel = new JPanel(new BorderLayout());
 
         // my clubs panel
@@ -51,9 +78,28 @@ public class ClubHomePageView extends JPanel {
         myClubsPanel.add(title, BorderLayout.NORTH);
 
         JPanel clubsListPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        String currentUsername = userDataAccessObject.getCurrentUsername();
 
-        for (int i = 0; i < 8; i++) {
-            // club icon
+        // Get all clubs and filter them
+        ArrayList<Club> allClubs = clubsDataAccessObject.getAllClubs();
+        ArrayList<Club> memberClubs = new ArrayList<>();
+        ArrayList<Club> nonMemberClubs = new ArrayList<>();
+
+        // Sort clubs into member and non-member lists based on user's saved club memberships
+        Account currentUser = (Account) userDataAccessObject.get(currentUsername);
+        ArrayList<String> userClubIds = currentUser != null && currentUser.getClubs() != null ?
+                                      currentUser.getClubs() : new ArrayList<>();
+
+        for (Club club : allClubs) {
+            if (userClubIds.contains(String.valueOf(club.getId()))) {
+                memberClubs.add(club);
+            } else {
+                nonMemberClubs.add(club);
+            }
+        }
+
+        // Display user's clubs
+        for (Club club : memberClubs) {
             JPanel clubIconPanel = new JPanel(new BorderLayout());
             clubIconPanel.setPreferredSize(new Dimension(150, 150));
             clubIconPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -65,7 +111,7 @@ public class ClubHomePageView extends JPanel {
             centeringPanel.setBackground(GUIConstants.WHITE);
             clubIconPanel.add(centeringPanel, BorderLayout.CENTER);
 
-            JLabel clubIconName = new JLabel("Club " + (i + 1));
+            JLabel clubIconName = new JLabel(club.getName());
             clubIconName.setFont(GUIConstants.FONT_TEXT);
             clubIconName.setHorizontalAlignment(SwingConstants.CENTER);
             clubIconPanel.add(clubIconName, BorderLayout.SOUTH);
@@ -154,7 +200,8 @@ public class ClubHomePageView extends JPanel {
         exploringPanel.setLayout(new BoxLayout(exploringPanel, BoxLayout.Y_AXIS));
         exploringPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        for (int i = 0; i < 4; i++) {
+        // Display clubs user is not a member of
+        for (Club club : nonMemberClubs) {
             JPanel explorePanel = new JPanel(new BorderLayout(5, 5));
             explorePanel.setBackground(GUIConstants.WHITE);
             explorePanel.setMaximumSize(new Dimension(370, 130));
@@ -164,7 +211,6 @@ public class ClubHomePageView extends JPanel {
             RoundImagePanel exploreRoundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
             exploreRoundPanel.setPreferredSize(new Dimension(100, 100));
 
-            // Add a wrapper panel to maintain the round panel's size
             JPanel imageWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
             imageWrapper.setBackground(GUIConstants.WHITE);
             imageWrapper.add(exploreRoundPanel);
@@ -174,27 +220,76 @@ public class ClubHomePageView extends JPanel {
             exploreTextPanel.setLayout(new BoxLayout(exploreTextPanel, BoxLayout.Y_AXIS));
             exploreTextPanel.setBackground(GUIConstants.WHITE);
 
-            JLabel exploreLabel = new JLabel("Club " + (i + 1));
+            // Panel for club name and join button
+            JPanel titleAndButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            titleAndButtonPanel.setBackground(GUIConstants.WHITE);
+
+            JLabel exploreLabel = new JLabel(club.getName());
             exploreLabel.setFont(GUIConstants.FONT_TEXT);
-            exploreLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            titleAndButtonPanel.add(exploreLabel);
+
+            JButton joinButton = new JButton("Join");
+            joinButton.setBackground(GUIConstants.RED);
+            joinButton.setForeground(Color.WHITE);
+            joinButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            joinButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            joinButton.addActionListener(e -> {
+                ArrayList<Account> members = club.getMembers();
+                members.add(new Account(currentUsername, ""));
+
+                // Update club with new member
+                clubsDataAccessObject.writeClub(
+                    club.getId(),
+                    members,
+                    club.getName(),
+                    club.getDescription(),
+                    club.getPosts(),
+                    club.getTags()
+                );
+
+                // Update the user's data to include the new club membership
+                Account updatedUser = (Account) userDataAccessObject.get(currentUsername);
+                if (updatedUser != null) {
+                    ArrayList<String> clubList = updatedUser.getClubs();
+                    if (clubList == null) {
+                        clubList = new ArrayList<>();
+                    }
+                    clubList.add(String.valueOf(club.getId()));
+                    updatedUser.setClubs(clubList);
+                    userDataAccessObject.save(updatedUser);
+                }
+
+                // Remove all components and rebuild the view
+                this.removeAll();
+
+                // Create new ClubHomePageView content
+                JPanel newMainPanel = createMainPanel();
+                this.add(newMainPanel);
+
+                // Force the panel to redraw
+                this.revalidate();
+                this.repaint();
+            });
+
+            titleAndButtonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+            titleAndButtonPanel.add(joinButton);
+
+            exploreTextPanel.add(titleAndButtonPanel);
+            exploreTextPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
             JLabel exploreDescription = new JLabel("<html><div style='width:200px'>" +
-                    "Explore the wonders of Club " + (i + 1) + " and join the community!" +
+                    club.getDescription() +
                     "</div></html>");
             exploreDescription.setFont(GUIConstants.SMALL_FONT_TEXT);
             exploreDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            exploreTextPanel.add(exploreLabel);
-            exploreTextPanel.add(Box.createRigidArea(new Dimension(0, 5)));
             exploreTextPanel.add(exploreDescription);
 
             explorePanel.add(exploreTextPanel);
             exploringPanel.add(explorePanel);
-
-            if (i < 4) {
-                exploringPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-            }
+            exploringPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
+
         exploreClubsPanel.add(exploringPanel);
         exploreClubsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -225,15 +320,13 @@ public class ClubHomePageView extends JPanel {
         exploreClubsPanel.add(createClubPanel);
 
         mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH);
-
         mainPanel.add(headerPanel, BorderLayout.CENTER);
         mainPanel.add(exploreClubsPanel, BorderLayout.EAST);
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         mainPanel.add(menuBar, BorderLayout.SOUTH);
 
-        this.add(mainPanel);
-
+        return mainPanel;
     }
 
     public String getViewName() {

@@ -103,30 +103,61 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         if (clubObj.has("members")) {
             JSONArray memberArray = clubObj.getJSONArray("members");
             for (int i = 0; i < memberArray.length(); i++) {
-                String username = memberArray.getString(i);
-                members.add(new Account(username, "password"));
+                // Skip null members
+                if (!memberArray.isNull(i)) {
+                    String username = memberArray.getString(i);
+                    if (username != null && !username.isEmpty()) {
+                        members.add(new Account(username, "password"));
+                    }
+                }
             }
         }
+
         ArrayList<Post> posts = new ArrayList<>();
         if (clubObj.has("posts")) {
             JSONArray postArray = clubObj.getJSONArray("posts");
             for (int i = 0; i < postArray.length(); i++) {
-                JSONObject postObj = postArray.getJSONObject(i);
-                String username = postObj.getString("user");
-                String title = postObj.getString("title");
-                String desc = postObj.getString("description");
-                long postID = postObj.getLong("id");
-                Account user = new Account(username, "password");
-                Post post = new Post(user, postID, title, desc);
-                posts.add(post);
+                if (!postArray.isNull(i)) {
+                    String postId = postArray.getString(i);
+                    // For now, we're not loading the actual posts since they're not displayed
+                    // You would need to implement post loading if they're needed
+                }
             }
         }
 
-        return new Club(name, description, members, new ArrayList<>(), posts) {
-            {
-                setDisplayName(name);
-                setDescription(description);
+        ArrayList<String> tags = new ArrayList<>();
+        if (clubObj.has("tags")) {
+            JSONArray tagsArray = clubObj.getJSONArray("tags");
+            for (int i = 0; i < tagsArray.length(); i++) {
+                if (!tagsArray.isNull(i)) {
+                    String tag = tagsArray.getString(i);
+                    if (tag != null && !tag.isEmpty()) {
+                        tags.add(tag);
+                    }
+                }
             }
-        };
+        }
+
+        return new Club(name, description, members, new ArrayList<>(), posts, clubID, tags);
+    }
+
+    @Override
+    public ArrayList<Club> getAllClubs() {
+        JSONObject data = getJsonObject();
+        ArrayList<Club> allClubs = new ArrayList<>();
+
+        if (!data.has("clubs")) {
+            return allClubs;
+        }
+
+        JSONObject clubs = data.getJSONObject("clubs");
+        for (String clubId : clubs.keySet()) {
+            Club club = getClub(Long.parseLong(clubId));
+            if (club != null) {
+                allClubs.add(club);
+            }
+        }
+
+        return allClubs;
     }
 }
