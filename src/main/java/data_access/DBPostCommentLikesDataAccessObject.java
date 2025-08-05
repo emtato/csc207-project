@@ -353,7 +353,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      */
     @Override
     public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
-            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
+            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs) {
         JSONObject data = new JSONObject();
         try {
             data = getJsonObject();

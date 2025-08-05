@@ -245,12 +245,19 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private void refreshContent(){
         profileContent.removeAll();
         final HashMap<Long, Post> posts = this.profileViewModel.getState().getPosts();
-        if (!posts.isEmpty()) {
+        if (posts != null && !posts.isEmpty()) {
             for (Long id : posts.keySet()) {
                 final Post post = posts.get(id);
-                PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
-                        ProfileViewModel.POST_HEIGHT, likePostController);
-                profileContent.add(postPanel);
+                if (post != null) {
+                    try {
+                        PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
+                                ProfileViewModel.POST_HEIGHT, likePostController);
+                        profileContent.add(postPanel);
+                    } catch (IllegalArgumentException e) {
+                        // Log error or handle invalid post gracefully
+                        System.err.println("Failed to create PostPanel for post ID " + id + ": " + e.getMessage());
+                    }
+                }
             }
         }
         this.revalidate();

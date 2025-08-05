@@ -54,6 +54,10 @@ public class PostPanel extends JPanel {
 
     public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
                      LikePostController likePostController) {
+        if (post == null) {
+            throw new IllegalArgumentException("Post cannot be null");
+        }
+
         this.viewManagerModel = viewManagerModel;
         this.post = post;
         this.likePostController = likePostController;

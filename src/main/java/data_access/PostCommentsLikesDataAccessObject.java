@@ -47,8 +47,9 @@ public interface PostCommentsLikesDataAccessObject {
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
      * @param time
+     * @param images      ArrayList of clubs this post is associated with
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time);
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs);
 
     /**
      * Get post object from postID.

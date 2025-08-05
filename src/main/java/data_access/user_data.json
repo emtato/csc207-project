@@ -96,7 +96,14 @@
       "bio": "",
       "blockedTerms": [],
       "notificationsEnabled": true,
-      "userPosts": [],
+      "userPosts": [
+        837794139575,
+        584811795013,
+        218615980106,
+        201464160475,
+        105096858119,
+        896842594309
+      ],
       "password": "123",
       "foodPreferences": [],
       "followingAccounts": {},

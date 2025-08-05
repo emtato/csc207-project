@@ -256,7 +256,7 @@ public class AppBuilder {
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         // TODO: add the use case and move the data access object out of the view and into the interactor
-        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject);
+        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject, createPostViewModel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;

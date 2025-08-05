@@ -109,11 +109,13 @@ public class PostView extends JPanel {
         centerPanel = new JPanel();
 
         // top
-        title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
+        title = new JLabel(post.getTitle()); //recipe/post title
         title.setFont(fontTitle);
 
         splitTop.add(title);
-        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
+        // Add null check for post.getUser()
+        String authorText = post.getUser() != null ? post.getUser().getUsername() : "Anonymous";
+        subtitle = new JLabel(authorText + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
         JLabel tags = new JLabel("tags: " + post.getTags());

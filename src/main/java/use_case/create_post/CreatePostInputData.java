@@ -21,10 +21,11 @@ public class CreatePostInputData {
     private final String steps;
     private final ArrayList<String> tags;
     private final ArrayList<String> images;
+    private final ArrayList<String> clubs;
 
     public CreatePostInputData(Account user, String title, String type,
                                String body, ArrayList<String> ingredients, String steps,
-                               ArrayList<String> tags, ArrayList<String> images) {
+                               ArrayList<String> tags, ArrayList<String> images, ArrayList<String> clubs) {
         this.user = user;
         this.title = title;
         this.type = type;
@@ -33,6 +34,7 @@ public class CreatePostInputData {
         this.steps = steps;
         this.tags = tags;
         this.images = images;
+        this.clubs = clubs;
     }
 
     public Account getUser() {
@@ -65,5 +67,9 @@ public class CreatePostInputData {
 
     public String getSteps() {
         return steps;
+    }
+
+    public ArrayList<String> getClubs() {
+        return clubs;
     }
 }

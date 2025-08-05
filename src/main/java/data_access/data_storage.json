@@ -258,6 +258,27 @@
       "likes": 1,
       "tags": []
     },
+    "896842594309": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [{
+        "foodPreferences": [],
+        "members": [],
+        "name": "pink pony club",
+        "description": "",
+        "posts": []
+      }],
+      "description": "whattatttaa",
+      "time": "2025-08-05 01:30 PM",
+      "title": "hehe",
+      "type": "clubs",
+      "user": "123",
+      "tags": []
+    },
     "578232418276": {
       "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
       "contents": {

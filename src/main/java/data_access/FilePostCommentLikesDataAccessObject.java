@@ -1,8 +1,8 @@
-package data_access;/**
+/**
  * Created by Emilia on 2025-07-29!
- * Description:
- * ^ • ω • ^
+ * Description: File-based implementation of PostCommentsLikesDataAccessObject
  */
+package data_access;
 
 import entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +19,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
-
     private static PostCommentsLikesDataAccessObject instance;
-
-    private String filePath = "src/main/java/data_access/data_storage.json";
+    private final String filePath = "src/main/java/data_access/data_storage.json";
 
     private FilePostCommentLikesDataAccessObject() {
     }
@@ -220,18 +218,21 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
     }
 
     /**
-     * not fully done implementing/ not capable of posting everything but a start. writes given post information to JSON.
+     * Not fully done implementing/ not capable of posting everything but a start. writes given post information to JSON.
      *
+     * @param postID      unique identifier for the post
      * @param user        user who posted dis
      * @param title       title of dis post
      * @param postType    String, type of dis post (club, event, recipe,..)
      * @param description String description
-     * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
-     * @param tags        tasg
-     * @param time
+     * @param contents    HashMap of remaining post information (recipe would have ingredients, steps key-value pairs)
+     * @param tags        tags associated with the post
+     * @param images      list of image paths
+     * @param time        timestamp of when the post was created
+     * @param clubs       ArrayList of clubs this post is associated with
      */
     @Override
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
@@ -243,12 +244,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         JSONObject newPost = new JSONObject();
         newPost.put("user", user.getUsername());
         newPost.put("title", title);
-        newPost.put("description", description);
         newPost.put("type", postType);
-        newPost.put("likes", 0);
-        JSONObject contentsJSONObject = new JSONObject(contents);
-        newPost.put("contents", contentsJSONObject);
+        newPost.put("description", description);
+        newPost.put("contents", contents);
         newPost.put("tags", tags);
+        newPost.put("images", images);
+        newPost.put("time", time);
+        newPost.put("clubs", clubs);
         posts.put(String.valueOf(postID), newPost);
         newPost.put("images", images);
 
@@ -291,7 +293,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         String username = postObj.getString("user");
         String title = postObj.getString("title");
         String description = postObj.getString("description");
-        long likeCount = postObj.getLong("likes");
+        // Handle case where likes field doesn't exist
+        long likeCount = postObj.optLong("likes", 0);  // Default to 0 if field doesn't exist
 
         Account user = new Account(username, "password");
         Post post = new Post(user, postID, title, description);
@@ -319,7 +322,6 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         if (postObj.has("contents")) {
             JSONObject contents = postObj.getJSONObject("contents");
             if (postObj.get("type").equals("recipe")) {
-
                 JSONArray ingredients = contents.getJSONArray("ingredients");
                 ArrayList<String> ingredientList = new ArrayList<>();
                 for (int i = 0; i < ingredients.length(); i++) {
@@ -327,21 +329,19 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 }
 
                 JSONArray stepsArray = contents.getJSONArray("steps");
-                String steps = "";
+                StringBuilder steps = new StringBuilder();
                 for (int i = 0; i < stepsArray.length(); i++) {
-                    steps += stepsArray.getString(i) + "<br>";
+                    steps.append(stepsArray.getString(i)).append("<br>");
                 }
 
                 String cuisines = contents.get("cuisines").toString();
                 if (cuisines.equals("Enter cuisine separated by commas if u want")) {
                     cuisines = "";
                 }
-                Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
-                return rep;
-                //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
+                return new Recipe(post, ingredientList, steps.toString(), new ArrayList<>(Arrays.asList(cuisines.split(","))));
             }
-            else if (postObj.get("type").equals("other?")) {
-
+            else if (postObj.get("type").equals("other")) {
+                return new Post(user, postID, title, description);
             }
         }
         return post;
