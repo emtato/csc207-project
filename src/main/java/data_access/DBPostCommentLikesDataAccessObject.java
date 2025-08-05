@@ -1,8 +1,4 @@
-package data_access;/**
- * Created by Emilia on 2025-07-29!
- * Description:
- * ^ • ω • ^
- */
+package data_access;
 
 import entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
-    private String filePath = "src/main/java/data_access/data_storage.json";
+    private final String filePath = "src/main/java/data_access/data_storage.json";
 
 
     /**
@@ -217,6 +213,10 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         posts.put(String.valueOf(postID), newPost);
         newPost.put("images", images);
 
+        if (postType.equals("review") && contents.containsKey("rating")) {
+            newPost.put("rating", contents.get("rating"));
+        }
+
         //idk why this is necessary but it doesnt read a.m. it can only recognize AM
         if (time.charAt(time.length() - 4) == 'a') {
             String cutTime = time.substring(0, time.length() - 4) + "AM";
@@ -240,16 +240,12 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
     public Post getPost(long postID) {
         JSONObject data = getJsonObject();
 
-        if (!data.has("posts")) {
-            return null;
-        }
+        if (!data.has("posts")) { return null; }
 
         JSONObject posts = data.getJSONObject("posts");
         String parentPostID = String.valueOf(postID);
 
-        if (!posts.has(parentPostID)) {
-            return null;
-        }
+        if (!posts.has(parentPostID)) { return null; }
 
         JSONObject postObj = posts.getJSONObject(parentPostID);
 
@@ -257,8 +253,8 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         String title = postObj.getString("title");
         String description = postObj.getString("description");
         long likeCount = postObj.getLong("likes");
-
         Account user = new Account(username, "password");
+
         Post post = new Post(user, postID, title, description);
         post.setLikes(likeCount);
 
@@ -292,22 +288,28 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 }
 
                 JSONArray stepsArray = contents.getJSONArray("steps");
-                String steps = "";
+                StringBuilder steps = new StringBuilder();
                 for (int i = 0; i < stepsArray.length(); i++) {
-                    steps += stepsArray.getString(i) + "<br>";
+                    steps.append(stepsArray.getString(i)).append("<br>");
                 }
 
                 String cuisines = contents.get("cuisines").toString();
                 if (cuisines.equals("Enter cuisine separated by commas if u want")) {
                     cuisines = "";
                 }
-                Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
-                return rep;
+                return new Recipe(post, ingredientList, steps.toString(), new ArrayList<>(Arrays.asList(cuisines.split(","))));
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
-            else if (postObj.get("type").equals("other?")) {
-
+            else if (postObj.get("type").equals("review")) {
+                double rating = postObj.has("rating") ? postObj.getDouble("rating") : -1;
+                Review review = new Review(user, postID, title, description);
+                review.setRating(rating);
+                return review;
             }
+
+//            else if (postObj.get("type").equals("other?")) {
+//
+//            }
         }
         return post;
     }

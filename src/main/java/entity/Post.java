@@ -143,9 +143,7 @@ public class Post {
         return isReview;
     }
 
-    public void setReview(boolean review) {
-        isReview = review;
-    }
+    public void setReview(boolean review) { isReview = review; }
 
     public boolean isPublic() {
         return isPublic;
@@ -194,8 +192,7 @@ public class Post {
 
     public ArrayList<Comment> getComments() {
         DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
-        ArrayList<Comment> comments = DBPostCommentLikesDataAccessObject.getComments(postID);
-        return comments;
+        return DBPostCommentLikesDataAccessObject.getComments(postID);
     }
 
     public ArrayList<String> getImageURLs() {
@@ -207,10 +204,7 @@ public class Post {
      */
     public void setImageURLs(ArrayList<String> imageURLs) {
         this.imageURLs = imageURLs;
-        if (imageURLs != null && !imageURLs.isEmpty()) {
-            this.isImageVideo = true;
-        }
-        else this.isImageVideo = false;
+        this.isImageVideo = imageURLs != null && !imageURLs.isEmpty();
     }
 
     public String getType() {
