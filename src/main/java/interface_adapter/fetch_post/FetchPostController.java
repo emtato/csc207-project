@@ -19,17 +19,18 @@ public class FetchPostController {
         this.interactor = interactor;
     }
 
-    public void fetch(long postID) {
-        interactor.execute(new FetchPostInputData(postID));
+//    public void fetch(long postID) {
+//        interactor.execute(new FetchPostInputData(postID));
+//    }
+
+    public void getRandomFeedPosts(int count) {
+        final FetchPostInputData data = new FetchPostInputData(count);
+        interactor.getRandomFeedPosts(data); //using one implementation only
     }
 
-    public List<Post> getRandomFeedPosts(int count) {
-        return ((FetchPostInteractor) interactor).getRandomFeedPosts(count); //using one implementation only
-    }
 
-
-    public List<Long> getAvailablePostIDs() {
-        return ((FetchPostInteractor) interactor).getAvailablePostIDs();
+    public void getAvailablePostIDs() {
+         ((FetchPostInteractor) interactor).getAvailablePostIDs();
     }
 }
 

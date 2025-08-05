@@ -6,6 +6,7 @@ package use_case.fetch_post;/**
 
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
+import use_case.get_comments.GetCommentsOutputBoundary;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,29 +15,32 @@ import java.util.List;
 public class FetchPostInteractor implements FetchPostInputBoundary {
 
     private final PostCommentsLikesDataAccessObject postDAO;
-
-    public FetchPostInteractor(PostCommentsLikesDataAccessObject postDAO) {
+    private final FetchPostOutputBoundary presenter;
+    public FetchPostInteractor(PostCommentsLikesDataAccessObject postDAO, FetchPostOutputBoundary presenter) {
         this.postDAO = postDAO;
+        this.presenter = presenter;
     }
 
     @Override
     public void execute(FetchPostInputData inputData) {
-        Post post = postDAO.getPost(inputData.getPostID());
+        //Post post = postDAO.getPost(inputData.getPostID());
 
 
     }
 
-    public List<Post> getRandomFeedPosts(int count) {
+    @Override
+    public void getRandomFeedPosts(FetchPostInputData inputData) {
         List<Long> availableIDs = postDAO.getAvailablePosts();
         Collections.shuffle(availableIDs);
         List<Post> result = new ArrayList<>();
-        for (int i = 0; i < Math.min(count, availableIDs.size()); i++) {
+        for (int i = 0; i < Math.min(inputData.getNumberOfPosts(), availableIDs.size()); i++) {
             result.add(postDAO.getPost(availableIDs.get(i)));
         }
-        return result;
+        FetchPostOutputData data = new FetchPostOutputData((ArrayList<Post>) result);
+        presenter.prepareSuccessView(data);
     }
 
-    public List<Long> getAvailablePostIDs() {
-        return postDAO.getAvailablePosts();
+    public void getAvailablePostIDs(){
+        //presenter.present(postDAO.getAvailablePosts());
     }
 }

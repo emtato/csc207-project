@@ -3,6 +3,7 @@ package app;
 import data_access.DBClubsDataAccessObject;
 import data_access.FilePostCommentLikesDataAccessObject;
 import data_access.FileUserDataAccessObject;
+
 import javax.swing.JFrame;
 
 public class AppDirector {
@@ -22,7 +23,7 @@ public class AppDirector {
         return AppDirector.instance;
     }
 
-    public JFrame buildFileApp(){
+    public JFrame buildFileApp() {
         // build the views
         viewBuilder = new ViewBuilder()
                 .addSignupView()
@@ -39,7 +40,8 @@ public class AppDirector {
                 .addEventsView()
                 .addNotificationsView()
                 .addMapView()
-                .addExploreView();
+                .addExploreView()
+                .addCreatePostView();
 
         // create the use case builder with the File daos
         useCaseBuilder = new UseCaseBuilder(
@@ -65,6 +67,7 @@ public class AppDirector {
                 .addGetCommentsUseCase()
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
+                .addCreatePostUseCase()
                 .build();
     }
 }

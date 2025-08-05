@@ -107,6 +107,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
 
         final JScrollPane profileContentPanel = createProfileContentScrollPane();
+                profileContentPanel.getVerticalScrollBar().setUnitIncrement(16);
+
         this.add(profileContentPanel);
 
         // add a refresh button that executes the view profile use case on press (refreshes the profile view)

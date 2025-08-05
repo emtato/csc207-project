@@ -10,24 +10,28 @@ import java.util.List;
  */
 
 public class FetchPostInputData {
-    private final long postID;
-    private final List<Long> postIDs;
+    // private final long postID;
+    private final int numberOfPosts;
+    //private final List<Long> postIDs;
 
-    public FetchPostInputData(long postID) {
-        this.postID = postID;
-        this.postIDs = null;
+    public FetchPostInputData(int numberOfPosts) {
+        this.numberOfPosts = numberOfPosts;
     }
 
-    public FetchPostInputData(List<Long> postIDs) {
-        this.postID = -1;
-        this.postIDs = postIDs;
-    }
-
-    public long getPostID() {
-        return postID;
-    }
-
-    public List<Long> getPostIDs() {
-        return postIDs;
+    public int getNumberOfPosts() {
+        return numberOfPosts;
     }
 }
+//    public FetchPostInputData(List<Long> postIDs) {
+//        this.postID = -1;
+//        this.postIDs = postIDs;
+//    }
+//
+//    public long getPostID() {
+//        return postID;
+//    }
+//
+//    public List<Long> getPostIDs() {
+//        return postIDs;
+//    }
+//}

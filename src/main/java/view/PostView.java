@@ -137,7 +137,7 @@ public class PostView extends JPanel {
         menuBar.setPreferredSize(new Dimension(1200, 100));
 
         // right
-        ArrayList<JButton> rightButtons = new ArrayList<>();
+        // ArrayList<JButton> rightButtons = new ArrayList<>();
 //        if (liked) {
 //            likeButton.setText("unlike");
 //        }
