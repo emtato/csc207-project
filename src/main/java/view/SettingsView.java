@@ -111,14 +111,15 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         accountPrivacyToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (accountPrivacyToggle.isSelected()) {
+                if (!accountPrivacyToggle.isSelected()) {
                     accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
                 }
                 else {
                     accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_OFF);
                 }
                 final SettingsState settingsState = settingsViewModel.getState();
-                settingsController.executePrivacyToggle(settingsState.getUsername(), accountPrivacyToggle.isSelected());
+                settingsController.executePrivacyToggle(settingsState.getUsername(),
+                        !accountPrivacyToggle.isSelected());
             }
         });
     }
@@ -127,7 +128,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         notificationsToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (notificationsToggle.isSelected()) {
+                if (!notificationsToggle.isSelected()) {
                     notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
                 }
                 else {
@@ -135,7 +136,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 }
                 final SettingsState settingsState = settingsViewModel.getState();
                 settingsController.executeNotificationsToggle(settingsState.getUsername(),
-                        notificationsToggle.isSelected());
+                        !notificationsToggle.isSelected());
             }
         });
     }
@@ -179,12 +180,12 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (showPasswordButton.isSelected()) {
-                    showPasswordButton.setText(SettingsViewModel.SHOW_PASSWORD_LABEL);
-                    passwordField.setEchoChar('\u25CF');
-                }
-                else {
                     showPasswordButton.setText(SettingsViewModel.HIDE_PASSWORD_LABEL);
                     passwordField.setEchoChar((char) 0);
+                }
+                else {
+                    showPasswordButton.setText(SettingsViewModel.SHOW_PASSWORD_LABEL);
+                    passwordField.setEchoChar('\u25CF');
                 }
             }
         });
@@ -252,7 +253,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("privacy changed")) {
             final SettingsState state = this.settingsViewModel.getState();
-            this.accountPrivacyToggle.setSelected(state.isPublic());
+            this.accountPrivacyToggle.setSelected(!state.isPublic());
             if (state.isPublic()) {
                 this.accountPrivacyToggle.setText(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
             }
@@ -262,7 +263,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         }
         else if (evt.getPropertyName().equals("notifications changed")) {
             final SettingsState state = this.settingsViewModel.getState();
-            this.notificationsToggle.setSelected(state.isNotificationsEnabled());
+            this.notificationsToggle.setSelected(!state.isNotificationsEnabled());
             if (state.isNotificationsEnabled()) {
                 this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
             }
