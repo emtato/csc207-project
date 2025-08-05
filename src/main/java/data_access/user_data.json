@@ -138,6 +138,36 @@
       "followerAccounts": {},
       "username": "new_user"
     },
+    "screchie": {
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
+      "displayName": "",
+      "bio": "",
+      "blockedTerms": [],
+      "notificationsEnabled": true,
+      "userPosts": [],
+      "password": "bwaaah",
+      "foodPreferences": [],
+      "clubs": [],
+      "followingAccounts": {
+        "caf_feine666": {
+          "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+          "displayName": "Latte",
+          "username": "caf_feine666"
+        },
+        "jinufan333": {
+          "profilePictureUrl": "https://img.wattpad.com/cover/396514319-256-k922675.jpg",
+          "displayName": "Emilia",
+          "username": "jinufan333"
+        }
+      },
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {},
+      "username": "screchie"
+    },
     "caf_feine666": {
       "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
       "likesUsernames": [],
@@ -165,7 +195,11 @@
       "isPublic": false,
       "mutedAccounts": [],
       "email": "",
-      "followerAccounts": {},
+      "followerAccounts": {"screchie": {
+        "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+        "displayName": "",
+        "username": "screchie"
+      }},
       "username": "caf_feine666"
     },
     "rotmaxxer": {
@@ -204,6 +238,7 @@
       "userPosts": [123134344413],
       "password": "woofwoof",
       "foodPreferences": [""],
+      "clubs": [],
       "followingAccounts": {},
       "isPublic": true,
       "mutedAccounts": [],
@@ -213,6 +248,11 @@
           "profilePictureUrl": "https://static.planetminecraft.com/files/image/minecraft/mod/2024/896/18241151-johnporkmeme_s.jpg",
           "displayName": "Johnathan",
           "username": "john pork of texus"
+        },
+        "screchie": {
+          "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+          "displayName": "",
+          "username": "screchie"
         },
         "caf_feine666": {
           "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
