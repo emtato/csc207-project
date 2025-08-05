@@ -7,4 +7,5 @@ package use_case.fetch_post;/**
 public interface FetchPostOutputBoundary {
     void prepareSuccessView(FetchPostOutputData data);
     void prepareFailView(String errorMessage);
+
 }

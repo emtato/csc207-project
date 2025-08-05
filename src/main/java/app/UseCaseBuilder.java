@@ -15,6 +15,7 @@ import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.fetch_post.FetchPostPresenter;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.like_post.LikePostController;
@@ -49,6 +50,7 @@ import use_case.edit_profile.EditProfileInteractor;
 import use_case.edit_profile.EditProfileOutputBoundary;
 import use_case.fetch_post.FetchPostInputBoundary;
 import use_case.fetch_post.FetchPostInteractor;
+import use_case.fetch_post.FetchPostOutputBoundary;
 import use_case.get_comments.GetCommentsInputBoundary;
 import use_case.get_comments.GetCommentsInteractor;
 import use_case.get_comments.GetCommentsOutputBoundary;
@@ -98,7 +100,7 @@ public class UseCaseBuilder {
         this.viewBuilder = viewBuilder;
     }
 
-    public JFrame build(){
+    public JFrame build() {
         return viewBuilder.build();
     }
 
@@ -355,8 +357,8 @@ public class UseCaseBuilder {
      * @return this builder
      */
     public UseCaseBuilder addFetchPostUseCase() {
-        //final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
-        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject);
+        final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
+        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         viewBuilder.getHomePageView().setFetchPostController(fetchPostController);
         return this;

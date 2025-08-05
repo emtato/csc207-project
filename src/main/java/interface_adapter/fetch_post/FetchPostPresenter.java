@@ -8,18 +8,21 @@ import use_case.fetch_post.FetchPostOutputBoundary;
 import use_case.fetch_post.FetchPostOutputData;
 
 public class FetchPostPresenter implements FetchPostOutputBoundary {
-    private FetchPostOutputData viewModel;
+    private FetchPostOutputData result;
 
     @Override
     public void prepareSuccessView(FetchPostOutputData data) {
-        this.viewModel = data;
+        this.result = data;
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
         System.err.println("Failed to fetch post: " + errorMessage);
     }
-    public FetchPostOutputData getViewModel() {
-    return viewModel;
-}
+
+    public FetchPostOutputData getResult() {
+        return result;
+    }
+
+
 }

@@ -6,6 +6,7 @@ package use_case.fetch_post;/**
 
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
+import use_case.get_comments.GetCommentsOutputBoundary;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,9 +15,10 @@ import java.util.List;
 public class FetchPostInteractor implements FetchPostInputBoundary {
 
     private final PostCommentsLikesDataAccessObject postDAO;
-
-    public FetchPostInteractor(PostCommentsLikesDataAccessObject postDAO) {
+    private final FetchPostOutputBoundary presenter;
+    public FetchPostInteractor(PostCommentsLikesDataAccessObject postDAO, FetchPostOutputBoundary presenter) {
         this.postDAO = postDAO;
+        this.presenter = presenter;
     }
 
     @Override
@@ -26,17 +28,18 @@ public class FetchPostInteractor implements FetchPostInputBoundary {
 
     }
 
-    public List<Post> getRandomFeedPosts(int count) {
+    public void getRandomFeedPosts(int count) {
         List<Long> availableIDs = postDAO.getAvailablePosts();
         Collections.shuffle(availableIDs);
         List<Post> result = new ArrayList<>();
         for (int i = 0; i < Math.min(count, availableIDs.size()); i++) {
             result.add(postDAO.getPost(availableIDs.get(i)));
         }
-        return result;
+        presenter.present(result);
+
     }
 
-    public List<Long> getAvailablePostIDs() {
-        return postDAO.getAvailablePosts();
+    public void getAvailablePostIDs(){
+        presenter.present(postDAO.getAvailablePosts());
     }
 }

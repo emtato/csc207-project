@@ -38,7 +38,7 @@ public class HomePageView extends JPanel {
     private FetchPostController fetchPostController;
     private LikePostController likePostController;
 
-    public HomePageView(ViewManagerModel viewManagerModel) {
+    public HomePageView(ViewManagerModel viewManagerModel,) {
         this.viewManagerModel = viewManagerModel;
 
         // TODO: hi delete this later, just adding a button to refresh the screen for now
@@ -119,10 +119,10 @@ public class HomePageView extends JPanel {
 
         int maxNumberOfDisplayingPosts = 10;
         //should technically make new use case, fetch_home_feed to abide by clean architecture exactly (using inputdata etc) oops
-        List<Post> randomFeedPosts = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
-        List<Post> randomFeedPosts2 = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
-
-
+        fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
+        fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
+        List<Post> randomFeedPosts =
+                List < Post > randomFeedPosts2 =
         for (int i = 0; i < randomFeedPosts.size(); i++) {
             JPanel feedRow = new JPanel();
             feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
@@ -147,9 +147,11 @@ public class HomePageView extends JPanel {
     public String getViewName() {
         return viewName;
     }
+
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
     }
+
     public void setFetchPostController(FetchPostController controller) {
         this.fetchPostController = controller;
     }

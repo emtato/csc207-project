@@ -104,7 +104,8 @@ public class ViewBuilder {
      * @return this builder
      */
     public ViewBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel);
+
+        homePageView = new HomePageView(viewManagerModel, );
         cardPanel.add(homePageView, homePageView.getViewName());
         viewManagerModel.setHomePageView(homePageView);
         return this;

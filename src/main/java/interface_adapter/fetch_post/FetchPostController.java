@@ -23,13 +23,13 @@ public class FetchPostController {
         interactor.execute(new FetchPostInputData(postID));
     }
 
-    public List<Post> getRandomFeedPosts(int count) {
-        return ((FetchPostInteractor) interactor).getRandomFeedPosts(count); //using one implementation only
+    public void getRandomFeedPosts(int count) {
+        ((FetchPostInteractor) interactor).getRandomFeedPosts(count); //using one implementation only
     }
 
 
-    public List<Long> getAvailablePostIDs() {
-        return ((FetchPostInteractor) interactor).getAvailablePostIDs();
+    public void getAvailablePostIDs() {
+         ((FetchPostInteractor) interactor).getAvailablePostIDs();
     }
 }
 
