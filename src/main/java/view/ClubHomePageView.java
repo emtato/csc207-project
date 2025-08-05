@@ -101,7 +101,7 @@ public class ClubHomePageView extends JPanel {
 
         JLabel announcementsTitle = new JLabel("Announcements");
         announcementsTitle.setFont(GUIConstants.FONT_TITLE);
-        announcementsTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        announcementsTitle.setHorizontalAlignment(SwingConstants.LEFT);
         announcementsPanel.add(announcementsTitle, BorderLayout.NORTH);
 
         // Create a panel to hold all posts
