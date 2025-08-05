@@ -113,34 +113,42 @@ public class HomePageView extends JPanel {
     }
 
     public void updateHomeFeed() {
-        feedPanel.removeAll();
-        //TODO: refresh work properly after having made post
-        trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
+        SwingUtilities.invokeLater(() -> {
+            feedPanel.removeAll();
+            //TODO: refresh work properly after having made post
+            trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
 
-        int maxNumberOfDisplayingPosts = 10;
-        //should technically make new use case, fetch_home_feed to abide by clean architecture exactly (using inputdata etc) oops
-        List<Post> randomFeedPosts = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
-        List<Post> randomFeedPosts2 = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
+            int maxNumberOfDisplayingPosts = 10;
+            //should technically make new use case, fetch_home_feed to abide by clean architecture exactly (using inputdata etc) oops
+            List<Post> randomFeedPosts = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
+            List<Post> randomFeedPosts2 = fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
 
 
-        for (int i = 0; i < randomFeedPosts.size(); i++) {
-            JPanel feedRow = new JPanel();
-            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
-            feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
-            Post post1 = randomFeedPosts.get(i);
-            PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400, likePostController);
-            postPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-            feedRow.setMaximumSize(new Dimension(2000, 420));
-            feedRow.add(postPanel);
+            for (int i = 0; i < randomFeedPosts.size(); i++) {
+                JPanel feedRow = new JPanel();
+                feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
+                feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
+                Post post1 = randomFeedPosts.get(i);
+                PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400, likePostController);
+                postPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
+                feedRow.setMaximumSize(new Dimension(2000, 420));
+                feedRow.add(postPanel);
 
-            Post post2 = randomFeedPosts2.get(i);
-            PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400, likePostController);
-            postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-            feedRow.add(postTwo); // second post
-            feedRow.add(Box.createHorizontalGlue());
+                Post post2 = randomFeedPosts2.get(i);
+                PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400, likePostController);
+                postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
+                feedRow.add(postTwo); // second post
+                feedRow.add(Box.createHorizontalGlue());
 
-            feedPanel.add(feedRow);
-        }
+                feedPanel.add(feedRow);
+            }
+
+            feedPanel.revalidate();
+            feedPanel.repaint();
+            revalidate();
+            repaint();
+        });
+
     }
 
 
