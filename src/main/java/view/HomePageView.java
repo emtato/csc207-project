@@ -118,6 +118,8 @@ public class HomePageView extends JPanel {
     }
 
     public void updateHomeFeed() {
+
+  SwingUtilities.invokeLater(() -> {
         feedPanel.removeAll();
         //TODO: refresh work properly after having made post
         trialpost.setImageURLs(new ArrayList<>(Arrays.asList("https://i.imgur.com/eA9NeJ1.jpeg", "https://i.imgur.com/wzX83Zc.jpeg", "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg")));
@@ -147,6 +149,11 @@ public class HomePageView extends JPanel {
 
             feedPanel.add(feedRow);
         }
+      feedPanel.revalidate();
+            feedPanel.repaint();
+            revalidate();
+            repaint();
+     });
     }
 
 

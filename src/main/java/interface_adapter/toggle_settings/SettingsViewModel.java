@@ -27,6 +27,8 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String PASSWORD_LABEL = "Enter New Password: ";
     public static final String PASSWORD_BUTTON_LABEL = "Change Password";
     public static final String PASSWORD_HEADING = "Change Password";
+    public static final String SHOW_PASSWORD_LABEL = "Show Password";
+    public static final String HIDE_PASSWORD_LABEL = "Hide Password";
 
     public SettingsViewModel() {
         super("settings");

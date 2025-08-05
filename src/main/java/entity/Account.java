@@ -23,6 +23,7 @@ public class Account implements User {
     private ArrayList<Long> userPosts;
     private boolean isPublic;
     private boolean notificationsEnabled;
+    private ArrayList<String> clubs = new ArrayList<>();
 
     public Account(String username, String password) {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
@@ -39,6 +40,7 @@ public class Account implements User {
         mutedAccounts = new ArrayList<>();
         foodPreferences = new ArrayList<>();
         userPosts = new ArrayList<>();
+        clubs = new ArrayList<>();  // Initialize clubs list
         isPublic = true;
         notificationsEnabled = true;
     }
@@ -237,5 +239,13 @@ public class Account implements User {
     @Override
     public void setNotificationsEnabled(boolean notificationsEnabled) {
         this.notificationsEnabled = notificationsEnabled;
+    }
+
+    public ArrayList<String> getClubs() {
+        return clubs;
+    }
+
+    public void setClubs(ArrayList<String> clubs) {
+        this.clubs = clubs;
     }
 }

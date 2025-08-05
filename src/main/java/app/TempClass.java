@@ -4,6 +4,8 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// import use_case.note.DataAccessException;
+
 import java.io.IOException;
 
 // using this to do stuff with the grade api, will delete later. dont run it unless you want to clear the database.
