@@ -120,7 +120,7 @@ public class ClubHomePageView extends JPanel {
             clubIconPanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    SpecificClubView specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
+                    SpecificClubView specificClubView = new SpecificClubView(viewManagerModel, cardPanel, club);
                     cardPanel.add(specificClubView, specificClubView.getViewName());
                     viewManagerModel.setState(specificClubView.getViewName());
                 }
