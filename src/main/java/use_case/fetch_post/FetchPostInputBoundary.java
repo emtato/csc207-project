@@ -6,4 +6,5 @@ package use_case.fetch_post;/**
 
 public interface FetchPostInputBoundary {
     void execute(FetchPostInputData inputData);
+    void getRandomFeedPosts(FetchPostInputData inputData);
 }

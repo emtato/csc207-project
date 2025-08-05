@@ -71,7 +71,10 @@
       "bio": "secret account to login easily",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": [92815889284],
+      "userPosts": [
+        92815889284,
+        193954216996
+      ],
       "password": "a",
       "foodPreferences": [
         "cheese",

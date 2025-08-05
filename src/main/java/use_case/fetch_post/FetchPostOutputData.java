@@ -2,14 +2,16 @@ package use_case.fetch_post;
 
 import entity.Post;
 
-public class FetchPostOutputData {
-    private final Post post;
+import java.util.ArrayList;
 
-    public FetchPostOutputData(Post post) {
-        this.post = post;
+public class FetchPostOutputData {
+    private final ArrayList<Post> posts;
+
+    public FetchPostOutputData(ArrayList<Post> posts) {
+        this.posts = posts;
     }
 
-    public Post getPost() {
-        return post;
+    public ArrayList<Post> getPosts() {
+        return posts;
     }
 }

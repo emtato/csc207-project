@@ -10,6 +10,9 @@ import interface_adapter.analyze_recipe.AnalyzeRecipeController;
 import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.create_post_view.CreatePostController;
+import interface_adapter.create_post_view.CreatePostPresenter;
+import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.edit_profile.EditProfileController;
@@ -42,6 +45,10 @@ import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.create_post.CreatePostInputBoundary;
+import use_case.create_post.CreatePostInputData;
+import use_case.create_post.CreatePostInteractor;
+import use_case.create_post.CreatePostOutputBoundary;
 import use_case.delete_account.DeleteAccountInputBoundary;
 import use_case.delete_account.DeleteAccountInteractor;
 import use_case.delete_account.DeleteAccountOutputBoundary;
@@ -357,10 +364,18 @@ public class UseCaseBuilder {
      * @return this builder
      */
     public UseCaseBuilder addFetchPostUseCase() {
-        final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
+        final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter(viewBuilder.getHomePageViewModel());
         final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         viewBuilder.getHomePageView().setFetchPostController(fetchPostController);
+        return this;
+    }
+     public UseCaseBuilder addCreatePostUseCase() {
+        final CreatePostViewModel viewModel = new CreatePostViewModel();
+        final CreatePostOutputBoundary createPostOutputBoundary = new CreatePostPresenter(viewModel);
+        final CreatePostInputBoundary createpostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject, createPostOutputBoundary);
+        final CreatePostController createPostController = new CreatePostController(createpostInteractor);
+        viewBuilder.getCreateNewPostView().setCreatePostController(createPostController);
         return this;
     }
 }

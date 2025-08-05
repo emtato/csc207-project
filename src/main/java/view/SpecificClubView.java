@@ -95,7 +95,7 @@ public class SpecificClubView extends JPanel {
                 PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
                 UserDataAccessObject userDAO = FileUserDataAccessObject.getInstance();
                 CreatePostViewModel createPostViewModel = new CreatePostViewModel();
-                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, postDAO, userDAO, createPostViewModel);
+                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
                 cardPanel.add(createNewPostView, createNewPostView.getViewName());
                 viewManagerModel.setState(createNewPostView.getViewName());
             }

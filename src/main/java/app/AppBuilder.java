@@ -24,6 +24,7 @@ import interface_adapter.fetch_post.FetchPostPresenter;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
+import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.like_post.LikePostController;
 import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersPresenter;
@@ -136,6 +137,7 @@ public class AppBuilder {
     private SettingsViewModel settingsViewModel;
     private ManageFollowersViewModel manageFollowersViewModel;
     private ManageFollowingViewModel manageFollowingViewModel;
+    private HomePageViewModel homePageViewModel;
     private LoginView loginView;
     private ClubHomePageView clubHomePageView;
     private NotificationsView notificationsView;
@@ -170,7 +172,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel);
+        homePageViewModel = new HomePageViewModel();
+        homePageView = new HomePageView(viewManagerModel, homePageViewModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         viewManagerModel.setHomePageView(homePageView);
         return this;
@@ -256,7 +259,7 @@ public class AppBuilder {
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         // TODO: add the use case and move the data access object out of the view and into the interactor
-        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject, createPostViewModel);
+        createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
@@ -587,8 +590,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFetchPostUseCase() {
-        //final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
-        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject);
+        final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter(homePageViewModel);
+        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         homePageView.setFetchPostController(fetchPostController);
         return this;

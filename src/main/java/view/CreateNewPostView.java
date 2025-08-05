@@ -4,6 +4,7 @@ import app.Session;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostState;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -43,16 +44,15 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     private final JRadioButton clubPost = new JRadioButton("Club Post");
     private final String viewName = "create new post";
 
-    private final CreatePostInteractor createPostInteractor;
+    private CreatePostController createPostController;
     private final CreatePostViewModel createPostViewModel;
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
-                           UserDataAccessObject userDataAccessObject, CreatePostViewModel createPostViewModel) {
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.createPostViewModel = createPostViewModel;
+
         this.createPostViewModel.addPropertyChangeListener(this);  // Add this view as a listener
-        CreatePostPresenter presenter = new interface_adapter.create_post_view.CreatePostPresenter(createPostViewModel);
-        this.createPostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject, presenter);
+       // CreatePostPresenter presenter = new interface_adapter.create_post_view.CreatePostPresenter(createPostViewModel);
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
@@ -170,8 +170,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
                 //write to posts data
-                CreatePostInputData inputData = new CreatePostInputData(Session.getCurrentAccount(), title, "recipe", body, ingredients, steps, tags, imagesList, clubs);
-                createPostInteractor.execute(inputData);
+                createPostController.createPost(Session.getCurrentAccount(), title, "recipe", body, ingredients, steps, tags, imagesList, clubs);
 
                 viewManagerModel.setState("homepage view");
                 HomePageView homePageView = viewManagerModel.getHomePageView();
@@ -228,8 +227,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
 
-                CreatePostInputData inputData = new CreatePostInputData(Session.getCurrentAccount(), title, "general", body, new ArrayList<>(), "", tags, imagesList, clubs);
-                createPostInteractor.execute(inputData);
+                createPostController.createPost(Session.getCurrentAccount(), title, "general", body, new ArrayList<>(), "", tags, imagesList, clubs);
 
                 viewManagerModel.setState("homepage view");
                 HomePageView homePageView = viewManagerModel.getHomePageView();
@@ -322,8 +320,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     clubs = new ArrayList<>(Arrays.asList(clubsArea.getText().split(",")));
                 }
 
-                CreatePostInputData inputData = new CreatePostInputData(Session.getCurrentAccount(), title, "clubs", body, new ArrayList<>(), "", tags, imagesList, clubs);
-                createPostInteractor.execute(inputData);
+                createPostController.createPost(Session.getCurrentAccount(), title, "clubs", body, new ArrayList<>(), "", tags, imagesList, clubs);
 
                 viewManagerModel.setState("homepage view");
                 HomePageView homePageView = viewManagerModel.getHomePageView();
@@ -346,5 +343,8 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             contentPanel.revalidate();
             contentPanel.repaint();
         }
+    }
+     public void setCreatePostController(CreatePostController controller) {
+        this.createPostController = controller;
     }
 }

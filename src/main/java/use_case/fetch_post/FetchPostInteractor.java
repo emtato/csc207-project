@@ -23,23 +23,24 @@ public class FetchPostInteractor implements FetchPostInputBoundary {
 
     @Override
     public void execute(FetchPostInputData inputData) {
-        Post post = postDAO.getPost(inputData.getPostID());
+        //Post post = postDAO.getPost(inputData.getPostID());
 
 
     }
 
-    public void getRandomFeedPosts(int count) {
+    @Override
+    public void getRandomFeedPosts(FetchPostInputData inputData) {
         List<Long> availableIDs = postDAO.getAvailablePosts();
         Collections.shuffle(availableIDs);
         List<Post> result = new ArrayList<>();
-        for (int i = 0; i < Math.min(count, availableIDs.size()); i++) {
+        for (int i = 0; i < Math.min(inputData.getNumberOfPosts(), availableIDs.size()); i++) {
             result.add(postDAO.getPost(availableIDs.get(i)));
         }
-        presenter.present(result);
-
+        FetchPostOutputData data = new FetchPostOutputData((ArrayList<Post>) result);
+        presenter.prepareSuccessView(data);
     }
 
     public void getAvailablePostIDs(){
-        presenter.present(postDAO.getAvailablePosts());
+        //presenter.present(postDAO.getAvailablePosts());
     }
 }
