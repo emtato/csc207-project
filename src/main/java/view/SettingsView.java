@@ -7,20 +7,26 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.JButton;
+import javax.swing.JPasswordField;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
+import javax.swing.Box;
 
+import interface_adapter.change_password.ChangePasswordController;
 import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.logout.LogoutController;
-import interface_adapter.settings.SettingsController;
-import interface_adapter.settings.SettingsState;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.toggle_settings.SettingsController;
+import interface_adapter.toggle_settings.SettingsState;
+import interface_adapter.toggle_settings.SettingsViewModel;
 import view.ui_components.GeneralJLabel;
 import view.ui_components.MenuBarPanel;
 
@@ -31,82 +37,69 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
     private SettingsController settingsController;
     private LogoutController logoutController;
+    private DeleteAccountController deleteAccountController;
+    private ChangePasswordController changePasswordController;
 
     private final JToggleButton accountPrivacyToggle;
     private final JToggleButton notificationsToggle;
+    private final JButton logoutButton;
+    private final JButton deleteAccountButton;
+    private final JButton changePasswordButton;
+    private final JPasswordField passwordField;
 
     public SettingsView(SettingsViewModel settingsViewModel, ViewManagerModel viewManagerModel) {
         this.settingsViewModel = settingsViewModel;
         this.viewManagerModel = viewManagerModel;
         this.settingsViewModel.addPropertyChangeListener(this);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // add title
         final JLabel title = new GeneralJLabel(SettingsViewModel.TITLE_LABEL,
                 GUIConstants.TITLE_SIZE, GUIConstants.RED);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(title);
 
+        // add settings panel
         final JPanel settingsPanel = getSettingsPanel();
 
-        final JLabel privacyHeading = new GeneralJLabel(SettingsViewModel.PRIVACY_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(privacyHeading);
-
-        final JPanel privacyPanel = new JPanel();
-        privacyPanel.setLayout(new BoxLayout(privacyPanel, BoxLayout.X_AXIS));
-        privacyPanel.setBackground(GUIConstants.PINK);
-        final JLabel privacyLabel = new JLabel(SettingsViewModel.ACCOUNT_PRIVACY_LABEL);
-        privacyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        privacyLabel.setFont(GUIConstants.FONT_TEXT);
-        privacyLabel.setForeground(GUIConstants.RED);
-        privacyPanel.add(privacyLabel);
-        privacyPanel.add(Box.createHorizontalGlue());
         accountPrivacyToggle = new JToggleButton(SettingsViewModel.ACCOUNT_PRIVACY_TOGGLE_ON);
-        accountPrivacyToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        privacyPanel.add(accountPrivacyToggle);
+        addNewPanel(settingsPanel, SettingsViewModel.PRIVACY_HEADING, SettingsViewModel.ACCOUNT_PRIVACY_LABEL,
+                accountPrivacyToggle);
 
-        settingsPanel.add(privacyPanel);
-
-        final JLabel notificationsHeading = new GeneralJLabel(SettingsViewModel.NOTIFICATIONS_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(notificationsHeading);
-
-        final JPanel notificationsPanel = new JPanel();
-        notificationsPanel.setLayout(new BoxLayout(notificationsPanel, BoxLayout.X_AXIS));
-        notificationsPanel.setBackground(GUIConstants.PINK);
-        final JLabel notificationsLabel = new JLabel(SettingsViewModel.NOTIFICATIONS_LABEL);
-        notificationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        notificationsLabel.setFont(GUIConstants.FONT_TEXT);
-        notificationsLabel.setForeground(GUIConstants.RED);
-        notificationsPanel.add(notificationsLabel);
-        notificationsPanel.add(Box.createHorizontalGlue());
         notificationsToggle = new JToggleButton(SettingsViewModel.NOTIFICATIONS_TOGGLE_ON);
-        notificationsToggle.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        notificationsPanel.add(notificationsToggle);
+        addNewPanel(settingsPanel, SettingsViewModel.NOTIFICATIONS_HEADING,SettingsViewModel.NOTIFICATIONS_LABEL,
+                notificationsToggle);
 
-        settingsPanel.add(notificationsPanel);
+        logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
+        addNewPanel(settingsPanel, SettingsViewModel.LOGOUT_HEADING, SettingsViewModel.LOGOUT_LABEL, logoutButton);
 
-        final JLabel logoutHeading = new GeneralJLabel(SettingsViewModel.LOGOUT_HEADING,
-                GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
-        settingsPanel.add(logoutHeading);
+        deleteAccountButton = new JButton(SettingsViewModel.DELETE_BUTTON_LABEL);
+        addNewPanel(settingsPanel, SettingsViewModel.DELETE_HEADING, SettingsViewModel.DELETE_LABEL,
+                deleteAccountButton);
 
-        final JPanel logoutPanel = new JPanel();
-        logoutPanel.setLayout(new BoxLayout(logoutPanel, BoxLayout.X_AXIS));
-        logoutPanel.setBackground(GUIConstants.PINK);
-        final JLabel logoutLabel = new JLabel(SettingsViewModel.LOGOUT_LABEL);
-        logoutLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        logoutLabel.setFont(GUIConstants.FONT_TEXT);
-        logoutLabel.setForeground(GUIConstants.RED);
-        logoutPanel.add(logoutLabel);
-        logoutPanel.add(Box.createHorizontalGlue());
-        final JButton logoutButton = new JButton(SettingsViewModel.LOGOUT_BUTTON_LABEL);
-        logoutButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        logoutPanel.add(logoutButton);
+        passwordField = new JPasswordField();
+        addNewPanel(settingsPanel, SettingsViewModel.PASSWORD_HEADING, SettingsViewModel.PASSWORD_LABEL,
+                passwordField);
 
-        settingsPanel.add(logoutPanel);
-
+        changePasswordButton = new JButton(SettingsViewModel.PASSWORD_BUTTON_LABEL);
+        settingsPanel.add(changePasswordButton);
         settingsPanel.add(Box.createVerticalGlue());
+        this.add(settingsPanel);
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // add a menu bar
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(menuBar);
 
+        // add listeners
+        addPrivacyToggleListener();
+        addNotificationsToggleListener();
+        addLogoutButtonListener();
+        addDeleteAccountButtonListener();
+        addChangePasswordButtonListener();
+        addPasswordFieldDocumentListener();
+    }
+
+    private void addPrivacyToggleListener(){
         accountPrivacyToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -119,7 +112,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 settingsController.executePrivacyToggle(settingsState.getUsername(), accountPrivacyToggle.isSelected());
             }
         });
+    }
 
+    private void addNotificationsToggleListener(){
         notificationsToggle.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -133,7 +128,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                         notificationsToggle.isSelected());
             }
         });
+    }
 
+    private void addLogoutButtonListener(){
         logoutButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(logoutButton)) {
@@ -142,11 +139,74 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
+    }
 
-        this.add(title);
-        this.add(settingsPanel);
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        this.add(menuBar);
+    private void addDeleteAccountButtonListener(){
+        deleteAccountButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(deleteAccountButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.deleteAccountController.execute(settingsState.getUsername());
+                    }
+                }
+        );
+    }
+
+    private void addChangePasswordButtonListener(){
+        changePasswordButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(changePasswordButton)) {
+                        final SettingsState settingsState = settingsViewModel.getState();
+                        this.changePasswordController.execute(settingsState.getUsername(),
+                                settingsState.getNewPassword());
+                    }
+                }
+        );
+    }
+
+    private void addPasswordFieldDocumentListener(){
+        passwordField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void documentListenerHelper() {
+                final SettingsState currentState = settingsViewModel.getState();
+                currentState.setNewPassword(new String(passwordField.getPassword()));
+                settingsViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+    }
+
+    private void addNewPanel(JPanel parentPanel, String header, String label, JComponent component) {
+        final JLabel newHeading = new GeneralJLabel(header, GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
+        parentPanel.add(newHeading);
+
+        final JPanel subPanel = new JPanel();
+        subPanel.setLayout(new BoxLayout(subPanel, BoxLayout.X_AXIS));
+        subPanel.setBackground(GUIConstants.PINK);
+        final JLabel newLabel = new JLabel(label);
+        newLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        newLabel.setFont(GUIConstants.FONT_TEXT);
+        newLabel.setForeground(GUIConstants.RED);
+        subPanel.add(newLabel);
+        subPanel.add(Box.createHorizontalGlue());
+        component.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        subPanel.add(component);
+
+        parentPanel.add(subPanel);
     }
 
     @NotNull
@@ -184,6 +244,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
                 this.notificationsToggle.setText(SettingsViewModel.NOTIFICATIONS_TOGGLE_OFF);
             }
         }
+        else if (evt.getPropertyName().equals("password changed")) {
+            SettingsState state = this.settingsViewModel.getState();
+            this.passwordField.setText(state.getNewPassword());
+        }
     }
 
     public String getViewName() {
@@ -195,5 +259,11 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     }
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
+    }
+    public void setDeleteAccountController(DeleteAccountController controller) {
+        this.deleteAccountController = controller;
+    }
+    public void setChangePasswordController(ChangePasswordController changePasswordController) {
+        this.changePasswordController = changePasswordController;
     }
 }

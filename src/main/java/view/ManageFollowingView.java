@@ -19,7 +19,7 @@ import entity.User;
 import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingState;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import interface_adapter.profile.ProfileController;
+import interface_adapter.view_profile.ProfileController;
 import view.ui_components.UserInfoPanel;
 
 public class ManageFollowingView extends JPanel implements PropertyChangeListener {
@@ -36,27 +36,32 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
 
     private final JButton backButton;
 
-
     public ManageFollowingView(ManageFollowingViewModel manageFollowingViewModel) {
         this.manageFollowingViewModel = manageFollowingViewModel;
         this.manageFollowingViewModel.addPropertyChangeListener(this);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // instantiate variables
         title = new JLabel(ManageFollowingViewModel.TITLE_LABEL);
         followingPanel = new JPanel();
         followingPanels = new ArrayList<>();
-        backButton = new JButton("Back to Profile");
-        followAccountInput = new JTextField("Enter username to follow");
+        backButton = new JButton(ManageFollowingViewModel.BACK_BUTTON_LABEL);
+        followAccountInput = new JTextField(ManageFollowingViewModel.INPUT_PROMPT);
 
+        // create the view
         createUIComponents();
         refreshScreen();
     }
 
     private void createUIComponents() {
 
+        // add title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(GUIConstants.FONT_TITLE);
         title.setForeground(GUIConstants.RED);
+        this.add(title);
 
+        // add main panel
         final JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -64,10 +69,15 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         JScrollPane scrollPane = new JScrollPane(followingPanel);
         mainPanel.add(scrollPane);
 
-        final JButton followButton = new JButton("Follow");
+        final JButton followButton = new JButton(ManageFollowingViewModel.FOLLOW_BUTTON_LABEL);
         mainPanel.add(followAccountInput);
         mainPanel.add(followButton);
+        this.add(mainPanel);
 
+        // add back button
+        this.add(backButton);
+
+        // add listeners
         followButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(followButton)) {
@@ -111,11 +121,6 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
                     }
                 }
         );
-
-        this.add(title);
-        this.add(mainPanel);
-        this.add(backButton);
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
     private void refreshScreen() {

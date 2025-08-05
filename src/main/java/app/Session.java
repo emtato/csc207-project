@@ -6,6 +6,7 @@ package app;/**
 
 import data_access.DBUserDataAccessObject;
 import data_access.FileUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.Account;
 
 /**
@@ -26,7 +27,7 @@ public class Session {
     }
 
     public static void setCurrentAccount() {
-        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject();
+        UserDataAccessObject fileUserDataAccessObject = FileUserDataAccessObject.getInstance();
         currentAccount = (Account) fileUserDataAccessObject.get(currentUsername);
     }
 

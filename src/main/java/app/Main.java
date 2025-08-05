@@ -13,12 +13,10 @@ public class Main {
      * @param args unused arguments
      */
     public static void main(String[] args) {
-        final AppBuilder appBuilder = new AppBuilder();
+        final AppBuilder appBuilder = AppBuilder.getInstance();
         final JFrame application = appBuilder
                 .addLoginView()
                 .addSignupView()
-                .addLoggedInView()
-                .addNoteView()
                 .addClubHomePageView()
                 .addHomePageView()
                 .addExploreView()
@@ -29,20 +27,25 @@ public class Main {
                 .addSettingsView()
                 .addManageFollowersView()
                 .addManageFollowingView()
+                .addPostView()
+                .addSpecificClubView()
+                .addCreateClubView()
+                .addCreatePostView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
+                .addDeleteAccountUseCase()
                 .addLogoutUseCase()
-                .addNoteUseCase()
                 .addEditProfileUseCase()
                 .addSettingsUseCase()
                 .addManageFollowersUseCase()
                 .addManageFollowingUseCase()
                 .addProfileUseCase()
-                .addPostView()
-                .addSpecificClubView()
-                .addCreateClubView()
-                .addCreatePostView()
+                .addLikePostUseCase()
+                .addWriteCommentUseCase()
+                .addGetCommentsUseCase()
+                .addAnalyzeRecipeUseCase()
+                .addFetchPostUseCase()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();

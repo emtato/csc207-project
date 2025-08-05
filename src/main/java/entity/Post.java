@@ -1,6 +1,6 @@
 package entity;
 
-import data_access.DBPostCommentLikesDataAccessObject;
+import data_access.FilePostCommentLikesDataAccessObject;
 
 import java.util.Locale;
 import java.time.LocalDateTime;
@@ -194,6 +194,7 @@ public class Post {
         DBPostCommentLikesDataAccessObject DBPostCommentLikesDataAccessObject = new DBPostCommentLikesDataAccessObject();
         return DBPostCommentLikesDataAccessObject.getComments(postID);
     }
+
 
     public ArrayList<String> getImageURLs() {
         return imageURLs;

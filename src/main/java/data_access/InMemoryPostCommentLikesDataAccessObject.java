@@ -15,10 +15,27 @@ import java.util.HashMap;
  * NOT persist data between runs of the program.
  */
 public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+    private static PostCommentsLikesDataAccessObject instance;
+
     HashMap<Long, ArrayList<Comment>> commentsMap = new HashMap<>();
     HashMap<Long, Club> clubsMap = new HashMap<>();
     HashMap<Long, Post> postsMap = new HashMap<>();
     HashMap<Account, ArrayList<Long>> likesMap = new HashMap<>();
+
+    private InMemoryPostCommentLikesDataAccessObject() {
+    }
+
+    public static PostCommentsLikesDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new InMemoryPostCommentLikesDataAccessObject();
+        }
+        return instance;
+    }
+
+    @Override
+    public void deletePost(long postID){
+        postsMap.remove(postID);
+    }
 
     @Override
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
@@ -115,20 +132,4 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         return new ArrayList<>(postsMap.keySet());
     }
 
-    @Override
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description,
-                          ArrayList<Post> posts, ArrayList<String> tags) {
-        Club club = new Club(name, description, members, tags, posts);
-        clubsMap.put(clubID, club);
-    }
-
-    @Override
-    public Club getClub(long clubID) {
-        if(!clubsMap.containsKey(clubID)) {
-            return null;
-        }
-        else{
-            return clubsMap.get(clubID);
-        }
-    }
 }

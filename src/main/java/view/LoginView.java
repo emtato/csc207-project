@@ -60,7 +60,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         buttons.add(signUp);
         logIn = new JButton("log in");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
+        cancel = new JButton("quit");
         buttons.add(cancel);
 
         logIn.addActionListener(
@@ -80,7 +80,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         signUp.addActionListener(e -> viewManagerModel.setState("sign up"));
 
-        cancel.addActionListener(this);
+        cancel.addActionListener(e -> System.exit(0));
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 

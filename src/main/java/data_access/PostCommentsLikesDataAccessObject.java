@@ -14,6 +14,13 @@ public interface PostCommentsLikesDataAccessObject {
     public ArrayList<Comment> getComments(long parentID);
 
     /**
+     * deletes a post given a post ID
+     *
+     * @param postID post ID to delete
+     */
+    public void deletePost(long postID);
+
+    /**
      * keep a record of which account has liked which post
      *
      * @param user   current logged in user
@@ -66,9 +73,4 @@ public interface PostCommentsLikesDataAccessObject {
      * @return ArrayList of long
      */
     public ArrayList<Long> getAvailablePosts();
-
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description,
-                          ArrayList<Post> posts, ArrayList<String> tags);
-
-    public Club getClub(long clubID);
 }

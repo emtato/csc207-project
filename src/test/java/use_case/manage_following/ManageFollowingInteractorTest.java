@@ -1,16 +1,13 @@
 package use_case.manage_following;
 
-import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import entity.CreateAccount;
-import entity.Post;
 import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
-import use_case.profile.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -35,7 +32,7 @@ class ManageFollowingInteractorTest {
 
         // Add users to the user repository and add a following from user to user2
         ManageFollowingInputData inputData = new ManageFollowingInputData(username, username2);
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
         userRepository.save(user);
         userRepository.save(user2);
         userRepository.addFollowing(username, username2);
@@ -71,22 +68,22 @@ class ManageFollowingInteractorTest {
     @Test
     void followSuccessTest() {
 
-        // Create user with username Caf Feine
-        final String username = "Caf Feine";
+        // Create user with username Caf
+        final String username = "Caf";
         final String password = "password";
         final ArrayList<User> followingAccountsUser1 = new ArrayList<>();
         UserFactory factory = new CreateAccount();
         final User user = factory.create(username, password);
 
-        // Create user with username Decaf
-        final String username2 = "Decaf";
+        // Create user with username Feine
+        final String username2 = "Feine";
         final String password2 = "password2";
         final ArrayList<User> followerAccountsUser2 = new ArrayList<>();
         final User user2 = factory.create(username2, password2);
 
         // Add users to the user repository and add a following from user to user2
         ManageFollowingInputData inputData = new ManageFollowingInputData(username, username2);
-        InMemoryUserDataAccessObject userRepository = new InMemoryUserDataAccessObject();
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
         userRepository.save(user);
         userRepository.save(user2);
 

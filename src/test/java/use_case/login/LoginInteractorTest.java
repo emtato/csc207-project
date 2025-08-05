@@ -1,6 +1,8 @@
 package use_case.login;
 
+import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
 import entity.CreateAccount;
 import entity.User;
 import entity.UserFactory;
@@ -12,8 +14,9 @@ class LoginInteractorTest {
 
     @Test
     void successTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
         UserFactory factory = new CreateAccount();
@@ -33,25 +36,26 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, successPresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Pauline", "password");
+        final LoginUserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // For the success test, we need to add Paul to the data access repository before we log in.
+        // For the success test, we need to add Pauline to the data access repository before we log in.
         UserFactory factory = new CreateAccount();
-        User user = factory.create("Paul", "password");
+        User user = factory.create("Pauline", "password");
         userRepository.save(user);
 
         // This creates a successPresenter that tests whether the test case is as we expect.
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername());
+                assertEquals("Pauline", userRepository.getCurrentUsername());
             }
 
             @Override
@@ -60,7 +64,8 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, successPresenter);
+        userRepository.setCurrentUsername(null);
         assertEquals(null, userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
@@ -68,13 +73,14 @@ class LoginInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Pablo", "wrong");
+        final LoginUserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // For this failure test, we need to add Paul to the data access repository before we log in, and
+        // For this failure test, we need to add Pablo to the data access repository before we log in, and
         // the passwords should not match.
         UserFactory factory = new CreateAccount();
-        User user = factory.create("Paul", "password");
+        User user = factory.create("Pablo", "password");
         userRepository.save(user);
 
         // This creates a presenter that tests whether the test case is as we expect.
@@ -87,18 +93,19 @@ class LoginInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
-                assertEquals("Incorrect password for \"Paul\".", error);
+                assertEquals("Incorrect password for \"Pablo\".", error);
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, failurePresenter);
         interactor.execute(inputData);
     }
 
     @Test
     void failureUserDoesNotExistTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        final LoginInputData inputData = new LoginInputData("Paulo", "password");
+        final LoginUserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
         // Add Paul to the repo so that when we check later they already exist
 
@@ -112,11 +119,11 @@ class LoginInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
-                assertEquals("Paul: Account does not exist.", error);
+                assertEquals("Paulo: Account does not exist.", error);
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, dataRepository, failurePresenter);
         interactor.execute(inputData);
     }
 }

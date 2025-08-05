@@ -4,7 +4,7 @@ package use_case.create_post;/**
  * ^ • ω • ^
  */
 
-import data_access.FileUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 
 import java.time.LocalDateTime;
@@ -15,10 +15,10 @@ import java.util.HashMap;
 
 public class CreatePostInteractor implements CreatePostInputBoundary {
     private final PostCommentsLikesDataAccessObject postDAO;
-    private final FileUserDataAccessObject userDAO;
+    private final UserDataAccessObject userDAO;
 
     public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO,
-                                FileUserDataAccessObject userDAO) {
+                                UserDataAccessObject userDAO) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
 
@@ -52,7 +52,7 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
         );
 
         // associate with user
-        userDAO.writePostToFile(
+        userDAO.addPost(
                 postID,
                 inputData.getUser().getUsername()
         );

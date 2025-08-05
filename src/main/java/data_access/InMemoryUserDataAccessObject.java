@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
-import use_case.note.DataAccessException;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -13,10 +12,22 @@ import use_case.note.DataAccessException;
  */
 public class InMemoryUserDataAccessObject implements UserDataAccessObject {
 
+    private static UserDataAccessObject instance;
+
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, String> notes = new HashMap<>();
 
     private String currentUsername;
+
+    private InMemoryUserDataAccessObject() {
+    }
+
+    public static UserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new InMemoryUserDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public boolean existsByName(String identifier) {
@@ -48,17 +59,6 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     @Override
     public String getCurrentUsername() {
         return this.currentUsername;
-    }
-
-    @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        notes.put(user.getUsername(), note);
-        return loadNote(user);
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        return notes.get(user.getUsername());
     }
 
     @Override
@@ -133,4 +133,24 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
         save(user);
     }
 
+    @Override
+    public void addPost(long id, String username) {
+        User user = get(username);
+        user.getUserPosts().add(id);
+        save(user);
+    }
+
+    @Override
+    public void deleteAccount(String username) {
+        User user = get(username);
+        for (User followedAccount : user.getFollowingAccounts().values()) {
+            followedAccount.getFollowerAccounts().remove(username);
+            save(followedAccount);
+        }
+        for (User follower : user.getFollowerAccounts().values()) {
+            follower.getFollowingAccounts().remove(username);
+            save(follower);
+        }
+        users.remove(username);
+    }
 }

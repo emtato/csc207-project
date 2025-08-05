@@ -19,10 +19,11 @@ public class LoginOutputData {
     private final boolean isPublic;
     private final boolean notificationsEnabled;
     private final boolean useCaseFailed;
+    private final String password;
 
     public LoginOutputData(String username, String displayName, String profilePictureUrl, String bio, int numFollowers,
                            int numFollowing, HashMap<Long, Post> posts, boolean isPublic, boolean notificationsEnabled,
-                           boolean useCaseFailed) {
+                           boolean useCaseFailed, String password) {
         this.username = username;
         this.displayName = displayName;
         this.profilePictureUrl = profilePictureUrl;
@@ -33,6 +34,7 @@ public class LoginOutputData {
         this.isPublic = isPublic;
         this.notificationsEnabled = notificationsEnabled;
         this.useCaseFailed = useCaseFailed;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -73,5 +75,9 @@ public class LoginOutputData {
 
     public boolean isNotificationsEnabled() {
         return notificationsEnabled;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

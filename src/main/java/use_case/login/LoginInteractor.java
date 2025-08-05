@@ -1,17 +1,24 @@
 package use_case.login;
 
+import data_access.PostCommentsLikesDataAccessObject;
+import entity.Post;
 import entity.User;
+
+import java.util.HashMap;
 
 /**
  * The Login Interactor.
  */
 public class LoginInteractor implements LoginInputBoundary {
     private final LoginUserDataAccessInterface userDataAccessObject;
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
 
     public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
+                           PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
                            LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
+        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.loginPresenter = loginOutputBoundary;
     }
 
@@ -31,10 +38,16 @@ public class LoginInteractor implements LoginInputBoundary {
 
                 final User user = userDataAccessObject.get(loginInputData.getUsername());
 
+                final HashMap<Long, Post> posts = new HashMap<>();
+                for (Long postId : user.getUserPosts()) {
+                    final Post post = postCommentsLikesDataAccessObject.getPost(postId);
+                    posts.put(postId, post);
+                }
+
                 userDataAccessObject.setCurrentUsername(user.getUsername());
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getUsername(), user.getDisplayName(),
                         user.getProfilePictureUrl(), user.getBio(), user.getNumFollowers(), user.getNumFollowing(),
-                        user.getUserPosts(), user.isPublic(), user.isNotificationsEnabled(), false);
+                        posts, user.isPublic(), user.isNotificationsEnabled(), false, user.getPassword());
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }

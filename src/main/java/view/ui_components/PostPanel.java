@@ -3,6 +3,7 @@ package view.ui_components;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
 import view.PostView;
 
 import javax.swing.*;
@@ -49,11 +50,13 @@ public class PostPanel extends JPanel {
     private boolean liked;
     private JPanel centerPanel;
     private JPanel bottomPanel;
+    private LikePostController likePostController;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
+                     LikePostController likePostController) {
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-
+        this.likePostController = likePostController;
 
         setLayout(new BorderLayout());
 
@@ -92,6 +95,10 @@ public class PostPanel extends JPanel {
                 ArrayList<String> imageURLS = post.getImageURLs();
                 for (int i = 0; i < Math.min(3, imageURLS.size()); i++) {
                     String imageURL = imageURLS.get(i);
+                    if (!imageURL.startsWith("http://") && !imageURL.startsWith("https://")) {
+                        System.out.println("Invalid image URL: " + imageURL);
+                        continue; // skip invalid URLs
+                    }
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
                     Image img = imageIcon.getImage().getScaledInstance(-1, 200, Image.SCALE_SMOOTH);
@@ -193,22 +200,25 @@ public class PostPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
     }
 
     public void actionPerformed(ActionEvent e) throws IOException, InterruptedException {
         if (e.getSource() == likeButton) {
-            if (!liked) {
-                System.out.println("me likey likey");
+            boolean isLiking = !liked;
+            likePostController.likePost(post.getID(), isLiking);
+
+            if (isLiking) {
+                likeButton.setText("Unlike");
                 post.setLikes(post.getLikes() + 1);
-                likeButton.setText("unlike");
-                liked = true;
             }
             else {
+                likeButton.setText("Like");
                 post.setLikes(post.getLikes() - 1);
-                likeButton.setText("like");
-                liked = false;
             }
-            subtitle.setText(post.getUser().getUsername() + " | " + post.getLikes() + " likes");
+            liked = isLiking;
+
+            subtitle.setText(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes");
 
         }
         if (e.getSource() == saveButton) {
@@ -225,7 +235,6 @@ public class PostPanel extends JPanel {
 
             PostView currentPostView = viewManagerModel.getPostView();
             currentPostView.displayPost(this.post);   // push the chosen post into it
-
 
         }
     }

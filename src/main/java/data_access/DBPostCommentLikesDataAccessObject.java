@@ -1,43 +1,117 @@
 package data_access;
 
 import entity.*;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
-    private final String filePath = "src/main/java/data_access/data_storage.json";
+public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+   // private final String filePath = "src/main/java/data_access/data_storage.json";
+    private static PostCommentsLikesDataAccessObject instance;
 
+    private final String DATABASE_USERNAME = "csc207munchablesusername";
+    private final String DATABASE_PASSWORD = "csc207munchablespassword";
+    private final String DATA_KEY = "postcommentlikes";
+    private static final int CREDENTIAL_ERROR = 401;
+    private static final int SUCCESS_CODE = 200;
+    private static final String CONTENT_TYPE_LABEL = "Content-Type";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String STATUS_CODE_LABEL = "status_code";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String MESSAGE = "message";
 
-    /**
-     * method to reduce duplicate code, retrieves JSONObject from file
-     *
-     * @return JSONObject of data_storage.json.
-     */
-    @NotNull
-    private JSONObject getJsonObject() {
-        JSONObject data;
+    private DBPostCommentLikesDataAccessObject() {
+    }
+
+    public static PostCommentsLikesDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new DBPostCommentLikesDataAccessObject();
+        }
+        return instance;
+    }
+
+    @Override
+    public void deletePost(long postID){
+        JSONObject data = new JSONObject();
         try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            data = new JSONObject(content);
+            data = getJsonObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        catch (IOException e) {
-            data = new JSONObject();
+
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+            if (posts.has(String.valueOf(postID))) {
+                posts.remove(String.valueOf(postID));
+            }
         }
-        return data;
+        else {
+            posts = new JSONObject();
+        }
+
+        data.put("posts", posts);
+        try {
+            saveJSONObject(data);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
-     * reduce duplicate code for get comments in data_storage.JSON
+     * method to reduce duplicate code, retrieves JSONObject of post, comment, like data from database
+     *
+     * @return JSONObject .
+     */
+    @NotNull
+    private JSONObject getJsonObject() throws DataAccessException {
+        // Make an API call to get the user object.
+        final String username = DATABASE_USERNAME;
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+                final JSONObject data = userJSONObject.getJSONObject("info");
+                if (data.has(DATA_KEY)) {
+                    return data.getJSONObject(DATA_KEY);
+                }
+                else{
+                    data.put(DATA_KEY, new JSONObject());
+                    saveJSONObject(data.getJSONObject(DATA_KEY));
+                    return data.getJSONObject(DATA_KEY);
+                }
+            }
+            else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * reduce duplicate code for geting comments
      *
      * @param data     JSONObject data from entire file
      * @param parentID post ID of the post the comment is posted on
@@ -66,10 +140,86 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         return both;
     }
 
+    /**
+     * helper method for saveJSONObject, retrieves JSONObject of all info from database
+     *
+     * @return JSONObject .
+     */
+    private JSONObject getInfo() throws DataAccessException {
+        // Make an API call to get the user object.
+        final String username = DATABASE_USERNAME;
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+        final Request request = new Request.Builder()
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+                final JSONObject data = userJSONObject.getJSONObject("info");
+                return data;
+            }
+            else {
+                throw new DataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private boolean saveJSONObject(JSONObject data) throws DataAccessException {
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        // POST METHOD
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put(USERNAME, DATABASE_USERNAME);
+        requestBody.put(PASSWORD, DATABASE_PASSWORD);
+        final JSONObject info = getInfo();
+        info.put(DATA_KEY, data);
+        requestBody.put("info", info);
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
+                .method("PUT", body)
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                return true;
+            }
+            else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
+                throw new DataAccessException("message could not be found or password was incorrect");
+            }
+            else {
+                throw new DataAccessException("database error: " + responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
+
     @Override
-    public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
+    public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp)  {
         // read existing data
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         ArrayList<Object> list = getCommentArray(data, parentID);
         JSONArray comments = (JSONArray) list.get(0);
@@ -85,18 +235,25 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         commentsMap.put(String.valueOf(parentID), comments);
         data.put("comments", commentsMap);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        try {
+            saveJSONObject(data);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
+
     }
 
     @Override
     public ArrayList<Comment> getComments(long parentID) {
         // read existing data
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         ArrayList<Object> list = getCommentArray(data, parentID);
         JSONArray comments = (JSONArray) list.get(0);
@@ -114,10 +271,15 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public void addLike(Account user, long postID) {
-        JSONObject data;
+        JSONObject data = new JSONObject();
         JSONObject likeMap;
 
-        data = getJsonObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
@@ -143,25 +305,24 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         likeMap.put(username, likedPosts);
         data.put("likes", likeMap);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        try {
+            saveJSONObject(data);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
     @Override
     public boolean postIsLiked(Account user, long postID) {
-        JSONObject data;
+        JSONObject data = new JSONObject();
         JSONObject likeMap;
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            data = new JSONObject(content);
+            data = new JSONObject();
         }
-        catch (IOException e) {
-            return false;
+        catch (JSONException ex) {
+            System.out.println(ex.getMessage());
         }
 
         if (data.has("likes")) {
@@ -192,8 +353,16 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      * @param time
      */
     @Override
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
-        JSONObject data = getJsonObject();
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
+            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         JSONObject posts;
         if (data.has("posts")) {
             posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
@@ -228,17 +397,23 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         }
 
         data.put("posts", posts);
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
+        try {
+            saveJSONObject(data);
         }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
     @Override
     public Post getPost(long postID) {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (!data.has("posts")) { return null; }
 
@@ -316,7 +491,14 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public void updateLikesForPost(long postID, int likeDifference) {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         if (data.has("posts")) {
             JSONObject posts = data.getJSONObject("posts");
             if (posts.has(String.valueOf(postID))) {
@@ -325,11 +507,11 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 post.put("likes", currentLikes + likeDifference);
                 posts.put(String.valueOf(postID), post);
                 data.put("posts", posts);
-                try (FileWriter writer = new FileWriter(filePath)) {
-                    writer.write(data.toString(2));
+                try {
+                    saveJSONObject(data);
                 }
-                catch (IOException e) {
-                    throw new RuntimeException("i am sad :(", e);
+                catch (DataAccessException ex) {
+                    System.out.println(ex.getMessage());
                 }
             }
             else {
@@ -345,10 +527,16 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public ArrayList<Long> getAvailablePosts() {
-        JSONObject data = getJsonObject();
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         if (!data.has("posts")) {
-            return null;
+            return new ArrayList<>();
         }
 
         JSONObject posts = data.getJSONObject("posts");
@@ -358,77 +546,5 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             postIDs.add(postID);
         }
         return postIDs;
-    }
-
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
-        JSONObject data = getJsonObject();
-        JSONObject clubs;
-        if (data.has("clubs")) {
-            clubs = data.getJSONObject("clubs");
-        }
-        else {
-            clubs = new JSONObject();
-        }
-        JSONObject newClub = new JSONObject();
-        newClub.put("name", name);
-        newClub.put("description", description);
-        newClub.put("posts", posts);
-        clubs.put(String.valueOf(clubID), newClub);
-        data.put("clubs", clubs);
-
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
-        }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
-        }
-    }
-
-    public Club getClub(long clubID) {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("clubs")) {
-            return null;
-        }
-
-        JSONObject clubs = data.getJSONObject("clubs");
-        String parentClubID = String.valueOf(clubID);
-
-        if (!clubs.has(parentClubID)) {
-            return null;
-        }
-
-        JSONObject clubObj = clubs.getJSONObject(parentClubID);
-        String name = clubObj.getString("name");
-        String description = clubObj.getString("description");
-        ArrayList<Account> members = new ArrayList<>();
-        if (clubObj.has("members")) {
-            JSONArray memberArray = clubObj.getJSONArray("members");
-            for (int i = 0; i < memberArray.length(); i++) {
-                String username = memberArray.getString(i);
-                members.add(new Account(username, "password"));
-            }
-        }
-        ArrayList<Post> posts = new ArrayList<>();
-        if (clubObj.has("posts")) {
-            JSONArray postArray = clubObj.getJSONArray("posts");
-            for (int i = 0; i < postArray.length(); i++) {
-                JSONObject postObj = postArray.getJSONObject(i);
-                String username = postObj.getString("user");
-                String title = postObj.getString("title");
-                String desc = postObj.getString("description");
-                long postID = postObj.getLong("id");
-                Account user = new Account(username, "password");
-                Post post = new Post(user, postID, title, desc);
-                posts.add(post);
-            }
-        }
-
-        return new Club(name, description, members, new ArrayList<>(), posts) {
-            {
-                setDisplayName(name);
-                setDescription(description);
-            }
-        };
     }
 }

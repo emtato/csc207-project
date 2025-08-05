@@ -3,7 +3,7 @@ package interface_adapter.homepage;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.clubs.ClubViewModel;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import use_case.homepage.HomePageOutputBoundary;
 

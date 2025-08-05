@@ -1,11 +1,9 @@
 package data_access;
 
 import entity.Account;
-import entity.Post;
 import entity.User;
 import org.json.JSONObject;
 import org.json.JSONArray;
-import use_case.note.DataAccessException;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,8 +14,20 @@ import java.util.HashMap;
 
 public class FileUserDataAccessObject implements UserDataAccessObject {
 
+    private static UserDataAccessObject instance;
+
     private final String filePath = "src/main/java/data_access/user_data.json";
     private String currentUsername;
+
+    private FileUserDataAccessObject() {
+    }
+
+    public static UserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new FileUserDataAccessObject();
+        }
+        return instance;
+    }
 
     /**
      * Gets the JSON object from the file, creating an empty one if the file doesn't exist
@@ -124,14 +134,10 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
         // Store user posts
         if (account.getUserPosts() != null) {
-            JSONObject userPostsJson = new JSONObject();
-            for (Long postId : account.getUserPosts().keySet()) {
-                Post post = account.getUserPosts().get(postId);
-                JSONObject postJson = new JSONObject();
-                postJson.put("id", post.getID());
-                postJson.put("title", post.getTitle());
-                postJson.put("description", post.getDescription());
-                userPostsJson.put(String.valueOf(postId), postJson);
+            JSONArray userPostsJson = new JSONArray();
+
+            for (Long postId : account.getUserPosts()) {
+                userPostsJson.put(postId);
             }
             userJson.put("userPosts", userPostsJson);
         }
@@ -260,13 +266,10 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
         // Load user posts
         if (userJson.has("userPosts")) {
-            HashMap<Long, Post> posts = new HashMap<>();
-            JSONObject postsJson = userJson.getJSONObject("userPosts");
-            for (String postId : postsJson.keySet()) {
-                JSONObject postJson = postsJson.getJSONObject(postId);
-                Post post = new Post(account, postJson.getLong("id"),
-                        postJson.getString("title"), postJson.getString("description"));
-                posts.put(Long.parseLong(postId), post);
+            ArrayList<Long> posts = new ArrayList<>();
+            JSONArray postsJsonArray = userJson.getJSONArray("userPosts");
+            for (int i = 0; i < postsJsonArray.length(); i++) {
+                posts.add(postsJsonArray.getLong(i));
             }
             account.setUserPosts(posts);
         }
@@ -274,26 +277,11 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         return account;
     }
 
-    public void writePostToFile(long id, String username) {
-        JSONObject data = getJsonObject();
-        if (data.has("users")) {
-           JSONObject usersObj = data.getJSONObject("users");
-           if (usersObj.has(username)) {
-               JSONObject userJson = usersObj.getJSONObject(username);
-               JSONArray postsArray = userJson.getJSONArray("posts");
-               postsArray.put(id);
-               userJson.put("posts", postsArray);
-               usersObj.put(username, userJson);
-               data.put("users", usersObj);
-               writeToFile(data);
-           }
-           else{
-               System.out.println("User " + username + " does not exist");
-           }
-        }
-        else{
-            System.out.println("gaaaa");
-        }
+    @Override
+    public void addPost(long id, String username) {
+        User user = get(username);
+        user.getUserPosts().add(id);
+        save(user);
     }
 
     @Override
@@ -309,34 +297,6 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void changePassword(User user) {
         save(user); // Since save() updates all user data
-    }
-
-    @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            data.put("notes", new JSONObject());
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getUsername(), note);
-        data.put("notes", notes);
-
-        writeToFile(data);
-        return note;
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            return null;
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getUsername(), null);
     }
 
     @Override
@@ -414,6 +374,45 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         followedUser.getFollowerAccounts().put(username, user);
         save(user);
         save(followedUser);
+    }
+
+    @Override
+    public void deleteAccount(String username) {
+        JSONObject data = getJsonObject();
+
+        if (!data.has("users")) {
+            data.put("users", new JSONObject());
+        }
+
+        JSONObject users = data.getJSONObject("users");
+        if (users.has(username)) {
+            JSONObject user = users.getJSONObject(username);
+
+            JSONObject followingAccounts = user.getJSONObject("followingAccounts");
+            for (String followedAccountUsername : followingAccounts.keySet()) {
+                JSONObject fullFollowedAccount = users.getJSONObject(followedAccountUsername);
+                JSONObject followedAccountFollowerMap = fullFollowedAccount.getJSONObject("followerAccounts");
+                followedAccountFollowerMap.remove(username);
+                fullFollowedAccount.put("followerAccounts", followedAccountFollowerMap);
+                users.put(followedAccountUsername, fullFollowedAccount);
+            }
+
+            JSONObject followerAccounts = user.getJSONObject("followerAccounts");
+            for (String followerAccountUsername : followerAccounts.keySet()) {
+                JSONObject fullFollowerAccount = users.getJSONObject(followerAccountUsername);
+                JSONObject followerAccountFollowingMap = fullFollowerAccount.getJSONObject("followingAccounts");
+                followerAccountFollowingMap.remove(username);
+                fullFollowerAccount.put("followingAccounts", followerAccountFollowingMap);
+                users.put(followerAccountUsername, fullFollowerAccount);
+            }
+
+            users.remove(username);
+            data.put("users", users);
+            writeToFile(data);
+        }
+        else {
+            System.out.println("User not found, delete unsuccessful");
+        }
     }
 }
 

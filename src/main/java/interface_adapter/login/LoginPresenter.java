@@ -2,12 +2,10 @@ package interface_adapter.login;
 
 import app.Session;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.LoggedInState;
-import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.profile.ProfileState;
-import interface_adapter.profile.ProfileViewModel;
-import interface_adapter.settings.SettingsState;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.view_profile.ProfileState;
+import interface_adapter.view_profile.ProfileViewModel;
+import interface_adapter.toggle_settings.SettingsState;
+import interface_adapter.toggle_settings.SettingsViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
@@ -17,18 +15,15 @@ import use_case.login.LoginOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
-    private final LoggedInViewModel loggedInViewModel;
     private final ProfileViewModel profileViewModel;
     private final SettingsViewModel settingsViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
-                          LoggedInViewModel loggedInViewModel,
                           LoginViewModel loginViewModel,
                           ProfileViewModel profileViewModel,
                           SettingsViewModel settingsViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
         this.profileViewModel = profileViewModel;
         this.settingsViewModel = settingsViewModel;
@@ -36,11 +31,6 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     @Override
     public void prepareSuccessView(LoginOutputData response) {
-        // On success, switch to the logged in view.
-        final LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setUsername(response.getUsername());
-        this.loggedInViewModel.setState(loggedInState);
-        this.loggedInViewModel.firePropertyChanged();
         Session.setCurrentUsername(response.getUsername());
         Session.setCurrentAccount();
 
@@ -57,12 +47,13 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.profileViewModel.firePropertyChanged();
         final SettingsState settingsState = settingsViewModel.getState();
         settingsState.setUsername(response.getUsername());
+        settingsState.setNewPassword(response.getPassword());
+        settingsState.setNotificationsEnabled(response.isNotificationsEnabled());
         settingsState.setIsPublic(response.isPublic());
         settingsViewModel.setState(settingsState);
         settingsViewModel.firePropertyChanged("privacy changed");
-        settingsState.setNotificationsEnabled(response.isNotificationsEnabled());
-        settingsViewModel.setState(settingsState);
         settingsViewModel.firePropertyChanged("notifications changed");
+        settingsViewModel.firePropertyChanged("password changed");
 
         this.viewManagerModel.setState("homepage view");
         this.viewManagerModel.firePropertyChanged();

@@ -51,7 +51,7 @@ public class MenuBarPanel extends JPanel {
         notificationsButton.setToolTipText("Notifications");
         styleButton(notificationsButton, buttonSize);
 
-        // Create notifications button with system icon
+        // Create profile button with system icon
         ImageIcon profileIcon = new ImageIcon(getClass().getResource("/images/pngaaa.com-4877784.png"));
         Image profileImg = profileIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         JButton profileButton = new JButton(new ImageIcon(profileImg));
