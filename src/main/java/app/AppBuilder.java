@@ -183,7 +183,8 @@ public class AppBuilder {
     }
 
     public AppBuilder addSpecificClubView() {
-        specificClubView = new SpecificClubView(viewManagerModel, cardPanel);
+        Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
+        specificClubView = new SpecificClubView(viewManagerModel, cardPanel, defaultClub);
         cardPanel.add(specificClubView, specificClubView.getViewName());
         return this;
     }
