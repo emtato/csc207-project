@@ -114,12 +114,30 @@
       "followerAccounts": {},
       "username": "123"
     },
+    "new_user": {
+      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "likesUsernames": [],
+      "blockedAccounts": {},
+      "displayName": "",
+      "bio": "",
+      "blockedTerms": [],
+      "notificationsEnabled": true,
+      "userPosts": [],
+      "password": "wwww",
+      "foodPreferences": [],
+      "followingAccounts": {},
+      "isPublic": true,
+      "mutedAccounts": [],
+      "email": "",
+      "followerAccounts": {},
+      "username": "new_user"
+    },
     "caf_feine666": {
       "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
       "likesUsernames": [],
       "blockedAccounts": {},
       "displayName": "Latte",
-      "bio": "i luv u a latte <3",
+      "bio": "i luv u a latte <3\ncomputer science more like constant suffering amirite",
       "blockedTerms": [],
       "notificationsEnabled": false,
       "userPosts": [
@@ -137,7 +155,7 @@
         "displayName": "Emilia",
         "username": "jinufan333"
       }},
-      "isPublic": true,
+      "isPublic": false,
       "mutedAccounts": [],
       "email": "",
       "followerAccounts": {},

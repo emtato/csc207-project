@@ -170,7 +170,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
+        homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         viewManagerModel.setHomePageView(homePageView);
         return this;
