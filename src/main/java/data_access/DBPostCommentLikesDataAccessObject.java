@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.note.DataAccessException;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +37,36 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             instance = new DBPostCommentLikesDataAccessObject();
         }
         return instance;
+    }
+
+    @Override
+    public void deletePost(long postID){
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+            if (posts.has(String.valueOf(postID))) {
+                posts.remove(String.valueOf(postID));
+            }
+        }
+        else {
+            posts = new JSONObject();
+        }
+
+        data.put("posts", posts);
+        try {
+            saveJSONObject(data);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
@@ -323,7 +353,7 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
      */
     @Override
     public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
-            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
+            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs) {
         JSONObject data = new JSONObject();
         try {
             data = getJsonObject();
@@ -509,90 +539,5 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             postIDs.add(postID);
         }
         return postIDs;
-    }
-
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
-        JSONObject data = new JSONObject();
-        try {
-            data = getJsonObject();
-        }
-        catch (DataAccessException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        JSONObject clubs;
-        if (data.has("clubs")) {
-            clubs = data.getJSONObject("clubs");
-        }
-        else {
-            clubs = new JSONObject();
-        }
-        JSONObject newClub = new JSONObject();
-        newClub.put("name", name);
-        newClub.put("description", description);
-        newClub.put("posts", posts);
-        clubs.put(String.valueOf(clubID), newClub);
-        data.put("clubs", clubs);
-
-       try {
-           saveJSONObject(data);
-       }
-       catch (DataAccessException ex) {
-           System.out.println(ex.getMessage());
-       }
-    }
-
-    public Club getClub(long clubID) {
-        JSONObject data = new JSONObject();
-        try {
-            getJsonObject();
-        }
-        catch (DataAccessException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        if (!data.has("clubs")) {
-            return null;
-        }
-
-        JSONObject clubs = data.getJSONObject("clubs");
-        String parentClubID = String.valueOf(clubID);
-
-        if (!clubs.has(parentClubID)) {
-            return null;
-        }
-
-        JSONObject clubObj = clubs.getJSONObject(parentClubID);
-        String name = clubObj.getString("name");
-        String description = clubObj.getString("description");
-        ArrayList<Account> members = new ArrayList<>();
-        if (clubObj.has("members")) {
-            JSONArray memberArray = clubObj.getJSONArray("members");
-            for (int i = 0; i < memberArray.length(); i++) {
-                String username = memberArray.getString(i);
-                members.add(new Account(username, "password"));
-            }
-        }
-        ArrayList<Post> posts = new ArrayList<>();
-        if (clubObj.has("posts")) {
-            JSONArray postArray = clubObj.getJSONArray("posts");
-            for (int i = 0; i < postArray.length(); i++) {
-                JSONObject postObj = postArray.getJSONObject(i);
-                String username = postObj.getString("user");
-                String title = postObj.getString("title");
-                String desc = postObj.getString("description");
-                long postID = postObj.getLong("id");
-                Account user = new Account(username, "password");
-                Post post = new Post(user, postID, title, desc);
-                posts.add(post);
-            }
-        }
-
-        return new Club(name, description, members, new ArrayList<>(), posts) {
-            {
-                setDisplayName(name);
-                setDescription(description);
-            }
-        };
     }
 }

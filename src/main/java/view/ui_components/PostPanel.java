@@ -1,11 +1,9 @@
 package view.ui_components;
 
-import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.like_post.LikePostController;
-import use_case.like_post.LikePostInteractor;
 import view.PostView;
 
 import javax.swing.*;
@@ -53,14 +51,16 @@ public class PostPanel extends JPanel {
     private JPanel centerPanel;
     private JPanel bottomPanel;
     private LikePostController likePostController;
-    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
-    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
+    public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
+                     LikePostController likePostController) {
+        if (post == null) {
+            throw new IllegalArgumentException("Post cannot be null");
+        }
+
         this.viewManagerModel = viewManagerModel;
         this.post = post;
-        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
-        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
-
+        this.likePostController = likePostController;
 
         setLayout(new BorderLayout());
 
@@ -99,6 +99,10 @@ public class PostPanel extends JPanel {
                 ArrayList<String> imageURLS = post.getImageURLs();
                 for (int i = 0; i < Math.min(3, imageURLS.size()); i++) {
                     String imageURL = imageURLS.get(i);
+                    if (!imageURL.startsWith("http://") && !imageURL.startsWith("https://")) {
+                        System.out.println("Invalid image URL: " + imageURL);
+                        continue; // skip invalid URLs
+                    }
                     URL url = new URL(imageURL);
                     ImageIcon imageIcon = new ImageIcon(url);
                     Image img = imageIcon.getImage().getScaledInstance(-1, 200, Image.SCALE_SMOOTH);
@@ -235,7 +239,6 @@ public class PostPanel extends JPanel {
 
             PostView currentPostView = viewManagerModel.getPostView();
             currentPostView.displayPost(this.post);   // push the chosen post into it
-
 
         }
     }

@@ -8,11 +8,11 @@ import javax.swing.*;
 import javax.swing.JLabel;
 
 
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
+import data_access.*;
 import entity.Account;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.PostPanel;
 import view.ui_components.RoundImagePanel;
@@ -27,8 +27,11 @@ public class ClubHomePageView extends JPanel {
     private final String viewName = "club view";
     private final ViewManagerModel viewManagerModel;
     private final JPanel cardPanel;
+    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject();
+    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
     private Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject = FilePostCommentLikesDataAccessObject.getInstance();
+    private LikePostController likePostController;
 
     public ClubHomePageView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
 
@@ -94,7 +97,7 @@ public class ClubHomePageView extends JPanel {
 
         // club announcements panel
         JPanel announcementsPanel = new JPanel(new BorderLayout(0, 5));
-        announcementsPanel.setBorder(BorderFactory.createEmptyBorder(100, 0, 100, 50));
+        announcementsPanel.setBorder(BorderFactory.createEmptyBorder(100, 50, 100, 50));
 
         JLabel announcementsTitle = new JLabel("Announcements");
         announcementsTitle.setFont(GUIConstants.FONT_TITLE);
@@ -105,28 +108,23 @@ public class ClubHomePageView extends JPanel {
         JPanel postsContainer = new JPanel();
         postsContainer.setLayout(new BoxLayout(postsContainer, BoxLayout.Y_AXIS));
         postsContainer.setBackground(GUIConstants.WHITE);
+        postsContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add posts vertically
+        // Add posts in rows of two
         for (int i = 0; i < 3; i++) {
-            JPanel feedRow = new JPanel();
-            feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
-            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 1000, 400, postCommentsLikesDataAccessObject);
-            postPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
-            feedRow.setMaximumSize(new Dimension(2000, 420));
+            JPanel feedRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+            feedRow.setBackground(GUIConstants.WHITE);
+
+            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400, likePostController);
+            postPanel.setMaximumSize(new Dimension(500, 420));
             feedRow.add(postPanel);
 
-            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 1000, 400, postCommentsLikesDataAccessObject);
-            postTwo.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
-            feedRow.add(postTwo); // second post
-
-            PostPanel postThree = new PostPanel(viewManagerModel, postex2, 1000, 400, postCommentsLikesDataAccessObject);
-            postThree.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
-            feedRow.add(postThree); // second post
-
-            feedRow.add(Box.createHorizontalGlue());
-
+            PostPanel postTwo = new PostPanel(viewManagerModel, postex2, 500, 400, likePostController);
+            postTwo.setMaximumSize(new Dimension(500, 420));
+            feedRow.add(postTwo);
 
             postsContainer.add(feedRow);
+            postsContainer.add(Box.createRigidArea(new Dimension(0, 20)));
         }
 
         // Create scroll pane for posts
@@ -135,7 +133,7 @@ public class ClubHomePageView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(420, 400));
+        scrollPane.setPreferredSize(new Dimension(1100, 400));
 
         announcementsPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -198,7 +196,7 @@ public class ClubHomePageView extends JPanel {
             }
         }
         exploreClubsPanel.add(exploringPanel);
-        exploreClubsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Small gap before create club button
+        exploreClubsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JPanel createClubPanel = new JPanel(new BorderLayout());
         createClubPanel.setPreferredSize(new Dimension(150, 100));
@@ -216,7 +214,9 @@ public class ClubHomePageView extends JPanel {
         createClubPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                CreateClubView createClubView = new CreateClubView(viewManagerModel);
+                String currentUsername = userDataAccessObject.getCurrentUsername();
+                Account currentUser = (Account) userDataAccessObject.get(currentUsername);
+                CreateClubView createClubView = new CreateClubView(viewManagerModel, clubsDataAccessObject, currentUser);
                 cardPanel.add(createClubView, createClubView.getViewName());
                 viewManagerModel.setState(createClubView.getViewName());
             }
@@ -238,5 +238,8 @@ public class ClubHomePageView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+    public void setLikePostController(LikePostController controller) {
+        this.likePostController = controller;
     }
 }

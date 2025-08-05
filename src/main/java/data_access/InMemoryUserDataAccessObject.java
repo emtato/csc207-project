@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
-import use_case.UserDataAccessInterface;
-import use_case.create_post.CreatePostDataAccessInterface;
-import use_case.note.DataAccessException;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -62,17 +59,6 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     @Override
     public String getCurrentUsername() {
         return this.currentUsername;
-    }
-
-    @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        notes.put(user.getUsername(), note);
-        return loadNote(user);
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        return notes.get(user.getUsername());
     }
 
     @Override
@@ -154,4 +140,17 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
         save(user);
     }
 
+    @Override
+    public void deleteAccount(String username) {
+        User user = get(username);
+        for (User followedAccount : user.getFollowingAccounts().values()) {
+            followedAccount.getFollowerAccounts().remove(username);
+            save(followedAccount);
+        }
+        for (User follower : user.getFollowerAccounts().values()) {
+            follower.getFollowingAccounts().remove(username);
+            save(follower);
+        }
+        users.remove(username);
+    }
 }

@@ -7,6 +7,7 @@ import entity.Post;
 import entity.Recipe;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -30,6 +31,11 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
             instance = new InMemoryPostCommentLikesDataAccessObject();
         }
         return instance;
+    }
+
+    @Override
+    public void deletePost(long postID){
+        postsMap.remove(postID);
     }
 
     @Override
@@ -73,31 +79,30 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     }
 
     @Override
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String,
-            ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time) {
-        Post newPost = new Post(user, postID, title, description);
-        newPost.setTitle(title);
-        newPost.setType(postType);
-        newPost.setLikes(0);
-        newPost.setTags(tags);
-        newPost.setImageURLs(images);
+    public void writePost(long postID, Account user, String title, String postType,
+                        String description, HashMap<String, ArrayList<String>> contents,
+                        ArrayList<String> tags, ArrayList<String> images, String time,
+                        ArrayList<Club> clubs) {
+        Post post;
+        if (postType.equals("recipe")) {
+            ArrayList<String> ingredients = contents.get("ingredients");
+            String steps = String.join("<br>", contents.get("steps"));
+            String cuisines = String.join(",", contents.getOrDefault("cuisines", new ArrayList<>()));
+            post = new Recipe(new Post(user, postID, title, description), ingredients, steps,
+                            new ArrayList<>(Arrays.asList(cuisines.split(","))));
+        } else {
+            post = new Post(user, postID, title, description);
+        }
 
-        if (contents != null) {
-            if(postType.equals("recipie")) {
-                final ArrayList<String> ingredients = contents.get("ingredients");
-                final ArrayList<String> stepsArray = contents.get("steps");
-                final StringBuilder steps = new StringBuilder();
-                for(String step : stepsArray) {
-                    steps.append(step).append("<br>");
-                }
-                final ArrayList<String> cuisines = contents.get("cuisines");
+        post.setTags(tags);
+        post.setImageURLs(images);
+        post.setDateTimeFromString(time);
 
-                Post recipe = new Recipe(newPost, ingredients, steps.toString(), cuisines);
-                postsMap.put(postID, recipe);
-            }
-            else if (postType.equals("other")) {
-                // TODO
-            }
+        postsMap.put(postID, post);
+
+        // Store clubs associated with the post
+        for (Club club : clubs) {
+            clubsMap.put(postID, club);
         }
     }
 
@@ -127,20 +132,4 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         return new ArrayList<>(postsMap.keySet());
     }
 
-    @Override
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description,
-                          ArrayList<Post> posts, ArrayList<String> tags) {
-        Club club = new Club(name, description, members, tags, posts);
-        clubsMap.put(clubID, club);
-    }
-
-    @Override
-    public Club getClub(long clubID) {
-        if(!clubsMap.containsKey(clubID)) {
-            return null;
-        }
-        else{
-            return clubsMap.get(clubID);
-        }
-    }
 }

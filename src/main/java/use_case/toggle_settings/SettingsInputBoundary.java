@@ -1,0 +1,18 @@
+package use_case.toggle_settings;
+
+/**
+ * Input Boundary for actions which are related to changing the settings.
+ */
+public interface SettingsInputBoundary {
+    /**
+     * Executes the change privacy use case.
+     * @param settingsInputData the input data
+     */
+    void executePrivacyToggle(SettingsInputData settingsInputData);
+
+    /**
+     * Executes the enable/disable notifications use case.
+     * @param settingsInputData the input data
+     */
+    void executeNotificationsToggle(SettingsInputData settingsInputData);
+}

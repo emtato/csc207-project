@@ -1,7 +1,7 @@
 package interface_adapter.manage_followers;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.profile.ProfileViewModel;
+import interface_adapter.view_profile.ProfileViewModel;
 import use_case.manage_followers.ManageFollowersOutputBoundary;
 import use_case.manage_followers.ManageFollowersOutputData;
 

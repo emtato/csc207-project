@@ -8,11 +8,23 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 import data_access.*;
+import data_access.spoonacular.SpoonacularAPI;
 import entity.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.analyze_recipe.AnalyzeRecipeController;
+import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
+import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.delete_account.DeleteAccountController;
+import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
+import interface_adapter.fetch_post.FetchPostController;
+import interface_adapter.fetch_post.FetchPostPresenter;
+import interface_adapter.get_comments.GetCommentsController;
+import interface_adapter.get_comments.GetCommentsPresenter;
+import interface_adapter.get_comments.GetCommentsViewModel;
+import interface_adapter.like_post.LikePostController;
 import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersPresenter;
 import interface_adapter.manage_following.ManageFollowingController;
@@ -21,7 +33,6 @@ import interface_adapter.map.MapViewModel;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
-import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -30,24 +41,38 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingViewModel;
-import interface_adapter.note.NoteController;
-import interface_adapter.note.NotePresenter;
-import interface_adapter.note.NoteViewModel;
-import interface_adapter.profile.ProfileController;
-import interface_adapter.profile.ProfilePresenter;
-import interface_adapter.profile.ProfileViewModel;
-import interface_adapter.settings.SettingsController;
-import interface_adapter.settings.SettingsPresenter;
+import interface_adapter.view_profile.ProfileController;
+import interface_adapter.view_profile.ProfilePresenter;
+import interface_adapter.view_profile.ProfileViewModel;
+import interface_adapter.toggle_settings.SettingsController;
+import interface_adapter.toggle_settings.SettingsPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.toggle_settings.SettingsViewModel;
+import interface_adapter.write_comment.WriteCommentController;
+import use_case.analyze_recipe.AnalyzeRecipeInputBoundary;
+import use_case.analyze_recipe.AnalyzeRecipeInteractor;
+import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.comment.CommentPostInputBoundary;
+import use_case.comment.CommentPostInteractor;
+import use_case.delete_account.DeleteAccountInputBoundary;
+import use_case.delete_account.DeleteAccountInteractor;
+import use_case.delete_account.DeleteAccountOutputBoundary;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInteractor;
 import use_case.edit_profile.EditProfileOutputBoundary;
+import use_case.fetch_post.FetchPostInputBoundary;
+import use_case.fetch_post.FetchPostInteractor;
+import use_case.fetch_post.FetchPostOutputBoundary;
+import use_case.get_comments.GetCommentsInputBoundary;
+import use_case.get_comments.GetCommentsInteractor;
+import use_case.get_comments.GetCommentsOutputBoundary;
+import use_case.like_post.LikePostInputBoundary;
+import use_case.like_post.LikePostInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -60,15 +85,12 @@ import use_case.manage_followers.ManageFollowersOutputBoundary;
 import use_case.manage_following.ManageFollowingInputBoundary;
 import use_case.manage_following.ManageFollowingInteractor;
 import use_case.manage_following.ManageFollowingOutputBoundary;
-import use_case.note.NoteInputBoundary;
-import use_case.note.NoteInteractor;
-import use_case.note.NoteOutputBoundary;
-import use_case.profile.ProfileInputBoundary;
-import use_case.profile.ProfileInteractor;
-import use_case.profile.ProfileOutputBoundary;
-import use_case.settings.SettingsInputBoundary;
-import use_case.settings.SettingsInteractor;
-import use_case.settings.SettingsOutputBoundary;
+import use_case.view_profile.ProfileInputBoundary;
+import use_case.view_profile.ProfileInteractor;
+import use_case.view_profile.ProfileOutputBoundary;
+import use_case.toggle_settings.SettingsInputBoundary;
+import use_case.toggle_settings.SettingsInteractor;
+import use_case.toggle_settings.SettingsOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -91,31 +113,30 @@ public class AppBuilder {
     // static instance of an AppBuilder
     private static AppBuilder instance;
 
+    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject();
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final UserDataAccessObject userDataAccessObject = DBUserDataAccessObject.getInstance();
+    private final UserDataAccessObject userDataAccessObject = FileUserDataAccessObject.getInstance();
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
-            DBPostCommentLikesDataAccessObject.getInstance();
+            FilePostCommentLikesDataAccessObject.getInstance();
     private PostViewModel postViewModel;
     private PostView postView;
+    private GetCommentsViewModel getCommentsViewModel;
+    private AnalyzeRecipeViewModel analyzeRecipeViewModel;
     private CreatePostViewModel createPostViewModel;
     private CreateNewPostView createNewPostView;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-    private NoteViewModel noteViewModel;
     private ProfileViewModel profileViewModel;
     private EditProfileViewModel editProfileViewModel;
-    private LoggedInViewModel loggedInViewModel;
     private SettingsViewModel settingsViewModel;
     private ManageFollowersViewModel manageFollowersViewModel;
     private ManageFollowingViewModel manageFollowingViewModel;
-    private LoggedInView loggedInView;
     private LoginView loginView;
-    private NoteView noteView;
     private ClubHomePageView clubHomePageView;
     private NotificationsView notificationsView;
     private ExploreEventsView exploreEventsView;
@@ -149,7 +170,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addHomePageView() {
-        homePageView = new HomePageView(viewManagerModel, postCommentsLikesDataAccessObject);
+        homePageView = new HomePageView(viewManagerModel);
         cardPanel.add(homePageView, homePageView.getViewName());
         viewManagerModel.setHomePageView(homePageView);
         return this;
@@ -168,7 +189,9 @@ public class AppBuilder {
     }
 
     public AppBuilder addCreateClubView() {
-        createClubView = new CreateClubView(viewManagerModel);
+        String currentUsername = userDataAccessObject.getCurrentUsername();
+        Account currentUser = (Account) userDataAccessObject.get(currentUsername);
+        createClubView = new CreateClubView(viewManagerModel, clubsDataAccessObject, currentUser);
         cardPanel.add(createClubView, createClubView.getViewName());
         return this;
     }
@@ -210,30 +233,6 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the LoggedIn View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addLoggedInView() {
-        loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
-        cardPanel.add(loggedInView, loggedInView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the Note View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addNoteView() {
-        noteViewModel = new NoteViewModel();
-        noteView = new NoteView(noteViewModel);
-        cardPanel.add(noteView, noteView.getViewName());
-        return this;
-    }
-
-    /**
      * Adds the analyze recipe View to the application.
      *
      * @return this builder
@@ -245,8 +244,10 @@ public class AppBuilder {
                 "2.sprinkle in 2 blinks of mystery flakes, scream gently\n" +
                 "3.serve upside-down on a warm tile");
         postViewModel = new PostViewModel();
+        getCommentsViewModel = new GetCommentsViewModel();
+        analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
         //postView = new PostView(postViewModel, viewManagerModel, trialpost);
-        postView = new PostView(viewManagerModel, trialpost, postCommentsLikesDataAccessObject);
+        postView = new PostView(viewManagerModel, trialpost, getCommentsViewModel, analyzeRecipeViewModel);
         cardPanel.add(postView, postView.getViewName());
         viewManagerModel.setPostView(postView);
         return this;
@@ -255,7 +256,7 @@ public class AppBuilder {
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         // TODO: add the use case and move the data access object out of the view and into the interactor
-        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject);
+        createNewPostView = new CreateNewPostView(viewManagerModel, postCommentsLikesDataAccessObject, userDataAccessObject, createPostViewModel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
@@ -371,7 +372,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel, profileViewModel, settingsViewModel);
+                loginViewModel, profileViewModel, settingsViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, postCommentsLikesDataAccessObject, loginOutputBoundary);
 
@@ -387,14 +388,14 @@ public class AppBuilder {
      */
     public AppBuilder addChangePasswordUseCase() {
         final ChangePasswordOutputBoundary changePasswordOutputBoundary =
-                new ChangePasswordPresenter(loggedInViewModel);
+                new ChangePasswordPresenter(settingsViewModel);
 
         final ChangePasswordInputBoundary changePasswordInteractor =
                 new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
 
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
-        loggedInView.setChangePasswordController(changePasswordController);
+        settingsView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -404,33 +405,13 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, loginViewModel);
 
         final LogoutInputBoundary logoutInteractor =
                 new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-        loggedInView.setLogoutController(logoutController);
         settingsView.setLogoutController(logoutController);
-        return this;
-    }
-
-    /**
-     * Adds the Note Use Case to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addNoteUseCase() {
-        final NoteOutputBoundary noteOutputBoundary = new NotePresenter(viewManagerModel,
-                noteViewModel, loggedInViewModel);
-
-        final NoteInputBoundary noteInteractor =
-                new NoteInteractor(userDataAccessObject, noteOutputBoundary, userFactory);
-
-        final NoteController noteController = new NoteController(noteInteractor);
-        noteView.setNoteController(noteController);
-        loggedInView.setNoteController(noteController);
         return this;
     }
 
@@ -516,6 +497,100 @@ public class AppBuilder {
         final ManageFollowersController manageFollowersController =
                 new ManageFollowersController(manageFollowersInteractor);
         manageFollowersView.setManageFollowersController(manageFollowersController);
+        return this;
+    }
+
+    /**
+     * Adds the Delete Account Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addDeleteAccountUseCase() {
+        final DeleteAccountOutputBoundary deleteAccountOutputBoundary = new DeleteAccountPresenter(
+                viewManagerModel, loginViewModel);
+        final DeleteAccountInputBoundary deleteAccountInteractor =
+                new DeleteAccountInteractor(userDataAccessObject, postCommentsLikesDataAccessObject,
+                        deleteAccountOutputBoundary);
+        final DeleteAccountController deleteAccountController =
+                new DeleteAccountController(deleteAccountInteractor);
+        settingsView.setDeleteAccountController(deleteAccountController);
+        return this;
+    }
+
+    /**
+     * Adds the Like Post Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addLikePostUseCase() {
+        //final LikePostOutputBoundary likePostOutputBoundary = new LikePostPresenter(viewManagerModel);
+        final LikePostInputBoundary likePostInteractor = new LikePostInteractor(postCommentsLikesDataAccessObject);
+        final LikePostController likePostController =
+                new LikePostController(likePostInteractor);
+        postView.setLikePostController(likePostController);
+        homePageView.setLikePostController(likePostController);
+        profileView.setLikePostController(likePostController);
+        clubHomePageView.setLikePostController(likePostController);
+        specificClubView.setLikePostController(likePostController);
+        return this;
+    }
+
+    /**
+     * Adds the Write Comment Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addWriteCommentUseCase() {
+        //final WriteCommentOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter(viewManagerModel);
+        final CommentPostInputBoundary writeCommentInteractor =
+                new CommentPostInteractor(postCommentsLikesDataAccessObject);
+        final WriteCommentController writeCommentController =
+                new WriteCommentController(writeCommentInteractor);
+        postView.setWriteCommentController(writeCommentController);
+        return this;
+    }
+
+    /**
+     * Adds the Get Comments Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addGetCommentsUseCase() {
+        final GetCommentsOutputBoundary getCommentsOutputBoundary = new GetCommentsPresenter(getCommentsViewModel);
+        final GetCommentsInputBoundary getCommentsInteractor =
+                new GetCommentsInteractor(postCommentsLikesDataAccessObject, getCommentsOutputBoundary);
+        final GetCommentsController getCommentsController =
+                new GetCommentsController(getCommentsInteractor);
+        postView.setGetCommentsController(getCommentsController);
+        return this;
+    }
+
+    /**
+     * Adds the Analyze Recipe Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addAnalyzeRecipeUseCase() {
+        final AnalyzeRecipeOutputBoundary analyzeRecipeOutputBoundary =
+                new AnalyzeRecipePresenter(analyzeRecipeViewModel);
+        final AnalyzeRecipeInputBoundary analyzeRecipeInteractor =
+                new AnalyzeRecipeInteractor(new SpoonacularAPI(), analyzeRecipeOutputBoundary);
+        final AnalyzeRecipeController analyzeRecipeController =
+                new AnalyzeRecipeController(analyzeRecipeInteractor);
+        postView.setAnalyzeRecipeController(analyzeRecipeController);
+        return this;
+    }
+
+    /**
+     * Adds the Fetch Post Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addFetchPostUseCase() {
+        //final FetchPostOutputBoundary fetchPostOutputBoundary = new FetchPostPresenter();
+        final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject);
+        final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
+        homePageView.setFetchPostController(fetchPostController);
         return this;
     }
 

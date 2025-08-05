@@ -14,6 +14,13 @@ public interface PostCommentsLikesDataAccessObject {
     public ArrayList<Comment> getComments(long parentID);
 
     /**
+     * deletes a post given a post ID
+     *
+     * @param postID post ID to delete
+     */
+    public void deletePost(long postID);
+
+    /**
      * keep a record of which account has liked which post
      *
      * @param user   current logged in user
@@ -40,8 +47,9 @@ public interface PostCommentsLikesDataAccessObject {
      * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
      * @param tags        tasg
      * @param time
+     * @param images      ArrayList of clubs this post is associated with
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time);
+    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs);
 
     /**
      * Get post object from postID.
@@ -66,9 +74,4 @@ public interface PostCommentsLikesDataAccessObject {
      * @return ArrayList of long
      */
     public ArrayList<Long> getAvailablePosts();
-
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description,
-                          ArrayList<Post> posts, ArrayList<String> tags);
-
-    public Club getClub(long clubID);
 }

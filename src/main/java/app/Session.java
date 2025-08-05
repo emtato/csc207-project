@@ -27,7 +27,7 @@ public class Session {
     }
 
     public static void setCurrentAccount() {
-        UserDataAccessObject fileUserDataAccessObject = DBUserDataAccessObject.getInstance();
+        UserDataAccessObject fileUserDataAccessObject = FileUserDataAccessObject.getInstance();
         currentAccount = (Account) fileUserDataAccessObject.get(currentUsername);
     }
 

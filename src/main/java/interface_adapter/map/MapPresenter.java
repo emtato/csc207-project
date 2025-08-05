@@ -4,8 +4,8 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.explore.ExploreViewModel;
 import interface_adapter.clubs.ClubViewModel;
-import interface_adapter.profile.ProfileViewModel;
-import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.view_profile.ProfileViewModel;
+import interface_adapter.toggle_settings.SettingsViewModel;
 import use_case.map.MapOutputBoundary;
 
 public class MapPresenter implements MapOutputBoundary {

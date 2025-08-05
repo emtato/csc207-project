@@ -1,7 +1,5 @@
 package view;
 
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Comment;
 import interface_adapter.ViewManagerModel;
@@ -25,27 +23,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import data_access.spoonacular.SpoonacularAPI;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.analyze_recipe.AnalyzeRecipeController;
-import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.get_comments.GetCommentsController;
-import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
 import interface_adapter.like_post.LikePostController;
+import interface_adapter.view_profile.ProfileController;
 import interface_adapter.write_comment.WriteCommentController;
-import use_case.analyze_recipe.AnalyzeRecipeInteractor;
-import use_case.analyze_recipe.SpoonacularAccessInterface;
-import use_case.comment.CommentPostInputData;
-import use_case.comment.CommentPostInteractor;
-import use_case.fetch_post.FetchPostInteractor;
-import use_case.get_comments.GetCommentsInteractor;
-import use_case.get_comments.GetCommentsOutputBoundary;
-import use_case.like_post.LikePostInputData;
-import use_case.like_post.LikePostInteractor;
 import view.ui_components.JFrame;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.RoundedButton;
@@ -92,34 +79,26 @@ public class PostView extends JPanel {
     private final RoundedButton commentButton = new RoundedButton("coment");
 
     //use cases
-    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private LikePostController likePostController;
     private WriteCommentController writeCommentController;
     private GetCommentsController getCommentsController;
-    private final GetCommentsViewModel getCommentsViewModel = new GetCommentsViewModel();
+    private final GetCommentsViewModel getCommentsViewModel;
     private AnalyzeRecipeController analyzeRecipeController;
-    private AnalyzeRecipeViewModel analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
-    private SpoonacularAPI spoonacularAPI;
+    private AnalyzeRecipeViewModel analyzeRecipeViewModel;
 
     private final JPanel mainPanel;
     //TODO: keep track of which posts liked to update this according to user and postID
 
-
-    public PostView(ViewManagerModel viewManagerModel, Post post, PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject) {
+    //TODO: remove the dependence on the getCommentsViewModel and analyzeRecipeViewModel and remove them from the constructor after
+    public PostView(ViewManagerModel viewManagerModel, Post post, GetCommentsViewModel getCommentsViewModel, AnalyzeRecipeViewModel analyzeRecipeViewModel) {
 
         //this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
+        this.getCommentsViewModel = getCommentsViewModel;
+        this.analyzeRecipeViewModel = analyzeRecipeViewModel;
         this.post = post;
-        this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
         this.repice = null;
-        this.spoonacularAPI = new SpoonacularAPI();
-        this.likePostController = new LikePostController(new LikePostInteractor(postCommentsLikesDataAccessObject));
-        this.writeCommentController = new WriteCommentController(new CommentPostInteractor(postCommentsLikesDataAccessObject));
-        this.getCommentsController = new GetCommentsController(
-                new GetCommentsInteractor(postCommentsLikesDataAccessObject,
-                        new GetCommentsPresenter(getCommentsViewModel))
-        );
-        this.analyzeRecipeController = new AnalyzeRecipeController(new AnalyzeRecipeInteractor((SpoonacularAccessInterface) spoonacularAPI, new AnalyzeRecipePresenter(analyzeRecipeViewModel)));
+
         mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -130,17 +109,18 @@ public class PostView extends JPanel {
         centerPanel = new JPanel();
 
         // top
-        title = new JLabel(post.getTitle()); //recipe/post title "HELLLOOOO aaiaiaiee" you will not be forgotten
+        title = new JLabel(post.getTitle()); //recipe/post title
         title.setFont(fontTitle);
 
         splitTop.add(title);
-        subtitle = new JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
+        // Add null check for post.getUser()
+        String authorText = post.getUser() != null ? post.getUser().getUsername() : "Anonymous";
+        subtitle = new JLabel(authorText + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
         subtitle.setFont(subtite);
         subtitle.setForeground(Color.GRAY);
         JLabel tags = new JLabel("tags: " + post.getTags());
         tags.setFont(text);
         tags.setForeground(Color.LIGHT_GRAY);
-
 
         splitTop.add(subtitle);
         splitTop.add(tags);
@@ -149,7 +129,8 @@ public class PostView extends JPanel {
         topPanel.add(splitTop);
 
         // middle
-        displayPost(post);
+        // TODO: hihi can we get rid of this? this is just a plceholder right?
+        //displayPost(post);
 
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
@@ -588,13 +569,23 @@ public class PostView extends JPanel {
 //        frame.add(new PostView(new PostViewModel(), new ViewManagerModel(), trialpost));
         Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
 
-        PostCommentsLikesDataAccessObject dao = FilePostCommentLikesDataAccessObject.getInstance();
-        frame.add(new PostView(new ViewManagerModel(), trialpost, dao));
+        frame.add(new PostView(new ViewManagerModel(), trialpost, new GetCommentsViewModel(), new AnalyzeRecipeViewModel()));
 
         frame.setPreferredSize(new Dimension(1728, 1080));
         frame.pack();
         frame.setVisible(true);
     }
 
-
+    public void setLikePostController(LikePostController controller) {
+        this.likePostController = controller;
+    }
+    public void setWriteCommentController(WriteCommentController controller) {
+        this.writeCommentController = controller;
+    }
+    public void setGetCommentsController(GetCommentsController controller) {
+        this.getCommentsController = controller;
+    }
+    public void setAnalyzeRecipeController(AnalyzeRecipeController controller) {
+        this.analyzeRecipeController = controller;
+    }
 }

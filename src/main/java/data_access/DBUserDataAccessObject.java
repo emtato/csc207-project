@@ -16,7 +16,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import use_case.note.DataAccessException;
 
 
 /**
@@ -173,7 +172,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         try {
             data = getJsonObject();
         }
-        catch (DataAccessException ex) {}
+        catch (Exception ex) {}
 
         if (!data.has("users")) {
             data.put("users", new JSONObject());
@@ -419,34 +418,6 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     }
 
     @Override
-    public String saveNote(User user, String note) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            data.put("notes", new JSONObject());
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        notes.put(user.getUsername(), note);
-        data.put("notes", notes);
-
-        saveJSONObject(data);
-        return note;
-    }
-
-    @Override
-    public String loadNote(User user) throws DataAccessException {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("notes")) {
-            return null;
-        }
-
-        JSONObject notes = data.getJSONObject("notes");
-        return notes.optString(user.getUsername(), null);
-    }
-
-    @Override
     public void updateDisplayName(User user, String newDisplayName) {
         user.setDisplayName(newDisplayName);
         save(user);
@@ -521,5 +492,47 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         followedUser.getFollowerAccounts().put(username, user);
         save(user);
         save(followedUser);
+    }
+
+    @Override
+    public void deleteAccount(String username) {
+        try {
+            JSONObject data = getJsonObject();
+            if (!data.has("users")) {
+                data.put("users", new JSONObject());
+            }
+
+            JSONObject users = data.getJSONObject("users");
+            if (users.has(username)) {
+                JSONObject user = users.getJSONObject(username);
+                JSONObject followingAccounts = user.getJSONObject("followingAccounts");
+                for (String followedAccountUsername : followingAccounts.keySet()) {
+                    JSONObject fullFollowedAccount = users.getJSONObject(followedAccountUsername);
+                    JSONObject followedAccountFollowerMap = fullFollowedAccount.getJSONObject("followerAccounts");
+                    followedAccountFollowerMap.remove(username);
+                    fullFollowedAccount.put("followerAccounts", followedAccountFollowerMap);
+                    users.put(followedAccountUsername, fullFollowedAccount);
+                }
+
+                JSONObject followerAccounts = user.getJSONObject("followerAccounts");
+                for (String followerAccountUsername : followerAccounts.keySet()) {
+                    JSONObject fullFollowerAccount = users.getJSONObject(followerAccountUsername);
+                    JSONObject followerAccountFollowingMap = fullFollowerAccount.getJSONObject("followingAccounts");
+                    followerAccountFollowingMap.remove(username);
+                    fullFollowerAccount.put("followingAccounts", followerAccountFollowingMap);
+                    users.put(followerAccountUsername, fullFollowerAccount);
+                }
+
+                users.remove(username);
+                data.put("users", users);
+                saveJSONObject(data);
+            }
+            else {
+                System.out.println("User not found, delete unsuccessful");
+            }
+        }
+        catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
