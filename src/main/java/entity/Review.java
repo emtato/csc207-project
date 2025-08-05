@@ -2,7 +2,7 @@ package entity;
 
 // If the Post is a Review
 public class Review extends Post {
-    private double rating;
+    private int rating;
     private boolean isRestaurantReview; // Review of a Restaurant
     private boolean isRecipeReview; // Review of a Recipe
 
@@ -13,13 +13,13 @@ public class Review extends Post {
         this.isRecipeReview = false;
     }
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 
     // ratings are using the 5-star system
     // 0<=rating<=5
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         if (rating >= 0 && rating <= 5) {
             this.rating = rating;
         }
