@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 public class Club {
     private final String name;
-
+    private final long id;
     private String description;
     private final ArrayList<Account> members = new ArrayList<>();
     private final ArrayList<String> foodPreferences = new ArrayList<>();
     private final ArrayList<Post> posts = new ArrayList<>();
+    private final ArrayList<String> tags = new ArrayList<>();
 
-    public Club(String name, String description, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts) {
+    public Club(String name, String description, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts, long id, ArrayList<String> tags) {
         this.name = name;
         this.description = description;
+        this.id = id;
         if (members != null) {
             this.members.addAll(members);
         }
@@ -21,6 +23,9 @@ public class Club {
         }
         if (posts != null) {
             this.posts.addAll(posts);
+        }
+        if (tags != null) {
+            this.tags.addAll(tags);
         }
     }
 
@@ -34,6 +39,14 @@ public class Club {
 
     public String getName() {
         return name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
     }
 
     public void setDisplayName(String newDisplayName) {
@@ -61,4 +74,5 @@ public class Club {
     }
 
     public ArrayList<Post> getPosts() {return posts;}
+
 }

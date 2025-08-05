@@ -107,6 +107,12 @@
       ],
       "password": "123",
       "foodPreferences": [],
+      "clubs": [
+        "1754332203250",
+        "1754429844109",
+        "12341325",
+        "2435234"
+      ],
       "followingAccounts": {},
       "isPublic": true,
       "mutedAccounts": [],

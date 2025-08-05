@@ -80,6 +80,7 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         userJson.put("bio", account.getBio());
         userJson.put("displayName", account.getDisplayName());
         userJson.put("profilePictureUrl", account.getProfilePictureUrl());
+        userJson.put("clubs", new JSONArray(account.getClubs())); // Save club memberships
 
         // Store booleans
         userJson.put("isPublic", account.isPublic());
@@ -149,24 +150,30 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
     @Override
     public User get(String username) {
         JSONObject data = getJsonObject();
-        if (!data.has("users")) {
+        if (!data.has("users") || !data.getJSONObject("users").has(username)) {
             return null;
         }
 
-        JSONObject users = data.getJSONObject("users");
-        if (!users.has(username)) {
-            return null;
-        }
+        JSONObject userJson = data.getJSONObject("users").getJSONObject(username);
+        Account account = new Account(username, userJson.getString("password"));
 
-        JSONObject userJson = users.getJSONObject(username);
-        Account account = new Account(userJson.getString("username"), userJson.getString("password"));
-
-        // Set basic properties
-        account.setDisplayName(userJson.optString("displayName", ""));
+        // Load account data
         account.setEmail(userJson.optString("email", ""));
         account.setBio(userJson.optString("bio", ""));
-        account.setProfilePictureUrl(userJson.optString("profilePictureUrl",
-                "https://i.imgur.com/eA9NeJ1.jpeg"));
+        account.setDisplayName(userJson.optString("displayName", ""));
+        account.setProfilePictureUrl(userJson.optString("profilePictureUrl", ""));
+
+        // Load club memberships - make sure to handle the case where clubs field doesn't exist
+        ArrayList<String> clubs = new ArrayList<>();
+        if (userJson.has("clubs")) {
+            JSONArray clubsArray = userJson.getJSONArray("clubs");
+            for (int i = 0; i < clubsArray.length(); i++) {
+                clubs.add(clubsArray.getString(i));
+            }
+        }
+        account.setClubs(clubs);
+
+        // Load booleans
         account.setPublic(userJson.optBoolean("isPublic", true));
         account.setNotificationsEnabled(userJson.optBoolean("notificationsEnabled", true));
 
@@ -415,4 +422,3 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         }
     }
 }
-
