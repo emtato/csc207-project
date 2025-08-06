@@ -114,7 +114,8 @@ public class AppBuilder {
     // static instance of an AppBuilder
     private static AppBuilder instance;
 
-    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject();
+    private final PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
+    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject(postDAO);
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();

@@ -38,51 +38,55 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             map.put("steps", new ArrayList<>(Arrays.asList(inputData.getSteps())));
             map.put("cuisines", inputData.getTags());
 
-            // Convert club names/IDs to Club objects
-            ArrayList<Club> clubs = new ArrayList<>();
-            for (String clubName : inputData.getClubs()) {
-                // Create a new club with minimal data and a random ID since this is temporary
-                clubs.add(new Club(
-                    clubName,                    // name
-                    "",                         // description
-                    new ArrayList<Account>(),   // members
-                    new ArrayList<String>(),    // foodPreferences
-                    new ArrayList<Post>(),      // posts
-                    System.currentTimeMillis(), // temporary unique ID
-                    new ArrayList<String>()     // tags
-                ));
+            // Get current timestamp
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+            String timestamp = now.format(formatter);
+
+            // Generate unique ID for the post
+            long postId = System.currentTimeMillis();
+
+            // Create the post with type parameter
+            Post post = new Post(
+                inputData.getUser(),
+                postId,
+                inputData.getTitle(),
+                inputData.getBody(),
+                inputData.getImages(),
+                inputData.getType()
+            );
+            post.setTags(inputData.getTags());
+
+            // Save the post using writePost
+            postDAO.writePost(
+                postId,
+                inputData.getUser(),
+                inputData.getTitle(),
+                inputData.getType(),
+                inputData.getBody(),
+                map,
+                inputData.getTags(),
+                inputData.getImages(),
+                timestamp,
+                inputData.getClubs()
+            );
+
+            // If this is a club post, add it to the club's posts
+            if (inputData.getClubId() != null) {
+                postDAO.addPostToClub(post, inputData.getClubId());
             }
 
-            long postID = (long) (Math.random() * 1_000_000_000_000L);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
-            LocalDateTime now = LocalDateTime.now();
-            String time = now.format(formatter);
+            CreatePostOutputData outputData = new CreatePostOutputData(post.getID(), timestamp);
+            createPostPresenter.prepareSuccessView(outputData);
 
-            // write to posts storage
-            postDAO.writePost(
-                    postID,
-                    inputData.getUser(),
-                    inputData.getTitle(),
-                    inputData.getType(),
-                    inputData.getBody(),
-                    map,
-                    new ArrayList<>(),  // tags
-                    inputData.getImages(),
-                    time,
-                    clubs
-            );
-
-            // associate with user
-            userDAO.addPost(
-                    postID,
-                    inputData.getUser().getUsername()
-            );
-
-            // Call presenter's success method
-            createPostPresenter.prepareSuccessView();
         } catch (Exception e) {
-            // If any error occurs during post creation, call presenter's fail method
-            createPostPresenter.prepareFailView("Failed to create post: " + e.getMessage());
+            // Get current timestamp for error case
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+            String errorTimestamp = now.format(formatter);
+
+            CreatePostOutputData outputData = new CreatePostOutputData(0L, errorTimestamp);
+            createPostPresenter.prepareFailView(outputData);
         }
     }
 }

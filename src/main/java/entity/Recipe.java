@@ -29,7 +29,7 @@ public class Recipe extends Post {
      */
     public Recipe(Account user, long postID, String title, String description, ArrayList<String> ingredients,
                   String steps, ArrayList<String> cuisines) {
-        super(user, postID, title, description);
+        super(user, postID, title, description, new ArrayList<>(), "recipe");
         this.ingredients = ingredients;
         this.steps = steps;
         this.cuisines = cuisines;
@@ -58,7 +58,8 @@ public class Recipe extends Post {
      */
     public Recipe(Post post, ArrayList<String> ingredients,
                   String steps, ArrayList<String> cuisines) {
-        super(post.getUser(), post.getID(), post.getTitle(), post.getDescription());
+        super(post.getUser(), post.getID(), post.getTitle(), post.getDescription(),
+              post.getImageURLs(), post.getType());
         this.setTags(post.getTags());
         this.setImageURLs(post.getImageURLs());
         this.setLikes(post.getLikes());

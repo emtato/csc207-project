@@ -5,12 +5,9 @@ package use_case.create_post;/**
  */
 
 import entity.Account;
+import entity.Club;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class CreatePostInputData {
     private final Account user;
@@ -21,11 +18,12 @@ public class CreatePostInputData {
     private final String steps;
     private final ArrayList<String> tags;
     private final ArrayList<String> images;
-    private final ArrayList<String> clubs;
+    private final ArrayList<Club> clubs;
+    private Long clubId; // ID of the club this post belongs to, if any
 
     public CreatePostInputData(Account user, String title, String type,
                                String body, ArrayList<String> ingredients, String steps,
-                               ArrayList<String> tags, ArrayList<String> images, ArrayList<String> clubs) {
+                               ArrayList<String> tags, ArrayList<String> images, ArrayList<Club> clubs) {
         this.user = user;
         this.title = title;
         this.type = type;
@@ -69,7 +67,15 @@ public class CreatePostInputData {
         return steps;
     }
 
-    public ArrayList<String> getClubs() {
+    public ArrayList<Club> getClubs() {
         return clubs;
+    }
+
+    public void setClubId(Long clubId) {
+        this.clubId = clubId;
+    }
+
+    public Long getClubId() {
+        return clubId;
     }
 }

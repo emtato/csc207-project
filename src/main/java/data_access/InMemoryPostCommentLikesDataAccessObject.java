@@ -132,4 +132,9 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         return new ArrayList<>(postsMap.keySet());
     }
 
+    @Override
+    public void addPostToClub(Post post, long clubId) throws DataAccessException {
+
+    }
+
 }

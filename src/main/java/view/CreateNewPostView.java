@@ -3,6 +3,8 @@ package view;
 import app.Session;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
+import entity.Club;
+import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
@@ -41,48 +43,68 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     private final ViewManagerModel viewManagerModel;
     private final JRadioButton recipes = new JRadioButton("post new recipe :3 ");
     private final JRadioButton generalPost = new JRadioButton("General Post");
-    private final JRadioButton clubPost = new JRadioButton("Club Post");
+    private final JRadioButton announcementPost = new JRadioButton("Announcement");
     private final String viewName = "create new post";
+    private final Club club;
+    private final JPanel mainCardPanel;
 
     private CreatePostController createPostController;
     private final CreatePostViewModel createPostViewModel;
 
     public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel) {
+        this(viewManagerModel, createPostViewModel, null);
+    }
+
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, Club club) {
         this.viewManagerModel = viewManagerModel;
         this.createPostViewModel = createPostViewModel;
+        this.club = club;
+        this.contentPanel = new JPanel();
+        this.mainCardPanel = viewManagerModel.getCardPanel();
 
-        this.createPostViewModel.addPropertyChangeListener(this);  // Add this view as a listener
-       // CreatePostPresenter presenter = new interface_adapter.create_post_view.CreatePostPresenter(createPostViewModel);
         setSize(1300, 800);
         setLayout(new BorderLayout());
 
-        ButtonGroup group = new ButtonGroup();
-        group.add(recipes);
-        group.add(generalPost);
-        group.add(clubPost);
+        // If this is a club post, only show relevant options
+        if (club != null) {
+            ButtonGroup buttonGroup = new ButtonGroup();
+            buttonGroup.add(recipes);
+            buttonGroup.add(generalPost);
+            buttonGroup.add(announcementPost);
 
-        JPanel radioPanel = new JPanel();
-        radioPanel.add(recipes);
-        radioPanel.add(generalPost);
-        radioPanel.add(clubPost);
-        JLabel label = new JLabel("select what type of post u wanna make", SwingConstants.CENTER);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.add(label);
-        topPanel.add(radioPanel);
-        add(topPanel, BorderLayout.NORTH);
+            JPanel radioPanel = new JPanel();
+            radioPanel.add(recipes);
+            radioPanel.add(generalPost);
+            radioPanel.add(announcementPost);
+            contentPanel.add(radioPanel);
+
+            generalPost.setSelected(true);
+        } else {
+            ButtonGroup group = new ButtonGroup();
+            group.add(recipes);
+            group.add(generalPost);
+
+            JPanel radioPanel = new JPanel();
+            radioPanel.add(recipes);
+            radioPanel.add(generalPost);
+            JLabel label = new JLabel("select what type of post u wanna make", SwingConstants.CENTER);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+            topPanel.add(label);
+            topPanel.add(radioPanel);
+            add(topPanel, BorderLayout.NORTH);
+        }
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         menuBar.setPreferredSize(new Dimension(1200, 100));
 
-        contentPanel = new JPanel();
         add(contentPanel, BorderLayout.CENTER);
         add(menuBar, BorderLayout.SOUTH);
 
         recipes.addActionListener(this::actionPerformed);
         generalPost.addActionListener(this::actionPerformed);
-        clubPost.addActionListener(this::actionPerformed);
+        announcementPost.addActionListener(this::actionPerformed);
 
         setVisible(true);
     }
@@ -97,12 +119,10 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
 
         if (e.getSource() == recipes) {
             recipePostView();
-        }
-        else if (e.getSource() == generalPost) {
+        } else if (e.getSource() == generalPost) {
             generalPostView();
-        }
-        else if (e.getSource() == clubPost) {
-            clubPostView();
+        } else if (e.getSource() == announcementPost) {
+            announcementPostView();
         }
         contentPanel.revalidate();
         contentPanel.repaint();
@@ -157,12 +177,10 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 String body = bodyArea.getText();
                 ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
                 String steps = stepsArea.getText();
-                //ArrayList<String> cuisines = new ArrayList<>();
                 ArrayList<String> tags = new ArrayList<>();
-                ArrayList<String> clubs = new ArrayList<>();
+                ArrayList<Club> clubs = new ArrayList<>();  // Changed to ArrayList<Club>
 
                 if (!cuisinesArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
-                    //cuisines = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
                     tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
                 }
                 ArrayList<String> imagesList = new ArrayList<>();
@@ -170,7 +188,21 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
                 //write to posts data
-                createPostController.createPost(Session.getCurrentAccount(), title, "recipe", body, ingredients, steps, tags, imagesList, clubs);
+                CreatePostInputData postData = new CreatePostInputData(
+                        Session.getCurrentAccount(),
+                        title,
+                        "recipe",
+                        body,
+                        ingredients,
+                        steps,
+                        tags,
+                        imagesList,
+                        new ArrayList<>()  // empty clubs list
+                );
+                if (club != null) {
+                    postData.setClubId(club.getId());
+                }
+                createPostController.execute(postData);
 
                 viewManagerModel.setState("homepage view");
                 HomePageView homePageView = viewManagerModel.getHomePageView();
@@ -221,19 +253,106 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 String body = bodyArea.getText();
                 ArrayList<String> tags = new ArrayList<>();
                 ArrayList<String> imagesList = new ArrayList<>();
-                ArrayList<String> clubs = new ArrayList<>();
+                ArrayList<Club> clubs = new ArrayList<>();  // Changed to ArrayList<Club>
 
                 if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
 
-                createPostController.createPost(Session.getCurrentAccount(), title, "general", body, new ArrayList<>(), "", tags, imagesList, clubs);
+                CreatePostInputData postData = new CreatePostInputData(
+                        Session.getCurrentAccount(),
+                        title,
+                        "general",
+                        body,
+                        new ArrayList<>(),
+                        "",
+                        tags,
+                        imagesList,
+                        clubs  // Now using ArrayList<Club>
+                );
+                if (club != null) {
+                    postData.setClubId(club.getId());
+                }
+                createPostController.execute(postData);
 
                 viewManagerModel.setState("homepage view");
                 HomePageView homePageView = viewManagerModel.getHomePageView();
                 homePageView.updateHomeFeed();
             }
         });
+        contentPanel.add(okButton);
+    }
+
+    private void announcementPostView() {
+        contentPanel.removeAll();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        JTextArea titleArea = new JTextArea("Enter announcement title", 2, 20);
+        JTextArea bodyArea = new JTextArea("Enter announcement content", 6, 80);
+        bodyArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JTextArea imagesArea = new JTextArea("Enter link to images, separated by commas, must end in .jpg, .png, etc", 3, 80);
+        imagesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Set wrapping
+        titleArea.setLineWrap(true);
+        titleArea.setWrapStyleWord(true);
+        bodyArea.setLineWrap(true);
+        bodyArea.setWrapStyleWord(true);
+        imagesArea.setLineWrap(true);
+
+        textFIeldHints(titleArea, "Enter announcement title");
+        textFIeldHints(bodyArea, "Enter announcement content");
+        textFIeldHints(imagesArea, "Enter link to images, separated by commas, must end in .jpg, .png, etc");
+
+        contentPanel.add(titleArea);
+        contentPanel.add(bodyArea);
+        contentPanel.add(imagesArea);
+
+        JButton okButton = new JButton("Post Announcement");
+        okButton.setFont(new Font("Arial", Font.BOLD, 16));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String title = titleArea.getText();
+                String body = bodyArea.getText();
+                ArrayList<String> imagesList = new ArrayList<>();
+                if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
+                    imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
+                }
+
+                // Create post with explicit announcement type
+                Post post = new Post(
+                    Session.getCurrentAccount(),
+                    System.currentTimeMillis(),
+                    title,
+                    body,
+                    imagesList,
+                    "announcement"  // Explicitly set as announcement
+                );
+
+                CreatePostInputData postData = new CreatePostInputData(
+                        Session.getCurrentAccount(),
+                        title,
+                        "announcement",  // Ensure type is announcement
+                        body,
+                        new ArrayList<>(),
+                        "",
+                        new ArrayList<>(),
+                        imagesList,
+                        new ArrayList<>()
+                );
+
+                if (club != null) {
+                    postData.setClubId(club.getId());
+                }
+
+                createPostController.execute(postData);
+
+                // Navigate back to specific club view
+                viewManagerModel.setState("specific club view");
+                viewManagerModel.firePropertyChanged();
+            }
+        });
+
         contentPanel.add(okButton);
     }
 
@@ -267,69 +386,6 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
 //end of recipe new post view
 //---------------------------------------------------------------------------------------------------------------------
 
-    private void clubPostView() {
-        contentPanel.removeAll();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-
-        JTextArea titleArea = new JTextArea("Enter post title", 2, 20);
-        JTextArea bodyArea = new JTextArea("Enter post description", 6, 80);
-        bodyArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea clubsArea = new JTextArea("Enter clubs you want to post to, separated by commas", 3, 80);
-        clubsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea imagesArea = new JTextArea("Enter link to images, separated by commas, must end in .jpg, .png, etc", 3, 80);
-        imagesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea tagsArea = new JTextArea("Enter cuisines and tags separated by commas if u want", 1, 80);
-        tagsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        //set wrapping
-        titleArea.setLineWrap(true);
-        titleArea.setWrapStyleWord(true);
-        bodyArea.setLineWrap(true);
-        bodyArea.setWrapStyleWord(true);
-        clubsArea.setLineWrap(true);
-        clubsArea.setWrapStyleWord(true);
-        imagesArea.setLineWrap(true);
-        tagsArea.setLineWrap(true);
-
-        textFIeldHints(titleArea, "Enter post title");
-        textFIeldHints(bodyArea, "Enter post description");
-        textFIeldHints(clubsArea, "Enter clubs you want to post to, separated by commas");
-        textFIeldHints(imagesArea, "Enter link to images, separated by commas, must end in .jpg, .png, etc");
-        textFIeldHints(tagsArea, "Enter cuisines and tags separated by commas if u want");
-
-        contentPanel.add(titleArea);
-        contentPanel.add(bodyArea);
-        contentPanel.add(clubsArea);
-        contentPanel.add(imagesArea);
-        contentPanel.add(tagsArea);
-
-        JButton okButton = new JButton("send it \uD83E\uDEE3");
-        okButton.setFont(new Font("papyrus", Font.BOLD, 20));
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                String title = titleArea.getText();
-                String body = bodyArea.getText();
-                ArrayList<String> clubs = new ArrayList<>();
-                ArrayList<String> tags = new ArrayList<>();
-                ArrayList<String> imagesList = new ArrayList<>();
-
-                if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
-                    imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
-                }
-                if (!clubsArea.getText().equals("Enter clubs you want to post to, separated by commas")) {
-                    clubs = new ArrayList<>(Arrays.asList(clubsArea.getText().split(",")));
-                }
-
-                createPostController.createPost(Session.getCurrentAccount(), title, "clubs", body, new ArrayList<>(), "", tags, imagesList, clubs);
-
-                viewManagerModel.setState("homepage view");
-                HomePageView homePageView = viewManagerModel.getHomePageView();
-                homePageView.updateHomeFeed();
-            }
-        });
-        contentPanel.add(okButton);
-    }
-
     public String getViewName() {
         return viewName;
     }
@@ -344,7 +400,9 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             contentPanel.repaint();
         }
     }
-     public void setCreatePostController(CreatePostController controller) {
+
+    public void setCreatePostController(CreatePostController controller) {
         this.createPostController = controller;
     }
 }
+

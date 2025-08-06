@@ -22,10 +22,8 @@ public class CreatePostController {
     public CreatePostController(CreatePostInputBoundary interactor) {
         this.interactor = interactor;
     }
-     public void createPost(Account user, String title, String type,
-                            String body, ArrayList<String> ingredients, String steps,
-                            ArrayList<String> tags, ArrayList<String> images, ArrayList<String> clubs) {
-        CreatePostInputData inputData = new CreatePostInputData(user, title, type, body, ingredients, steps, tags, images, clubs);
+
+    public void execute(CreatePostInputData inputData) {
         interactor.execute(inputData);
     }
 }

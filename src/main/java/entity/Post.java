@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Represents a generic social media post made by a user.
@@ -38,26 +39,52 @@ public class Post {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
     /**
-     * Constructs a new Post object with the given user, ID, title, and description.
-     * Initializes default flags and timestamp.
-     *
-     * @param user        The account that created the post
+     * Constructor for creating a new post
+     * @param user        The user who created the post
      * @param ID          The unique identifier of the post
      * @param title       The title of the post
      * @param description The description/content of the post
+     * @param imageURLs   List of image URLs associated with the post
+     * @param contents    Map containing additional post content (e.g., ingredients, steps)
+     * @param type        The type of post
+     * @param timestamp   The timestamp when the post was created
+     * @param tags        List of tags associated with the post
      */
-    public Post(Account user, long ID, String title, String description) {
+    public Post(Account user, long ID, String title, String description,
+                ArrayList<String> imageURLs, HashMap<String, ArrayList<String>> contents,
+                String type, String timestamp, ArrayList<String> tags) {
         this.user = user;
         this.postID = ID;
         this.title = title;
         this.description = description;
-        this.tags = new ArrayList<>();
-        dateTime = LocalDateTime.now();
+        this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
+        this.imageURLs = imageURLs != null ? new ArrayList<>(imageURLs) : new ArrayList<>();
+        this.type = type;
+        if (timestamp != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+            this.dateTime = LocalDateTime.parse(timestamp, formatter);
+        } else {
+            this.dateTime = LocalDateTime.now();
+        }
         this.isImageVideo = false;
         this.isReview = false;
         this.isPublic = false;
         this.isClub = false;
-        this.imageURLs = new ArrayList<>();
+    }
+
+    /**
+     * Basic constructor for legacy compatibility
+     */
+    public Post(Account user, long ID, String title, String description,
+                ArrayList<String> imageURLs, String type) {
+        this(user, ID, title, description, imageURLs, new HashMap<>(), type, null, new ArrayList<>());
+    }
+
+    /**
+     * Simple constructor for basic posts
+     */
+    public Post(Account user, long ID, String title, String description) {
+        this(user, ID, title, description, new ArrayList<>(), "general");
     }
 
     public String getTitle() {
@@ -215,5 +242,3 @@ public class Post {
         this.type = type;
     }
 }
-
-

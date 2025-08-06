@@ -40,16 +40,19 @@ public interface PostCommentsLikesDataAccessObject {
     /**
      * not fully done implementing/ not capable of posting everything but a start. writes given post information to JSON.
      *
-     * @param user        user who posted dis
-     * @param title       title of dis post
-     * @param postType    String, type of dis post (club, event, recipe,..)
+     * @param user        user who posted this
+     * @param title       title of this post
+     * @param postType    String, type of this post (club, event, recipe,..)
      * @param description String description
-     * @param contents    HashMap of remaining post information (recipe would have an ingredients, steps key-value pairs)
-     * @param tags        tasg
-     * @param time
-     * @param images      ArrayList of clubs this post is associated with
+     * @param contents    HashMap of remaining post information (recipe would have ingredients, steps key-value pairs)
+     * @param tags        tags for the post
+     * @param images      List of image URLs
+     * @param time        timestamp of the post
+     * @param clubs      ArrayList of clubs this post is associated with
      */
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs);
+    public void writePost(long postID, Account user, String title, String postType, String description,
+                         HashMap<String, ArrayList<String>> contents, ArrayList<String> tags,
+                         ArrayList<String> images, String time, ArrayList<Club> clubs);
 
     /**
      * Get post object from postID.
@@ -74,4 +77,11 @@ public interface PostCommentsLikesDataAccessObject {
      * @return ArrayList of long
      */
     public ArrayList<Long> getAvailablePosts();
+
+    /**
+     * Add a post to a specific club
+     * @param post The post to add to the club
+     * @param clubId The ID of the club to add the post to
+     */
+    public void addPostToClub(Post post, long clubId) throws DataAccessException;
 }

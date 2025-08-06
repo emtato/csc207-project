@@ -9,9 +9,12 @@ import entity.Club;
 import entity.Post;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
+import interface_adapter.create_post_view.CreatePostController;
+import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
 import interface_adapter.like_post.LikePostController;
 import interface_adapter.create_post_view.CreatePostViewModel;
+import use_case.create_post.CreatePostInteractor;
 import view.ui_components.EventsPanel;
 import view.ui_components.MenuBarPanel;
 import view.ui_components.PostPanel;
@@ -22,6 +25,7 @@ import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class SpecificClubView extends JPanel {
     private final String viewName = "specific club view";
@@ -29,7 +33,6 @@ public class SpecificClubView extends JPanel {
     private final JPanel cardPanel;
     private final GetCommentsViewModel getCommentsViewModel;
     private final AnalyzeRecipeViewModel analyzeRecipeViewModel;
-    private Post postex2 = new Post(new Account("jinufan333", "WOOF ARF BARK BARK"), 2384723473L, "titler?", "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance");
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject = FilePostCommentLikesDataAccessObject.getInstance();
     private LikePostController likePostController;
     private final Club club;
@@ -101,7 +104,16 @@ public class SpecificClubView extends JPanel {
                 PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
                 UserDataAccessObject userDAO = FileUserDataAccessObject.getInstance();
                 CreatePostViewModel createPostViewModel = new CreatePostViewModel();
-                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
+
+                // Create the required objects for post creation
+                CreatePostPresenter createPostPresenter = new CreatePostPresenter(createPostViewModel);
+                CreatePostInteractor createPostInteractor = new CreatePostInteractor(postDAO, userDAO, createPostPresenter);
+                CreatePostController createPostController = new CreatePostController(createPostInteractor);
+
+                // Create the view and set its controller
+                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club);
+                createNewPostView.setCreatePostController(createPostController);
+
                 cardPanel.add(createNewPostView, createNewPostView.getViewName());
                 viewManagerModel.setState(createNewPostView.getViewName());
             }
@@ -122,13 +134,47 @@ public class SpecificClubView extends JPanel {
         postsContainer.setLayout(new BoxLayout(postsContainer, BoxLayout.Y_AXIS));
         postsContainer.setBackground(GUIConstants.WHITE);
 
-        // Add posts vertically in announcements
-        for (int i = 0; i < 3; i++) {
-            PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400,likePostController);
-            postPanel.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
-            postPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            postsContainer.add(postPanel);
-            postsContainer.add(Box.createVerticalStrut(10));
+        ArrayList<Post> clubPosts = club.getPosts();
+        ArrayList<Post> announcements = new ArrayList<>();
+
+        // Filter for announcement posts
+        if (clubPosts != null) {
+            for (Post post : clubPosts) {
+                System.out.println("Post ID: " + post.getID() + ", Type: " + post.getType());
+                if (post.getType() != null && post.getType().equals("announcement")) {
+                    announcements.add(post);
+                    System.out.println("Added to announcements");
+                }
+            }
+        }
+
+        System.out.println("Total announcements found: " + announcements.size());
+
+        if (!announcements.isEmpty()) {
+            // Add announcement posts in rows of two
+            for (int i = 0; i < announcements.size(); i += 2) {
+                JPanel feedRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+                feedRow.setBackground(GUIConstants.WHITE);
+
+                // Add first post
+                PostPanel postPanel = new PostPanel(viewManagerModel, announcements.get(i), 500, 400, likePostController);
+                postPanel.setMaximumSize(new Dimension(500, 420));
+                feedRow.add(postPanel);
+
+                // Add second post if it exists
+                if (i + 1 < announcements.size()) {
+                    PostPanel postTwo = new PostPanel(viewManagerModel, announcements.get(i + 1), 500, 400, likePostController);
+                    postTwo.setMaximumSize(new Dimension(500, 420));
+                    feedRow.add(postTwo);
+                }
+
+                postsContainer.add(feedRow);
+                postsContainer.add(Box.createRigidArea(new Dimension(0, 20)));
+            }
+        } else {
+            JLabel noPostsLabel = new JLabel("No announcements yet!");
+            noPostsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            postsContainer.add(noPostsLabel);
         }
 
         // Create scroll pane for announcements posts
@@ -183,23 +229,7 @@ public class SpecificClubView extends JPanel {
         feedContainer.setLayout(new BoxLayout(feedContainer, BoxLayout.Y_AXIS));
         feedContainer.setBackground(GUIConstants.WHITE);
 
-        // Add posts in rows
-        for (int i = 0; i < 3; i++) {
-            JPanel rowPanel = new JPanel();
-            rowPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
-            rowPanel.setBackground(GUIConstants.WHITE);
-
-            // Add three posts per row
-            for (int j = 0; j < 2; j++) {
-                PostPanel postPanel = new PostPanel(viewManagerModel, postex2, 500, 400,likePostController);
-                postPanel.setPreferredSize(new Dimension(500, 400));
-                rowPanel.add(postPanel);
-            }
-
-            rowPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            feedContainer.add(rowPanel);
-            feedContainer.add(Box.createVerticalStrut(10));
-        }
+        setupPostsPanel(feedContainer);
 
         // Create scroll pane for posts
         JScrollPane feedScrollPane = new JScrollPane(feedContainer);
@@ -222,6 +252,49 @@ public class SpecificClubView extends JPanel {
 
         this.add(mainPanel);
 
+    }
+
+    private void setupPostsPanel(JPanel postsPanel) {
+        postsPanel.setLayout(new BoxLayout(postsPanel, BoxLayout.Y_AXIS));
+        postsPanel.setBackground(GUIConstants.WHITE);
+
+        ArrayList<Post> clubPosts = club.getPosts();
+        ArrayList<Post> regularPosts = new ArrayList<>();
+
+        // Filter out announcement posts
+        if (clubPosts != null) {
+            for (Post post : clubPosts) {
+                if (post.getType() == null || !post.getType().equals("announcement")) {
+                    regularPosts.add(post);
+                }
+            }
+        }
+
+        if (!regularPosts.isEmpty()) {
+            for (int i = 0; i < regularPosts.size(); i += 2) {
+                JPanel feedRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+                feedRow.setBackground(GUIConstants.WHITE);
+
+                // Add first post
+                PostPanel postPanel = new PostPanel(viewManagerModel, regularPosts.get(i), 500, 400, likePostController);
+                postPanel.setMaximumSize(new Dimension(500, 420));
+                feedRow.add(postPanel);
+
+                // Add second post if it exists
+                if (i + 1 < regularPosts.size()) {
+                    PostPanel postTwo = new PostPanel(viewManagerModel, regularPosts.get(i + 1), 500, 400, likePostController);
+                    postTwo.setMaximumSize(new Dimension(500, 420));
+                    feedRow.add(postTwo);
+                }
+
+                postsPanel.add(feedRow);
+                postsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+            }
+        } else {
+            JLabel noPostsLabel = new JLabel("No posts yet!");
+            noPostsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            postsPanel.add(noPostsLabel);
+        }
     }
 
     public String getViewName() {
