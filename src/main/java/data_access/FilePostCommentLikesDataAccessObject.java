@@ -307,11 +307,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         String username = postObj.getString("user");
         String title = postObj.getString("title");
         String description = postObj.getString("description");
-        // Handle case where likes field doesn't exist
-        long likeCount = postObj.optLong("likes", 0);  // Default to 0 if field doesn't exist
+        String type = postObj.optString("type", "general");  // Get type, default to "general" if not found
+        long likeCount = postObj.optLong("likes", 0);
 
         Account user = new Account(username, "password");
-        Post post = new Post(user, postID, title, description);
+
+        // Create post with the proper type
+        Post post = new Post(user, postID, title, description, new ArrayList<>(), type);
         post.setLikes(likeCount);
 
         if (postObj.has("images")) {

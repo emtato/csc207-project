@@ -110,8 +110,8 @@ public class SpecificClubView extends JPanel {
                 CreatePostInteractor createPostInteractor = new CreatePostInteractor(postDAO, userDAO, createPostPresenter);
                 CreatePostController createPostController = new CreatePostController(createPostInteractor);
 
-                // Create the view and set its controller
-                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club);
+                // Create the view and pass the club
+                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club, cardPanel);
                 createNewPostView.setCreatePostController(createPostController);
 
                 cardPanel.add(createNewPostView, createNewPostView.getViewName());
@@ -151,25 +151,14 @@ public class SpecificClubView extends JPanel {
         System.out.println("Total announcements found: " + announcements.size());
 
         if (!announcements.isEmpty()) {
-            // Add announcement posts in rows of two
-            for (int i = 0; i < announcements.size(); i += 2) {
-                JPanel feedRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-                feedRow.setBackground(GUIConstants.WHITE);
-
-                // Add first post
-                PostPanel postPanel = new PostPanel(viewManagerModel, announcements.get(i), 500, 400, likePostController);
+            // Add announcement posts vertically
+            for (Post announcement : announcements) {
+                PostPanel postPanel = new PostPanel(viewManagerModel, announcement, 500, 400, likePostController);
                 postPanel.setMaximumSize(new Dimension(500, 420));
-                feedRow.add(postPanel);
+                postPanel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Center align the post panel
 
-                // Add second post if it exists
-                if (i + 1 < announcements.size()) {
-                    PostPanel postTwo = new PostPanel(viewManagerModel, announcements.get(i + 1), 500, 400, likePostController);
-                    postTwo.setMaximumSize(new Dimension(500, 420));
-                    feedRow.add(postTwo);
-                }
-
-                postsContainer.add(feedRow);
-                postsContainer.add(Box.createRigidArea(new Dimension(0, 20)));
+                postsContainer.add(postPanel);
+                postsContainer.add(Box.createRigidArea(new Dimension(0, 20))); // Add spacing between posts
             }
         } else {
             JLabel noPostsLabel = new JLabel("No announcements yet!");

@@ -46,23 +46,25 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             // Generate unique ID for the post
             long postId = System.currentTimeMillis();
 
-            // Create the post with type parameter
+            // Create the post with the explicit type from inputData
             Post post = new Post(
                 inputData.getUser(),
                 postId,
                 inputData.getTitle(),
                 inputData.getBody(),
                 inputData.getImages(),
-                inputData.getType()
+                map,
+                inputData.getType(),  // Pass the type explicitly
+                timestamp,
+                inputData.getTags()
             );
-            post.setTags(inputData.getTags());
 
-            // Save the post using writePost
+            // Save the post using writePost with the same type
             postDAO.writePost(
                 postId,
                 inputData.getUser(),
                 inputData.getTitle(),
-                inputData.getType(),
+                inputData.getType(),  // Use the same type here
                 inputData.getBody(),
                 map,
                 inputData.getTags(),

@@ -51,16 +51,17 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     private CreatePostController createPostController;
     private final CreatePostViewModel createPostViewModel;
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel) {
-        this(viewManagerModel, createPostViewModel, null);
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, JPanel mainCardPanel) {
+        this(viewManagerModel, createPostViewModel, null, mainCardPanel);
     }
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, Club club) {
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, Club club, JPanel mainCardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.createPostViewModel = createPostViewModel;
         this.club = club;
+        this.mainCardPanel = mainCardPanel;
         this.contentPanel = new JPanel();
-        this.mainCardPanel = viewManagerModel.getCardPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         setSize(1300, 800);
         setLayout(new BorderLayout());
@@ -73,12 +74,30 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             buttonGroup.add(announcementPost);
 
             JPanel radioPanel = new JPanel();
+            radioPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10)); // Add spacing between buttons
+
+            // Make announcement option more prominent for club posts
+            announcementPost.setFont(new Font("Arial", Font.BOLD, 14));
+            announcementPost.setForeground(new Color(0, 100, 0));  // Dark green color
+
             radioPanel.add(recipes);
             radioPanel.add(generalPost);
             radioPanel.add(announcementPost);
-            contentPanel.add(radioPanel);
 
-            generalPost.setSelected(true);
+            JLabel label = new JLabel("Select what type of post you want to make", SwingConstants.CENTER);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.BOLD, 16));
+
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+            topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Add padding
+            topPanel.add(label);
+            topPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+            topPanel.add(radioPanel);
+
+            add(topPanel, BorderLayout.NORTH);
+            contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
+            add(contentPanel, BorderLayout.CENTER);
         } else {
             ButtonGroup group = new ButtonGroup();
             group.add(recipes);
@@ -102,6 +121,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         add(contentPanel, BorderLayout.CENTER);
         add(menuBar, BorderLayout.SOUTH);
 
+        // Ensure action listeners are added for all buttons
         recipes.addActionListener(this::actionPerformed);
         generalPost.addActionListener(this::actionPerformed);
         announcementPost.addActionListener(this::actionPerformed);
@@ -319,20 +339,10 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
 
-                // Create post with explicit announcement type
-                Post post = new Post(
-                    Session.getCurrentAccount(),
-                    System.currentTimeMillis(),
-                    title,
-                    body,
-                    imagesList,
-                    "announcement"  // Explicitly set as announcement
-                );
-
                 CreatePostInputData postData = new CreatePostInputData(
                         Session.getCurrentAccount(),
                         title,
-                        "announcement",  // Ensure type is announcement
+                        "announcement",  // Explicitly set type as announcement
                         body,
                         new ArrayList<>(),
                         "",
