@@ -16,4 +16,10 @@ public interface ManageFollowingUserDataAccessInterface extends UserDataAccessIn
     boolean canFollow(String username, String otherUsername);
 
     void addFollowing(String username, String otherUsername);
+
+    void removeFollowRequest(String currentUsername, String removedUsername);
+
+    boolean canRequestFollow(String username, String otherUsername);
+
+    void addFollowRequest(String username, String otherUsername);
 }

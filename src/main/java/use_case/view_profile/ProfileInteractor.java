@@ -59,7 +59,9 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String username = inputData.getUsername();
         final User user = userDataAccessObject.get(username);
         final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
-        final SwitchToFollowingViewOutputData outputData = new SwitchToFollowingViewOutputData(username, following);
+        final ArrayList<User> requested = new ArrayList<>(user.getRequestedAccounts().values());
+        final SwitchToFollowingViewOutputData outputData = new SwitchToFollowingViewOutputData(username, following,
+                requested);
         presenter.switchToManageFollowingView(outputData);
     }
 
@@ -68,7 +70,9 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String username = inputData.getUsername();
         final User user = userDataAccessObject.get(username);
         final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
-        final SwitchToFollowersViewOutputData outputData = new SwitchToFollowersViewOutputData(username, followers);
+        final ArrayList<User> requesters = new ArrayList<>(user.getRequesterAccounts().values());
+        final SwitchToFollowersViewOutputData outputData = new SwitchToFollowersViewOutputData(username, followers,
+                requesters);
         presenter.switchToManageFollowersView(outputData);
     }
 

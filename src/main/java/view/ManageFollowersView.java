@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import entity.User;
 import interface_adapter.manage_followers.ManageFollowersController;
 import interface_adapter.manage_followers.ManageFollowersState;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
+import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.view_profile.ProfileController;
 import view.ui_components.UserInfoPanel;
 
@@ -27,7 +28,13 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
     final JLabel title;
 
     private final JPanel mainPanel;
+    private final JPanel followersPanel;
+    private final JPanel requestsPanel;
     private final ArrayList<UserInfoPanel> followersPanels;
+    private final ArrayList<UserInfoPanel> requestersPanels;
+    private final ArrayList<JButton> acceptFollowRequestButtons;
+    private final JScrollPane followersScrollPane;
+    private final JScrollPane requestsScrollPane;
 
     private final JButton backButton;
 
@@ -38,13 +45,21 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
 
         title = new JLabel(ManageFollowersViewModel.TITLE_LABEL);
         mainPanel = new JPanel();
+        followersPanel = new JPanel();
+        requestsPanel = new JPanel();
         followersPanels = new ArrayList<>();
+        requestersPanels = new ArrayList<>();
+        followersScrollPane = new JScrollPane(followersPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        requestsScrollPane = new JScrollPane(requestsPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        acceptFollowRequestButtons = new ArrayList<>();
         backButton = new JButton(ManageFollowersViewModel.BACK_LABEL);
 
-        createUIComponents();
+        createUiComponents();
     }
 
-    private void createUIComponents() {
+    private void createUiComponents() {
 
         // add title
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -55,9 +70,17 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
         // add main panel as scroll pane
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        followersPanel.setLayout(new BoxLayout(followersPanel, BoxLayout.Y_AXIS));
+        requestsPanel.setLayout(new BoxLayout(requestsPanel, BoxLayout.Y_AXIS));
 
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        this.add(scrollPane);
+        final JLabel followersLabel = new JLabel("Followers");
+        mainPanel.add(followersLabel);
+        mainPanel.add(followersScrollPane);
+        final JLabel requestsLabel = new JLabel("Follow Requests");
+        mainPanel.add(requestsLabel);
+        mainPanel.add(requestsScrollPane);
+
+        this.add(mainPanel);
 
         // add back button and add action listener to the back button
         this.add(backButton);
@@ -75,10 +98,13 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
 
     private void refreshScreen(ManageFollowersState state) {
         this.followersPanels.clear();
-        mainPanel.removeAll();
+        this.requestersPanels.clear();
+        this.acceptFollowRequestButtons.clear();
+        followersPanel.removeAll();
+        requestsPanel.removeAll();
         final ArrayList<User> followers = state.getFollowers();
         for (User account : followers) {
-            final JButton removeButton = new JButton(ManageFollowersViewModel.REMOVE_LABEL);
+            final JButton removeButton = new JButton(ManageFollowersViewModel.REMOVE_FOLLOW_LABEL);
             removeButton.addActionListener(
                     event -> {
                         if (event.getSource().equals(removeButton)) {
@@ -92,10 +118,52 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
         }
 
         for (UserInfoPanel followerPanel : followersPanels) {
-            mainPanel.add(followerPanel);
+            followersPanel.add(followerPanel);
         }
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        final ArrayList<User> requesters = state.getRequesters();
+        for (User account : requesters) {
+            final JButton removeButton = new JButton(ManageFollowersViewModel.REMOVE_REQUEST_LABEL);
+            removeButton.addActionListener(
+                    event -> {
+                        if (event.getSource().equals(removeButton)) {
+                            this.manageFollowersController.executeRemoveRequester(
+                                    state.getUsername(), account.getUsername());
+                        }
+                    }
+            );
+            this.requestersPanels.add(new UserInfoPanel(account.getProfilePictureUrl(), account.getUsername(),
+                    account.getDisplayName(), removeButton));
+            final JButton acceptButton = new JButton(ManageFollowersViewModel.ACCEPT_REQUEST_LABEL
+                    + " from: " + account.getUsername());
+            acceptButton.addActionListener(
+                    event -> {
+                        if (event.getSource().equals(acceptButton)) {
+                            this.manageFollowersController.executeAcceptRequester(
+                                    state.getUsername(), account.getUsername());
+                        }
+                    }
+            );
+            this.acceptFollowRequestButtons.add(acceptButton);
+        }
+
+        for (int i = 0; i < requestersPanels.size(); i++) {
+            requestsPanel.add(requestersPanels.get(i).addButton(acceptFollowRequestButtons.get(i)));
+        }
+
+        final Dimension screenSize = new Dimension(ManageFollowingViewModel.PANEL_WIDTH,
+                ManageFollowingViewModel.PANEL_HEIGHT);
+        followersPanel.setPreferredSize(screenSize);
+
+        followersPanel.revalidate();
+        followersPanel.repaint();
+        followersScrollPane.revalidate();
+        followersScrollPane.repaint();
+
+        requestsPanel.setPreferredSize(screenSize);
+        requestsPanel.revalidate();
+        requestsPanel.repaint();
+        requestsScrollPane.revalidate();
+        requestsScrollPane.repaint();
     }
 
     @Override

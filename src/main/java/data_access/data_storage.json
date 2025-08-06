@@ -346,6 +346,26 @@
       "user": "a",
       "tags": []
     },
+    "595960484838": {
+      "images": ["https://www.shutterstock.com/image-illustration/metallic-gears-cogs-3d-rendered-260nw-1708381105.jpg"],
+      "contents": {
+        "ingredients": [
+          "gears",
+          " bolts",
+          " screws",
+          " gasoline"
+        ],
+        "steps": ["crunch crunch"],
+        "cuisines": ["totally edible food"]
+      },
+      "clubs": [],
+      "description": "beep boop beep boop",
+      "time": "2025-08-06 01:40 PM",
+      "title": "Robot dinner",
+      "type": "recipe",
+      "user": "not_a_robot",
+      "tags": []
+    },
     "362171472867": {
       "images": [
         "https://i.imgur.com/eA9NeJ1.jpeg",
