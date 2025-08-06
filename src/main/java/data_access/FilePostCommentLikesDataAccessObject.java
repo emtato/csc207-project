@@ -232,11 +232,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
      * @param clubs       ArrayList of clubs this post is associated with
      */
     @Override
-    public void writePost(long postID, Account user, String title, String postType, String description, HashMap<String, ArrayList<String>> contents, ArrayList<String> tags, ArrayList<String> images, String time, ArrayList<Club> clubs) {
+    public void writePost(long postID, Account user, String title, String postType, String description,
+                         HashMap<String, ArrayList<String>> contents, ArrayList<String> tags,
+                         ArrayList<String> images, String time, ArrayList<Club> clubs) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
-            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
+            posts = data.getJSONObject("posts");
         }
         else {
             posts = new JSONObject();
@@ -249,10 +251,21 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         newPost.put("contents", contents);
         newPost.put("tags", tags);
         newPost.put("images", images);
-        newPost.put("time", time);
-        newPost.put("clubs", clubs);
-        posts.put(String.valueOf(postID), newPost);
-        newPost.put("images", images);
+
+        // Convert clubs to JSON array of club objects
+        JSONArray clubsArray = new JSONArray();
+        for (Club club : clubs) {
+            JSONObject clubObj = new JSONObject();
+            clubObj.put("name", club.getName());
+            clubObj.put("description", club.getDescription());
+            clubObj.put("members", new JSONArray(club.getMembers()));
+            clubObj.put("foodPreferences", new JSONArray(club.getFoodPreferences()));
+            clubObj.put("posts", new JSONArray());  // Empty posts array as these are stored separately
+            clubObj.put("id", club.getId());
+            clubObj.put("tags", new JSONArray(club.getTags()));
+            clubsArray.put(clubObj);
+        }
+        newPost.put("clubs", clubsArray);
 
         //idk why this is necessary but it doesnt read a.m. it can only recognize AM
         if (time.charAt(time.length() - 4) == 'a') {
@@ -264,6 +277,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             newPost.put("time", cutTime);
         }
 
+        posts.put(String.valueOf(postID), newPost);
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
@@ -293,11 +307,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         String username = postObj.getString("user");
         String title = postObj.getString("title");
         String description = postObj.getString("description");
-        // Handle case where likes field doesn't exist
-        long likeCount = postObj.optLong("likes", 0);  // Default to 0 if field doesn't exist
+        String type = postObj.optString("type", "general");  // Get type, default to "general" if not found
+        long likeCount = postObj.optLong("likes", 0);
 
         Account user = new Account(username, "password");
-        Post post = new Post(user, postID, title, description);
+
+        // Create post with the proper type
+        Post post = new Post(user, postID, title, description, new ArrayList<>(), type);
         post.setLikes(likeCount);
 
         if (postObj.has("images")) {
@@ -391,5 +407,39 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             postIDs.add(postID);
         }
         return postIDs;
+    }
+
+    @Override
+    public void addPostToClub(Post post, long clubId) throws DataAccessException {
+        final JSONObject data = getJsonObject();
+
+        // Get the clubs section
+        JSONObject clubs = data.getJSONObject("clubs");
+
+        // Find the specific club
+        JSONObject club = clubs.getJSONObject(String.valueOf(clubId));
+
+        // Get the club's posts array
+        JSONArray posts = club.getJSONArray("posts");
+
+        // Add the post ID to the club's posts array if not already present
+        boolean exists = false;
+        for (int i = 0; i < posts.length(); i++) {
+            if (posts.getLong(i) == post.getID()) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            posts.put(post.getID());
+        }
+
+        // Save back to file
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        } catch (IOException e) {
+            throw new DataAccessException("Error writing to file: " + e.getMessage());
+        }
     }
 }

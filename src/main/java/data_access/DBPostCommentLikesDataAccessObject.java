@@ -540,4 +540,9 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         }
         return postIDs;
     }
+
+    @Override
+    public void addPostToClub(Post post, long clubId) throws DataAccessException {
+
+    }
 }

@@ -114,7 +114,8 @@ public class AppBuilder {
     // static instance of an AppBuilder
     private static AppBuilder instance;
 
-    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject();
+    private final PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
+    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject(postDAO);
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
@@ -260,7 +261,7 @@ public class AppBuilder {
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
         // TODO: add the use case and move the data access object out of the view and into the interactor
-        createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
+        createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, cardPanel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
