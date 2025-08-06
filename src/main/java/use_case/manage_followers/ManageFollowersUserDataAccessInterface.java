@@ -12,4 +12,13 @@ public interface ManageFollowersUserDataAccessInterface extends UserDataAccessIn
      * @param removedUsername the user to remove
      */
     void removeFollower(String currentUsername, String removedUsername);
+
+    /**
+     * Removes a user from the given user's requesters list.
+     * @param currentUsername the user to remove from
+     * @param removedUsername the user to remove
+     */
+    void removeFollowRequester(String currentUsername, String removedUsername);
+
+    void addFollowing(String username, String otherUsername);
 }

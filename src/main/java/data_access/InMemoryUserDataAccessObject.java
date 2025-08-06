@@ -62,19 +62,19 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     }
 
     @Override
-    public void updateDisplayName(User user, String newDisplayName){
+    public void updateDisplayName(User user, String newDisplayName) {
         user.setDisplayName(newDisplayName);
         save(user);
     }
 
     @Override
-    public void updateBio(User user, String newBio){
+    public void updateBio(User user, String newBio) {
         user.setBio(newBio);
         save(user);
     }
 
     @Override
-    public void updateProfilePictureUrl(User user, String newProfilePictureUrl){
+    public void updateProfilePictureUrl(User user, String newProfilePictureUrl) {
         user.setProfilePictureUrl(newProfilePictureUrl);
         save(user);
     }
@@ -87,8 +87,8 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollower(String username, String removedUsername) {
-        User user = get(username);
-        User removedUser = get(removedUsername);
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
         user.getFollowerAccounts().remove(removedUsername);
         removedUser.getFollowingAccounts().remove(username);
         save(user);
@@ -97,8 +97,8 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollowing(String username, String removedUsername) {
-        User user = get(username);
-        User removedUser = get(removedUsername);
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
         removedUser.getFollowerAccounts().remove(username);
         user.getFollowingAccounts().remove(removedUsername);
         save(user);
@@ -106,43 +106,88 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     }
 
     @Override
-    public void setPrivacy(User user, boolean isPublic){
+    public void removeFollowRequest(String username, String removedUsername) {
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
+        removedUser.getRequesterAccounts().remove(username);
+        user.getRequestedAccounts().remove(removedUsername);
+        save(user);
+        save(removedUser);
+    }
+
+    @Override
+    public void removeFollowRequester(String username, String removedUsername) {
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
+        removedUser.getRequestedAccounts().remove(username);
+        user.getRequesterAccounts().remove(removedUsername);
+        save(user);
+        save(removedUser);
+    }
+
+    @Override
+    public void setPrivacy(User user, boolean isPublic) {
         user.setPublic(isPublic);
         save(user);
     }
 
     @Override
-    public void setNotificationStatus(User user, boolean enabled){
+    public void setNotificationStatus(User user, boolean enabled) {
         user.setNotificationsEnabled(enabled);
         save(user);
     }
 
     @Override
-    public boolean canFollow(String username, String otherUsername){
-        User user = get(username);
-        return users.containsKey(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername);
+    public boolean canRequestFollow(String username, String otherUsername) {
+        final User user = get(username);
+        return users.containsKey(otherUsername) && !user.getRequestedAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername)
+                && !get(otherUsername).isPublic();
+    }
+
+    @Override
+    public boolean canFollow(String username, String otherUsername) {
+        final User user = get(username);
+        return users.containsKey(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && get(otherUsername).isPublic();
+    }
+
+    @Override
+    public void addFollowRequest(String username, String otherUsername) {
+        final User user = get(username);
+        final User requestedUser = get(otherUsername);
+        user.getRequestedAccounts().put(otherUsername, requestedUser);
+        requestedUser.getRequesterAccounts().put(username, user);
+        save(requestedUser);
+        save(user);
     }
 
     @Override
     public void addFollowing(String username, String otherUsername) {
-        User user = get(username);
-        User followedUser = get(otherUsername);
+        final User user = get(username);
+        final User followedUser = get(otherUsername);
         user.getFollowingAccounts().put(otherUsername, followedUser);
         followedUser.getFollowerAccounts().put(username, user);
+        if (user.getRequestedAccounts().containsKey(otherUsername)) {
+            user.getRequestedAccounts().remove(otherUsername);
+        }
+        if (followedUser.getRequesterAccounts().containsKey(username)) {
+            followedUser.getRequesterAccounts().remove(username);
+        }
         save(followedUser);
         save(user);
     }
 
     @Override
     public void addPost(long id, String username) {
-        User user = get(username);
+        final User user = get(username);
         user.getUserPosts().add(id);
         save(user);
     }
 
     @Override
     public void deleteAccount(String username) {
-        User user = get(username);
+        final User user = get(username);
         for (User followedAccount : user.getFollowingAccounts().values()) {
             followedAccount.getFollowerAccounts().remove(username);
             save(followedAccount);

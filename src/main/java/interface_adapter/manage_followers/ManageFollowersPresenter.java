@@ -25,6 +25,7 @@ public class ManageFollowersPresenter implements ManageFollowersOutputBoundary {
     public void prepareSuccessView(ManageFollowersOutputData response) {
         final ManageFollowersState manageFollowersState = manageFollowersViewModel.getState();
         manageFollowersState.setFollowers(response.getFollowers());
+        manageFollowersState.setRequesters(response.getRequesters());
         manageFollowersViewModel.setState(manageFollowersState);
         manageFollowersViewModel.firePropertyChanged();
     }
