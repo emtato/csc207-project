@@ -21,7 +21,7 @@ import okhttp3.Response;
 /**
  * The DAO for user data.
  */
-public class DBUserDataAccessObject implements UserDataAccessObject{
+public class DBUserDataAccessObject implements UserDataAccessObject {
     private static UserDataAccessObject instance;
 
     private final String DATABASE_USERNAME = "csc207munchablesusername";
@@ -219,6 +219,26 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
         }
         userJson.put("followingAccounts", followingAccountsJson);
 
+        JSONObject requestedAccountsJson = new JSONObject();
+        for (String key : account.getRequestedAccounts().keySet()) {
+            JSONObject requestedJson = new JSONObject();
+            requestedJson.put("username", account.getRequestedAccounts().get(key).getUsername());
+            requestedJson.put("displayName", account.getRequestedAccounts().get(key).getDisplayName());
+            requestedJson.put("profilePictureUrl", account.getRequestedAccounts().get(key).getProfilePictureUrl());
+            followingAccountsJson.put(key, requestedJson);
+        }
+        userJson.put("requestedAccounts", requestedAccountsJson);
+
+        JSONObject requesterAccountsJson = new JSONObject();
+        for (String key : account.getRequesterAccounts().keySet()) {
+            JSONObject requesterJson = new JSONObject();
+            requesterJson.put("username", account.getRequesterAccounts().get(key).getUsername());
+            requesterJson.put("displayName", account.getRequesterAccounts().get(key).getDisplayName());
+            requesterJson.put("profilePictureUrl", account.getRequesterAccounts().get(key).getProfilePictureUrl());
+            followingAccountsJson.put(key, requesterJson);
+        }
+        userJson.put("requesterAccounts", requesterAccountsJson);
+
         JSONObject blockedAccountsJson = new JSONObject();
         for (String key : account.getBlockedAccounts().keySet()) {
             JSONObject blockedJson = new JSONObject();
@@ -352,6 +372,36 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
             account.setFollowingAccounts(following);
         }
 
+        if (userJson.has("requestedAccounts")) {
+            HashMap<String, User> requested = new HashMap<>();
+            JSONObject requestedJson = userJson.getJSONObject("requestedAccounts");
+            for (String key : requestedJson.keySet()) {
+                String requestedUsername = requestedJson.getJSONObject(key).getString("username");
+                String requestedDisplayName = requestedJson.getJSONObject(key).getString("displayName");
+                String requestedPictureUrl = requestedJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToRequest = new Account(requestedUsername, "");
+                accountToRequest.setDisplayName(requestedDisplayName);
+                accountToRequest.setProfilePictureUrl(requestedPictureUrl);
+                requested.put(key, accountToRequest);
+            }
+            account.setRequestedAccounts(requested);
+        }
+
+        if (userJson.has("requesterAccounts")) {
+            HashMap<String, User> requesters = new HashMap<>();
+            JSONObject requesterJson = userJson.getJSONObject("requesterAccounts");
+            for (String key : requesterJson.keySet()) {
+                String requesterUsername = requesterJson.getJSONObject(key).getString("username");
+                String requesterDisplayName = requesterJson.getJSONObject(key).getString("displayName");
+                String requesterPictureUrl = requesterJson.getJSONObject(key).getString("profilePictureUrl");
+                User requester = new Account(requesterUsername, "");
+                requester.setDisplayName(requesterDisplayName);
+                requester.setProfilePictureUrl(requesterPictureUrl);
+                requesters.put(key, requester);
+            }
+            account.setRequesterAccounts(requesters);
+        }
+
         if (userJson.has("blockedAccounts")) {
             HashMap<String, User> blocked = new HashMap<>();
             JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
@@ -443,7 +493,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
 
     @Override
     public void removeFollower(String username, String removedUsername) {
-        User user = get(username);
+        final User user = get(username);
         User removedUser = get(removedUsername);
         user.getFollowerAccounts().remove(removedUsername);
         removedUser.getFollowingAccounts().remove(username);
@@ -462,6 +512,26 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     }
 
     @Override
+    public void removeFollowRequest(String username, String removedUsername) {
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
+        removedUser.getRequesterAccounts().remove(username);
+        user.getRequestedAccounts().remove(removedUsername);
+        save(user);
+        save(removedUser);
+    }
+
+    @Override
+    public void removeFollowRequester(String username, String removedUsername) {
+        final User user = get(username);
+        final User removedUser = get(removedUsername);
+        removedUser.getRequestedAccounts().remove(username);
+        user.getRequesterAccounts().remove(removedUsername);
+        save(user);
+        save(removedUser);
+    }
+
+    @Override
     public void setPrivacy(User user, boolean isPublic) {
         user.setPublic(isPublic);
         save(user);
@@ -474,22 +544,44 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     }
 
     @Override
-    public boolean canFollow(String username, String otherUsername){
-        if (get(username) != null && get(otherUsername) != null) {
-            User user = get(username);
-            return !user.getFollowingAccounts().containsKey(otherUsername) && !username.equals(otherUsername);
-        }
-        else{
-            return false;
-        }
+    public boolean canRequestFollow(String username, String otherUsername) {
+        final User user = get(username);
+        final User otherUser = get(otherUsername);
+        return otherUser != null && !user.getRequestedAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername)
+                && !otherUser.isPublic();
     }
 
     @Override
-    public void addFollowing(String username, String otherUsername){
-        User user = get(username);
-        User followedUser = get(otherUsername);
+    public boolean canFollow(String username, String otherUsername) {
+        final User user = get(username);
+        final User otherUser = get(otherUsername);
+        return otherUser != null && !user.getFollowingAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && otherUser.isPublic();
+    }
+
+    @Override
+    public void addFollowRequest(String username, String otherUsername) {
+        final User user = get(username);
+        final User requestedUser = get(otherUsername);
+        user.getRequestedAccounts().put(otherUsername, requestedUser);
+        requestedUser.getRequesterAccounts().put(username, user);
+        save(requestedUser);
+        save(user);
+    }
+
+    @Override
+    public void addFollowing(String username, String otherUsername) {
+        final User user = get(username);
+        final User followedUser = get(otherUsername);
         user.getFollowingAccounts().put(otherUsername, followedUser);
         followedUser.getFollowerAccounts().put(username, user);
+        if (user.getRequestedAccounts().containsKey(otherUsername)) {
+            user.getRequestedAccounts().remove(otherUsername);
+        }
+        if (followedUser.getRequesterAccounts().containsKey(username)) {
+            followedUser.getRequesterAccounts().remove(username);
+        }
         save(user);
         save(followedUser);
     }
@@ -497,27 +589,27 @@ public class DBUserDataAccessObject implements UserDataAccessObject{
     @Override
     public void deleteAccount(String username) {
         try {
-            JSONObject data = getJsonObject();
+            final JSONObject data = getJsonObject();
             if (!data.has("users")) {
                 data.put("users", new JSONObject());
             }
 
-            JSONObject users = data.getJSONObject("users");
+            final JSONObject users = data.getJSONObject("users");
             if (users.has(username)) {
-                JSONObject user = users.getJSONObject(username);
-                JSONObject followingAccounts = user.getJSONObject("followingAccounts");
+                final JSONObject user = users.getJSONObject(username);
+                final JSONObject followingAccounts = user.getJSONObject("followingAccounts");
                 for (String followedAccountUsername : followingAccounts.keySet()) {
-                    JSONObject fullFollowedAccount = users.getJSONObject(followedAccountUsername);
-                    JSONObject followedAccountFollowerMap = fullFollowedAccount.getJSONObject("followerAccounts");
+                    final JSONObject fullFollowedAccount = users.getJSONObject(followedAccountUsername);
+                    final JSONObject followedAccountFollowerMap = fullFollowedAccount.getJSONObject("followerAccounts");
                     followedAccountFollowerMap.remove(username);
                     fullFollowedAccount.put("followerAccounts", followedAccountFollowerMap);
                     users.put(followedAccountUsername, fullFollowedAccount);
                 }
 
-                JSONObject followerAccounts = user.getJSONObject("followerAccounts");
+                final JSONObject followerAccounts = user.getJSONObject("followerAccounts");
                 for (String followerAccountUsername : followerAccounts.keySet()) {
-                    JSONObject fullFollowerAccount = users.getJSONObject(followerAccountUsername);
-                    JSONObject followerAccountFollowingMap = fullFollowerAccount.getJSONObject("followingAccounts");
+                    final JSONObject fullFollowerAccount = users.getJSONObject(followerAccountUsername);
+                    final JSONObject followerAccountFollowingMap = fullFollowerAccount.getJSONObject("followingAccounts");
                     followerAccountFollowingMap.remove(username);
                     fullFollowerAccount.put("followingAccounts", followerAccountFollowingMap);
                     users.put(followerAccountUsername, fullFollowerAccount);

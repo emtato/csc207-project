@@ -27,4 +27,11 @@ public class UserInfoPanel extends JPanel {
         button.setForeground(GUIConstants.RED);
         this.add(button);
     }
+
+    public UserInfoPanel addButton(JButton button) {
+        this.add(button);
+        this.revalidate();
+        this.repaint();
+        return this;
+    }
 }

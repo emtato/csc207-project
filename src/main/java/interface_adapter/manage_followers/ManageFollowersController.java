@@ -23,11 +23,27 @@ public class ManageFollowersController {
     }
 
     /**
+     * Executes the Remove Follower Use Case.
+     */
+    public void executeRemoveRequester(String username, String requesterUsername) {
+        final ManageFollowersInputData manageFollowersInputData =
+                new ManageFollowersInputData(username, requesterUsername);
+        manageFollowersUseCaseInteractor.executeRemoveRequester(manageFollowersInputData);
+    }
+
+    /**
+     * Executes the Accept Follow Request Use Case.
+     */
+    public void executeAcceptRequester(String username, String requesterUsername) {
+        final ManageFollowersInputData manageFollowersInputData =
+                new ManageFollowersInputData(username, requesterUsername);
+        manageFollowersUseCaseInteractor.executeAcceptRequester(manageFollowersInputData);
+    }
+
+    /**
      * Executes the "switch to Profile View" Use Case.
      */
     public void switchToProfileView() {
         manageFollowersUseCaseInteractor.switchToProfileView();
     }
-
-
 }

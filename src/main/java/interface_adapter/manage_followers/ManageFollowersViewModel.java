@@ -8,8 +8,10 @@ import interface_adapter.ViewModel;
 public class ManageFollowersViewModel extends ViewModel<ManageFollowersState> {
 
     public static final String TITLE_LABEL = "Followers";
-    public static final String REMOVE_LABEL = "Remove Follower";
+    public static final String REMOVE_FOLLOW_LABEL = "Remove Follower";
+    public static final String REMOVE_REQUEST_LABEL = "Decline Follow Request";
     public static final String BACK_LABEL = "Back to Profile";
+    public static final String ACCEPT_REQUEST_LABEL = "Accept Follow Request";
 
     public ManageFollowersViewModel() {
         super("manage followers");

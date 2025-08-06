@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class ManageFollowingState {
     private String username = "";
     private String otherUsername = "";
+    private ArrayList<User> requested = new ArrayList<>();
     private ArrayList<User> following = new ArrayList<>();
 
     public String getUsername() {
@@ -34,5 +35,13 @@ public class ManageFollowingState {
 
     public void setOtherUsername(String otherUsername) {
         this.otherUsername = otherUsername;
+    }
+
+    public ArrayList<User> getRequested() {
+        return requested;
+    }
+
+    public void setRequested(ArrayList<User> requested) {
+        this.requested = requested;
     }
 }

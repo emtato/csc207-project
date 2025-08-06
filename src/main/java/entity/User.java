@@ -33,6 +33,12 @@ public interface User {
     HashMap<String, User> getFollowingAccounts();
     void setFollowingAccounts(HashMap<String, User> followingAccounts);
 
+    HashMap<String, User> getRequesterAccounts();
+    void setRequesterAccounts(HashMap<String, User> requesterAccounts);
+
+    HashMap<String, User> getRequestedAccounts();
+    void setRequestedAccounts(HashMap<String, User> requestedAccounts);
+
     ArrayList<Long> getUserPosts();
     void setUserPosts(ArrayList<Long> userPosts);
 

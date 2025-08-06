@@ -15,6 +15,8 @@ public class Account implements User {
     private String bio;
     private HashMap<String, User> followerAccounts;
     private HashMap<String, User> followingAccounts;
+    private HashMap<String, User> requesterAccounts;
+    private HashMap<String, User> requestedAccounts;
     private HashMap<String, User> blockedAccounts;
     private ArrayList<String> blockedTerms;
     private ArrayList<User> mutedAccounts;
@@ -35,6 +37,8 @@ public class Account implements User {
         likesUsernames = new ArrayList<>();
         followingAccounts = new HashMap<>();
         followerAccounts = new HashMap<>();
+        requestedAccounts = new HashMap<>();
+        requesterAccounts = new HashMap<>();
         blockedAccounts = new HashMap<>();
         blockedTerms = new ArrayList<>();
         mutedAccounts = new ArrayList<>();
@@ -247,5 +251,25 @@ public class Account implements User {
 
     public void setClubs(ArrayList<String> clubs) {
         this.clubs = clubs;
+    }
+
+    @Override
+    public HashMap<String, User> getRequesterAccounts() {
+        return requesterAccounts;
+    }
+
+    @Override
+    public void setRequesterAccounts(HashMap<String, User> requesterAccounts) {
+        this.requesterAccounts = requesterAccounts;
+    }
+
+    @Override
+    public HashMap<String, User> getRequestedAccounts() {
+        return requestedAccounts;
+    }
+
+    @Override
+    public void setRequestedAccounts(HashMap<String, User> requestedAccounts) {
+        this.requestedAccounts = requestedAccounts;
     }
 }

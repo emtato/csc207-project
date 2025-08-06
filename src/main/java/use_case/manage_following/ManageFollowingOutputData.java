@@ -9,11 +9,23 @@ import java.util.ArrayList;
  */
 public class ManageFollowingOutputData {
     private final ArrayList<User> following;
-    public ManageFollowingOutputData(ArrayList<User> following) {
+    private final ArrayList<User> requested;
+    private final String actionPerformed;
+    public ManageFollowingOutputData(ArrayList<User> following, ArrayList<User> requested, String actionPerformed) {
         this.following = following;
+        this.requested = requested;
+        this.actionPerformed = actionPerformed;
     }
 
     public ArrayList<User> getFollowing() {
         return following;
+    }
+
+    public ArrayList<User> getRequested() {
+        return requested;
+    }
+
+    public String getActionPerformed() {
+        return actionPerformed;
     }
 }

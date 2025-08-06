@@ -16,23 +16,42 @@ public class ManageFollowingInteractor implements ManageFollowingInputBoundary{
 
     @Override
     public void executeUnfollow(ManageFollowingInputData manageFollowingInputData) {
-        userDataAccessObject.removeFollowing(manageFollowingInputData.getUsername(),
-                manageFollowingInputData.getOtherUsername());
         final User user = userDataAccessObject.get(manageFollowingInputData.getUsername());
-        final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
-        final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following);
+        if (user.getRequestedAccounts().containsKey(manageFollowingInputData.getOtherUsername())) {
+            userDataAccessObject.removeFollowRequest(manageFollowingInputData.getUsername(),
+                    manageFollowingInputData.getOtherUsername());
+        }
+        else {
+            userDataAccessObject.removeFollowing(manageFollowingInputData.getUsername(),
+                    manageFollowingInputData.getOtherUsername());
+        }
+        final User updatedUser = userDataAccessObject.get(manageFollowingInputData.getUsername());
+        final ArrayList<User> following = new ArrayList<>(updatedUser.getFollowingAccounts().values());
+        final ArrayList<User> requested = new ArrayList<>(updatedUser.getRequestedAccounts().values());
+        final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following, requested, "Unfollow");
         presenter.prepareSuccessView(outputData);
     }
 
     @Override
     public void executeFollow(ManageFollowingInputData manageFollowingInputData) {
-        if (userDataAccessObject.canFollow(manageFollowingInputData.getUsername(),
-                manageFollowingInputData.getOtherUsername())){
+        if (userDataAccessObject.canRequestFollow(manageFollowingInputData.getUsername(),
+                manageFollowingInputData.getOtherUsername())) {
+            userDataAccessObject.addFollowRequest(manageFollowingInputData.getUsername(),
+                    manageFollowingInputData.getOtherUsername());
+            final User user = userDataAccessObject.get(manageFollowingInputData.getUsername());
+            final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
+            final ArrayList<User> requested = new ArrayList<>(user.getRequestedAccounts().values());
+            final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following, requested, "Request");
+            presenter.prepareSuccessView(outputData);
+        }
+        else if (userDataAccessObject.canFollow(manageFollowingInputData.getUsername(),
+                manageFollowingInputData.getOtherUsername())) {
             userDataAccessObject.addFollowing(manageFollowingInputData.getUsername(),
                     manageFollowingInputData.getOtherUsername());
             final User user = userDataAccessObject.get(manageFollowingInputData.getUsername());
             final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
-            final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following);
+            final ArrayList<User> requested = new ArrayList<>(user.getRequestedAccounts().values());
+            final ManageFollowingOutputData outputData = new ManageFollowingOutputData(following, requested, "Follow");
             presenter.prepareSuccessView(outputData);
         }
         else {

@@ -17,10 +17,33 @@ public class ManageFollowersInteractor implements ManageFollowersInputBoundary{
     @Override
     public void executeRemoveFollower(ManageFollowersInputData manageFollowersInputData) {
         userDataAccessObject.removeFollower(manageFollowersInputData.getUsername(),
-                manageFollowersInputData.getRemovedFollower());
+                manageFollowersInputData.getRemovedUsername());
         final User user = userDataAccessObject.get(manageFollowersInputData.getUsername());
         final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
-        final ManageFollowersOutputData outputData = new ManageFollowersOutputData(followers);
+        final ArrayList<User> requesters = new ArrayList<>(user.getRequesterAccounts().values());
+        final ManageFollowersOutputData outputData = new ManageFollowersOutputData(followers, requesters);
+        presenter.prepareSuccessView(outputData);
+    }
+
+    @Override
+    public void executeRemoveRequester(ManageFollowersInputData manageFollowersInputData) {
+        userDataAccessObject.removeFollowRequester(manageFollowersInputData.getUsername(),
+                manageFollowersInputData.getRemovedUsername());
+        final User user = userDataAccessObject.get(manageFollowersInputData.getUsername());
+        final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
+        final ArrayList<User> requesters = new ArrayList<>(user.getRequesterAccounts().values());
+        final ManageFollowersOutputData outputData = new ManageFollowersOutputData(followers, requesters);
+        presenter.prepareSuccessView(outputData);
+    }
+
+    @Override
+    public void executeAcceptRequester(ManageFollowersInputData manageFollowersInputData) {
+        userDataAccessObject.addFollowing(manageFollowersInputData.getRemovedUsername(),
+                manageFollowersInputData.getUsername());
+        final User user = userDataAccessObject.get(manageFollowersInputData.getUsername());
+        final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
+        final ArrayList<User> requesters = new ArrayList<>(user.getRequesterAccounts().values());
+        final ManageFollowersOutputData outputData = new ManageFollowersOutputData(followers, requesters);
         presenter.prepareSuccessView(outputData);
     }
 
