@@ -1,8 +1,8 @@
 package use_case.login;
 
-import entity.Post;
+import java.util.Map;
 
-import java.util.HashMap;
+import entity.Post;
 
 /**
  * Output Data for the Login Use Case.
@@ -15,14 +15,14 @@ public class LoginOutputData {
     private final String bio;
     private final int numFollowers;
     private final int numFollowing;
-    private final HashMap<Long, Post> posts;
+    private final Map<Long, Post> posts;
     private final boolean isPublic;
     private final boolean notificationsEnabled;
     private final boolean useCaseFailed;
     private final String password;
 
     public LoginOutputData(String username, String displayName, String profilePictureUrl, String bio, int numFollowers,
-                           int numFollowing, HashMap<Long, Post> posts, boolean isPublic, boolean notificationsEnabled,
+                           int numFollowing, Map<Long, Post> posts, boolean isPublic, boolean notificationsEnabled,
                            boolean useCaseFailed, String password) {
         this.username = username;
         this.displayName = displayName;
@@ -61,7 +61,7 @@ public class LoginOutputData {
         return numFollowing;
     }
 
-    public HashMap<Long, Post>getPosts() {
+    public Map<Long, Post> getPosts() {
         return posts;
     }
 

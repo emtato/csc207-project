@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Output Data for the Switch to Edit Profile View Use Case.
  */
-public class SwitchToEditProfileViewOutputData{
+public class SwitchToEditProfileViewOutputData {
     private final String username;
     private final String displayName;
     private final String bio;

@@ -76,7 +76,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        logIn.addActionListener(e -> viewManagerModel.setState("log in"));
+        logIn.addActionListener(actionEvent -> viewManagerModel.setState("log in"));
 
         addUsernameListener();
         addPasswordListener();

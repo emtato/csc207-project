@@ -20,5 +20,10 @@ public interface ManageFollowersUserDataAccessInterface extends UserDataAccessIn
      */
     void removeFollowRequester(String currentUsername, String removedUsername);
 
+    /**
+     * Adds a following from one user to another one.
+     * @param username the user doing the following
+     * @param otherUsername the user being followed
+     */
     void addFollowing(String username, String otherUsername);
 }

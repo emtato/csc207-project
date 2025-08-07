@@ -7,21 +7,21 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.JButton;
-import javax.swing.JPasswordField;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JComponent;
-import javax.swing.Box;
 
-import interface_adapter.change_password.ChangePasswordController;
 import org.jetbrains.annotations.NotNull;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.toggle_settings.SettingsController;
@@ -55,10 +55,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // add title
-        final JLabel title = new GeneralJLabel(SettingsViewModel.TITLE_LABEL,
-                GUIConstants.TITLE_SIZE, GUIConstants.RED);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.add(title);
+        addTitle();
 
         // add settings panel
         final JPanel settingsPanel = getSettingsPanel();
@@ -82,15 +79,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         addNewPanel(settingsPanel, SettingsViewModel.PASSWORD_HEADING, SettingsViewModel.PASSWORD_LABEL,
                 passwordField);
 
-        final JPanel passwordButtonsPanel = new JPanel();
-        passwordButtonsPanel.setLayout(new BoxLayout(passwordButtonsPanel, BoxLayout.X_AXIS));
         changePasswordButton = new JButton(SettingsViewModel.PASSWORD_BUTTON_LABEL);
-        passwordButtonsPanel.add(changePasswordButton);
         showPasswordButton = new JToggleButton(SettingsViewModel.SHOW_PASSWORD_LABEL);
         showPasswordButton.setSelected(false);
-        passwordButtonsPanel.add(showPasswordButton);
-        settingsPanel.add(passwordButtonsPanel);
-        settingsPanel.add(Box.createVerticalGlue());
+        addPasswordButtonsPanel(settingsPanel);
         this.add(settingsPanel);
 
         // add a menu bar
@@ -217,6 +209,13 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    private void addTitle() {
+        final JLabel title = new GeneralJLabel(SettingsViewModel.TITLE_LABEL,
+                GUIConstants.TITLE_SIZE, GUIConstants.RED);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(title);
+    }
+
     private void addNewPanel(JPanel parentPanel, String header, String label, JComponent component) {
         final JLabel newHeading = new GeneralJLabel(header, GUIConstants.HEADER_SIZE, GUIConstants.WHITE);
         parentPanel.add(newHeading);
@@ -234,6 +233,15 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         subPanel.add(component);
 
         parentPanel.add(subPanel);
+    }
+
+    private void addPasswordButtonsPanel(JPanel parentPanel) {
+        final JPanel passwordButtonsPanel = new JPanel();
+        passwordButtonsPanel.setLayout(new BoxLayout(passwordButtonsPanel, BoxLayout.X_AXIS));
+        passwordButtonsPanel.add(changePasswordButton);
+        passwordButtonsPanel.add(showPasswordButton);
+        parentPanel.add(passwordButtonsPanel);
+        parentPanel.add(Box.createVerticalGlue());
     }
 
     @NotNull
@@ -287,12 +295,15 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void setSettingsController(SettingsController controller) {
         this.settingsController = controller;
     }
+
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
     }
+
     public void setDeleteAccountController(DeleteAccountController controller) {
         this.deleteAccountController = controller;
     }
+
     public void setChangePasswordController(ChangePasswordController changePasswordController) {
         this.changePasswordController = changePasswordController;
     }

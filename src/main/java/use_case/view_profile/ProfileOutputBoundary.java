@@ -19,16 +19,19 @@ public interface ProfileOutputBoundary {
 
     /**
      * Switches to the Edit Profile View.
+     * @param outputData the output data
      */
     void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData);
 
     /**
      * Switches to the Manage Following View.
+     * @param outputData the output data
      */
     void switchToManageFollowingView(SwitchToFollowingViewOutputData outputData);
 
     /**
      * Switches to the ManageFollowers View.
+     * @param outputData the output data
      */
     void switchToManageFollowersView(SwitchToFollowersViewOutputData outputData);
 }

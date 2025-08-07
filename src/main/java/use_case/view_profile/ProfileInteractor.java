@@ -1,13 +1,14 @@
 package use_case.view_profile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class ProfileInteractor implements ProfileInputBoundary{
+public class ProfileInteractor implements ProfileInputBoundary {
     private final ProfileUserDataAccessInterface userDataAccessObject;
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final ProfileOutputBoundary presenter;
@@ -30,7 +31,7 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final int numFollowers = user.getNumFollowers();
         final int numFollowing = user.getNumFollowing();
         final ArrayList<Long> posts = user.getUserPosts();
-        final HashMap<Long, Post> postsMap = new HashMap<>();
+        final Map<Long, Post> postsMap = new HashMap<>();
         for (Long postId : posts) {
             postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
         }

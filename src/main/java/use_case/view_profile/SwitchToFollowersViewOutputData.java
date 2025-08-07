@@ -1,13 +1,14 @@
 package use_case.view_profile;
 
-import entity.User;
-
 import java.util.ArrayList;
+
+import entity.User;
 
 public class SwitchToFollowersViewOutputData {
     private final String username;
     private final ArrayList<User> followers;
     private final ArrayList<User> requesters;
+
     public SwitchToFollowersViewOutputData(String username, ArrayList<User> followers, ArrayList<User> requesters) {
         this.username = username;
         this.followers = followers;

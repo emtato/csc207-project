@@ -1,9 +1,9 @@
 package interface_adapter.view_profile;
 
+import java.util.HashMap;
+import java.util.Map;
 
 import entity.Post;
-
-import java.util.HashMap;
 
 /**
  * The state for the Profile View Model.
@@ -13,9 +13,9 @@ public class ProfileState {
     private String displayName = "";
     private String profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
     private String bio = "";
-    private int numFollowers = 0;
-    private int numFollowing = 0;
-    private HashMap<Long, Post> posts = new HashMap<>();
+    private int numFollowers;
+    private int numFollowing;
+    private Map<Long, Post> posts = new HashMap<>();
 
     public String getUsername() {
         return username;
@@ -65,17 +65,22 @@ public class ProfileState {
         this.numFollowing = numFollowing;
     }
 
-    public HashMap<Long, Post> getPosts() {
+    public Map<Long, Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(HashMap<Long, Post> posts) {
+    /**
+     * Sets the user's posts to the given map of posts, or an empty map if null.
+     * @param posts the posts to set
+     */
+    public void setPosts(Map<Long, Post> posts) {
         if (posts == null) {
             this.posts = new HashMap<>();
-            return;
         }
-        // Remove any null posts from the HashMap
-        posts.values().removeIf(post -> post == null);
-        this.posts = posts;
+        else {
+            // Remove any null posts from the HashMap
+            posts.values().removeIf(post -> post == null);
+            this.posts = posts;
+        }
     }
 }

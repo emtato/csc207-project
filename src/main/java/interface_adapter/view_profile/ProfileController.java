@@ -15,6 +15,7 @@ public class ProfileController {
 
     /**
      * Executes the View Profile Use Case.
+     * @param username the username of the user whose profile is being viewed
      */
     public void executeViewProfile(String username) {
         final ProfileInputData profileInputData = new ProfileInputData(username);
@@ -23,6 +24,7 @@ public class ProfileController {
 
     /**
      * Executes the "switch to Edit Profile View" Use Case.
+     * @param username the username of the current user
      */
     public void switchToEditProfileView(String username) {
         final ProfileInputData inputData = new ProfileInputData(username);
@@ -31,6 +33,7 @@ public class ProfileController {
 
     /**
      * Executes the "switch to Manage Following View" Use Case.
+     * @param username the username of the current user
      */
     public void switchToManageFollowingView(String username) {
         final ProfileInputData inputData = new ProfileInputData(username);
@@ -39,6 +42,7 @@ public class ProfileController {
 
     /**
      * Executes the "switch to Manage Followers View" Use Case.
+     * @param username the username of the current user
      */
     public void switchToManageFollowersView(String username) {
         final ProfileInputData inputData = new ProfileInputData(username);

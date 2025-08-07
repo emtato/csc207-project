@@ -15,6 +15,8 @@ public class ManageFollowingController {
 
     /**
      * Executes the Unfollow Use Case.
+     * @param username the user doing the unfollowing
+     * @param followingUsername the usesr being unfollowed
      */
     public void executeUnfollow(String username, String followingUsername) {
         final ManageFollowingInputData manageFollowingInputData =
@@ -24,6 +26,8 @@ public class ManageFollowingController {
 
     /**
      * Executes the Follow Use Case.
+     * @param username the user doing the following
+     * @param usernameToFollow the user being followed
      */
     public void executeFollow(String username, String usernameToFollow) {
         final ManageFollowingInputData manageFollowingInputData =

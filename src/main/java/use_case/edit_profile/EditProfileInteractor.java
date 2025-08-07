@@ -2,7 +2,7 @@ package use_case.edit_profile;
 
 import entity.User;
 
-public class EditProfileInteractor implements EditProfileInputBoundary{
+public class EditProfileInteractor implements EditProfileInputBoundary {
     private final EditProfileUserDataAccessInterface userDataAccessObject;
     private final EditProfileOutputBoundary presenter;
 
