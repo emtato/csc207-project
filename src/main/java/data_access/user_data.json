@@ -478,7 +478,12 @@
       "bio": ":3",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": [],
+      "userPosts": [
+        1754547172166,
+        1754547077251,
+        1754548723653,
+        1754548763868
+      ],
       "requesterAccounts": {"new_user": {
         "profilePictureUrl": "https://i.imgur.com/r83iVpM.jpeg",
         "displayName": "Not A New User",
