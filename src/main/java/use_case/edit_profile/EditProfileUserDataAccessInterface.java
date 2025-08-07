@@ -1,9 +1,9 @@
 package use_case.edit_profile;
 
+import java.util.ArrayList;
+
 import entity.User;
 import use_case.UserDataAccessInterface;
-
-import java.util.ArrayList;
 
 /**
  * DAO for the Edit Profile Use Case.

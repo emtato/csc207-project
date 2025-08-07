@@ -28,7 +28,7 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
     private ManageFollowingController manageFollowingController;
     private ProfileController profileController;
 
-    final JLabel title;
+    private final JLabel title;
 
     private final JPanel followingPanel;
     private final JPanel requestsPanel;
@@ -139,15 +139,13 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
         );
     }
 
-    private void refreshScreen() {
+    private void refreshFollowingPanel() {
         this.followingPanels.clear();
-        this.requestedPanels.clear();
         followingPanel.removeAll();
-        requestsPanel.removeAll();
+
         final JLabel followingLabel = new JLabel("Following");
         followingPanel.add(followingLabel);
-        final JLabel requestsLabel = new JLabel("Requested To Follow");
-        requestsPanel.add(requestsLabel);
+
         final ArrayList<User> following = this.manageFollowingViewModel.getState().getFollowing();
         for (User account : following) {
             final JButton removeButton = new JButton(ManageFollowingViewModel.REMOVE_FOLLOW_LABEL);
@@ -167,6 +165,20 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
             userPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
             followingPanel.add(userPanel);
         }
+
+        followingPanel.revalidate();
+        followingPanel.repaint();
+        followingScrollPane.revalidate();
+        followingScrollPane.repaint();
+    }
+
+    private void refreshRequestsPanel() {
+        this.requestedPanels.clear();
+        requestsPanel.removeAll();
+
+        final JLabel requestsLabel = new JLabel("Requested To Follow");
+        requestsPanel.add(requestsLabel);
+
         final ArrayList<User> requested = this.manageFollowingViewModel.getState().getRequested();
         for (User account : requested) {
             final JButton removeButton = new JButton(ManageFollowingViewModel.UNREQUEST_LABEL);
@@ -186,20 +198,19 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
             userPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
             requestsPanel.add(userPanel);
         }
-        final Dimension screenSize = new Dimension(ManageFollowingViewModel.PANEL_WIDTH,
-                ManageFollowingViewModel.PANEL_HEIGHT);
-        followAccountInput.setPreferredSize(screenSize);
-
-        followingPanel.revalidate();
-        followingPanel.repaint();
-        followingScrollPane.revalidate();
-        followingScrollPane.repaint();
 
         requestsPanel.revalidate();
         requestsPanel.repaint();
         requestsScrollPane.revalidate();
         requestsScrollPane.repaint();
+    }
 
+    private void refreshScreen() {
+        refreshFollowingPanel();
+        refreshRequestsPanel();
+        final Dimension screenSize = new Dimension(ManageFollowingViewModel.PANEL_WIDTH,
+                ManageFollowingViewModel.PANEL_HEIGHT);
+        followAccountInput.setPreferredSize(screenSize);
         scrollPanels.setPreferredSize(screenSize);
         scrollPanels.revalidate();
         scrollPanels.repaint();
@@ -220,6 +231,7 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
     public void setManageFollowingController(ManageFollowingController controller) {
         this.manageFollowingController = controller;
     }
+
     public void setProfileController(ProfileController controller) {
         this.profileController = controller;
     }

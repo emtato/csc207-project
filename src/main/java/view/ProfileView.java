@@ -5,7 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -28,6 +28,7 @@ import view.ui_components.PostPanel;
 import view.ui_components.ProfilePictureLabel;
 
 public class ProfileView extends JPanel implements PropertyChangeListener {
+    private static final int SCROLL_BAR_INCREMENNT = 16;
     private final String viewName = "profile";
     private final ProfileViewModel profileViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -57,67 +58,25 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         final JLabel title = createTitle();
         this.add(title);
 
-        // add main panel containting user information and buttons to go to other profile related views
-        final JPanel mainPanel = createMainPanel();
-
         profilePicture = new ProfilePictureLabel(this.profileViewModel.getState().getProfilePictureUrl(),
                 ProfileViewModel.PFP_WIDTH, ProfileViewModel.PFP_HEIGHT);
         profilePicture.setAlignmentX(Component.LEFT_ALIGNMENT);
-        mainPanel.add(profilePicture);
-        mainPanel.add(Box.createRigidArea(new Dimension(GUIConstants.COMPONENT_GAP_SIZE, ProfileViewModel.PFP_HEIGHT)));
-
-        final JPanel userInfoPanel = createUserInfoPanel();
-
         displayName = new GeneralJLabel(this.profileViewModel.getState().getDisplayName(), GUIConstants.TEXT_SIZE,
                 GUIConstants.RED);
-        userInfoPanel.add(displayName);
-
         username = new GeneralJLabel(this.profileViewModel.getState().getUsername(), GUIConstants.SMALL_TEXT_SIZE,
                 GUIConstants.RED);
-        userInfoPanel.add(username);
-
         bio = createBioTextArea();
-        userInfoPanel.add(bio);
-
-        mainPanel.add(userInfoPanel);
-
-        final JPanel profileButtons = createProfileButtonsPanel();
-
         editProfileButton = new JButton(ProfileViewModel.EDIT_PROFILE_BUTTON_LABEL);
         editProfileButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        final JLabel label = new JLabel();
-        final LabelButtonPanel editButtonPanel = new LabelButtonPanel(label, editProfileButton);
-        profileButtons.add(editButtonPanel);
-
-        following = new JLabel(this.profileViewModel.getState().getNumFollowing()+" Following");
+        following = new JLabel(this.profileViewModel.getState().getNumFollowing() + " Following");
         followingButton = new JButton(ProfileViewModel.FOLLOWING_BUTTON_LABEL);
-        final LabelButtonPanel followingButtonPanel = new LabelButtonPanel(following, followingButton);
-        profileButtons.add(followingButtonPanel);
-
-        followers = new JLabel(this.profileViewModel.getState().getNumFollowers()+" Followers");
+        followers = new JLabel(this.profileViewModel.getState().getNumFollowers() + " Followers");
         followersButton = new JButton(ProfileViewModel.FOLLOWERS_BUTTON_LABEL);
-        final LabelButtonPanel followersButtonPanel = new LabelButtonPanel(followers, followersButton);
-        profileButtons.add(followersButtonPanel);
-
-        mainPanel.add(profileButtons);
-        this.add(mainPanel);
-
-        // add profile content scroll panel containing the user's posts
         profileContent = new JPanel();
         profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
-
-        final JScrollPane profileContentPanel = createProfileContentScrollPane();
-                profileContentPanel.getVerticalScrollBar().setUnitIncrement(16);
-
-        this.add(profileContentPanel);
-
-        // add a refresh button that executes the view profile use case on press (refreshes the profile view)
         refreshButton = new JButton("Refresh");
-        this.add(refreshButton);
 
-       // add a menu bar
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        this.add(menuBar);
+        createView();
 
         // add listeners
         addRefreshButtonListener();
@@ -126,10 +85,50 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         addFollowingButtonListener();
     }
 
+    private void createView() {
+        // add main panel containting user information and buttons to go to other profile related views
+        final JPanel mainPanel = createMainPanel();
+        mainPanel.add(profilePicture);
+        mainPanel.add(Box.createRigidArea(new Dimension(GUIConstants.COMPONENT_GAP_SIZE, ProfileViewModel.PFP_HEIGHT)));
+
+        final JPanel userInfoPanel = createUserInfoPanel();
+        userInfoPanel.add(displayName);
+        userInfoPanel.add(username);
+        userInfoPanel.add(bio);
+
+        mainPanel.add(userInfoPanel);
+
+        final JPanel profileButtons = createProfileButtonsPanel();
+        final JLabel label = new JLabel();
+        final LabelButtonPanel editButtonPanel = new LabelButtonPanel(label, editProfileButton);
+        profileButtons.add(editButtonPanel);
+
+        final LabelButtonPanel followingButtonPanel = new LabelButtonPanel(following, followingButton);
+        profileButtons.add(followingButtonPanel);
+
+        final LabelButtonPanel followersButtonPanel = new LabelButtonPanel(followers, followersButton);
+        profileButtons.add(followersButtonPanel);
+
+        mainPanel.add(profileButtons);
+        this.add(mainPanel);
+
+        // add profile content scroll panel containing the user's posts
+        final JScrollPane profileContentPanel = createProfileContentScrollPane();
+        profileContentPanel.getVerticalScrollBar().setUnitIncrement(SCROLL_BAR_INCREMENNT);
+
+        this.add(profileContentPanel);
+
+        // add a refresh button that executes the view profile use case on press (refreshes the profile view)
+        this.add(refreshButton);
+
+        // add a menu bar
+        final MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        this.add(menuBar);
+    }
+
     private JLabel createTitle() {
         final JLabel title = new JLabel(ProfileViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setMinimumSize(new Dimension(1000, 50));
         title.setFont(GUIConstants.FONT_TITLE);
         title.setForeground(Color.RED);
         return title;
@@ -154,7 +153,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     }
 
     private JTextArea createBioTextArea() {
-        final JTextArea bioArea = new JTextArea(ProfileViewModel.BIO_ROW_NUM,ProfileViewModel.BIO_COL_NUM);
+        final JTextArea bioArea = new JTextArea(ProfileViewModel.BIO_ROW_NUM, ProfileViewModel.BIO_COL_NUM);
         bioArea.setText(this.profileViewModel.getState().getBio());
         bioArea.setFont(GUIConstants.FONT_TEXT);
         bioArea.setEditable(false);
@@ -234,24 +233,24 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private void setFields(ProfileState state){
+    private void setFields(ProfileState state) {
         profilePicture.updateIcon(state.getProfilePictureUrl());
         displayName.setText(state.getDisplayName());
         username.setText(state.getUsername());
         bio.setText(state.getBio());
-        following.setText(state.getNumFollowing()+" following");
-        followers.setText(state.getNumFollowers()+" followers");
+        following.setText(state.getNumFollowing() + " following");
+        followers.setText(state.getNumFollowers() + " followers");
         refreshContent();
     }
 
-    private void refreshContent(){
+    private void refreshContent() {
         profileContent.removeAll();
-        final HashMap<Long, Post> posts = this.profileViewModel.getState().getPosts();
+        final Map<Long, Post> posts = this.profileViewModel.getState().getPosts();
         if (!posts.isEmpty()) {
             for (Long id : posts.keySet()) {
                 final Post post = posts.get(id);
                 if (post != null) {
-                    PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
+                    final PostPanel postPanel = new PostPanel(viewManagerModel, post, ProfileViewModel.POST_WIDTH,
                             ProfileViewModel.POST_HEIGHT, likePostController);
                     profileContent.add(postPanel);
                 }
@@ -268,6 +267,7 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     public void setProfileController(ProfileController controller) {
         this.profileController = controller;
     }
+
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
     }

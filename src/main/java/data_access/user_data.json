@@ -255,11 +255,6 @@
           "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
           "displayName": "Latte",
           "username": "caf_feine666"
-        },
-        "amansda666": {
-          "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
-          "displayName": "",
-          "username": "amansda666"
         }
       },
       "blockedAccounts": {},
@@ -268,7 +263,18 @@
       "blockedTerms": [],
       "notificationsEnabled": true,
       "userPosts": [595960484838],
-      "requesterAccounts": {},
+      "requesterAccounts": {
+        "caf_feine666": {
+          "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+          "displayName": "Latte",
+          "username": "caf_feine666"
+        },
+        "amansda666": {
+          "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+          "displayName": "",
+          "username": "amansda666"
+        }
+      },
       "password": "beepboop",
       "foodPreferences": [],
       "clubs": [],
@@ -297,6 +303,11 @@
           "profilePictureUrl": "https://img.wattpad.com/cover/396514319-256-k922675.jpg",
           "displayName": "Emilia",
           "username": "jinufan333"
+        },
+        "amansda666": {
+          "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+          "displayName": "",
+          "username": "amansda666"
         }
       },
       "isPublic": false,
@@ -308,7 +319,11 @@
     "caf_feine666": {
       "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
       "likesUsernames": [],
-      "requestedAccounts": {},
+      "requestedAccounts": {"not_a_robot": {
+        "profilePictureUrl": "https://www.shutterstock.com/image-illustration/cute-3d-robot-isolated-on-600nw-2292427479.jpg",
+        "displayName": "Chris",
+        "username": "not_a_robot"
+      }},
       "blockedAccounts": {},
       "displayName": "Latte",
       "bio": "i luv u a latte <3\ncomputer science more like constant suffering amirite",
@@ -451,29 +466,31 @@
       "username": "jinufan333"
     },
     "amansda666": {
-      "profilePictureUrl": "https://i.imgur.com/eA9NeJ1.jpeg",
+      "profilePictureUrl": "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538",
       "likesUsernames": [],
-      "requestedAccounts": {},
+      "requestedAccounts": {"not_a_robot": {
+        "profilePictureUrl": "https://www.shutterstock.com/image-illustration/cute-3d-robot-isolated-on-600nw-2292427479.jpg",
+        "displayName": "Chris",
+        "username": "not_a_robot"
+      }},
       "blockedAccounts": {},
-      "displayName": "",
-      "bio": "",
+      "displayName": "Amanda",
+      "bio": ":3",
       "blockedTerms": [],
       "notificationsEnabled": false,
-      "userPosts": [],
-      "requesterAccounts": {
-        "new_user": {
-          "profilePictureUrl": "https://i.imgur.com/r83iVpM.jpeg",
-          "displayName": "Not A New User",
-          "username": "new_user"
-        },
-        "not_a_robot": {
-          "profilePictureUrl": "https://www.shutterstock.com/image-illustration/cute-3d-robot-isolated-on-600nw-2292427479.jpg",
-          "displayName": "Chris",
-          "username": "not_a_robot"
-        }
-      },
+      "userPosts": [
+        1754547172166,
+        1754547077251,
+        1754548723653,
+        1754548763868
+      ],
+      "requesterAccounts": {"new_user": {
+        "profilePictureUrl": "https://i.imgur.com/r83iVpM.jpeg",
+        "displayName": "Not A New User",
+        "username": "new_user"
+      }},
       "password": "666",
-      "foodPreferences": [],
+      "foodPreferences": ["food"],
       "clubs": [],
       "followingAccounts": {
         "screchie": {
@@ -500,11 +517,18 @@
       "isPublic": false,
       "mutedAccounts": [],
       "email": "",
-      "followerAccounts": {"caf_feine666": {
-        "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
-        "displayName": "Latte",
-        "username": "caf_feine666"
-      }},
+      "followerAccounts": {
+        "not_a_robot": {
+          "profilePictureUrl": "https://www.shutterstock.com/image-illustration/cute-3d-robot-isolated-on-600nw-2292427479.jpg",
+          "displayName": "Chris",
+          "username": "not_a_robot"
+        },
+        "caf_feine666": {
+          "profilePictureUrl": "https://i.imgur.com/PLi6XUA.jpeg",
+          "displayName": "Latte",
+          "username": "caf_feine666"
+        }
+      },
       "username": "amansda666"
     }
   }

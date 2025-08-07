@@ -1,10 +1,10 @@
 package use_case.manage_following;
 
-import entity.User;
-
 import java.util.ArrayList;
 
-public class ManageFollowingInteractor implements ManageFollowingInputBoundary{
+import entity.User;
+
+public class ManageFollowingInteractor implements ManageFollowingInputBoundary {
     private final ManageFollowingUserDataAccessInterface userDataAccessObject;
     private final ManageFollowingOutputBoundary presenter;
 

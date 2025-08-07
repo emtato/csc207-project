@@ -2,10 +2,10 @@ package interface_adapter.login;
 
 import app.Session;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.view_profile.ProfileState;
-import interface_adapter.view_profile.ProfileViewModel;
 import interface_adapter.toggle_settings.SettingsState;
 import interface_adapter.toggle_settings.SettingsViewModel;
+import interface_adapter.view_profile.ProfileState;
+import interface_adapter.view_profile.ProfileViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 

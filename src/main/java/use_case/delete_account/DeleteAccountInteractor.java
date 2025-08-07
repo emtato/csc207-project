@@ -2,15 +2,11 @@ package use_case.delete_account;
 
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.User;
-import use_case.logout.LogoutInputData;
-import use_case.logout.LogoutOutputBoundary;
-import use_case.logout.LogoutOutputData;
-import use_case.logout.LogoutUserDataAccessInterface;
 
 /**
  * The Delete Account Interactor.
  */
-public class DeleteAccountInteractor implements DeleteAccountInputBoundary{
+public class DeleteAccountInteractor implements DeleteAccountInputBoundary {
     private DeleteAccountUserDataAccessInterface userDataAccessObject;
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private DeleteAccountOutputBoundary deleteAccountPresenter;
@@ -27,7 +23,7 @@ public class DeleteAccountInteractor implements DeleteAccountInputBoundary{
     public void execute(DeleteAccountInputData deleteAccountInputData) {
         final String username = deleteAccountInputData.getUsername();
         final User user = userDataAccessObject.get(username);
-        for (Long postID : user.getUserPosts()){
+        for (Long postID : user.getUserPosts()) {
             postCommentsLikesDataAccessObject.deletePost(postID);
         }
         userDataAccessObject.deleteAccount(username);

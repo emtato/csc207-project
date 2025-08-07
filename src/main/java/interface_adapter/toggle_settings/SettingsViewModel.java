@@ -18,7 +18,7 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String NOTIFICATIONS_TOGGLE_OFF = "OFF";
     public static final int SETTINGS_PANEL_WIDTH = 1200;
     public static final int SETTINGS_PANEL_HEIGHT = 600;
-    public static final String LOGOUT_LABEL = "Logout";
+    public static final String LOGOUT_LABEL = "Login Status";
     public static final String LOGOUT_BUTTON_LABEL = "Logout";
     public static final String LOGOUT_HEADING = "Logout";
     public static final String DELETE_LABEL = "Delete Your Account";

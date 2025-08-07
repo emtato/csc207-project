@@ -6,6 +6,7 @@ package use_case.manage_followers;
 public class ManageFollowersInputData {
     private final String username;
     private final String removedUsername;
+
     public ManageFollowersInputData(String username, String removedUsername) {
         this.username = username;
         this.removedUsername = removedUsername;

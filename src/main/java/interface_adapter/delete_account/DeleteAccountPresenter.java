@@ -5,7 +5,6 @@ import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import use_case.delete_account.DeleteAccountOutputBoundary;
 import use_case.delete_account.DeleteAccountOutputData;
-import use_case.logout.LogoutOutputData;
 
 public class DeleteAccountPresenter implements DeleteAccountOutputBoundary {
     private ViewManagerModel viewManagerModel;

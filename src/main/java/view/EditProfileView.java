@@ -26,6 +26,7 @@ import view.ui_components.LabelTextPanel;
 import view.ui_components.ProfilePictureLabel;
 
 public class EditProfileView extends JPanel implements PropertyChangeListener {
+    private static final String LINE_BREAK = "\n";
     private final String viewName = "edit profile";
     private final EditProfileViewModel editProfileViewModel;
     private EditProfileController editProfileController;
@@ -47,96 +48,32 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         this.editProfileViewModel.addPropertyChangeListener(this);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // add title
-        final JLabel title;
-        title = new GeneralJLabel(EditProfileViewModel.TITLE_LABEL, GUIConstants.TITLE_SIZE, GUIConstants.RED);
-        this.add(title);
-
-        // add the main panel
-        final JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        // profile preview panel on the left side of main panel
-        final JPanel profilePreviewPanel = createProfilePreviewPanel();
+        // instantiate variables
         profilePicture = new ProfilePictureLabel(this.editProfileViewModel.getState().getProfilePictureUrl(),
                 EditProfileViewModel.PFP_WIDTH, EditProfileViewModel.PFP_HEIGHT);
-        profilePreviewPanel.add(profilePicture);
-
-        profilePreviewPanel.add(Box.createRigidArea(new Dimension(EditProfileViewModel.PFP_WIDTH,
-                GUIConstants.COMPONENT_GAP_SIZE)));
-
         displayName = new GeneralJLabel(this.editProfileViewModel.getState().getDisplayName(), GUIConstants.TEXT_SIZE,
                 GUIConstants.WHITE);
-        profilePreviewPanel.add(displayName);
-
         username = new GeneralJLabel(this.editProfileViewModel.getState().getUsername(), GUIConstants.SMALL_TEXT_SIZE,
                 GUIConstants.WHITE);
-        profilePreviewPanel.add(username);
-
-        bio = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,EditProfileViewModel.INPUT_FIELD_COL_NUM);
-        bio.setText(this.editProfileViewModel.getState().getBio());
-        bio.setEditable(false);
-        bio.setMaximumSize(new Dimension(EditProfileViewModel.PFP_WIDTH, EditProfileViewModel.PFP_HEIGHT));
-        bio.setLineWrap(true);
-        bio.setWrapStyleWord(true);
-        profilePreviewPanel.add(bio);
-
-        profilePreviewPanel.add(Box.createVerticalGlue());
-
-        backButton = new JButton(EditProfileViewModel.BACK_BUTTON_LABEL);
-        backButton.setFont(GUIConstants.FONT_TEXT);
-        backButton.setForeground(GUIConstants.PINK);
-        profilePreviewPanel.add(backButton);
-        mainPanel.add(profilePreviewPanel);
-        mainPanel.add(Box.createRigidArea(new Dimension(GUIConstants.COMPONENT_GAP_SIZE,
-                EditProfileViewModel.EDIT_PANEL_HEIGHT)));
-
-        // edit profile panel on right side of main panel
-        final JPanel editProfilePanel = createEditProfilePanel();
-
-        final JLabel editNameLabel = new JLabel(EditProfileViewModel.EDIT_NAME_LABEL);
+        bio = createBioPreview();
+        backButton = createBackButton();
         nameInputField = new JTextField();
         nameInputField.setColumns(EditProfileViewModel.INPUT_FIELD_COL_NUM);
         nameInputField.setText(this.editProfileViewModel.getState().getNewDisplayName());
-        final JPanel editNamePanel = new LabelTextPanel(editNameLabel, nameInputField);
-        editProfilePanel.add(editNamePanel);
-
-        final JLabel editBioLabel = new JLabel(EditProfileViewModel.EDIT_BIO_LABEL);
-        bioInputField = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,EditProfileViewModel.INPUT_FIELD_COL_NUM);
+        bioInputField = new JTextArea(EditProfileViewModel.BIO_ROW_NUM, EditProfileViewModel.INPUT_FIELD_COL_NUM);
         bioInputField.setText(this.editProfileViewModel.getState().getNewBio());
         bioInputField.setLineWrap(true);
         bioInputField.setWrapStyleWord(true);
-        final JPanel editBioPanel = new LabelTextPanel(editBioLabel, bioInputField);
-        editProfilePanel.add(editBioPanel);
-
-        final JLabel pfpLabel = new JLabel(EditProfileViewModel.UPLOAD_PFP_LABEL);
         uploadProfilePicture = new JTextField(this.editProfileViewModel.getState().getNewProfilePictureUrl());
         uploadProfilePicture.setColumns(EditProfileViewModel.INPUT_FIELD_COL_NUM);
         uploadProfilePicture.setText(this.editProfileViewModel.getState().getNewProfilePictureUrl());
-        final JPanel uploadProfilePicturePanel = new LabelTextPanel(pfpLabel, uploadProfilePicture);
-        editProfilePanel.add(uploadProfilePicturePanel);
-
-        final JLabel editPreferencesLabel = new JLabel(EditProfileViewModel.PREFERENCE_TAGS_LABEL);
         preferencesField = new JTextArea(EditProfileViewModel.PREF_ROW_NUM, EditProfileViewModel.INPUT_FIELD_COL_NUM);
-        final StringBuilder preferences = new StringBuilder();
-        for (String pref : this.editProfileViewModel.getState().getPreferences()){
-            preferences.append(pref+"\n");
-        }
-        preferencesField.setText(preferences.toString());
-        final JPanel editPrefsPanel = new LabelTextPanel(editPreferencesLabel, preferencesField);
-        editProfilePanel.add(editPrefsPanel);
-
-        JPanel saveButtonPanel = new JPanel();
-        saveButtonPanel.setLayout(new BoxLayout(saveButtonPanel, BoxLayout.X_AXIS));
-        saveButtonPanel.add(Box.createHorizontalGlue());
         saveChangesButton = new JButton(EditProfileViewModel.SAVE_CHANGES_BUTTON_LABEL);
         saveChangesButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         saveChangesButton.setFont(GUIConstants.FONT_TEXT);
         saveChangesButton.setForeground(GUIConstants.PINK);
-        saveButtonPanel.add(saveChangesButton);
-        editProfilePanel.add(saveButtonPanel);
 
-        mainPanel.add(editProfilePanel);
-        this.add(mainPanel);
+        createView();
 
         // add listeners
         addNameInputFieldListener();
@@ -147,25 +84,97 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         addBackButtonListener();
     }
 
-    private JPanel createProfilePreviewPanel(){
+    private JTextArea createBioPreview() {
+        final JTextArea bioArea = new JTextArea(EditProfileViewModel.BIO_ROW_NUM,
+                EditProfileViewModel.INPUT_FIELD_COL_NUM);
+        bioArea.setText(this.editProfileViewModel.getState().getBio());
+        bioArea.setEditable(false);
+        bioArea.setMaximumSize(new Dimension(EditProfileViewModel.PFP_WIDTH, EditProfileViewModel.PFP_HEIGHT));
+        bioArea.setLineWrap(true);
+        bioArea.setWrapStyleWord(true);
+        return bioArea;
+    }
+
+    private JButton createBackButton() {
+        final JButton button = new JButton(EditProfileViewModel.BACK_BUTTON_LABEL);
+        button.setFont(GUIConstants.FONT_TEXT);
+        button.setForeground(GUIConstants.PINK);
+        return button;
+    }
+
+    private void createView() {
+        // add title
+        final JLabel title;
+        title = new GeneralJLabel(EditProfileViewModel.TITLE_LABEL, GUIConstants.TITLE_SIZE, GUIConstants.RED);
+        this.add(title);
+        // add the main panel
+        final JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        // profile preview panel on the left side of main panel
+        final JPanel profilePreviewPanel = createProfilePreviewPanel();
+        mainPanel.add(profilePreviewPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(GUIConstants.COMPONENT_GAP_SIZE,
+                EditProfileViewModel.EDIT_PANEL_HEIGHT)));
+        // edit profile panel on right side of main panel
+        final JPanel editProfilePanel = createEditProfilePanel();
+
+        final JLabel editBioLabel = new JLabel(EditProfileViewModel.EDIT_BIO_LABEL);
+        final JPanel editBioPanel = new LabelTextPanel(editBioLabel, bioInputField);
+        editProfilePanel.add(editBioPanel);
+
+        final JLabel pfpLabel = new JLabel(EditProfileViewModel.UPLOAD_PFP_LABEL);
+        final JPanel uploadProfilePicturePanel = new LabelTextPanel(pfpLabel, uploadProfilePicture);
+        editProfilePanel.add(uploadProfilePicturePanel);
+
+        final JLabel editPreferencesLabel = new JLabel(EditProfileViewModel.PREFERENCE_TAGS_LABEL);
+        final StringBuilder preferences = new StringBuilder();
+        for (String pref : this.editProfileViewModel.getState().getPreferences()) {
+            preferences.append(pref).append(LINE_BREAK);
+        }
+        preferencesField.setText(preferences.toString());
+        final JPanel editPrefsPanel = new LabelTextPanel(editPreferencesLabel, preferencesField);
+        editProfilePanel.add(editPrefsPanel);
+
+        final JPanel saveButtonPanel = new JPanel();
+        saveButtonPanel.setLayout(new BoxLayout(saveButtonPanel, BoxLayout.X_AXIS));
+        saveButtonPanel.add(Box.createHorizontalGlue());
+        saveButtonPanel.add(saveChangesButton);
+        editProfilePanel.add(saveButtonPanel);
+
+        mainPanel.add(editProfilePanel);
+        this.add(mainPanel);
+    }
+
+    private JPanel createProfilePreviewPanel() {
         final JPanel profilePreviewPanel = new JPanel();
         profilePreviewPanel.setLayout(new BoxLayout(profilePreviewPanel, BoxLayout.Y_AXIS));
         profilePreviewPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         profilePreviewPanel.setBackground(GUIConstants.RED);
+        profilePreviewPanel.add(profilePicture);
+        profilePreviewPanel.add(Box.createRigidArea(new Dimension(EditProfileViewModel.PFP_WIDTH,
+                GUIConstants.COMPONENT_GAP_SIZE)));
+        profilePreviewPanel.add(displayName);
+        profilePreviewPanel.add(username);
+        profilePreviewPanel.add(bio);
+        profilePreviewPanel.add(Box.createVerticalGlue());
+        profilePreviewPanel.add(backButton);
         return profilePreviewPanel;
     }
 
-    private JPanel createEditProfilePanel(){
+    private JPanel createEditProfilePanel() {
         final JPanel editProfilePanel = new JPanel();
         final Dimension panelSize = new Dimension(EditProfileViewModel.EDIT_PANEL_WIDTH,
                 EditProfileViewModel.EDIT_PANEL_HEIGHT);
         editProfilePanel.setMaximumSize(panelSize);
         editProfilePanel.setMinimumSize(panelSize);
         editProfilePanel.setLayout(new BoxLayout(editProfilePanel, BoxLayout.Y_AXIS));
+        final JLabel editNameLabel = new JLabel(EditProfileViewModel.EDIT_NAME_LABEL);
+        final JPanel editNamePanel = new LabelTextPanel(editNameLabel, nameInputField);
+        editProfilePanel.add(editNamePanel);
         return editProfilePanel;
     }
 
-    private void addNameInputFieldListener(){
+    private void addNameInputFieldListener() {
         nameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
@@ -191,7 +200,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         });
     }
 
-    private void addBioInputFieldListener(){
+    private void addBioInputFieldListener() {
         bioInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
@@ -217,7 +226,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         });
     }
 
-    private void addUploadProfilePictureFieldListener(){
+    private void addUploadProfilePictureFieldListener() {
         uploadProfilePicture.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
@@ -243,13 +252,13 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         });
     }
 
-    private void addPreferencesFieldListener(){
+    private void addPreferencesFieldListener() {
         preferencesField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
                 final EditProfileState currentState = editProfileViewModel.getState();
 
-                ArrayList<String> list = new ArrayList<>(Arrays.asList(preferencesField.getText().split("\n")));
+                final ArrayList<String> list = new ArrayList<>(Arrays.asList(preferencesField.getText().split("\n")));
                 currentState.setNewPreferences(list);
                 editProfileViewModel.setState(currentState);
             }
@@ -271,17 +280,13 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         });
     }
 
-    private void addSaveChangesButtonListener(){
+    private void addSaveChangesButtonListener() {
         saveChangesButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(saveChangesButton)) {
                         final EditProfileState currentState = editProfileViewModel.getState();
-
-                        this.editProfileController.execute(
-                                currentState.getUsername(),
-                                currentState.getNewDisplayName(),
-                                currentState.getNewBio(),
-                                currentState.getNewProfilePictureUrl(),
+                        this.editProfileController.execute(currentState.getUsername(), currentState.getNewDisplayName(),
+                                currentState.getNewBio(), currentState.getNewProfilePictureUrl(),
                                 currentState.getNewPreferences()
                         );
                     }
@@ -289,7 +294,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         );
     }
 
-    private void addBackButtonListener(){
+    private void addBackButtonListener() {
         backButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
@@ -312,8 +317,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
             this.bioInputField.setText(this.editProfileViewModel.getState().getNewBio());
             this.uploadProfilePicture.setText(this.editProfileViewModel.getState().getProfilePictureUrl());
             final StringBuilder preferences = new StringBuilder();
-            for (String pref : this.editProfileViewModel.getState().getPreferences()){
-                preferences.append(pref+"\n");
+            for (String pref : this.editProfileViewModel.getState().getPreferences()) {
+                preferences.append(pref).append(LINE_BREAK);
             }
             preferencesField.setText(preferences.toString());
         }
@@ -327,8 +332,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         }
         if (evt.getPropertyName().equals("preferences")) {
             final StringBuilder preferences = new StringBuilder();
-            for (String pref : this.editProfileViewModel.getState().getPreferences()){
-                preferences.append(pref+"\n");
+            for (String pref : this.editProfileViewModel.getState().getPreferences()) {
+                preferences.append(pref).append(LINE_BREAK);
             }
             preferencesField.setText(preferences.toString());
         }
@@ -345,6 +350,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
     public void setEditProfileController(EditProfileController controller) {
         this.editProfileController = controller;
     }
+
     public void setProfileController(ProfileController controller) {
         this.profileController = controller;
     }

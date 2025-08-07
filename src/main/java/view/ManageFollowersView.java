@@ -1,6 +1,7 @@
 package view;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
     private ManageFollowersController manageFollowersController;
     private ProfileController profileController;
 
-    final JLabel title;
+    private final JLabel title;
 
     private final JPanel mainPanel;
     private final JPanel followersPanel;
@@ -159,7 +160,6 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
         followersScrollPane.revalidate();
         followersScrollPane.repaint();
 
-        requestsPanel.setPreferredSize(screenSize);
         requestsPanel.revalidate();
         requestsPanel.repaint();
         requestsScrollPane.revalidate();
@@ -180,6 +180,7 @@ public class ManageFollowersView extends JPanel implements PropertyChangeListene
     public void setManageFollowersController(ManageFollowersController controller) {
         this.manageFollowersController = controller;
     }
+
     public void setProfileController(ProfileController controller) {
         this.profileController = controller;
     }

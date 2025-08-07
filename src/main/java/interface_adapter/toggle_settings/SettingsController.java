@@ -15,6 +15,8 @@ public class SettingsController {
 
     /**
      * Executes the Change Privacy Use Case.
+     * @param username the username of the user to change
+     * @param privacy whether the account is being set to public
      */
     public void executePrivacyToggle(String username, boolean privacy) {
         final SettingsInputData settingsInputData = new SettingsInputData(username, privacy);
@@ -23,11 +25,12 @@ public class SettingsController {
 
     /**
      * Executes the Change Notifications status Use Case.
+     * @param username the usename of the user to change
+     * @param notificationsEnabled whether notifications are being enabled
      */
     public void executeNotificationsToggle(String username, boolean notificationsEnabled) {
         final SettingsInputData settingsInputData = new SettingsInputData(username, notificationsEnabled);
         settingsUseCaseInteractor.executeNotificationsToggle(settingsInputData);
     }
-
 
 }

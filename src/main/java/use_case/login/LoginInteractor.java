@@ -1,10 +1,11 @@
 package use_case.login;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.User;
-
-import java.util.HashMap;
 
 /**
  * The Login Interactor.
@@ -38,7 +39,7 @@ public class LoginInteractor implements LoginInputBoundary {
 
                 final User user = userDataAccessObject.get(loginInputData.getUsername());
 
-                final HashMap<Long, Post> posts = new HashMap<>();
+                final Map<Long, Post> posts = new HashMap<>();
                 for (Long postId : user.getUserPosts()) {
                     final Post post = postCommentsLikesDataAccessObject.getPost(postId);
                     posts.put(postId, post);

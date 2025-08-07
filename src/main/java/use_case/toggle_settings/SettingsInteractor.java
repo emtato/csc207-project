@@ -2,7 +2,7 @@ package use_case.toggle_settings;
 
 import entity.User;
 
-public class SettingsInteractor implements SettingsInputBoundary{
+public class SettingsInteractor implements SettingsInputBoundary {
     private final SettingsUserDataAccessInterface userDataAccessObject;
     private final SettingsOutputBoundary presenter;
 

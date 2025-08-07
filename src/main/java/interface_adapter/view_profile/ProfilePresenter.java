@@ -10,8 +10,8 @@ import interface_adapter.manage_following.ManageFollowingViewModel;
 import use_case.view_profile.ProfileOutputBoundary;
 import use_case.view_profile.ProfileOutputData;
 import use_case.view_profile.SwitchToEditProfileViewOutputData;
-import use_case.view_profile.SwitchToFollowingViewOutputData;
 import use_case.view_profile.SwitchToFollowersViewOutputData;
+import use_case.view_profile.SwitchToFollowingViewOutputData;
 
 /**
  * The Presenter for the Profile Use Case.

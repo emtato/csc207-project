@@ -1,8 +1,8 @@
 package interface_adapter.manage_following;
 
-import entity.User;
-
 import java.util.ArrayList;
+
+import entity.User;
 
 /**
  * The state for the Manage Following View Model.

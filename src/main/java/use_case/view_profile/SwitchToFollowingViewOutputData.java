@@ -1,13 +1,14 @@
 package use_case.view_profile;
 
-import entity.User;
-
 import java.util.ArrayList;
+
+import entity.User;
 
 public class SwitchToFollowingViewOutputData {
     private final String username;
     private final ArrayList<User> following;
     private final ArrayList<User> requested;
+
     public SwitchToFollowingViewOutputData(String username, ArrayList<User> following, ArrayList<User> requested) {
         this.username = username;
         this.following = following;

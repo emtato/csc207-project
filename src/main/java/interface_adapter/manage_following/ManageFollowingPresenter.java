@@ -26,7 +26,7 @@ public class ManageFollowingPresenter implements ManageFollowingOutputBoundary {
         final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
         manageFollowingState.setFollowing(response.getFollowing());
         manageFollowingState.setRequested(response.getRequested());
-        manageFollowingState.setOtherUsername(response.getActionPerformed()+" Success");
+        manageFollowingState.setOtherUsername(response.getActionPerformed() + " Success");
         manageFollowingViewModel.setState(manageFollowingState);
         manageFollowingViewModel.firePropertyChanged();
     }

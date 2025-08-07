@@ -2,6 +2,7 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An implementation of the User interface.
@@ -13,11 +14,11 @@ public class Account implements User {
     private String displayName;
     private String email;
     private String bio;
-    private HashMap<String, User> followerAccounts;
-    private HashMap<String, User> followingAccounts;
-    private HashMap<String, User> requesterAccounts;
-    private HashMap<String, User> requestedAccounts;
-    private HashMap<String, User> blockedAccounts;
+    private Map<String, User> followerAccounts;
+    private Map<String, User> followingAccounts;
+    private Map<String, User> requesterAccounts;
+    private Map<String, User> requestedAccounts;
+    private Map<String, User> blockedAccounts;
     private ArrayList<String> blockedTerms;
     private ArrayList<User> mutedAccounts;
     private ArrayList<String> foodPreferences;
@@ -48,6 +49,7 @@ public class Account implements User {
         isPublic = true;
         notificationsEnabled = true;
     }
+
     @Override
     public boolean isPublic(){
         return isPublic;
@@ -121,20 +123,20 @@ public class Account implements User {
     }
 
     @Override
-    public HashMap<String, User> getFollowerAccounts() {
+    public Map<String, User> getFollowerAccounts() {
         return followerAccounts;
     }
 
     @Override
-    public void setFollowerAccounts(HashMap<String, User> followerAccounts) {
+    public void setFollowerAccounts(Map<String, User> followerAccounts) {
         this.followerAccounts = followerAccounts;
     }
 
-    public HashMap<String, User> getBlockedAccounts() {
+    public Map<String, User> getBlockedAccounts() {
         return blockedAccounts;
     }
 
-    public void setBlockedAccounts(HashMap<String, User> blockedAccounts) {
+    public void setBlockedAccounts(Map<String, User> blockedAccounts) {
         this.blockedAccounts = blockedAccounts;
     }
 
@@ -184,12 +186,12 @@ public class Account implements User {
     }
 
     @Override
-    public void setFollowingAccounts(HashMap<String, User> followingAccounts) {
+    public void setFollowingAccounts(Map<String, User> followingAccounts) {
         this.followingAccounts = followingAccounts;
     }
 
     @Override
-    public HashMap<String, User> getFollowingAccounts() {
+    public Map<String, User> getFollowingAccounts() {
         return followingAccounts;
     }
 
@@ -254,22 +256,22 @@ public class Account implements User {
     }
 
     @Override
-    public HashMap<String, User> getRequesterAccounts() {
+    public Map<String, User> getRequesterAccounts() {
         return requesterAccounts;
     }
 
     @Override
-    public void setRequesterAccounts(HashMap<String, User> requesterAccounts) {
+    public void setRequesterAccounts(Map<String, User> requesterAccounts) {
         this.requesterAccounts = requesterAccounts;
     }
 
     @Override
-    public HashMap<String, User> getRequestedAccounts() {
+    public Map<String, User> getRequestedAccounts() {
         return requestedAccounts;
     }
 
     @Override
-    public void setRequestedAccounts(HashMap<String, User> requestedAccounts) {
+    public void setRequestedAccounts(Map<String, User> requestedAccounts) {
         this.requestedAccounts = requestedAccounts;
     }
 }
