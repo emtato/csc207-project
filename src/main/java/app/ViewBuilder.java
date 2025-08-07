@@ -253,7 +253,7 @@ public class ViewBuilder {
 
     public ViewBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
-        createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, cardPanel);
+        createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
 
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
