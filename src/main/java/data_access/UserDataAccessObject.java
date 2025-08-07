@@ -1,6 +1,5 @@
 package data_access;
 
-import use_case.UserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.delete_account.DeleteAccountUserDataAccessInterface;
@@ -14,7 +13,6 @@ import use_case.toggle_settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public interface UserDataAccessObject extends
-        UserDataAccessInterface,
         SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
