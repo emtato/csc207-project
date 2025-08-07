@@ -34,18 +34,6 @@ public class Restaurant {
 //        this.priceRange = null;
 //    }
 
-    // TODO: add rating to Recipe
-    public float rating(ArrayList<entity.Review> reviews) {
-        int sum = 0;
-        int countWithStars = 0; // reviews that used the star rating system
-        for (entity.Review review : reviews) {
-            if(review.getRating() >= 0 && review.getRating() <= 5) {
-                sum += review.getRating();
-                countWithStars++;
-            }
-        }
-        return (float) sum / countWithStars;
-    }
 
     public String getName() {
         return name;
