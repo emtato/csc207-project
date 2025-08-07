@@ -111,7 +111,7 @@ public class SpecificClubView extends JPanel {
                 CreatePostController createPostController = new CreatePostController(createPostInteractor);
 
                 // Create the view and pass the club
-                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club, cardPanel);
+                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club);
                 createNewPostView.setCreatePostController(createPostController);
 
                 cardPanel.add(createNewPostView, createNewPostView.getViewName());
