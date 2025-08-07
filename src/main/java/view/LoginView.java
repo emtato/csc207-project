@@ -3,6 +3,8 @@ package view;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -24,7 +26,7 @@ import view.ui_components.LabelTextPanel;
 /**
  * The View for when the user is logging into the program.
  */
-public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoginView extends JPanel implements ActionListener, PropertyChangeListener, KeyListener {
 
     private final String viewName = "log in";
     private final LoginViewModel loginViewModel;
@@ -62,6 +64,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         buttons.add(logIn);
         cancel = new JButton("quit");
         buttons.add(cancel);
+
+        usernameInputField.addKeyListener(this);
+        passwordInputField.addKeyListener(this);
 
         logIn.addActionListener(
                 new ActionListener() {
@@ -165,5 +170,33 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     public void setLoginController(LoginController loginController) {
         this.loginController = loginController;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_TAB) {
+            if (e.getSource() == usernameInputField) {
+                passwordInputField.requestFocusInWindow();
+            }
+        } else if (code == KeyEvent.VK_ENTER) {
+            final LoginState currentState = loginViewModel.getState();
+
+            loginController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword()
+            );
+        }
     }
 }
