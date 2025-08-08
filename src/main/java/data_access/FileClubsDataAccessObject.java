@@ -178,4 +178,38 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
 
         return allClubs;
     }
+
+    public void removeMemberFromClub(String username, long clubID) {
+        // Update clubs.json
+        JSONObject data = getJsonObject();
+        JSONObject clubs = data.getJSONObject("clubs");
+        String clubIdStr = String.valueOf(clubID);
+
+        if (clubs.has(clubIdStr)) {
+            JSONObject clubData = clubs.getJSONObject(clubIdStr);
+            JSONArray members = clubData.getJSONArray("members");
+
+            // Create a new array without the username
+            JSONArray newMembers = new JSONArray();
+            for (int i = 0; i < members.length(); i++) {
+                if (!members.isNull(i) && !members.getString(i).equals(username)) {
+                    newMembers.put(members.getString(i));
+                }
+            }
+
+            clubData.put("members", newMembers);
+            clubs.put(clubIdStr, clubData);
+
+            try (FileWriter writer = new FileWriter(filePath)) {
+                data.put("clubs", clubs);
+                writer.write(data.toString(2));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to update club data: " + e.getMessage(), e);
+            }
+
+            // Update user_data.json
+            FileUserDataAccessObject userDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+            userDAO.removeClubFromUser(username, clubIdStr);
+        }
+    }
 }
