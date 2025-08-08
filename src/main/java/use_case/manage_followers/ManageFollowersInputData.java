@@ -5,17 +5,18 @@ package use_case.manage_followers;
  */
 public class ManageFollowersInputData {
     private final String username;
-    private final String removedFollower;
-    public ManageFollowersInputData(String username, String removedFollower) {
+    private final String removedUsername;
+
+    public ManageFollowersInputData(String username, String removedUsername) {
         this.username = username;
-        this.removedFollower = removedFollower;
+        this.removedUsername = removedUsername;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getRemovedFollower() {
-        return removedFollower;
+    public String getRemovedUsername() {
+        return removedUsername;
     }
 }

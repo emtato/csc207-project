@@ -46,20 +46,18 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     private final JRadioButton announcementPost = new JRadioButton("Announcement");
     private final String viewName = "create new post";
     private final Club club;
-    private final JPanel mainCardPanel;
 
     private CreatePostController createPostController;
     private final CreatePostViewModel createPostViewModel;
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, JPanel mainCardPanel) {
-        this(viewManagerModel, createPostViewModel, null, mainCardPanel);
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel) {
+        this(viewManagerModel, createPostViewModel, null);
     }
 
-    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, Club club, JPanel mainCardPanel) {
+    public CreateNewPostView(ViewManagerModel viewManagerModel, CreatePostViewModel createPostViewModel, Club club) {
         this.viewManagerModel = viewManagerModel;
         this.createPostViewModel = createPostViewModel;
         this.club = club;
-        this.mainCardPanel = mainCardPanel;
         this.contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 

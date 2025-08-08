@@ -3,6 +3,8 @@ package view;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -25,7 +27,7 @@ import view.ui_components.LabelTextPanel;
 /**
  * The View for the Signup Use Case.
  */
-public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
+public class SignupView extends JPanel implements ActionListener, PropertyChangeListener, KeyListener {
     private final String viewName = "sign up";
     private final ViewManagerModel viewManagerModel;
 
@@ -59,6 +61,10 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         logIn = new JButton("log in");
         buttons.add(logIn);
 
+        usernameInputField.addKeyListener(this);
+        passwordInputField.addKeyListener(this);
+        repeatPasswordInputField.addKeyListener(this);
+
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 new ActionListener() {
@@ -76,7 +82,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        logIn.addActionListener(e -> viewManagerModel.setState("log in"));
+        logIn.addActionListener(actionEvent -> viewManagerModel.setState("log in"));
 
         addUsernameListener();
         addPasswordListener();
@@ -188,5 +194,37 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
     public void setSignupController(SignupController controller) {
         this.signupController = controller;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_TAB) {
+            if (e.getSource() == usernameInputField) {
+                passwordInputField.requestFocusInWindow();
+            }
+            else if (e.getSource() == passwordInputField) {
+                repeatPasswordInputField.requestFocusInWindow();
+            }
+        }
+        else if (code == KeyEvent.VK_ENTER) {
+            final SignupState currentState = signupViewModel.getState();
+            signupController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword(),
+                    currentState.getRepeatPassword()
+            );
+        }
     }
 }

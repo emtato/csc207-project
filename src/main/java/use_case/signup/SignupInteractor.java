@@ -1,11 +1,7 @@
 package use_case.signup;
 
-import entity.Account;
-import entity.Post;
 import entity.User;
 import entity.UserFactory;
-
-import java.util.HashMap;
 
 /**
  * The Signup Interactor.
@@ -37,7 +33,8 @@ public class SignupInteractor implements SignupInputBoundary {
             System.out.println("Debug: Created user with name: " + user.getUsername());
 
             userDataAccessObject.save(user);
-            System.out.println("Debug: User exists after save: " + userDataAccessObject.existsByName(user.getUsername()));
+            System.out.println("Debug: User exists after save: "
+                    + userDataAccessObject.existsByName(user.getUsername()));
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);
             userPresenter.prepareSuccessView(signupOutputData);

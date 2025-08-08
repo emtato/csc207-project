@@ -12,16 +12,19 @@ public interface ProfileInputBoundary {
 
     /**
      * Switches to the Edit Profile View.
+     * @param profileInputData the input data
      */
     void switchToEditProfileView(ProfileInputData profileInputData);
 
     /**
      * Switches to the Manage Following View.
+     * @param profileInputData the input data
      */
     void switchToManageFollowingView(ProfileInputData profileInputData);
 
     /**
      * Switches to the ManageFollowers View.
+     * @param profileInputData the input data
      */
     void switchToManageFollowersView(ProfileInputData profileInputData);
 }

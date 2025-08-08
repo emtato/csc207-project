@@ -5,9 +5,11 @@ package use_case.toggle_settings;
  */
 public class SettingsOutputData {
     private final boolean isOn;
+
     public SettingsOutputData(boolean isOn) {
         this.isOn = isOn;
     }
+
     public boolean isOn() {
         return isOn;
     }

@@ -390,6 +390,16 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             String cutTime = time.substring(0, time.length() - 4) + "PM";
             newPost.put("time", cutTime);
         }
+        if (postType.equals("review") && contents.containsKey("rating")) {
+            ArrayList<String> ratingList = contents.get("rating");
+            if (!ratingList.isEmpty()) {
+                try {
+                    double rating = Double.parseDouble(ratingList.get(0));
+                    newPost.put("rating", rating);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
 
         data.put("posts", posts);
         try {
@@ -474,6 +484,12 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
                 return rep;
                 //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
+            }
+            else if (postObj.get("type").equals("review")) {
+                double rating = postObj.has("rating") ? postObj.getDouble("rating") : -1;
+                Review review = new Review(user, postID, title, description);
+                review.setRating(rating);
+                return review;
             }
             else if (postObj.get("type").equals("other?")) {
 

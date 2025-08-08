@@ -277,6 +277,16 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             newPost.put("time", cutTime);
         }
 
+        if ("review".equals(postType) && contents.containsKey("rating")) {
+            ArrayList<String> ratingList = contents.get("rating");
+            if (!ratingList.isEmpty()) {
+                try {
+                    double rating = Double.parseDouble(ratingList.get(0));
+                    newPost.put("rating", rating);
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+
         posts.put(String.valueOf(postID), newPost);
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -355,6 +365,12 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                     cuisines = "";
                 }
                 return new Recipe(post, ingredientList, steps.toString(), new ArrayList<>(Arrays.asList(cuisines.split(","))));
+            }
+            else if ("review".equals(type)) {
+                double rating = postObj.has("rating") ? postObj.getDouble("rating") : -1;
+                Review review = new Review(user, postID, title, description);
+                review.setRating(rating);
+                return review;
             }
             else if (postObj.get("type").equals("other")) {
                 return new Post(user, postID, title, description);

@@ -35,7 +35,6 @@ public class SettingsPresenter implements SettingsOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        final SettingsState settingsState = settingsViewModel.getState();
     }
 
 }

@@ -10,8 +10,8 @@ import interface_adapter.manage_following.ManageFollowingViewModel;
 import use_case.view_profile.ProfileOutputBoundary;
 import use_case.view_profile.ProfileOutputData;
 import use_case.view_profile.SwitchToEditProfileViewOutputData;
-import use_case.view_profile.SwitchToFollowingViewOutputData;
 import use_case.view_profile.SwitchToFollowersViewOutputData;
+import use_case.view_profile.SwitchToFollowingViewOutputData;
 
 /**
  * The Presenter for the Profile Use Case.
@@ -76,6 +76,7 @@ public class ProfilePresenter implements ProfileOutputBoundary {
         final ManageFollowingState manageFollowingState = manageFollowingViewModel.getState();
         manageFollowingState.setUsername(outputData.getUsername());
         manageFollowingState.setFollowing(outputData.getFollowing());
+        manageFollowingState.setRequested(outputData.getRequested());
         manageFollowingState.setOtherUsername("Enter username to follow");
         manageFollowingViewModel.setState(manageFollowingState);
         manageFollowingViewModel.firePropertyChanged();
@@ -88,6 +89,7 @@ public class ProfilePresenter implements ProfileOutputBoundary {
         final ManageFollowersState manageFollowersState = manageFollowersViewModel.getState();
         manageFollowersState.setUsername(outputData.getUsername());
         manageFollowersState.setFollowers(outputData.getFollowers());
+        manageFollowersState.setRequesters(outputData.getRequesters());
         manageFollowersViewModel.setState(manageFollowersState);
         manageFollowersViewModel.firePropertyChanged();
         viewManagerModel.setState(manageFollowersViewModel.getViewName());

@@ -6,6 +6,7 @@ package use_case.manage_following;
 public class ManageFollowingInputData {
     private final String username;
     private final String otherUsername;
+
     public ManageFollowingInputData(String username, String otherUsername) {
         this.username = username;
         this.otherUsername = otherUsername;

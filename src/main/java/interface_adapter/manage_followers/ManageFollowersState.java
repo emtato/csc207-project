@@ -1,8 +1,8 @@
 package interface_adapter.manage_followers;
 
-import entity.User;
-
 import java.util.ArrayList;
+
+import entity.User;
 
 /**
  * The state for the Manage Followers View Model.
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class ManageFollowersState {
     private String username;
     private ArrayList<User> followers;
+    private ArrayList<User> requesters;
 
     public String getUsername() {
         return username;
@@ -25,5 +26,13 @@ public class ManageFollowersState {
 
     public void setFollowers(ArrayList<User> followers) {
         this.followers = followers;
+    }
+
+    public ArrayList<User> getRequesters() {
+        return requesters;
+    }
+
+    public void setRequesters(ArrayList<User> requesters) {
+        this.requesters = requesters;
     }
 }

@@ -1,13 +1,14 @@
 package use_case.view_profile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
 import entity.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class ProfileInteractor implements ProfileInputBoundary{
+public class ProfileInteractor implements ProfileInputBoundary {
     private final ProfileUserDataAccessInterface userDataAccessObject;
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final ProfileOutputBoundary presenter;
@@ -30,7 +31,7 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final int numFollowers = user.getNumFollowers();
         final int numFollowing = user.getNumFollowing();
         final ArrayList<Long> posts = user.getUserPosts();
-        final HashMap<Long, Post> postsMap = new HashMap<>();
+        final Map<Long, Post> postsMap = new HashMap<>();
         for (Long postId : posts) {
             postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
         }
@@ -59,7 +60,9 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String username = inputData.getUsername();
         final User user = userDataAccessObject.get(username);
         final ArrayList<User> following = new ArrayList<>(user.getFollowingAccounts().values());
-        final SwitchToFollowingViewOutputData outputData = new SwitchToFollowingViewOutputData(username, following);
+        final ArrayList<User> requested = new ArrayList<>(user.getRequestedAccounts().values());
+        final SwitchToFollowingViewOutputData outputData = new SwitchToFollowingViewOutputData(username, following,
+                requested);
         presenter.switchToManageFollowingView(outputData);
     }
 
@@ -68,7 +71,9 @@ public class ProfileInteractor implements ProfileInputBoundary{
         final String username = inputData.getUsername();
         final User user = userDataAccessObject.get(username);
         final ArrayList<User> followers = new ArrayList<>(user.getFollowerAccounts().values());
-        final SwitchToFollowersViewOutputData outputData = new SwitchToFollowersViewOutputData(username, followers);
+        final ArrayList<User> requesters = new ArrayList<>(user.getRequesterAccounts().values());
+        final SwitchToFollowersViewOutputData outputData = new SwitchToFollowersViewOutputData(username, followers,
+                requesters);
         presenter.switchToManageFollowersView(outputData);
     }
 
