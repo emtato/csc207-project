@@ -1,9 +1,6 @@
 package view;
 
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.FileUserDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
-import data_access.UserDataAccessObject;
+import data_access.*;
 import entity.Account;
 import entity.Club;
 import entity.Post;
@@ -84,8 +81,10 @@ public class SpecificClubView extends JPanel {
 
         headerPanel.add(membersPanel);
 
+        // Create Post Button and Leave Club Button Panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+
         // Create Post Button
-        JPanel createPostPanel = new JPanel(new BorderLayout());
         JButton createPostButton = new JButton("Create Post");
         createPostButton.setFont(GUIConstants.FONT_TEXT);
         createPostButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -118,8 +117,40 @@ public class SpecificClubView extends JPanel {
                 viewManagerModel.setState(createNewPostView.getViewName());
             }
         });
-        createPostPanel.add(createPostButton, BorderLayout.CENTER);
-        headerPanel.add(createPostPanel);
+        buttonsPanel.add(createPostButton);
+
+        // Leave Club Button
+        JButton leaveClubButton = new JButton("Leave Club");
+        leaveClubButton.setFont(GUIConstants.FONT_TEXT);
+        leaveClubButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        leaveClubButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Account currentUser = app.Session.getCurrentAccount();
+                if (currentUser == null) {
+                    JOptionPane.showMessageDialog(null,
+                        "Please log in to leave the club",
+                        "Login Required",
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                int result = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to leave " + club.getName() + "?",
+                    "Leave Club",
+                    JOptionPane.YES_NO_OPTION);
+
+                if (result == JOptionPane.YES_OPTION) {
+                    FileClubsDataAccessObject clubsDAO = new FileClubsDataAccessObject(FilePostCommentLikesDataAccessObject.getInstance());
+                    clubsDAO.removeMemberFromClub(currentUser.getUsername(), club.getId());
+
+                    // Return to clubs view to see the updated club lists
+                    viewManagerModel.setState("clubs view");
+                }
+            }
+        });
+        buttonsPanel.add(leaveClubButton);
+        headerPanel.add(buttonsPanel);
 
         JPanel leftPanel = new JPanel(new BorderLayout());
 
