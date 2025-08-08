@@ -21,7 +21,6 @@ public class Main {
                 .addHomePageView()
                 .addExploreView()
                 .addEventsView()
-                .addNotificationsView()
                 .addProfileView()
                 .addEditProfileView()
                 .addSettingsView()

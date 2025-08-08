@@ -1,10 +1,9 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
-import data_access.DBClubsDataAccessObject;
+import data_access.FileClubsDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import entity.Account;
-import entity.Club;
 import entity.Post;
 import org.json.JSONObject;
 import view.ui_components.MenuBarPanel;
@@ -23,12 +22,12 @@ import java.io.IOException;
 public class CreateClubView extends JPanel {
     private final String viewName = "create club view";
     private final ViewManagerModel viewManagerModel;
-    private final DBClubsDataAccessObject clubsDAO;
+    private final FileClubsDataAccessObject clubsDAO;
     private final Account currentUser;
     private ArrayList<Account> members = new ArrayList<>();
     private final FileUserDataAccessObject userDataAccessObject = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
 
-    public CreateClubView(ViewManagerModel viewManagerModel, DBClubsDataAccessObject clubsDAO, Account currentUser) {
+    public CreateClubView(ViewManagerModel viewManagerModel, FileClubsDataAccessObject clubsDAO, Account currentUser) {
         this.viewManagerModel = viewManagerModel;
         this.clubsDAO = clubsDAO;
         this.currentUser = currentUser;

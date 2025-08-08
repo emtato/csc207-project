@@ -13,11 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class DBClubsDataAccessObject implements ClubsDataAccessObject {
+public class FileClubsDataAccessObject implements ClubsDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
     private final PostCommentsLikesDataAccessObject postDAO;
 
-    public DBClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
+    public FileClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
         this.postDAO = postDAO;
     }
 

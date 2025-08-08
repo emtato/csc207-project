@@ -115,7 +115,7 @@ public class AppBuilder {
     private static AppBuilder instance;
 
     private final PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
-    private final DBClubsDataAccessObject clubsDataAccessObject = new DBClubsDataAccessObject(postDAO);
+    private final FileClubsDataAccessObject clubsDataAccessObject = new FileClubsDataAccessObject(postDAO);
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
@@ -141,7 +141,6 @@ public class AppBuilder {
     private HomePageViewModel homePageViewModel;
     private LoginView loginView;
     private ClubHomePageView clubHomePageView;
-    private NotificationsView notificationsView;
     private ExploreEventsView exploreEventsView;
     private ExploreView exploreView;
     private HomePageView homePageView;
@@ -207,11 +206,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addNotificationsView() {
-        notificationsView = new NotificationsView(viewManagerModel);
-        cardPanel.add(notificationsView, notificationsView.getViewName());
-        return this;
-    }
+
 
     /**
      * Adds the Signup View to the application.
