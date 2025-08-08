@@ -16,6 +16,7 @@ public class FetchPostInteractor implements FetchPostInputBoundary {
 
     private final PostCommentsLikesDataAccessObject postDAO;
     private final FetchPostOutputBoundary presenter;
+
     public FetchPostInteractor(PostCommentsLikesDataAccessObject postDAO, FetchPostOutputBoundary presenter) {
         this.postDAO = postDAO;
         this.presenter = presenter;
@@ -31,16 +32,21 @@ public class FetchPostInteractor implements FetchPostInputBoundary {
     @Override
     public void getRandomFeedPosts(FetchPostInputData inputData) {
         List<Long> availableIDs = postDAO.getAvailablePosts();
-        Collections.shuffle(availableIDs);
-        List<Post> result = new ArrayList<>();
-        for (int i = 0; i < Math.min(inputData.getNumberOfPosts(), availableIDs.size()); i++) {
-            result.add(postDAO.getPost(availableIDs.get(i)));
+        if (availableIDs.isEmpty()) {
+            presenter.prepareFailView("No posts found");
         }
-        FetchPostOutputData data = new FetchPostOutputData((ArrayList<Post>) result);
-        presenter.prepareSuccessView(data);
+        else {
+            Collections.shuffle(availableIDs);
+            List<Post> result = new ArrayList<>();
+            for (int i = 0; i < Math.min(inputData.getNumberOfPosts(), availableIDs.size()); i++) {
+                result.add(postDAO.getPost(availableIDs.get(i)));
+            }
+            FetchPostOutputData data = new FetchPostOutputData((ArrayList<Post>) result);
+            presenter.prepareSuccessView(data);
+        }
     }
 
-    public void getAvailablePostIDs(){
+    public void getAvailablePostIDs() {
         //presenter.present(postDAO.getAvailablePosts());
     }
 }
