@@ -1,6 +1,6 @@
 package app;
 
-import data_access.DBClubsDataAccessObject;
+import data_access.FileClubsDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import data_access.spoonacular.SpoonacularAPI;
@@ -46,7 +46,6 @@ import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
 import use_case.create_post.CreatePostInputBoundary;
-import use_case.create_post.CreatePostInputData;
 import use_case.create_post.CreatePostInteractor;
 import use_case.create_post.CreatePostOutputBoundary;
 import use_case.delete_account.DeleteAccountInputBoundary;
@@ -89,7 +88,7 @@ import javax.swing.*;
 
 public class UseCaseBuilder {
     // DAOS
-    private DBClubsDataAccessObject dbClubsDataAccessObject;
+    private FileClubsDataAccessObject dbClubsDataAccessObject;
     private UserDataAccessObject userDataAccessObject;
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
@@ -97,7 +96,7 @@ public class UseCaseBuilder {
     private ViewBuilder viewBuilder;
     private UserFactory userFactory = new CreateAccount();
 
-    public UseCaseBuilder(DBClubsDataAccessObject clubsDataAccessObject,
+    public UseCaseBuilder(FileClubsDataAccessObject clubsDataAccessObject,
                           UserDataAccessObject userDataAccessObject,
                           PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
                           ViewBuilder viewBuilder) {

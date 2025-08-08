@@ -1,6 +1,6 @@
 package app;
 
-import data_access.DBClubsDataAccessObject;
+import data_access.FileClubsDataAccessObject;
 import data_access.FilePostCommentLikesDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
@@ -47,7 +47,7 @@ public class AppDirector {
         // create the use case builder with the File daos
         PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
         useCaseBuilder = new UseCaseBuilder(
-                new DBClubsDataAccessObject(postDAO),
+                new FileClubsDataAccessObject(postDAO),
                 FileUserDataAccessObject.getInstance(),
                 postDAO,
                 viewBuilder);
