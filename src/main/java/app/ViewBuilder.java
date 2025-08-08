@@ -56,7 +56,6 @@ public class ViewBuilder {
     private ClubHomePageView clubHomePageView;
     private SpecificClubView specificClubView;
     private ExploreEventsView exploreEventsView;
-    private NotificationsView notificationsView;
     private MapView mapView;
     private MapViewModel mapViewModel;
     private ExploreView exploreView;
@@ -220,11 +219,6 @@ public class ViewBuilder {
         return this;
     }
 
-    public ViewBuilder addNotificationsView() {
-        notificationsView = new NotificationsView(viewManagerModel);
-        cardPanel.add(notificationsView, notificationsView.getViewName());
-        return this;
-    }
 
     /**
      * Adds Map View to the application
@@ -359,9 +353,7 @@ public class ViewBuilder {
         return exploreEventsView;
     }
 
-    public NotificationsView getNotificationsView() {
-        return notificationsView;
-    }
+
 
     public MapView getMapView() {
         return mapView;
