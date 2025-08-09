@@ -1,43 +1,40 @@
 package data_access.places;
 
 import entity.Restaurant;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RestaurantMapper {
-
-    /**
-     * Converts a Places API response map into a Restaurant object.
-     *
-     * @param place A HashMap containing place details from GooglePlacesAPI
-     * @return A Restaurant object
-     */
     public static Restaurant fromPlace(HashMap<String, Object> place) {
         String name = (String) place.getOrDefault("name", "");
         String address = (String) place.getOrDefault("formattedAddress", "");
         String phone = (String) place.getOrDefault("internationalPhoneNumber", "");
-        String location = (String) place.getOrDefault("location", "");
+        String location = place.getOrDefault("location", "").toString();
 
-        // Use primaryType as a single cuisine
         ArrayList<String> cuisines = new ArrayList<>();
-        if (place.containsKey("primaryType") && place.get("primaryType") != null) {
-            cuisines.add((String) place.get("primaryType"));
-        }
+        Object primary = place.get("primaryType");
+        if (primary != null) cuisines.add(primary.toString());
 
-        // FIXME: have priceRange show correctly
         int priceLevel = -1;
-        if (place.containsKey("priceLevel") && place.get("priceLevel") instanceof Integer) {
-            priceLevel = (int) place.get("priceLevel");
+        Object plObj = place.get("priceLevel");
+        if (plObj instanceof Number) priceLevel = ((Number) plObj).intValue();
+        String priceRange;
+        switch (priceLevel) {
+            case 0 -> priceRange = "$";
+            case 1 -> priceRange = "$$";
+            case 2 -> priceRange = "$$$";
+            case 3 -> priceRange = "$$$$";
+            default -> priceRange = "?";
         }
-        String priceRange = switch (priceLevel) {
-            case 0 -> "$";
-            case 1 -> "$$";
-            case 2 -> "$$$";
-            case 3 -> "$$$$";
-            default -> "?";
-        };
 
-        return new Restaurant(cuisines, location);
-
+        Restaurant r = new Restaurant(cuisines, location);
+        // set fields — adjust to your Restaurant API (setName/setAddress/etc)
+        r.setName(name);
+        r.setAddress(address);
+        r.setPhone(phone);
+        r.setPriceRange(priceRange);
+        // optionally set reviews if available
+        return r;
     }
 }

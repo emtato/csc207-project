@@ -97,6 +97,7 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.*;
 import view.map.MapView;
+import view.map.RestaurantSearch;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
