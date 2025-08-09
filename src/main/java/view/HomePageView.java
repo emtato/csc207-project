@@ -42,21 +42,10 @@ public class HomePageView extends JPanel {
         this.viewManagerModel = viewManagerModel;
         this.homePageViewModel = homePageViewModel;
 
-        // TODO: hi delete this later, just adding a button to refresh the screen for now
-        final JButton refreshButton = new JButton("temorary refresh button we can delete later");
-        this.add(refreshButton);
-        refreshButton.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(refreshButton)) {
-                        updateHomeFeed();
-                    }
-                }
-        );
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // top tabs to switch between feeds
-        Dimension buttonSize = new Dimension(450, 40);
+        Dimension buttonSize = new Dimension(340, 30);
 
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
@@ -69,6 +58,15 @@ public class HomePageView extends JPanel {
         JButton tagsButton = new JButton("Tags");
         tagsButton.setPreferredSize(buttonSize);
         tagsButton.setBorder(BorderFactory.createEmptyBorder());
+        JButton refreshButton = new JButton("Refesh Homescreen");
+        refreshButton.setPreferredSize(buttonSize);
+        refreshButton.setBorder(BorderFactory.createEmptyBorder());
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateHomeFeed();
+            }
+        });
         JButton createButton = new JButton("NEW POST??");
         createButton.setPreferredSize(new Dimension(80, 30));
         createButton.setBorder(BorderFactory.createEmptyBorder());
@@ -81,9 +79,11 @@ public class HomePageView extends JPanel {
 
             }
         });
+
         tabsPanel.add(forYouButton);
         tabsPanel.add(followingButton);
         tabsPanel.add(tagsButton);
+        tabsPanel.add(refreshButton);
         tabsPanel.add(createButton);
 
         mainPanel.add(tabsPanel, BorderLayout.NORTH);
@@ -94,8 +94,6 @@ public class HomePageView extends JPanel {
 
         JPanel wrapperPanel = new JPanel(new BorderLayout());
         wrapperPanel.add(feedPanel, BorderLayout.CENTER);
-
-        //updateHomeFeed();
 
         JScrollPane mainScrollPane = new JScrollPane(wrapperPanel);
         mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
