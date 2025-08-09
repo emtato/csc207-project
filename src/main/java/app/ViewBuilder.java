@@ -3,7 +3,6 @@ package app;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
-import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.get_comments.GetCommentsViewModel;
@@ -16,9 +15,9 @@ import interface_adapter.post_view.PostViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.view_profile.ProfileViewModel;
-import use_case.create_post.CreatePostInteractor;
 import view.*;
 import view.map.MapView;
+import view.map.RestaurantSearch;
 
 import javax.swing.*;
 import java.awt.CardLayout;

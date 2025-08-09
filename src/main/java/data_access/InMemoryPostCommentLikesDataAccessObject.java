@@ -1,10 +1,7 @@
 package data_access;
 
-import entity.Account;
-import entity.Club;
-import entity.Comment;
-import entity.Post;
-import entity.Recipe;
+import entity.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +87,26 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
             String cuisines = String.join(",", contents.getOrDefault("cuisines", new ArrayList<>()));
             post = new Recipe(new Post(user, postID, title, description), ingredients, steps,
                             new ArrayList<>(Arrays.asList(cuisines.split(","))));
-        } else {
+        }
+        else if (postType.equals("review")) {
+            double rating = -1;
+            if (contents.containsKey("rating") && !contents.get("rating").isEmpty()) {
+                try {
+                    rating = Double.parseDouble(contents.get("rating").get(0));
+                } catch (NumberFormatException ignored) {}
+            }
+            Review review = new Review(user, postID, title, description);
+            review.setRating(rating);
+
+            if (contents.containsKey("restaurant") && !contents.get("restaurant").isEmpty()) {
+                review.setRestaurantReview(true);
+            }
+            else {
+                review.setRecipeReview(true);
+            }
+            post = review;
+        }
+        else {
             post = new Post(user, postID, title, description);
         }
 
@@ -108,12 +124,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
 
     @Override
     public Post getPost(long postID) {
-        if (!postsMap.containsKey(postID)) {
-            return null;
-        }
-        else{
-            return postsMap.get(postID);
-        }
+        return postsMap.getOrDefault(postID, null);
     }
 
     @Override
