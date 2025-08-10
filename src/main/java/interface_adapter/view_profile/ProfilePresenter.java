@@ -58,7 +58,7 @@ public class ProfilePresenter implements ProfileOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        profileViewModel.firePropertyChanged("User not found");
+        profileViewModel.firePropertyChanged(error);
     }
 
     @Override

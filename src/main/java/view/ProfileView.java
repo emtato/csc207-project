@@ -276,6 +276,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
                         targetUsername);
             }
         }
+        else if (evt.getPropertyName().equals("Account is private")) {
+            JOptionPane.showMessageDialog(this, "Account is private", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void setFields(ProfileState state, String propertyName) {
