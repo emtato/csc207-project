@@ -152,7 +152,14 @@
       "name": "fries",
       "description": "fries",
       "id": 1754429844109,
-      "posts": [],
+      "posts": [
+        1754779531076,
+        1754779560842,
+        1754779767974,
+        1754779813330,
+        1754780125879,
+        1754780389225
+      ],
       "tags": ["fries"]
     },
     "2435234": {
@@ -171,7 +178,17 @@
         1754506019545,
         1754506239848,
         1754506458511,
-        1754515372346
+        1754515372346,
+        1754692116906,
+        1754784992831,
+        1754784993117,
+        1754784993395,
+        1754784993674,
+        1754785010709,
+        1754785010988,
+        1754785011271,
+        1754785011543,
+        1754785011824
       ],
       "tags": [
         "blue cheese",
@@ -191,7 +208,8 @@
       "posts": [
         1754515569202,
         1754515748965,
-        1754515780020
+        1754515780020,
+        1754787072132
       ],
       "tags": [
         "sashimi",
@@ -247,41 +265,34 @@
       "tags": [""],
       "likes": 3
     },
-    "123134344413": {
-      "contents": {
-        "ingredients": [
-          "blue cheese",
-          " cat",
-          " demon powder"
-        ],
-        "steps": ["1. eat\n2.devour\n3.soul"],
-        "cuisines": ["yop"]
-      },
-      "description": "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance",
-      "time": "2025-05-05 10:30 AM",
-      "title": "WOOF ARF BARK BARK",
-      "type": "recipe",
-      "user": "jinufan333",
-      "tags": ["1. eat\n2.devour\n3.soul"],
-      "likes": 6
-    },
-    "351781523783": {
+    "1754787072132": {
       "images": [],
       "contents": {
-        "ingredients": [
-          "coffee beans",
-          " milk",
-          " sugar"
-        ],
-        "steps": ["drink coffee"],
+        "ingredients": [],
+        "steps": [""],
         "cuisines": []
       },
-      "description": "recipie for happiness",
-      "time": "2025-08-03 06:37 PM",
-      "title": "Happiness",
-      "type": "recipe",
-      "user": "caf_feine666",
-      "likes": 1,
+      "clubs": [],
+      "description": "HAUHAHHAHHH",
+      "time": "2025-08-09 08:51 PM",
+      "title": "PLEASEEEEE",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754779560842": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "xrfydchgvjgk",
+      "time": "2025-08-09 06:46 PM",
+      "title": "esdxthrfjcghj",
+      "type": "announcement",
+      "user": "123",
       "tags": []
     },
     "1754506458511": {
@@ -297,55 +308,6 @@
       "title": "afhgdfk",
       "type": "announcement",
       "user": "123",
-      "tags": []
-    },
-    "1754515780020": {
-      "images": [],
-      "contents": {
-        "ingredients": [],
-        "steps": [""],
-        "cuisines": []
-      },
-      "clubs": [],
-      "description": "plsssssssssssssssssssssss",
-      "time": "2025-08-06 05:29 PM",
-      "title": "does it workkkkkkk",
-      "type": "general",
-      "user": "123",
-      "tags": []
-    },
-    "578232418276": {
-      "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
-      "contents": {
-        "ingredients": [
-          "1. Shot of espresso",
-          " 2: half a cup of milk",
-          " 3: one baby duck"
-        ],
-        "steps": ["1: Pour the espresso in a cup\n2: Use a milk steamer to froth the milk\n3: eat the duck"],
-        "cuisines": ["duck"]
-      },
-      "description": "Make a duck latte!!",
-      "time": "2025-08-03 06:25 PM",
-      "title": "duck latte :3",
-      "type": "recipe",
-      "user": "caf_feine666",
-      "likes": 9,
-      "tags": ["duck"]
-    },
-    "1754547172166": {
-      "images": ["https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538"],
-      "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["doot"],
-        "cuisines": []
-      },
-      "clubs": [],
-      "description": "dooooooot",
-      "time": "2025-08-07 02:12 AM",
-      "title": "doot doot",
-      "type": "recipe",
-      "user": "amansda666",
       "tags": []
     },
     "1754515569202": {
@@ -413,7 +375,7 @@
       "user": "123",
       "tags": []
     },
-    "1754548763868": {
+    "1754786051788": {
       "images": [],
       "contents": {
         "ingredients": [],
@@ -421,11 +383,26 @@
         "cuisines": []
       },
       "clubs": [],
-      "description": "DOOT DOOT",
-      "time": "2025-08-07 02:39 AM",
-      "title": "DOOOOOOOOOT",
+      "description": "adf",
+      "time": "2025-08-09 08:34 PM",
+      "title": "hello???",
       "type": "general",
-      "user": "amansda666",
+      "user": "123",
+      "tags": []
+    },
+    "1754784993117": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
+      "type": "general",
+      "user": "123",
       "tags": []
     },
     "1754548723653": {
@@ -491,25 +468,17 @@
       "user": "123",
       "tags": []
     },
-    "1754505995739": {
+    "1754785010988": {
       "images": [],
       "contents": {
         "ingredients": [],
         "steps": [""],
         "cuisines": []
       },
-      "clubs": [{
-        "foodPreferences": [],
-        "members": [],
-        "name": "Blue Cheese Lovers",
-        "description": "",
-        "id": 1754505995739,
-        "posts": [],
-        "tags": []
-      }],
-      "description": "adrsyfghkj",
-      "time": "2025-08-06 02:46 PM",
-      "title": "adfsghjk",
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
       "type": "announcement",
       "user": "123",
       "tags": []
@@ -529,24 +498,33 @@
       "user": "123",
       "tags": []
     },
-    "896842594309": {
+    "1754780389225": {
       "images": [],
       "contents": {
         "ingredients": [],
         "steps": [""],
         "cuisines": []
       },
-      "clubs": [{
-        "foodPreferences": [],
-        "members": [],
-        "name": "pink pony club",
-        "description": "",
-        "posts": []
-      }],
-      "description": "whattatttaa",
-      "time": "2025-08-05 01:30 PM",
-      "title": "hehe",
-      "type": "clubs",
+      "clubs": [],
+      "description": "j",
+      "time": "2025-08-09 06:59 PM",
+      "title": "hiyy",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "1754784993395": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
+      "type": "general",
       "user": "123",
       "tags": []
     },
@@ -565,7 +543,7 @@
       "user": "123",
       "tags": []
     },
-    "1754504203691": {
+    "1754779767974": {
       "images": [],
       "contents": {
         "ingredients": [],
@@ -573,9 +551,24 @@
         "cuisines": []
       },
       "clubs": [],
-      "description": "adhfsghkd",
-      "time": "2025-08-06 02:16 PM",
-      "title": "asdgh",
+      "description": "yaya",
+      "time": "2025-08-09 06:49 PM",
+      "title": "sup",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754784993674": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
       "type": "general",
       "user": "123",
       "tags": []
@@ -675,6 +668,316 @@
         "tags": []
       },
       "user": "123"
+    },
+    "1754779813330": {
+      "images": [],
+      "contents": {
+        "ingredients": ["Enter list of ingredients separated by commas"],
+        "steps": ["Enter steps to make the yum yum"],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter recipe description",
+      "time": "2025-08-09 06:50 PM",
+      "title": "Enter post title",
+      "type": "recipe",
+      "user": "123",
+      "tags": []
+    },
+    "1754785011271": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "1754779531076": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "jpouihougj",
+      "time": "2025-08-09 06:45 PM",
+      "title": "strrdyfukgliho;jo",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "123134344413": {
+      "contents": {
+        "ingredients": [
+          "blue cheese",
+          " cat",
+          " demon powder"
+        ],
+        "steps": ["1. eat\n2.devour\n3.soul"],
+        "cuisines": ["yop"]
+      },
+      "description": "IS THAT MY HANDSOME, ELEGANT, INTELLIGENT, CHARMING, KIND, THOUGHTFUL, STRONG, COURAGEOUS, CREATIVE, BRILLIANT, GENTLE, HUMBLE, GENEROUS, PASSIONATE, WISE, FUNNY, LOYAL, DEPENDABLE, GRACEFUL, RADIANT, CALM, CONFIDENT, WARM, COMPASSIONATE, WITTY, ADVENTUROUS, RESPECTFUL, SINCERE, MAGNETIC, BOLD, ARTICULATE, EMPATHETIC, INSPIRING, HONEST, PATIENT, POWERFUL, ATTENTIVE, UPLIFTING, CLASSY, FRIENDLY, RELIABLE, AMBITIOUS, INTUITIVE, TALENTED, SUPPORTIVE, GROUNDED, DETERMINED, CHARISMATIC, EXTRAORDINARY, TRUSTWORTHY, NOBLE, DIGNIFIED, PERCEPTIVE, INNOVATIVE, REFINED, CONSIDERATE, BALANCED, OPEN-MINDED, COMPOSED, IMAGINATIVE, MINDFUL, OPTIMISTIC, VIRTUOUS, NOBLE-HEARTED, WELL-SPOKEN, QUICK-WITTED, DEEP, PHILOSOPHICAL, FEARLESS, AFFECTIONATE, EXPRESSIVE, EMOTIONALLY INTELLIGENT, RESOURCEFUL, DELIGHTFUL, FASCINATING, SHARP, SELFLESS, DRIVEN, ASSERTIVE, AUTHENTIC, VIBRANT, PLAYFUL, OBSERVANT, SKILLFUL, GENEROUS-SPIRITED, PRACTICAL, COMFORTING, BRAVE, WISE-HEARTED, ENTHUSIASTIC, DEPENDABLE, TACTFUL, ENDURING, DISCREET, WELL-MANNERED, COMPOSED, MATURE, TASTEFUL, JOYFUL, UNDERSTANDING, GENUINE, BRILLIANT-MINDED, ENCOURAGING, WELL-ROUNDED, MAGNETIC, DYNAMIC, RADIANT, RADIANT-SPIRITED, SOULFUL, RADIANT-HEARTED, INSIGHTFUL, CREATIVE-SOULED, JUSTICE-MINDED, RELIABLE-HEARTED, TENDER, UPLIFTING-MINDED, PERSEVERING, DEVOTED, ANGELIC, DOWN-TO-EARTH, GOLDEN-HEARTED, GENTLE-SPIRITED, CLEVER, COURAGEOUS-HEARTED, COURTEOUS, HARMONIOUS, LOYAL-MINDED, BEAUTIFUL-SOULED, EASYGOING, SINCERE-HEARTED, RESPECTFUL-MINDED, COMFORTING-VOICED, CONFIDENT-MINDED, EMOTIONALLY STRONG, RESPECTFUL-SOULED, IMAGINATIVE-HEARTED, PROTECTIVE, NOBLE-MINDED, CONFIDENT-SOULED, WISE-EYED, LOVING, SERENE, MAGNETIC-SOULED, EXPRESSIVE-EYED, BRILLIANT-HEARTED, INSPIRING-MINDED, AND ABSOLUTELY UNFORGETTABLE JINU SPOTTED?!?? \n haha get it jinu is sustenance",
+      "time": "2025-05-05 10:30 AM",
+      "title": "WOOF ARF BARK BARK",
+      "type": "recipe",
+      "user": "jinufan333",
+      "tags": ["1. eat\n2.devour\n3.soul"],
+      "likes": 6
+    },
+    "351781523783": {
+      "images": [],
+      "contents": {
+        "ingredients": [
+          "coffee beans",
+          " milk",
+          " sugar"
+        ],
+        "steps": ["drink coffee"],
+        "cuisines": []
+      },
+      "description": "recipie for happiness",
+      "time": "2025-08-03 06:37 PM",
+      "title": "Happiness",
+      "type": "recipe",
+      "user": "caf_feine666",
+      "likes": 1,
+      "tags": []
+    },
+    "1754786920196": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "hehehhehehe",
+      "time": "2025-08-09 08:48 PM",
+      "title": "heheheheh",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754515780020": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "plsssssssssssssssssssssss",
+      "time": "2025-08-06 05:29 PM",
+      "title": "does it workkkkkkk",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "578232418276": {
+      "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
+      "contents": {
+        "ingredients": [
+          "1. Shot of espresso",
+          " 2: half a cup of milk",
+          " 3: one baby duck"
+        ],
+        "steps": ["1: Pour the espresso in a cup\n2: Use a milk steamer to froth the milk\n3: eat the duck"],
+        "cuisines": ["duck"]
+      },
+      "description": "Make a duck latte!!",
+      "time": "2025-08-03 06:25 PM",
+      "title": "duck latte :3",
+      "type": "recipe",
+      "user": "caf_feine666",
+      "likes": 9,
+      "tags": ["duck"]
+    },
+    "1754547172166": {
+      "images": ["https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538"],
+      "contents": {
+        "ingredients": ["Enter list of ingredients separated by commas"],
+        "steps": ["doot"],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "dooooooot",
+      "time": "2025-08-07 02:12 AM",
+      "title": "doot doot",
+      "type": "recipe",
+      "user": "amansda666",
+      "tags": []
+    },
+    "1754692116906": {
+      "images": ["w"],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "ardstfydkjhk.,mnb",
+      "time": "2025-08-08 06:28 PM",
+      "title": "hihi",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754785011543": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "1754548763868": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "DOOT DOOT",
+      "time": "2025-08-07 02:39 AM",
+      "title": "DOOOOOOOOOT",
+      "type": "general",
+      "user": "amansda666",
+      "tags": []
+    },
+    "1754784992831": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "woooooooo",
+      "time": "2025-08-09 08:16 PM",
+      "title": "yayyyyyyy",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754780125879": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "iiho;lnkjihn.k m,",
+      "time": "2025-08-09 06:55 PM",
+      "title": "warestdjfykuglhjk",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754505995739": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [{
+        "foodPreferences": [],
+        "members": [],
+        "name": "Blue Cheese Lovers",
+        "description": "",
+        "id": 1754505995739,
+        "posts": [],
+        "tags": []
+      }],
+      "description": "adrsyfghkj",
+      "time": "2025-08-06 02:46 PM",
+      "title": "adfsghjk",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "1754785011824": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "Enter post description",
+      "time": "2025-08-09 08:16 PM",
+      "title": "Enter post title",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "896842594309": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [{
+        "foodPreferences": [],
+        "members": [],
+        "name": "pink pony club",
+        "description": "",
+        "posts": []
+      }],
+      "description": "whattatttaa",
+      "time": "2025-08-05 01:30 PM",
+      "title": "hehe",
+      "type": "clubs",
+      "user": "123",
+      "tags": []
+    },
+    "1754785010709": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "aofijdoiajfds",
+      "time": "2025-08-09 08:16 PM",
+      "title": "i think it works?????",
+      "type": "announcement",
+      "user": "123",
+      "tags": []
+    },
+    "1754504203691": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "adhfsghkd",
+      "time": "2025-08-06 02:16 PM",
+      "title": "asdgh",
+      "type": "general",
+      "user": "123",
+      "tags": []
     },
     "1754547077251": {
       "images": [

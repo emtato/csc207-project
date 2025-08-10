@@ -1,7 +1,7 @@
 package interface_adapter.homepage;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.clubs.ClubViewModel;
+import interface_adapter.clubs_home.ClubViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;

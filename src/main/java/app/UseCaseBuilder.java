@@ -10,6 +10,8 @@ import interface_adapter.analyze_recipe.AnalyzeRecipeController;
 import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.clubs_home.ClubController;
+import interface_adapter.clubs_home.ClubPresenter;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -32,6 +34,8 @@ import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
+import interface_adapter.specific_club.SpecificClubController;
+import interface_adapter.specific_club.SpecificClubPresenter;
 import interface_adapter.toggle_settings.SettingsController;
 import interface_adapter.toggle_settings.SettingsPresenter;
 import interface_adapter.view_profile.ProfileController;
@@ -43,6 +47,9 @@ import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.clubs_home.ClubInputBoundary;
+import use_case.clubs_home.ClubInteractor;
+import use_case.clubs_home.ClubOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
 import use_case.create_post.CreatePostInputBoundary;
@@ -77,6 +84,9 @@ import use_case.manage_following.ManageFollowingOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.specific_club.SpecificClubInputBoundary;
+import use_case.specific_club.SpecificClubInteractor;
+import use_case.specific_club.SpecificClubOutputBoundary;
 import use_case.toggle_settings.SettingsInputBoundary;
 import use_case.toggle_settings.SettingsInteractor;
 import use_case.toggle_settings.SettingsOutputBoundary;
@@ -377,4 +387,34 @@ public class UseCaseBuilder {
         viewBuilder.getCreateNewPostView().setCreatePostController(createPostController);
         return this;
     }
+    /**
+     * Adds the Club Home Page Use Case to the application.
+     *
+     * @return this builder
+     */
+//    public UseCaseBuilder addClubHomePageUseCase() {
+//        // Set up Club controller
+//        final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(
+//                viewBuilder.getClubViewModel());
+//        final ClubInputBoundary clubInteractor = new ClubInteractor(
+//                dbClubsDataAccessObject,
+//                userDataAccessObject,
+//                clubOutputBoundary);
+//        final ClubController clubController = new ClubController(clubInteractor);
+//
+//        // Set up SpecificClub controller
+//        final SpecificClubOutputBoundary specificClubPresenter = new SpecificClubPresenter(viewBuilder.getSpecificClubViewModel());
+//        final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
+//            dbClubsDataAccessObject,
+//            userDataAccessObject,
+//            specificClubPresenter
+//        );
+//        final SpecificClubController specificClubController = new SpecificClubController(specificClubInteractor);
+//
+//        // Set both controllers in the view
+//        viewBuilder.getClubHomePageView().setClubController(clubController);
+//        viewBuilder.getClubHomePageView().setSpecificClubController(specificClubController);
+//
+//        return this;
+//    }
 }

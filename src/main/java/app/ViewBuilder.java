@@ -3,6 +3,7 @@ package app;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
+import interface_adapter.clubs_home.ClubViewModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.get_comments.GetCommentsViewModel;
@@ -13,6 +14,7 @@ import interface_adapter.manage_following.ManageFollowingViewModel;
 import interface_adapter.map.MapViewModel;
 import interface_adapter.post_view.PostViewModel;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.specific_club.SpecificClubViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.view_profile.ProfileViewModel;
 import view.*;
@@ -28,7 +30,7 @@ public class ViewBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final UserFactory userFactory = new CreateAccount();
-    private ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // Views and view models
@@ -44,6 +46,7 @@ public class ViewBuilder {
     private EditProfileViewModel editProfileViewModel;
     private SettingsView settingsView;
     private SettingsViewModel settingsViewModel;
+    private ClubViewModel clubViewModel;
     private PostView postView;
     private PostViewModel postViewModel;
     private ManageFollowersView manageFollowersView;
@@ -54,6 +57,7 @@ public class ViewBuilder {
     private AnalyzeRecipeViewModel analyzeRecipeViewModel;
     private ClubHomePageView clubHomePageView;
     private SpecificClubView specificClubView;
+    private SpecificClubViewModel specificClubViewModel;
     private ExploreEventsView exploreEventsView;
     private MapView mapView;
     private MapViewModel mapViewModel;
@@ -200,14 +204,32 @@ public class ViewBuilder {
      * @return this builder
      */
     public ViewBuilder addClubHomePageView() {
-        clubHomePageView = new ClubHomePageView(viewManagerModel, cardPanel);
+        clubViewModel = new ClubViewModel();
+        specificClubViewModel = new SpecificClubViewModel();
+        clubHomePageView = new ClubHomePageView(
+            viewManagerModel,
+            clubViewModel,
+            null,  // ClubController will be set in addClubUseCase
+            cardPanel,
+            specificClubViewModel,
+            null   // SpecificClubController will be set in addSpecificClubUseCase
+        );
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
     }
 
     public ViewBuilder addSpecificClubView() {
+        // Create the default club for initial view
         Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
-        specificClubView = new SpecificClubView(viewManagerModel, cardPanel, defaultClub);
+
+        specificClubViewModel = new SpecificClubViewModel();
+        specificClubView = new SpecificClubView(
+            viewManagerModel,
+            cardPanel,
+            defaultClub,
+            specificClubViewModel,
+            null  // Controller will be set in addSpecificClubUseCase
+        );
         cardPanel.add(specificClubView, specificClubView.getViewName());
         return this;
     }
@@ -352,6 +374,8 @@ public class ViewBuilder {
         return exploreEventsView;
     }
 
+    public ClubViewModel getClubViewModel() { return clubViewModel;}
+
 
 
     public MapView getMapView() {
@@ -368,5 +392,9 @@ public class ViewBuilder {
 
     public CreateNewPostView getCreateNewPostView() {
         return createNewPostView;
+    }
+
+    public SpecificClubViewModel getSpecificClubViewModel() {
+        return specificClubViewModel;
     }
 }
