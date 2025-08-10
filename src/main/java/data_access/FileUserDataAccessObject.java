@@ -545,4 +545,21 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             }
         }
     }
+
+    @Override
+    public ArrayList<Account> getAllUsers() {
+        ArrayList<Account> users = new ArrayList<>();
+        JSONObject data = getJsonObject();
+        JSONObject usersJSON = data.getJSONObject("users");
+
+        for (String username : usersJSON.keySet()) {
+            JSONObject userData = usersJSON.getJSONObject(username);
+            Account account = (Account) get(username);
+            if (account != null) {
+                users.add(account);
+            }
+        }
+
+        return users;
+    }
 }

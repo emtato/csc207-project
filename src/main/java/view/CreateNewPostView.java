@@ -45,8 +45,9 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     private final JRadioButton generalPost = new JRadioButton("General Post");
     private final JRadioButton announcementPost = new JRadioButton("Announcement");
     private final String viewName = "create new post";
-    private final Club club;
+    private Club club;
 
+    // Make these fields regular instance fields instead of having createPostController be accessed through this$0
     private CreatePostController createPostController;
     private final CreatePostViewModel createPostViewModel;
 
@@ -133,6 +134,8 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
      * @param e actionevent
      */
     public void actionPerformed(ActionEvent e) {
+        // Store the controller before clearing the panel
+        final CreatePostController currentController = this.createPostController;
         contentPanel.removeAll();
 
         if (e.getSource() == recipes) {
@@ -142,6 +145,9 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         } else if (e.getSource() == announcementPost) {
             announcementPostView();
         }
+        // Restore the controller after rebuilding the view
+        this.createPostController = currentController;
+
         contentPanel.revalidate();
         contentPanel.repaint();
     }
@@ -196,7 +202,6 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 ArrayList<String> ingredients = new ArrayList<>(Arrays.asList(ingredientsListArea.getText().split(",")));
                 String steps = stepsArea.getText();
                 ArrayList<String> tags = new ArrayList<>();
-                ArrayList<Club> clubs = new ArrayList<>();  // Changed to ArrayList<Club>
 
                 if (!cuisinesArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
                     tags = new ArrayList<>(Arrays.asList(cuisinesArea.getText().split(",")));
@@ -205,7 +210,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
-                //write to posts data
+
                 CreatePostInputData postData = new CreatePostInputData(
                         Session.getCurrentAccount(),
                         title,
@@ -215,18 +220,13 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         steps,
                         tags,
                         imagesList,
-                        new ArrayList<>()  // empty clubs list
+                        new ArrayList<>()
                 );
                 if (club != null) {
                     postData.setClubId(club.getId());
                 }
-                createPostController.execute(postData);
-
-                viewManagerModel.setState("homepage view");
-                HomePageView homePageView = viewManagerModel.getHomePageView();
-                homePageView.updateHomeFeed();
+                handlePostCreation(postData);
             }
-
         });
         contentPanel.add(okButton);
 
@@ -271,7 +271,6 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 String body = bodyArea.getText();
                 ArrayList<String> tags = new ArrayList<>();
                 ArrayList<String> imagesList = new ArrayList<>();
-                ArrayList<Club> clubs = new ArrayList<>();  // Changed to ArrayList<Club>
 
                 if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
@@ -286,16 +285,12 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         "",
                         tags,
                         imagesList,
-                        clubs  // Now using ArrayList<Club>
+                        new ArrayList<>()
                 );
                 if (club != null) {
                     postData.setClubId(club.getId());
                 }
-                createPostController.execute(postData);
-
-                viewManagerModel.setState("homepage view");
-                HomePageView homePageView = viewManagerModel.getHomePageView();
-                homePageView.updateHomeFeed();
+                handlePostCreation(postData);
             }
         });
         contentPanel.add(okButton);
@@ -340,7 +335,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 CreatePostInputData postData = new CreatePostInputData(
                         Session.getCurrentAccount(),
                         title,
-                        "announcement",  // Explicitly set type as announcement
+                        "announcement",
                         body,
                         new ArrayList<>(),
                         "",
@@ -352,12 +347,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 if (club != null) {
                     postData.setClubId(club.getId());
                 }
-
-                createPostController.execute(postData);
-
-                // Navigate back to specific club view
-                viewManagerModel.setState("specific club view");
-                viewManagerModel.firePropertyChanged();
+                handlePostCreation(postData);
             }
         });
 
@@ -410,7 +400,75 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
     }
 
     public void setCreatePostController(CreatePostController controller) {
+        System.out.println("Setting CreatePostController: " + (controller != null ? "not null" : "null"));
         this.createPostController = controller;
+        if (controller == null) {
+            System.err.println("Warning: Setting null controller in CreateNewPostView");
+        }
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+        removeAll();  // Clear current components
+        this.contentPanel.removeAll();
+
+        setSize(1300, 800);
+        setLayout(new BorderLayout());
+
+        // If this is a club post, only show relevant options
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(recipes);
+        buttonGroup.add(generalPost);
+        buttonGroup.add(announcementPost);
+
+        JPanel radioPanel = new JPanel();
+        radioPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10)); // Add spacing between buttons
+
+        // Make announcement option more prominent for club posts
+        announcementPost.setFont(new Font("Arial", Font.BOLD, 14));
+        announcementPost.setForeground(new Color(0, 100, 0));  // Dark green color
+
+        radioPanel.add(recipes);
+        radioPanel.add(generalPost);
+        radioPanel.add(announcementPost);
+
+        JLabel label = new JLabel("Select what type of post you want to make", SwingConstants.CENTER);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Add padding
+        topPanel.add(label);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+        topPanel.add(radioPanel);
+
+        add(topPanel, BorderLayout.NORTH);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
+
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        menuBar.setPreferredSize(new Dimension(1200, 100));
+
+        add(contentPanel, BorderLayout.CENTER);
+        add(menuBar, BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
+    }
+
+    private void handlePostCreation(CreatePostInputData postData) {
+        final CreatePostController controller = this.createPostController;
+        if (controller == null) {
+            System.err.println("Error: CreatePostController is null when trying to create post");
+            JOptionPane.showMessageDialog(this,
+                "Unable to create post at this time. Please try again.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        controller.execute(postData);
+        viewManagerModel.setState("homepage view");
+        HomePageView homePageView = viewManagerModel.getHomePageView();
+        homePageView.updateHomeFeed();
     }
 }
-

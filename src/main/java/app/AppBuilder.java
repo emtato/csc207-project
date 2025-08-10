@@ -14,6 +14,12 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeController;
 import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
+import interface_adapter.clubs_home.ClubController;
+import interface_adapter.clubs_home.ClubPresenter;
+import interface_adapter.clubs_home.ClubViewModel;
+import interface_adapter.create_club.CreateClubController;
+import interface_adapter.create_club.CreateClubPresenter;
+import interface_adapter.create_club.CreateClubViewModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.delete_account.DeleteAccountPresenter;
@@ -42,6 +48,9 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.manage_followers.ManageFollowersViewModel;
 import interface_adapter.manage_following.ManageFollowingViewModel;
+import interface_adapter.specific_club.SpecificClubController;
+import interface_adapter.specific_club.SpecificClubPresenter;
+import interface_adapter.specific_club.SpecificClubViewModel;
 import interface_adapter.view_profile.ProfileController;
 import interface_adapter.view_profile.ProfilePresenter;
 import interface_adapter.view_profile.ProfileViewModel;
@@ -52,14 +61,23 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.write_comment.WriteCommentController;
+import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.create_post_view.CreatePostController;
+import interface_adapter.create_post_view.CreatePostPresenter;
+import interface_adapter.create_post_view.CreatePostState;
 import use_case.analyze_recipe.AnalyzeRecipeInputBoundary;
 import use_case.analyze_recipe.AnalyzeRecipeInteractor;
 import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.clubs_home.ClubInputBoundary;
+import use_case.clubs_home.ClubInteractor;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.create_club.CreateClubInputBoundary;
+import use_case.create_club.CreateClubInteractor;
+import use_case.create_club.CreateClubOutputBoundary;
 import use_case.delete_account.DeleteAccountInputBoundary;
 import use_case.delete_account.DeleteAccountInteractor;
 import use_case.delete_account.DeleteAccountOutputBoundary;
@@ -86,6 +104,9 @@ import use_case.manage_followers.ManageFollowersOutputBoundary;
 import use_case.manage_following.ManageFollowingInputBoundary;
 import use_case.manage_following.ManageFollowingInteractor;
 import use_case.manage_following.ManageFollowingOutputBoundary;
+import use_case.specific_club.SpecificClubInputBoundary;
+import use_case.specific_club.SpecificClubInteractor;
+import use_case.specific_club.SpecificClubOutputBoundary;
 import use_case.view_profile.ProfileInputBoundary;
 import use_case.view_profile.ProfileInteractor;
 import use_case.view_profile.ProfileOutputBoundary;
@@ -95,6 +116,9 @@ import use_case.toggle_settings.SettingsOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.create_post.CreatePostInputBoundary;
+import use_case.create_post.CreatePostInteractor;
+import use_case.create_post.CreatePostOutputBoundary;
 import view.*;
 import view.map.MapView;
 
@@ -140,6 +164,7 @@ public class AppBuilder {
     private ManageFollowingViewModel manageFollowingViewModel;
     private HomePageViewModel homePageViewModel;
     private LoginView loginView;
+    private ClubViewModel clubViewModel;
     private ClubHomePageView clubHomePageView;
     private ExploreEventsView exploreEventsView;
     private ExploreView exploreView;
@@ -151,7 +176,9 @@ public class AppBuilder {
     private ManageFollowingView manageFollowingView;
     private MapViewModel mapViewModel;
     private SpecificClubView specificClubView;
+    private SpecificClubViewModel specificClubViewModel;
     private CreateClubView createClubView;
+    private CreateClubViewModel createClubViewModel;
     private MapView mapView;
 
     private AppBuilder() {
@@ -186,17 +213,70 @@ public class AppBuilder {
     }
 
     public AppBuilder addSpecificClubView() {
+        // Create the default club for initial view
         Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
-        specificClubView = new SpecificClubView(viewManagerModel, cardPanel, defaultClub);
+
+        specificClubViewModel = new SpecificClubViewModel();
+        specificClubView = new SpecificClubView(
+            viewManagerModel,
+            cardPanel,
+            defaultClub,
+            specificClubViewModel,
+            null  // Controller will be set in addSpecificClubUseCase
+        );
+
         cardPanel.add(specificClubView, specificClubView.getViewName());
         return this;
     }
 
+    /**
+     * Adds the Specific Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addSpecificClubUseCase() {
+        // Create the presenter with the required ViewModel
+        final SpecificClubPresenter specificClubPresenter = new SpecificClubPresenter(specificClubViewModel);
+
+        final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
+            clubsDataAccessObject,
+            userDataAccessObject,
+            specificClubPresenter
+        );
+
+        final SpecificClubController specificClubController = new SpecificClubController(specificClubInteractor);
+        specificClubView.setSpecificClubController(specificClubController);
+        return this;
+    }
+
     public AppBuilder addCreateClubView() {
-        String currentUsername = userDataAccessObject.getCurrentUsername();
-        Account currentUser = (Account) userDataAccessObject.get(currentUsername);
-        createClubView = new CreateClubView(viewManagerModel, clubsDataAccessObject, currentUser);
+        createClubViewModel = new CreateClubViewModel();
+        createClubView = new CreateClubView(
+            viewManagerModel,
+            null  // Controller will be set in addCreateClubUseCase
+            , createClubViewModel,
+            Session.getCurrentAccount()
+        );
+
         cardPanel.add(createClubView, createClubView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Create Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addCreateClubUseCase() {
+        final CreateClubOutputBoundary createClubPresenter = new CreateClubPresenter(createClubViewModel);
+        final CreateClubInputBoundary createClubInteractor = new CreateClubInteractor(
+            clubsDataAccessObject,
+            userDataAccessObject,
+            createClubPresenter
+        );
+
+        final CreateClubController createClubController = new CreateClubController(createClubInteractor);
+        createClubView.setCreateClubController(createClubController);
         return this;
     }
 
@@ -253,16 +333,18 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Create Post View to the application.
+     *
+     * @return this builder
+     */
     public AppBuilder addCreatePostView() {
         createPostViewModel = new CreatePostViewModel();
-        // TODO: add the use case and move the data access object out of the view and into the interactor
         createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel);
         cardPanel.add(createNewPostView, createNewPostView.getViewName());
         viewManagerModel.setCreateNewPostView(createNewPostView);
         return this;
     }
-
-    // TODO: implement addMapView()
 
     /**
      * Adds Map View to the application
@@ -284,7 +366,16 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addClubHomePageView() {
-        clubHomePageView = new ClubHomePageView(viewManagerModel, cardPanel);
+        clubViewModel = new ClubViewModel();
+        specificClubViewModel = new SpecificClubViewModel();
+        clubHomePageView = new ClubHomePageView(
+            viewManagerModel,
+            clubViewModel,
+            null,  // ClubController will be set in addClubUseCase
+            cardPanel,
+            specificClubViewModel,
+            null   // SpecificClubController will be set in addSpecificClubUseCase
+        );
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
     }
@@ -609,5 +700,47 @@ public class AppBuilder {
         viewManagerModel.firePropertyChanged();
 
         return application;
+    }
+
+    /**
+     * Adds the Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addClubUseCase() {
+        final ClubPresenter clubPresenter = new ClubPresenter(viewManagerModel, clubViewModel);
+        final ClubInputBoundary clubInteractor = new ClubInteractor(
+            clubsDataAccessObject,
+            userDataAccessObject,
+            clubPresenter
+        );
+        final ClubController clubController = new ClubController(clubInteractor);
+        clubHomePageView.setClubController(clubController);
+        return this;
+    }
+
+    /**
+     * Adds the Create Post Use Case to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addCreatePostUseCase() {
+        if (createNewPostView == null || createPostViewModel == null) {
+            System.err.println("Failed to initialize CreatePostUseCase: View or ViewModel is null");
+            throw new IllegalStateException("CreateNewPostView must be initialized before adding CreatePostUseCase");
+        }
+
+        System.out.println("Initializing CreatePostUseCase...");
+        final CreatePostOutputBoundary createPostPresenter = new CreatePostPresenter(createPostViewModel);
+        final CreatePostInputBoundary createPostInteractor = new CreatePostInteractor(
+                postCommentsLikesDataAccessObject,
+                userDataAccessObject,
+                createPostPresenter
+        );
+        final CreatePostController createPostController = new CreatePostController(createPostInteractor);
+        System.out.println("Setting CreatePostController on view...");
+        createNewPostView.setCreatePostController(createPostController);
+        System.out.println("CreatePostUseCase initialization complete.");
+        return this;
     }
 }

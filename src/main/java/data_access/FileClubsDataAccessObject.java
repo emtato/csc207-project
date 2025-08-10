@@ -97,6 +97,19 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         }
     }
 
+    public boolean clubExists(String clubName) {
+        JSONObject data = getJsonObject();
+        JSONObject clubs = data.getJSONObject("clubs");
+
+        for (String clubId : clubs.keySet()) {
+            JSONObject clubData = clubs.getJSONObject(clubId);
+            if (clubData.getString("name").equalsIgnoreCase(clubName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Club getClub(long clubID) {
         return getClub(String.valueOf(clubID));
