@@ -1,6 +1,7 @@
 package interface_adapter.toggle_settings;
 
 import interface_adapter.ViewModel;
+import view.GUIConstants;
 
 /**
  * The View Model for the Settings View.
@@ -16,8 +17,8 @@ public class SettingsViewModel extends ViewModel<SettingsState> {
     public static final String NOTIFICATIONS_LABEL = "Notification Enabled";
     public static final String NOTIFICATIONS_TOGGLE_ON = "ON";
     public static final String NOTIFICATIONS_TOGGLE_OFF = "OFF";
-    public static final int SETTINGS_PANEL_WIDTH = 1200;
-    public static final int SETTINGS_PANEL_HEIGHT = 600;
+    public static final int SETTINGS_PANEL_WIDTH = GUIConstants.STANDARD_SCROLL_WIDTH;
+    public static final int SETTINGS_PANEL_HEIGHT = GUIConstants.STANDARD_SCROLL_HEIGHT;
     public static final String LOGOUT_LABEL = "Login Status";
     public static final String LOGOUT_BUTTON_LABEL = "Logout";
     public static final String LOGOUT_HEADING = "Logout";

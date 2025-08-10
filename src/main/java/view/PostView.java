@@ -134,7 +134,7 @@ public class PostView extends JPanel {
 
         // bottom
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        menuBar.setPreferredSize(new Dimension(1200, 100));
+        menuBar.setPreferredSize(new Dimension(GUIConstants.STANDARD_SCROLL_WIDTH, 100));
 
         // right
         // ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -224,7 +224,7 @@ public class PostView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(1300, 700));
+        scrollPane.setPreferredSize(new Dimension(GUIConstants.STANDARD_SCROLL_WIDTH, GUIConstants.STANDARD_SCROLL_HEIGHT));
         scrollPane.setBorder(null);
 
 
@@ -571,7 +571,7 @@ public class PostView extends JPanel {
 
         frame.add(new PostView(new ViewManagerModel(), trialpost, new GetCommentsViewModel(), new AnalyzeRecipeViewModel()));
 
-        frame.setPreferredSize(new Dimension(1728, 1080));
+        frame.setPreferredSize(new Dimension(GUIConstants.STANDARD_PAGE_WIDTH, GUIConstants.STANDARD_PAGE_HEIGHT));
         frame.pack();
         frame.setVisible(true);
     }

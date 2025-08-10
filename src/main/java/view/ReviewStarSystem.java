@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+import view.GUIConstants;
 
 // TODO: implement Review into this
 
@@ -47,7 +48,7 @@ public class ReviewStarSystem extends JFrame {
         });
 
         add(starPanel);
-        setSize(550, 150);
+        setSize(GUIConstants.STANDARD_PANEL_WIDTH, 150);
         setLocationRelativeTo(null);
         setVisible(true);
     }

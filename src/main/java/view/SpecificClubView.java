@@ -203,7 +203,7 @@ public class SpecificClubView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(500, 300));
+        scrollPane.setPreferredSize(new Dimension(GUIConstants.STANDARD_PANEL_WIDTH, 300));
 
         announcementsPanel.add(scrollPane, BorderLayout.CENTER);
         leftPanel.add(announcementsPanel, BorderLayout.NORTH);
@@ -234,7 +234,7 @@ public class SpecificClubView extends JPanel {
         eventsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         eventsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         eventsScrollPane.setBorder(null);
-        eventsScrollPane.setPreferredSize(new Dimension(500, 300));
+        eventsScrollPane.setPreferredSize(new Dimension(GUIConstants.STANDARD_PANEL_WIDTH, 300));
 
         eventsPanel.add(eventsScrollPane, BorderLayout.CENTER);
         leftPanel.add(eventsPanel, BorderLayout.CENTER);
@@ -257,7 +257,7 @@ public class SpecificClubView extends JPanel {
         feedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         feedScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         feedScrollPane.setBorder(null);
-        feedScrollPane.setPreferredSize(new Dimension(1000, 800));
+        feedScrollPane.setPreferredSize(new Dimension(GUIConstants.STANDARD_SCROLL_WIDTH, GUIConstants.STANDARD_SCROLL_HEIGHT));
 
         feedPanel.add(feedScrollPane, BorderLayout.CENTER);
 

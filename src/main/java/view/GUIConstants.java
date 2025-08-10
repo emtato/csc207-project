@@ -7,6 +7,22 @@ public class GUIConstants {
     // GENERAL (MULTIPLE PAGES)
     public static final int WINDOW_WIDTH = 1440;
     public static int WINDOW_HEIGHT = 900;
+    
+    // STANDARDIZED PAGE DIMENSIONS
+    public static final int STANDARD_PAGE_WIDTH = 1440;
+    public static final int STANDARD_PAGE_HEIGHT = 900;
+    public static final int STANDARD_SCROLL_WIDTH = 1200;
+    public static final int STANDARD_SCROLL_HEIGHT = 600;
+    
+    // STANDARDIZED COMPONENT SIZES
+    public static final int STANDARD_PANEL_WIDTH = 500;
+    public static final int STANDARD_PANEL_HEIGHT = 400;
+    public static final int STANDARD_BUTTON_WIDTH = 250;
+    public static final int STANDARD_BUTTON_HEIGHT = 75;
+    public static final int STANDARD_ICON_SIZE = 150;
+    public static final int STANDARD_SMALL_ICON_SIZE = 100;
+    
+    // EXISTING CONSTANTS
     public static final int BUTTON_WIDTH = 268;
     public static final int BUTTON_HEIGHT = 73;
 

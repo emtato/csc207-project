@@ -7,6 +7,7 @@ import entity.Account;
 import entity.Post;
 import org.json.JSONObject;
 import view.ui_components.MenuBarPanel;
+import view.GUIConstants;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -133,7 +134,7 @@ public class CreateClubView extends JPanel {
             });
 
             dialog.add(okButton, BorderLayout.SOUTH);
-            dialog.setSize(300, 400);
+            dialog.setSize(GUIConstants.STANDARD_PANEL_WIDTH, GUIConstants.STANDARD_PANEL_HEIGHT);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
         });

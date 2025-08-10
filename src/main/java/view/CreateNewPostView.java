@@ -61,7 +61,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         this.contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        setSize(1300, 800);
+        setSize(GUIConstants.STANDARD_PAGE_WIDTH, GUIConstants.STANDARD_PAGE_HEIGHT);
         setLayout(new BorderLayout());
 
         // If this is a club post, only show relevant options
@@ -114,7 +114,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         }
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        menuBar.setPreferredSize(new Dimension(1200, 100));
+        menuBar.setPreferredSize(new Dimension(GUIConstants.STANDARD_SCROLL_WIDTH, 100));
 
         add(contentPanel, BorderLayout.CENTER);
         add(menuBar, BorderLayout.SOUTH);

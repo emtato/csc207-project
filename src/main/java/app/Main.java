@@ -2,6 +2,7 @@ package app;
 
 import java.awt.Dimension;
 import javax.swing.JFrame;
+import view.GUIConstants;
 
 /**
  * The Main class of our application.
@@ -46,7 +47,7 @@ public class Main {
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
                 .build();
-        application.setPreferredSize(new Dimension(1440, 900));
+        application.setPreferredSize(new Dimension(GUIConstants.STANDARD_PAGE_WIDTH, GUIConstants.STANDARD_PAGE_HEIGHT));
         application.pack();
         application.setVisible(true);
     }

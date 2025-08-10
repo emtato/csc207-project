@@ -1,6 +1,7 @@
 package view.map;
 
 import view.ui_components.JFrame;
+import view.GUIConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ public class MapHTMLView extends JFrame {
 
     public MapHTMLView() {
         setTitle("HTML Display Example");
-        setSize(600, 400);
+        setSize(GUIConstants.STANDARD_PANEL_WIDTH, GUIConstants.STANDARD_PANEL_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

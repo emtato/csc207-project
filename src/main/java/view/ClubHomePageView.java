@@ -189,7 +189,7 @@ public class ClubHomePageView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(1100, 400));
+        scrollPane.setPreferredSize(new Dimension(GUIConstants.STANDARD_SCROLL_WIDTH, 400));
 
         announcementsPanel.add(scrollPane, BorderLayout.CENTER);
 
