@@ -24,21 +24,27 @@ public class ProfileInteractor implements ProfileInputBoundary {
     @Override
     public void executeViewProfile(ProfileInputData profileInputData) {
         final String username = profileInputData.getUsername();
-        final User user = userDataAccessObject.get(username);
-        final String displayName = user.getDisplayName();
-        final String bio = user.getBio();
-        final String profilePictureUrl = user.getProfilePictureUrl();
-        final int numFollowers = user.getNumFollowers();
-        final int numFollowing = user.getNumFollowing();
-        final ArrayList<Long> posts = user.getUserPosts();
-        final Map<Long, Post> postsMap = new HashMap<>();
-        for (Long postId : posts) {
-            postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
-        }
+        final String targetUsername = profileInputData.getTargetUsername();
+        final User user = userDataAccessObject.get(targetUsername);
+        if (user != null) {
+            final String displayName = user.getDisplayName();
+            final String bio = user.getBio();
+            final String profilePictureUrl = user.getProfilePictureUrl();
+            final int numFollowers = user.getNumFollowers();
+            final int numFollowing = user.getNumFollowing();
+            final ArrayList<Long> posts = user.getUserPosts();
+            final Map<Long, Post> postsMap = new HashMap<>();
+            for (Long postId : posts) {
+                postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
+            }
 
-        final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePictureUrl,
-                numFollowers, numFollowing, postsMap);
-        presenter.prepareSuccessView(profileOutputData);
+            final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio,
+                    profilePictureUrl, numFollowers, numFollowing, postsMap, targetUsername);
+            presenter.prepareSuccessView(profileOutputData);
+        }
+        else {
+            presenter.prepareFailView("User not found");
+        }
     }
 
     @Override

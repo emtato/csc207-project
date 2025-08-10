@@ -16,6 +16,7 @@ public class ProfileState {
     private int numFollowers;
     private int numFollowing;
     private Map<Long, Post> posts = new HashMap<>();
+    private String currentUsername;
 
     public String getUsername() {
         return username;
@@ -82,5 +83,13 @@ public class ProfileState {
             posts.values().removeIf(post -> post == null);
             this.posts = posts;
         }
+    }
+
+    public String getCurrentUsername() {
+        return currentUsername;
+    }
+
+    public void setCurrentUsername(String currentUsername) {
+        this.currentUsername = currentUsername;
     }
 }

@@ -38,19 +38,27 @@ public class ProfilePresenter implements ProfileOutputBoundary {
     @Override
     public void prepareSuccessView(ProfileOutputData response) {
         final ProfileState profileState = profileViewModel.getState();
-        profileState.setUsername(response.getUsername());
+        profileState.setUsername(response.getTargetUsername());
         profileState.setDisplayName(response.getDisplayName());
         profileState.setProfilePictureUrl(response.getProfilePictureUrl());
         profileState.setBio(response.getBio());
         profileState.setNumFollowers(response.getNumFollowers());
         profileState.setNumFollowing(response.getNumFollowing());
         profileState.setPosts(response.getPosts());
+        profileState.setCurrentUsername(response.getUsername());
         profileViewModel.setState(profileState);
-        profileViewModel.firePropertyChanged();
+        if (response.getTargetUsername().equals(response.getUsername())) {
+            profileViewModel.firePropertyChanged("My Profile Viewed");
+        }
+        else {
+            profileViewModel.firePropertyChanged("Other Profile Viewed");
+        }
+
     }
 
     @Override
     public void prepareFailView(String error) {
+        profileViewModel.firePropertyChanged("User not found");
     }
 
     @Override
