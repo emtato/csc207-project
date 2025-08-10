@@ -3,13 +3,13 @@ package entity;
 import java.util.ArrayList;
 
 public class Restaurant {
-    private final String name;
-    private final String address;
-    private final String phone;
+    private String name;
+    private String address;
+    private String phone;
     private final String location;
     private final ArrayList<String> cuisines;
     private final ArrayList<entity.Review> reviews;
-    private final String priceRange;
+    private String priceRange;
 
     // Restaurants based on cuisines and location
     public Restaurant(ArrayList<String> cuisines, String location) {
@@ -61,5 +61,14 @@ public class Restaurant {
 
     public String getPriceRange() {
         return priceRange;
+    }
+
+    public void setName(String name) { this.name = name;
+    }
+    public void setAddress(String address) { this.address = address;
+    }
+    public void setPhone(String phone) { this.phone = phone;
+    }
+    public void setPriceRange(String priceRange) { this.priceRange = priceRange;
     }
 }

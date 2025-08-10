@@ -19,6 +19,7 @@ import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.view_profile.ProfileViewModel;
 import view.*;
 import view.map.MapView;
+import view.map.RestaurantSearch;
 
 import javax.swing.*;
 import java.awt.CardLayout;

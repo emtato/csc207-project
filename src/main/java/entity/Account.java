@@ -27,6 +27,7 @@ public class Account implements User {
     private boolean isPublic;
     private boolean notificationsEnabled;
     private ArrayList<String> clubs = new ArrayList<>();
+    private String location;
 
     public Account(String username, String password) {
         this.profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
@@ -273,5 +274,13 @@ public class Account implements User {
     @Override
     public void setRequestedAccounts(Map<String, User> requestedAccounts) {
         this.requestedAccounts = requestedAccounts;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

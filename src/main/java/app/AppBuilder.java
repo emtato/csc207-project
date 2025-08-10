@@ -121,6 +121,7 @@ import use_case.create_post.CreatePostInteractor;
 import use_case.create_post.CreatePostOutputBoundary;
 import view.*;
 import view.map.MapView;
+import view.map.RestaurantSearch;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
