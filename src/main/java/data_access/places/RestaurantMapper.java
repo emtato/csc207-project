@@ -2,6 +2,7 @@ package data_access.places;
 
 import entity.Restaurant;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +12,10 @@ public class RestaurantMapper {
         String address = (String) place.getOrDefault("formattedAddress", "");
         String phone = (String) place.getOrDefault("internationalPhoneNumber", "");
         String location = place.getOrDefault("location", "").toString();
-
+        URI uri = null;
+        if (place.get("websiteUri") != null){
+            URI.create(place.getOrDefault("websiteUri", "").toString());
+        }
         ArrayList<String> cuisines = new ArrayList<>();
         Object primary = place.get("primaryType");
         if (primary != null) cuisines.add(primary.toString());
@@ -34,6 +38,7 @@ public class RestaurantMapper {
         r.setAddress(address);
         r.setPhone(phone);
         r.setPriceRange(priceRange);
+        r.setURI(uri);
         // optionally set reviews if available
         return r;
     }

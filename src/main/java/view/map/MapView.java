@@ -30,11 +30,16 @@ public class MapView {
             AppProperties appProps = new AppProperties();
             Properties props = appProps.getProperties();
             String apiKey = props.getProperty("PLACES_API_KEY");
+            String location =  ""; // e.g. "43.9559913,-78.8758528"
+
+            if (restaurant != null) {
+                 location = restaurant.getLocation();
+            }
 
             // Build valid Static Maps API URL
             String imageUrl = "https://maps.googleapis.com/maps/api/staticmap"
-                    + "?center=43.9559913,-78.8758528"
-                    + "&zoom=14"
+                    + "?center=" + location
+                    + "&zoom=15"
                     + "&size=800x800"
                     + "&key=" + apiKey;
 
@@ -67,6 +72,7 @@ public class MapView {
             System.exit(1);
         }
     }
+
     public static void main(String[] args) {
         JFrame test = new JFrame("Google Maps");
 
@@ -112,6 +118,7 @@ public class MapView {
             System.exit(1);
         }
     }
+
         public String getViewName() {
         return "map view";
     }

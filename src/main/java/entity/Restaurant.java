@@ -1,5 +1,6 @@
 package entity;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class Restaurant {
@@ -10,6 +11,7 @@ public class Restaurant {
     private final ArrayList<String> cuisines;
     private final ArrayList<entity.Review> reviews;
     private String priceRange;
+    private URI uri;
 
     // Restaurants based on cuisines and location
     public Restaurant(ArrayList<String> cuisines, String location) {
@@ -20,19 +22,8 @@ public class Restaurant {
         this.cuisines = cuisines;
         this.reviews = new ArrayList<>();
         this.priceRange = null;
+        this.uri = null;
     }
-
-//    // TODO: if extra time, different search function (delete if not used)
-//    // Restaurants based on name
-//    public Restaurant(String name) {
-//        this.name = name;
-//        this.address = null;
-//        this.phone = null;
-//        this.location = null;
-//        this.cuisines = new ArrayList<>();
-//        this.reviews = new ArrayList<>();
-//        this.priceRange = null;
-//    }
 
 
     public String getName() {
@@ -63,6 +54,10 @@ public class Restaurant {
         return priceRange;
     }
 
+    public URI getURI() {
+        return uri;
+    }
+
     public void setName(String name) { this.name = name;
     }
     public void setAddress(String address) { this.address = address;
@@ -71,4 +66,5 @@ public class Restaurant {
     }
     public void setPriceRange(String priceRange) { this.priceRange = priceRange;
     }
+    public void setURI(URI uri) { this.uri = uri; }
 }

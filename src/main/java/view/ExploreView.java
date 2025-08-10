@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,7 +82,7 @@ public class ExploreView extends JPanel {
         }
         var cuisines = currentUser.getFoodPreferences();
         if (cuisines == null || cuisines.isEmpty()) {
-            cuisines = new ArrayList<>(Arrays.asList("International"));
+            cuisines = new ArrayList<>(Arrays.asList(""));
         }
 
         try {
@@ -101,24 +102,40 @@ public class ExploreView extends JPanel {
                         if (liveRestaurants == null || liveRestaurants.isEmpty()) {
                             restaurantsPanel.add(new JLabel("No restaurants found for your preferences."));
                         } else {
-                            for (Restaurant rest : liveRestaurants) {
+                            for (Restaurant restaurant : liveRestaurants) {
                                 JPanel restBox = new JPanel();
                                 restBox.setLayout(new BoxLayout(restBox, BoxLayout.Y_AXIS));
                                 restBox.setBackground(Color.WHITE);
                                 restBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
 
-                                JLabel name = new JLabel(rest.getName());
+                                JLabel name = new JLabel(restaurant.getName());
                                 name.setFont(new Font("Roboto", Font.BOLD, 15));
-                                JLabel address = new JLabel(rest.getAddress() == null ? "Address unknown" : rest.getAddress());
-                                JLabel priceRange = new JLabel("Price range: " + (rest.getPriceRange() == null ? "N/A" : rest.getPriceRange()));
+                                JLabel address = new JLabel(restaurant.getAddress() == null ? "Address unknown" : restaurant.getAddress());
+                                JLabel priceRange = new JLabel("Price range: " + (restaurant.getPriceRange() == null ? "N/A" : restaurant.getPriceRange()));
 
-                                JButton viewButton = new JButton("View Restaurant");
-                                // TODO: add listener to open restaurant details
+                                JButton viewButton = new JButton("View Map");
+                                JButton websiteButton = new JButton("Website");
+
+                                viewButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        viewManagerModel.setState("map view");
+                                    }
+                                });
+                                websiteButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        if (restaurant.getURI() != null) {
+                                            openWebpage(restaurant.getURI());
+                                        }
+                                    }
+                                });
 
                                 restBox.add(name);
                                 restBox.add(address);
                                 restBox.add(priceRange);
                                 restBox.add(viewButton);
+                                restBox.add(websiteButton);
 
                                 restaurantsPanel.add(restBox);
                                 restaurantsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -246,6 +263,20 @@ public class ExploreView extends JPanel {
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
         this.add(menuBar, BorderLayout.SOUTH);
+    }
+
+    // SOURCE: https://stackoverflow.com/questions/10967451/open-a-link-in-browser-with-java-button
+    public static boolean openWebpage(URI uri) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     public String getViewName() {
