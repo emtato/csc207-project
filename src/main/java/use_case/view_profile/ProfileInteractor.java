@@ -25,14 +25,16 @@ public class ProfileInteractor implements ProfileInputBoundary {
     public void executeViewProfile(ProfileInputData profileInputData) {
         final String username = profileInputData.getUsername();
         final String targetUsername = profileInputData.getTargetUsername();
-        final User user = userDataAccessObject.get(targetUsername);
-        if (user != null) {
-            final String displayName = user.getDisplayName();
-            final String bio = user.getBio();
-            final String profilePictureUrl = user.getProfilePictureUrl();
-            final int numFollowers = user.getNumFollowers();
-            final int numFollowing = user.getNumFollowing();
-            final ArrayList<Long> posts = user.getUserPosts();
+        final User currentUser = userDataAccessObject.get(username);
+        final User targetUser = userDataAccessObject.get(targetUsername);
+        if (targetUser != null && (username.equals(targetUsername) || targetUser.isPublic()
+                || currentUser.getFollowingAccounts().containsKey(targetUsername))) {
+            final String displayName = targetUser.getDisplayName();
+            final String bio = targetUser.getBio();
+            final String profilePictureUrl = targetUser.getProfilePictureUrl();
+            final int numFollowers = targetUser.getNumFollowers();
+            final int numFollowing = targetUser.getNumFollowing();
+            final ArrayList<Long> posts = targetUser.getUserPosts();
             final Map<Long, Post> postsMap = new HashMap<>();
             for (Long postId : posts) {
                 postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
@@ -42,8 +44,11 @@ public class ProfileInteractor implements ProfileInputBoundary {
                     profilePictureUrl, numFollowers, numFollowing, postsMap, targetUsername);
             presenter.prepareSuccessView(profileOutputData);
         }
-        else {
+        else if (targetUser == null) {
             presenter.prepareFailView("User not found");
+        }
+        else {
+            presenter.prepareFailView("Account is private");
         }
     }
 
