@@ -1,6 +1,6 @@
 package use_case.specific_club;
 
-import data_access.FileClubsDataAccessObject;
+import data_access.ClubsDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
@@ -8,12 +8,12 @@ import entity.Club;
 import java.util.ArrayList;
 
 public class SpecificClubInteractor implements SpecificClubInputBoundary {
-    private final FileClubsDataAccessObject clubsDataAccessObject;
+    private final ClubsDataAccessObject clubsDataAccessObject;
     private final UserDataAccessObject userDataAccessObject;
     private final SpecificClubOutputBoundary specificClubPresenter;
 
     public SpecificClubInteractor(
-            FileClubsDataAccessObject clubsDataAccessObject,
+            ClubsDataAccessObject clubsDataAccessObject,
             UserDataAccessObject userDataAccessObject,
             SpecificClubOutputBoundary specificClubPresenter) {
         this.clubsDataAccessObject = clubsDataAccessObject;
@@ -24,7 +24,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void execute(SpecificClubInputData inputData) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(inputData.getClubId()));
+            Club club = clubsDataAccessObject.getClub(Long.parseLong(String.valueOf(inputData.getClubId())));
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -33,6 +33,8 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
             specificClubPresenter.prepareSuccessView(
                 new SpecificClubOutputData(club, true, null)
             );
+        } catch (NumberFormatException e) {
+            specificClubPresenter.prepareFailView("Invalid club ID format");
         } catch (Exception e) {
             specificClubPresenter.prepareFailView("Error loading club: " + e.getMessage());
         }
@@ -41,7 +43,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void leaveClub(String username, long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(clubId));
+            Club club = clubsDataAccessObject.getClub(clubId);
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -84,7 +86,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void loadClub(long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(clubId));
+            Club club = clubsDataAccessObject.getClub(clubId);
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -101,7 +103,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void fetchAnnouncements(long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(clubId));
+            Club club = clubsDataAccessObject.getClub(clubId);
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -118,7 +120,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void fetchPosts(long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(clubId));
+            Club club = clubsDataAccessObject.getClub(clubId);
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -135,7 +137,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public boolean isMember(String username, long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(String.valueOf(clubId));
+            Club club = clubsDataAccessObject.getClub(clubId);
             if (club == null) {
                 return false;
             }

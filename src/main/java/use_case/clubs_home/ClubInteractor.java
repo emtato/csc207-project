@@ -1,6 +1,6 @@
 package use_case.clubs_home;
 
-import data_access.FileClubsDataAccessObject;
+import data_access.ClubsDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
@@ -10,13 +10,14 @@ import use_case.create_club.CreateClubInputData;
 import java.util.ArrayList;
 
 public class ClubInteractor implements ClubInputBoundary {
-    private final FileClubsDataAccessObject clubsDataAccessObject;
+    private final ClubsDataAccessObject clubsDataAccessObject;
     private final UserDataAccessObject userDataAccessObject;
     private final ClubOutputBoundary clubPresenter;
 
-    public ClubInteractor(FileClubsDataAccessObject clubsDataAccessObject,
-                         UserDataAccessObject userDataAccessObject,
-                         ClubOutputBoundary clubPresenter) {
+    public ClubInteractor(
+            ClubsDataAccessObject clubsDataAccessObject,
+            UserDataAccessObject userDataAccessObject,
+            ClubOutputBoundary clubPresenter) {
         this.clubsDataAccessObject = clubsDataAccessObject;
         this.userDataAccessObject = userDataAccessObject;
         this.clubPresenter = clubPresenter;
@@ -62,7 +63,8 @@ public class ClubInteractor implements ClubInputBoundary {
             String username = clubInputData.getUsername();
             String clubId = clubInputData.getClubIdToJoin();
 
-            Club club = clubsDataAccessObject.getClub(clubId);
+            // Convert clubId to long before calling getClub
+            Club club = clubsDataAccessObject.getClub(Long.parseLong(clubId));
             if (club == null) {
                 throw new IllegalArgumentException("Club not found");
             }

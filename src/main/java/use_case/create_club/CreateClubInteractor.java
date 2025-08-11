@@ -1,6 +1,6 @@
 package use_case.create_club;
 
-import data_access.FileClubsDataAccessObject;
+import data_access.ClubsDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateClubInteractor implements CreateClubInputBoundary {
-    private final FileClubsDataAccessObject clubsDataAccessObject;
+    private final ClubsDataAccessObject clubsDataAccessObject;
     private final UserDataAccessObject userDataAccessObject;
     private final CreateClubOutputBoundary createClubPresenter;
 
     public CreateClubInteractor(
-            FileClubsDataAccessObject clubsDataAccessObject,
+            ClubsDataAccessObject clubsDataAccessObject,
             UserDataAccessObject userDataAccessObject,
             CreateClubOutputBoundary createClubPresenter) {
         this.clubsDataAccessObject = clubsDataAccessObject;
@@ -82,7 +82,7 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
             }
 
             // Get the created club and prepare success view
-            Club createdClub = clubsDataAccessObject.getClub(clubIdStr);
+            Club createdClub = clubsDataAccessObject.getClub(clubId);
             createClubPresenter.prepareSuccessView(new CreateClubOutputData(createdClub, true, null));
 
         } catch (Exception e) {
