@@ -29,9 +29,10 @@ public class Main {
                 .addManageFollowingView()
                 .addPostView()
                 .addSpecificClubView()
+                .addSpecificClubUseCase()  // Moved right after addSpecificClubView
                 .addCreateClubView()
                 .addCreatePostView()
-                .addCreatePostUseCase()  // Moved this right after addCreatePostView
+                .addCreatePostUseCase()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
@@ -48,7 +49,6 @@ public class Main {
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
                 .addCreateClubUseCase()
-                .addSpecificClubUseCase()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();

@@ -130,13 +130,13 @@
       "tags": ["asdfg"]
     },
     "1754332203250": {
-      "members": ["123"],
+      "members": [],
       "name": "asdf",
       "description": "adfs",
       "id": 1754332203250,
       "posts": [
-        1754504939611,
-        1754506605130
+        1754506605130,
+        1754911904166
       ],
       "tags": ["adf"]
     },
@@ -763,6 +763,21 @@
       "time": "2025-08-09 08:48 PM",
       "title": "heheheheh",
       "type": "general",
+      "user": "123",
+      "tags": []
+    },
+    "1754911904166": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "yo",
+      "time": "2025-08-11 07:31 AM",
+      "title": "hey this is a test announcement",
+      "type": "announcement",
       "user": "123",
       "tags": []
     },

@@ -181,10 +181,11 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         clubIconPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                SpecificClubView specificClubView = new SpecificClubView(
-                    viewManagerModel, cardPanel, club, specificClubViewModel, specificClubController);
-                cardPanel.add(specificClubView, specificClubView.getViewName());
-                viewManagerModel.setState(specificClubView.getViewName());
+                // Get the existing SpecificClubView instance from ViewManagerModel
+                SpecificClubView existingView = viewManagerModel.getSpecificClubView();
+                // Update it with the new club context
+                existingView.updateClub(club);
+                viewManagerModel.setState(existingView.getViewName());
             }
 
             @Override
