@@ -24,21 +24,32 @@ public class ProfileInteractor implements ProfileInputBoundary {
     @Override
     public void executeViewProfile(ProfileInputData profileInputData) {
         final String username = profileInputData.getUsername();
-        final User user = userDataAccessObject.get(username);
-        final String displayName = user.getDisplayName();
-        final String bio = user.getBio();
-        final String profilePictureUrl = user.getProfilePictureUrl();
-        final int numFollowers = user.getNumFollowers();
-        final int numFollowing = user.getNumFollowing();
-        final ArrayList<Long> posts = user.getUserPosts();
-        final Map<Long, Post> postsMap = new HashMap<>();
-        for (Long postId : posts) {
-            postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
-        }
+        final String targetUsername = profileInputData.getTargetUsername();
+        final User currentUser = userDataAccessObject.get(username);
+        final User targetUser = userDataAccessObject.get(targetUsername);
+        if (targetUser != null && (username.equals(targetUsername) || targetUser.isPublic()
+                || currentUser.getFollowingAccounts().containsKey(targetUsername))) {
+            final String displayName = targetUser.getDisplayName();
+            final String bio = targetUser.getBio();
+            final String profilePictureUrl = targetUser.getProfilePictureUrl();
+            final int numFollowers = targetUser.getNumFollowers();
+            final int numFollowing = targetUser.getNumFollowing();
+            final ArrayList<Long> posts = targetUser.getUserPosts();
+            final Map<Long, Post> postsMap = new HashMap<>();
+            for (Long postId : posts) {
+                postsMap.put(postId, postCommentsLikesDataAccessObject.getPost(postId));
+            }
 
-        final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio, profilePictureUrl,
-                numFollowers, numFollowing, postsMap);
-        presenter.prepareSuccessView(profileOutputData);
+            final ProfileOutputData profileOutputData = new ProfileOutputData(username, displayName, bio,
+                    profilePictureUrl, numFollowers, numFollowing, postsMap, targetUsername);
+            presenter.prepareSuccessView(profileOutputData);
+        }
+        else if (targetUser == null) {
+            presenter.prepareFailView("User not found");
+        }
+        else {
+            presenter.prepareFailView("Account is private");
+        }
     }
 
     @Override

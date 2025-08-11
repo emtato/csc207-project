@@ -37,6 +37,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         // Update state of other views
         final ProfileState profileState = profileViewModel.getState();
         profileState.setUsername(response.getUsername());
+        profileState.setCurrentUsername(response.getUsername());
         profileState.setDisplayName(response.getDisplayName());
         profileState.setProfilePictureUrl(response.getProfilePictureUrl());
         profileState.setBio(response.getBio());
@@ -44,7 +45,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         profileState.setNumFollowing(response.getNumFollowing());
         profileState.setPosts(response.getPosts());
         profileViewModel.setState(profileState);
-        this.profileViewModel.firePropertyChanged();
+        this.profileViewModel.firePropertyChanged("My Profile Viewed");
         final SettingsState settingsState = settingsViewModel.getState();
         settingsState.setUsername(response.getUsername());
         settingsState.setNewPassword(response.getPassword());

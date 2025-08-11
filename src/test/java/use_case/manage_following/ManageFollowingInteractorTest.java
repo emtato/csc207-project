@@ -65,6 +65,7 @@ class ManageFollowingInteractorTest {
         ManageFollowingInputBoundary interactor = new ManageFollowingInteractor(userRepository, successPresenter);
         interactor.executeUnfollow(inputData);
     }
+
     @Test
     void followSuccessTest() {
 
@@ -102,6 +103,43 @@ class ManageFollowingInteractorTest {
             @Override
             public void prepareFailView(String error) {
                 fail("Use case failure is unexpected.");
+            }
+
+            @Override
+            public void switchToProfileView() {
+                fail("This use case is unexpected.");
+            }
+        };
+
+        ManageFollowingInputBoundary interactor = new ManageFollowingInteractor(userRepository, successPresenter);
+        interactor.executeFollow(inputData);
+    }
+
+    @Test
+    void folloowNonexistentUserFailureTest() {
+
+        // Create user with username Caf
+        final String username = "Caf";
+        final String password = "password";
+        final ArrayList<User> followingAccountsUser1 = new ArrayList<>();
+        UserFactory factory = new CreateAccount();
+        final User user = factory.create(username, password);
+
+        // Add users to the user repository and add a following from user to user2
+        ManageFollowingInputData inputData = new ManageFollowingInputData(username, "nonexistent_username");
+        UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        userRepository.save(user);
+
+        // This creates a successPresenter that tests whether the test case is as we expect.
+        ManageFollowingOutputBoundary successPresenter = new ManageFollowingOutputBoundary() {
+            @Override
+            public void prepareSuccessView(ManageFollowingOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                assertEquals("Error occurred while following user", error);
             }
 
             @Override

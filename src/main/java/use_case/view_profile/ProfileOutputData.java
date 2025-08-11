@@ -1,6 +1,5 @@
 package use_case.view_profile;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import entity.Post;
@@ -16,9 +15,10 @@ public class ProfileOutputData {
     private final int numFollowers;
     private final int numFollowing;
     private final Map<Long, Post> posts;
+    private final String targetUsername;
 
     public ProfileOutputData(String username, String displayName, String bio, String profilePictureUrl,
-                             int numFollowers, int numFollowing, Map<Long, Post> posts) {
+                             int numFollowers, int numFollowing, Map<Long, Post> posts, String targetUsername) {
         this.username = username;
         this.displayName = displayName;
         this.bio = bio;
@@ -26,6 +26,7 @@ public class ProfileOutputData {
         this.numFollowers = numFollowers;
         this.numFollowing = numFollowing;
         this.posts = posts;
+        this.targetUsername = targetUsername;
     }
 
     public String getUsername() {
@@ -54,5 +55,9 @@ public class ProfileOutputData {
 
     public Map<Long, Post> getPosts() {
         return posts;
+    }
+
+    public String getTargetUsername() {
+        return targetUsername;
     }
 }

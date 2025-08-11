@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -47,6 +48,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
     private final JButton followersButton;
     private final JPanel profileContent;
     private final JButton refreshButton;
+    private final JButton seeMyProfileButton;
+    private final JButton seeOtherProfileButton;
+    private final JPanel profileButtonsPanel;
 
     public ProfileView(ProfileViewModel profileViewModel, ViewManagerModel viewManagerModel) {
         this.profileViewModel = profileViewModel;
@@ -75,6 +79,9 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         profileContent = new JPanel();
         profileContent.setLayout(new BoxLayout(profileContent, BoxLayout.Y_AXIS));
         refreshButton = new JButton("Refresh");
+        seeMyProfileButton = new JButton(ProfileViewModel.SEE_MY_PROFILE_BUTTON_LABEL);
+        seeOtherProfileButton = new JButton(ProfileViewModel.SEE_OTHER_PROFILE_BUTTON_LABEL);
+        profileButtonsPanel = new JPanel();
 
         createView();
 
@@ -83,6 +90,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         addEditProfileButtonListener();
         addFollowersButtonListener();
         addFollowingButtonListener();
+        addOtherProfileButtonListener();
+        addMyProfileButtonListener();
     }
 
     private void createView() {
@@ -98,18 +107,22 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
         mainPanel.add(userInfoPanel);
 
-        final JPanel profileButtons = createProfileButtonsPanel();
-        final JLabel label = new JLabel();
-        final LabelButtonPanel editButtonPanel = new LabelButtonPanel(label, editProfileButton);
-        profileButtons.add(editButtonPanel);
+        profileButtonsPanel.setLayout(new BoxLayout(profileButtonsPanel, BoxLayout.Y_AXIS));
+        final LabelButtonPanel editButtonPanel = new LabelButtonPanel(new JLabel(), editProfileButton);
+        profileButtonsPanel.add(editButtonPanel);
 
         final LabelButtonPanel followingButtonPanel = new LabelButtonPanel(following, followingButton);
-        profileButtons.add(followingButtonPanel);
+        profileButtonsPanel.add(followingButtonPanel);
 
         final LabelButtonPanel followersButtonPanel = new LabelButtonPanel(followers, followersButton);
-        profileButtons.add(followersButtonPanel);
+        profileButtonsPanel.add(followersButtonPanel);
 
-        mainPanel.add(profileButtons);
+        final LabelButtonPanel seeOtherProfileButtonPanel = new LabelButtonPanel(new JLabel(), seeOtherProfileButton);
+        profileButtonsPanel.add(seeOtherProfileButtonPanel);
+
+        final JScrollPane buttonsPanelScrollPane = new JScrollPane(profileButtonsPanel);
+
+        mainPanel.add(buttonsPanelScrollPane);
         this.add(mainPanel);
 
         // add profile content scroll panel containing the user's posts
@@ -149,6 +162,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
         userInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         userInfoPanel.setBackground(Color.WHITE);
+        final Dimension size = new Dimension(ProfileViewModel.INFO_PANEL_WIDTH, ProfileViewModel.INFO_PANEL_HEIGHT);
+        userInfoPanel.setMaximumSize(size);
         return userInfoPanel;
     }
 
@@ -161,13 +176,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         bioArea.setLineWrap(true);
         bioArea.setWrapStyleWord(true);
         return bioArea;
-    }
-
-    private JPanel createProfileButtonsPanel() {
-        final JPanel profileButtons = new JPanel();
-        profileButtons.setLayout(new BoxLayout(profileButtons, BoxLayout.Y_AXIS));
-        profileButtons.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        return profileButtons;
     }
 
     private JScrollPane createProfileContentScrollPane() {
@@ -187,7 +195,8 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(refreshButton)) {
                         final ProfileState profileState = profileViewModel.getState();
-                        this.profileController.executeViewProfile(profileState.getUsername());
+                        this.profileController.executeViewProfile(profileState.getCurrentUsername(),
+                                profileState.getUsername());
                     }
                 }
         );
@@ -226,20 +235,89 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
         );
     }
 
+    private void addMyProfileButtonListener() {
+        seeMyProfileButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(seeMyProfileButton)) {
+                        final ProfileState profileState = profileViewModel.getState();
+                        this.profileController.executeViewProfile(profileState.getCurrentUsername(),
+                                profileState.getCurrentUsername());
+                    }
+                }
+        );
+    }
+
+    private void addOtherProfileButtonListener() {
+        seeOtherProfileButton.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(seeOtherProfileButton)) {
+                        final ProfileState profileState = profileViewModel.getState();
+                        final String targetUsername = JOptionPane.showInputDialog(this, "Enter target username:");
+                        if (targetUsername != null && !targetUsername.isEmpty()) {
+                            this.profileController.executeViewProfile(profileState.getCurrentUsername(),
+                                    targetUsername);
+                        }
+                    }
+                }
+        );
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            setFields(this.profileViewModel.getState());
+        final ProfileState profileState = this.profileViewModel.getState();
+        if (evt.getPropertyName().equals("My Profile Viewed") || evt.getPropertyName().equals("Other Profile Viewed")) {
+            setFields(profileState, evt.getPropertyName());
+        }
+        else if (evt.getPropertyName().equals("User not found")) {
+            final String targetUsername = JOptionPane.showInputDialog(this,
+                    "User not found, enter a different username: ");
+            if (targetUsername != null && !targetUsername.isEmpty()) {
+                this.profileController.executeViewProfile(profileState.getCurrentUsername(),
+                        targetUsername);
+            }
+        }
+        else if (evt.getPropertyName().equals("Account is private")) {
+            JOptionPane.showMessageDialog(this, "Account is private", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void setFields(ProfileState state) {
+    private void setFields(ProfileState state, String propertyName) {
         profilePicture.updateIcon(state.getProfilePictureUrl());
         displayName.setText(state.getDisplayName());
         username.setText(state.getUsername());
         bio.setText(state.getBio());
         following.setText(state.getNumFollowing() + " following");
         followers.setText(state.getNumFollowers() + " followers");
+
+        profileButtonsPanel.removeAll();
+        if ("My Profile Viewed".equals(propertyName)) {
+            final LabelButtonPanel editButtonPanel = new LabelButtonPanel(new JLabel(), editProfileButton);
+            profileButtonsPanel.add(editButtonPanel);
+
+            final LabelButtonPanel followingButtonPanel = new LabelButtonPanel(following, followingButton);
+            profileButtonsPanel.add(followingButtonPanel);
+
+            final LabelButtonPanel followersButtonPanel = new LabelButtonPanel(followers, followersButton);
+            profileButtonsPanel.add(followersButtonPanel);
+
+            profileButtonsPanel.add(new LabelButtonPanel(new JLabel(), seeOtherProfileButton));
+        }
+        else if ("Other Profile Viewed".equals(propertyName)) {
+            final JLabel currentStatusLabel = new GeneralJLabel(
+                    "You are viewing " + state.getDisplayName() + "'s profile", GUIConstants.SMALL_TEXT_SIZE,
+                    GUIConstants.RED);
+            final JLabel numFollowingLabel = new GeneralJLabel(state.getNumFollowing() + " Following",
+                    GUIConstants.SMALL_TEXT_SIZE, GUIConstants.BLACK);
+            final JLabel numFollowersLabel = new GeneralJLabel(state.getNumFollowers() + " Followers",
+                    GUIConstants.SMALL_TEXT_SIZE, GUIConstants.BLACK);
+
+            profileButtonsPanel.add(currentStatusLabel);
+            profileButtonsPanel.add(numFollowingLabel);
+            profileButtonsPanel.add(numFollowersLabel);
+
+            profileButtonsPanel.add(new LabelButtonPanel(new JLabel(), seeMyProfileButton));
+            profileButtonsPanel.setBackground(GUIConstants.WHITE);
+        }
         refreshContent();
     }
 
