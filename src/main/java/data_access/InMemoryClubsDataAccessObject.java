@@ -16,7 +16,7 @@ public class InMemoryClubsDataAccessObject implements ClubsDataAccessObject {
     private final HashMap<Long, Club> clubs = new HashMap<>();
     private final PostCommentsLikesDataAccessObject postDAO;
 
-    private InMemoryClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
+    public InMemoryClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
         this.postDAO = postDAO;
     }
 
