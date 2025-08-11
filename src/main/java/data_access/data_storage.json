@@ -149,7 +149,7 @@
       "name": "fries",
       "description": "fries",
       "id": 1754429844109,
-      "posts": [],
+      "posts": [1754916224414],
       "tags": ["fries"]
     },
     "2435234": {
@@ -273,6 +273,21 @@
       "likes": 1,
       "tags": []
     },
+    "1754915549095": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "lessss goooooooooooo",
+      "time": "2025-08-11 08:32 AM",
+      "title": "i think this works?",
+      "type": "general",
+      "user": "123",
+      "tags": []
+    },
     "578232418276": {
       "images": ["https://i.imgur.com/PLi6XUA.jpeg"],
       "contents": {
@@ -340,6 +355,21 @@
       "title": "hii",
       "type": "recipe",
       "user": "a",
+      "tags": []
+    },
+    "1754916224414": {
+      "images": [],
+      "contents": {
+        "ingredients": [],
+        "steps": [""],
+        "cuisines": []
+      },
+      "clubs": [],
+      "description": "yipeee",
+      "time": "2025-08-11 08:43 AM",
+      "title": "hey hey hey",
+      "type": "announcement",
+      "user": "123",
       "tags": []
     },
     "1754548763868": {

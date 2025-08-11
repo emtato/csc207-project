@@ -22,7 +22,7 @@
         "travel",
         "food"
       ],
-      "clubs": [],
+      "clubs": ["1754915532863"],
       "followingAccounts": {},
       "isPublic": false,
       "mutedAccounts": [],
@@ -105,14 +105,19 @@
       "bio": "",
       "blockedTerms": [],
       "notificationsEnabled": true,
-      "userPosts": [1754913984348],
+      "userPosts": [
+        1754913984348,
+        1754915549095,
+        1754916224414
+      ],
       "requesterAccounts": {},
       "password": "123",
       "foodPreferences": [],
       "clubs": [
         "1754429844109",
         "12341325",
-        "2435234"
+        "2435234",
+        "1754915532863"
       ],
       "followingAccounts": {},
       "isPublic": true,

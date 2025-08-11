@@ -1,5 +1,6 @@
 package app;
 
+import data_access.ClubsDataAccessObject;
 import data_access.FileClubsDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
@@ -103,7 +104,8 @@ import javax.swing.*;
 
 public class UseCaseBuilder {
     // DAOS
-    private FileClubsDataAccessObject dbClubsDataAccessObject;
+    // private FileClubsDataAccessObject dbClubsDataAccessObject;
+    private ClubsDataAccessObject dbClubsDataAccessObject;
     private UserDataAccessObject userDataAccessObject;
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
@@ -111,10 +113,12 @@ public class UseCaseBuilder {
     private ViewBuilder viewBuilder;
     private UserFactory userFactory = new CreateAccount();
 
-    public UseCaseBuilder(FileClubsDataAccessObject clubsDataAccessObject,
-                          UserDataAccessObject userDataAccessObject,
-                          PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
-                          ViewBuilder viewBuilder) {
+    public UseCaseBuilder(
+            // FileClubsDataAccessObject clubsDataAccessObject,
+            ClubsDataAccessObject clubsDataAccessObject,
+            UserDataAccessObject userDataAccessObject,
+            PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
+            ViewBuilder viewBuilder) {
         this.dbClubsDataAccessObject = clubsDataAccessObject;
         this.userDataAccessObject = userDataAccessObject;
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
