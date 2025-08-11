@@ -457,7 +457,10 @@ public class AppBuilder {
         signupView.setSignupController(controller);
         return this;
     }
-
+    public AppBuilder setSessionUserDataAccessObject() {
+        Session.setUserDataAccessObject(userDataAccessObject);
+        return this;
+    }
     /**
      * Adds the Login Use Case to the application.
      *

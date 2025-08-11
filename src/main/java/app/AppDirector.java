@@ -54,6 +54,7 @@ public class AppDirector {
 
         // add the use cases and build the app
         return useCaseBuilder
+                //.setSessionUserDataAccessObject()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
