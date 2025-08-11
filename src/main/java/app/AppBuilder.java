@@ -223,7 +223,7 @@ public class AppBuilder {
             cardPanel,
             defaultClub,
             specificClubViewModel,
-            null  // Controller will be set in addSpecificClubUseCase
+            null
         );
 
         cardPanel.add(specificClubView, specificClubView.getViewName());

@@ -41,7 +41,8 @@ public class AppDirector {
                 .addEventsView()
                 .addMapView()
                 .addExploreView()
-                .addCreatePostView();
+                .addCreatePostView()
+                .addCreateClubView(); // Added this line
 
         // create the use case builder with the File daos
         PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
@@ -69,6 +70,9 @@ public class AppDirector {
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
                 .addCreatePostUseCase()
+                .addSpecificClubUseCase()
+                .addCreateClubUseCase()
+                .addClubUseCase()
                 .build();
     }
 }

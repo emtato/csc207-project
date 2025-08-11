@@ -4,6 +4,7 @@ import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.clubs_home.ClubViewModel;
+import interface_adapter.create_club.CreateClubViewModel;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.get_comments.GetCommentsViewModel;
@@ -47,6 +48,7 @@ public class ViewBuilder {
     private SettingsView settingsView;
     private SettingsViewModel settingsViewModel;
     private ClubViewModel clubViewModel;
+    private CreateClubViewModel createClubViewModel;
     private PostView postView;
     private PostViewModel postViewModel;
     private ManageFollowersView manageFollowersView;
@@ -58,6 +60,7 @@ public class ViewBuilder {
     private ClubHomePageView clubHomePageView;
     private SpecificClubView specificClubView;
     private SpecificClubViewModel specificClubViewModel;
+    private CreateClubView createClubView;
     private ExploreEventsView exploreEventsView;
     private MapView mapView;
     private MapViewModel mapViewModel;
@@ -75,6 +78,7 @@ public class ViewBuilder {
 
         application.add(cardPanel);
 
+        // Make sure we start with the login view, just like in Main.java
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
@@ -218,22 +222,6 @@ public class ViewBuilder {
         return this;
     }
 
-    public ViewBuilder addSpecificClubView() {
-        // Create the default club for initial view
-        Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
-
-        specificClubViewModel = new SpecificClubViewModel();
-        specificClubView = new SpecificClubView(
-            viewManagerModel,
-            cardPanel,
-            defaultClub,
-            specificClubViewModel,
-            null  // Controller will be set in addSpecificClubUseCase
-        );
-        cardPanel.add(specificClubView, specificClubView.getViewName());
-        return this;
-    }
-
     public ViewBuilder addEventsView() {
         exploreEventsView = new ExploreEventsView(viewManagerModel);
         cardPanel.add(exploreEventsView, exploreEventsView.getViewName());
@@ -276,7 +264,36 @@ public class ViewBuilder {
     }
 
     // TODO: add these views later, cant add them rn because they depend on daos rn
-    // addCreateClubView
+    public ViewBuilder addSpecificClubView() {
+        // Create the default club for initial view
+        Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
+
+        specificClubViewModel = new SpecificClubViewModel();
+        specificClubView = new SpecificClubView(
+                viewManagerModel,
+                cardPanel,
+                defaultClub,
+                specificClubViewModel,
+                null
+        );
+
+        cardPanel.add(specificClubView, specificClubView.getViewName());
+        viewManagerModel.setSpecificClubView(specificClubView);  // Store the view in ViewManagerModel
+        return this;
+    }
+
+    public ViewBuilder addCreateClubView() {
+        createClubViewModel = new CreateClubViewModel();
+        createClubView = new CreateClubView(
+                viewManagerModel,
+                null  // Controller will be set in addCreateClubUseCase
+                , createClubViewModel,
+                Session.getCurrentAccount()
+        );
+
+        cardPanel.add(createClubView, createClubView.getViewName());
+        return this;
+    }
 
     public ViewManagerModel getViewManagerModel() {
         return viewManagerModel;
@@ -376,6 +393,14 @@ public class ViewBuilder {
 
     public ClubViewModel getClubViewModel() { return clubViewModel;}
 
+    public CreateClubView getCreateClubView() { return createClubView; }
+
+    public CreateClubViewModel getCreateClubViewModel() {
+        return createClubViewModel;
+    }
+    public CreatePostViewModel getCreatePostViewModel() {
+        return createPostViewModel;
+    }
 
 
     public MapView getMapView() {

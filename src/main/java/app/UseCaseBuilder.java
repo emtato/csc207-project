@@ -12,6 +12,8 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.clubs_home.ClubController;
 import interface_adapter.clubs_home.ClubPresenter;
+import interface_adapter.create_club.CreateClubController;
+import interface_adapter.create_club.CreateClubPresenter;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -52,6 +54,9 @@ import use_case.clubs_home.ClubInteractor;
 import use_case.clubs_home.ClubOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.create_club.CreateClubInputBoundary;
+import use_case.create_club.CreateClubInteractor;
+import use_case.create_club.CreateClubOutputBoundary;
 import use_case.create_post.CreatePostInputBoundary;
 import use_case.create_post.CreatePostInteractor;
 import use_case.create_post.CreatePostOutputBoundary;
@@ -392,29 +397,56 @@ public class UseCaseBuilder {
      *
      * @return this builder
      */
-//    public UseCaseBuilder addClubHomePageUseCase() {
-//        // Set up Club controller
-//        final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(
-//                viewBuilder.getClubViewModel());
-//        final ClubInputBoundary clubInteractor = new ClubInteractor(
-//                dbClubsDataAccessObject,
-//                userDataAccessObject,
-//                clubOutputBoundary);
-//        final ClubController clubController = new ClubController(clubInteractor);
-//
-//        // Set up SpecificClub controller
-//        final SpecificClubOutputBoundary specificClubPresenter = new SpecificClubPresenter(viewBuilder.getSpecificClubViewModel());
-//        final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
-//            dbClubsDataAccessObject,
-//            userDataAccessObject,
-//            specificClubPresenter
-//        );
-//        final SpecificClubController specificClubController = new SpecificClubController(specificClubInteractor);
-//
-//        // Set both controllers in the view
-//        viewBuilder.getClubHomePageView().setClubController(clubController);
-//        viewBuilder.getClubHomePageView().setSpecificClubController(specificClubController);
-//
-//        return this;
-//    }
+    /**
+     * Adds the Specific Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addSpecificClubUseCase() {
+        final SpecificClubOutputBoundary specificClubOutputBoundary = new SpecificClubPresenter(viewBuilder.getSpecificClubViewModel());
+        final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                specificClubOutputBoundary
+        );
+
+        final SpecificClubController specificClubController = new SpecificClubController(specificClubInteractor);
+        viewBuilder.getSpecificClubView().setSpecificClubController(specificClubController);
+        return this;
+    }
+
+    /**
+     * Adds the Create Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addCreateClubUseCase() {
+        final CreateClubOutputBoundary createClubOutputBoundary = new CreateClubPresenter(viewBuilder.getCreateClubViewModel());
+        final CreateClubInputBoundary createClubInteractor = new CreateClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                createClubOutputBoundary
+        );
+
+        final CreateClubController createClubController = new CreateClubController(createClubInteractor);
+        viewBuilder.getCreateClubView().setCreateClubController(createClubController);
+        return this;
+    }
+
+    /**
+     * Adds the Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addClubUseCase() {
+        final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(viewBuilder.getViewManagerModel(), viewBuilder.getClubViewModel());
+        final ClubInputBoundary clubInteractor = new ClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                clubOutputBoundary
+        );
+        final ClubController clubController = new ClubController(clubInteractor);
+        viewBuilder.getClubHomePageView().setClubController(clubController);
+        return this;
+    }
 }
