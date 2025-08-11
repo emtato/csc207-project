@@ -12,6 +12,7 @@ public class ViewManagerModel extends ViewModel<String> {
     private PostView postView;
     private HomePageView homePageView;
     private CreateNewPostView createNewPostView;
+    private view.SpecificClubView specificClubView;
 
     public ViewManagerModel() {
         super("view manager");
@@ -45,5 +46,11 @@ public class ViewManagerModel extends ViewModel<String> {
     public void setCreateNewPostView(CreateNewPostView postView){
         this.createNewPostView = postView;
     }
-}
+    public view.SpecificClubView getSpecificClubView() {
+        return specificClubView;
+    }
 
+    public void setSpecificClubView(view.SpecificClubView specificClubView) {
+        this.specificClubView = specificClubView;
+    }
+}

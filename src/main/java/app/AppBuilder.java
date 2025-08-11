@@ -227,6 +227,7 @@ public class AppBuilder {
         );
 
         cardPanel.add(specificClubView, specificClubView.getViewName());
+        viewManagerModel.setSpecificClubView(specificClubView);  // Store the view in ViewManagerModel
         return this;
     }
 

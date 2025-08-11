@@ -28,7 +28,7 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     private final SpecificClubViewModel specificClubViewModel;
     private SpecificClubController specificClubController;
     private LikePostController likePostController;
-    private final Club club;
+    private Club club;
 
     /**
      * Constructor for the SpecificClubView.
@@ -364,5 +364,17 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
 
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
+    }
+
+    public void updateClub(Club newClub) {
+        this.club = newClub;
+        this.removeAll();
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        setupHeaderPanel(mainPanel);
+        setupContentPanels(mainPanel);
+        setupMenuBar(mainPanel);
+        this.add(mainPanel);
+        this.revalidate();
+        this.repaint();
     }
 }
