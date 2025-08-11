@@ -453,4 +453,8 @@ public class UseCaseBuilder {
         viewBuilder.getClubHomePageView().setClubController(clubController);
         return this;
     }
+//     public UseCaseBuilder setSessionUserDataAccessObject() {
+//        Session.setUserDataAccessObject(userDataAccessObject);
+//        return this;
+//    }
 }

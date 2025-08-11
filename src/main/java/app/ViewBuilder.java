@@ -1,5 +1,6 @@
 package app;
 
+import data_access.FileUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
@@ -81,7 +82,6 @@ public class ViewBuilder {
         // Make sure we start with the login view, just like in Main.java
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
-
         return application;
     }
 
@@ -211,12 +211,12 @@ public class ViewBuilder {
         clubViewModel = new ClubViewModel();
         specificClubViewModel = new SpecificClubViewModel();
         clubHomePageView = new ClubHomePageView(
-            viewManagerModel,
-            clubViewModel,
-            null,  // ClubController will be set in addClubUseCase
-            cardPanel,
-            specificClubViewModel,
-            null   // SpecificClubController will be set in addSpecificClubUseCase
+                viewManagerModel,
+                clubViewModel,
+                null,  // ClubController will be set in addClubUseCase
+                cardPanel,
+                specificClubViewModel,
+                null   // SpecificClubController will be set in addSpecificClubUseCase
         );
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
@@ -249,6 +249,7 @@ public class ViewBuilder {
      * @return this builder
      */
     public ViewBuilder addExploreView() {
+        Session.setUserDataAccessObject(FileUserDataAccessObject.getInstance()); //required here since explore view calls session.getuser before i can add it in usecasebuilder
         exploreView = new ExploreView(viewManagerModel, cardPanel);
         cardPanel.add(exploreView, exploreView.getViewName());
         return this;
@@ -294,6 +295,7 @@ public class ViewBuilder {
         cardPanel.add(createClubView, createClubView.getViewName());
         return this;
     }
+
 
     public ViewManagerModel getViewManagerModel() {
         return viewManagerModel;
@@ -391,13 +393,18 @@ public class ViewBuilder {
         return exploreEventsView;
     }
 
-    public ClubViewModel getClubViewModel() { return clubViewModel;}
+    public ClubViewModel getClubViewModel() {
+        return clubViewModel;
+    }
 
-    public CreateClubView getCreateClubView() { return createClubView; }
+    public CreateClubView getCreateClubView() {
+        return createClubView;
+    }
 
     public CreateClubViewModel getCreateClubViewModel() {
         return createClubViewModel;
     }
+
     public CreatePostViewModel getCreatePostViewModel() {
         return createPostViewModel;
     }

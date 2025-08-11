@@ -10,7 +10,7 @@ import entity.Post;
  */
 public class LikePostInteractor implements LikePostInputBoundary {
     private final PostCommentsLikesDataAccessObject postDAO;
-    //private final LikePostOutputBoundary presenter;
+   // private final LikePostOutputBoundary presenter;
 
     public LikePostInteractor(PostCommentsLikesDataAccessObject postDAO) {
         this.postDAO = postDAO;
@@ -27,6 +27,6 @@ public class LikePostInteractor implements LikePostInputBoundary {
             postDAO.updateLikesForPost(post.getID(), -1);
         }
 
-        //presenter.prepareSuccessView(post);
+       // presenter.prepareSuccessView(post);
     }
 }

@@ -16,6 +16,7 @@ import entity.Account;
 public class Session {
     private static String currentUsername = "example_user";
     private static Account currentAccount;
+    private static UserDataAccessObject userDataAccessObject;
 
     public static void setCurrentUsername(String username) {
         System.out.println("Current username is: " + username);
@@ -26,9 +27,12 @@ public class Session {
         return currentUsername;
     }
 
+    public static void setUserDataAccessObject(UserDataAccessObject userDataAccessObject) {
+        Session.userDataAccessObject = userDataAccessObject;
+    }
+
     public static void setCurrentAccount() {
-        UserDataAccessObject fileUserDataAccessObject = FileUserDataAccessObject.getInstance();
-        currentAccount = (Account) fileUserDataAccessObject.get(currentUsername);
+        currentAccount = (Account) userDataAccessObject.get(currentUsername);
     }
 
     public static Account getCurrentAccount() {
