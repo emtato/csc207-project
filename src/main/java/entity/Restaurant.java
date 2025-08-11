@@ -64,7 +64,7 @@ public class Restaurant {
     }
     public void setPhone(String phone) { this.phone = phone;
     }
-    public void setPriceRange(String priceRange) { this.priceRange = priceRange;
+    public void setURI(URI uri) { this.uri = uri;
     }
-    public void setURI(URI uri) { this.uri = uri; }
-}
+    public void setPriceRange(String priceRange) { this.priceRange = priceRange; }
+    }
