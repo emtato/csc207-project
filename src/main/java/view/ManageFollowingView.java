@@ -132,7 +132,8 @@ public class ManageFollowingView extends JPanel implements PropertyChangeListene
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
                         final ManageFollowingState currentState = manageFollowingViewModel.getState();
-                        this.profileController.executeViewProfile(currentState.getUsername());
+                        this.profileController.executeViewProfile(currentState.getUsername(),
+                                currentState.getUsername());
                         this.manageFollowingController.switchToProfileView();
                     }
                 }

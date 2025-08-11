@@ -13,11 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class DBClubsDataAccessObject implements ClubsDataAccessObject {
+public class FileClubsDataAccessObject implements ClubsDataAccessObject {
     private String filePath = "src/main/java/data_access/data_storage.json";
     private final PostCommentsLikesDataAccessObject postDAO;
 
-    public DBClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
+    public FileClubsDataAccessObject(PostCommentsLikesDataAccessObject postDAO) {
         this.postDAO = postDAO;
     }
 
@@ -95,6 +95,19 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         catch (IOException e) {
             throw new RuntimeException("Failed to write club data to file: " + e.getMessage(), e);
         }
+    }
+
+    public boolean clubExists(String clubName) {
+        JSONObject data = getJsonObject();
+        JSONObject clubs = data.getJSONObject("clubs");
+
+        for (String clubId : clubs.keySet()) {
+            JSONObject clubData = clubs.getJSONObject(clubId);
+            if (clubData.getString("name").equalsIgnoreCase(clubName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -177,5 +190,39 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         }
 
         return allClubs;
+    }
+
+    public void removeMemberFromClub(String username, long clubID) {
+        // Update clubs.json
+        JSONObject data = getJsonObject();
+        JSONObject clubs = data.getJSONObject("clubs");
+        String clubIdStr = String.valueOf(clubID);
+
+        if (clubs.has(clubIdStr)) {
+            JSONObject clubData = clubs.getJSONObject(clubIdStr);
+            JSONArray members = clubData.getJSONArray("members");
+
+            // Create a new array without the username
+            JSONArray newMembers = new JSONArray();
+            for (int i = 0; i < members.length(); i++) {
+                if (!members.isNull(i) && !members.getString(i).equals(username)) {
+                    newMembers.put(members.getString(i));
+                }
+            }
+
+            clubData.put("members", newMembers);
+            clubs.put(clubIdStr, clubData);
+
+            try (FileWriter writer = new FileWriter(filePath)) {
+                data.put("clubs", clubs);
+                writer.write(data.toString(2));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to update club data: " + e.getMessage(), e);
+            }
+
+            // Update user_data.json
+            FileUserDataAccessObject userDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+            userDAO.removeClubFromUser(username, clubIdStr);
+        }
     }
 }

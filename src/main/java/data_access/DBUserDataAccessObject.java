@@ -3,6 +3,7 @@ package data_access;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import entity.Account;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ import okhttp3.Response;
  */
 public class DBUserDataAccessObject implements UserDataAccessObject {
     private static UserDataAccessObject instance;
-
+    private final Map<String, User> users = new HashMap<>();
     private final String DATABASE_USERNAME = "csc207munchablesusername";
     private final String DATABASE_PASSWORD = "csc207munchablespassword";
     private final String DATA_KEY = "usersinformation";
@@ -625,6 +626,43 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
         }
         catch (DataAccessException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    @Override
+    public ArrayList<Account> getAllUsers() {
+        ArrayList<Account> allUsers = new ArrayList<>();
+        try {
+            JSONObject data = getJsonObject();
+            if (data.has("users")) {
+                JSONObject usersJson = data.getJSONObject("users");
+                for (String username : usersJson.keySet()) {
+                    User user = get(username);
+                    if (user instanceof Account) {
+                        allUsers.add((Account) user);
+                    }
+                }
+            }
+        } catch (DataAccessException e) {
+            System.out.println("Error fetching users: " + e.getMessage());
+        }
+        return allUsers;
+    }
+
+    @Override
+    public void removeClubFromUser(String username, String clubId) {
+        try {
+            User user = get(username);
+            if (user instanceof Account) {
+                Account account = (Account) user;
+                ArrayList<String> clubs = account.getClubs();
+                if (clubs != null) {
+                    clubs.remove(clubId);
+                    account.setClubs(clubs);
+                    save(account);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error removing club from user: " + e.getMessage());
         }
     }
 }

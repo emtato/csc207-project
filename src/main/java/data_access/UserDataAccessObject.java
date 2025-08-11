@@ -1,6 +1,6 @@
 package data_access;
 
-import use_case.UserDataAccessInterface;
+import entity.Account;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.create_post.CreatePostDataAccessInterface;
 import use_case.delete_account.DeleteAccountUserDataAccessInterface;
@@ -13,8 +13,9 @@ import use_case.view_profile.ProfileUserDataAccessInterface;
 import use_case.toggle_settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
+import java.util.ArrayList;
+
 public interface UserDataAccessObject extends
-        UserDataAccessInterface,
         SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
@@ -26,5 +27,12 @@ public interface UserDataAccessObject extends
         ManageFollowersUserDataAccessInterface,
         CreatePostDataAccessInterface,
         DeleteAccountUserDataAccessInterface {
+    void removeClubFromUser(String username, String clubId);
 
+    /**
+     * Gets all users in the system
+     *
+     * @return ArrayList of all user accounts
+     */
+    ArrayList<Account> getAllUsers();
 }

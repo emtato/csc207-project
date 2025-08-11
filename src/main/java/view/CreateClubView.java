@@ -1,187 +1,66 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
-import data_access.DBClubsDataAccessObject;
-import data_access.FileUserDataAccessObject;
+import interface_adapter.create_club.CreateClubController;
+import interface_adapter.create_club.CreateClubViewModel;
 import entity.Account;
-import entity.Club;
-import entity.Post;
-import org.json.JSONObject;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
-import javax.swing.JLabel;
-
-import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
 
-public class CreateClubView extends JPanel {
+public class CreateClubView extends JPanel implements PropertyChangeListener {
     private final String viewName = "create club view";
     private final ViewManagerModel viewManagerModel;
-    private final DBClubsDataAccessObject clubsDAO;
+    private CreateClubController createClubController;
+    private final CreateClubViewModel createClubViewModel;
     private final Account currentUser;
-    private ArrayList<Account> members = new ArrayList<>();
-    private final FileUserDataAccessObject userDataAccessObject = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+    private final ArrayList<Account> members = new ArrayList<>();
 
-    public CreateClubView(ViewManagerModel viewManagerModel, DBClubsDataAccessObject clubsDAO, Account currentUser) {
+    private final JTextArea titleArea;
+    private final JTextArea bodyArea;
+    private final JTextArea imagesArea;
+    private final JTextArea tagsArea;
+    private final JLabel memberCountLabel;
+
+    public CreateClubView(ViewManagerModel viewManagerModel,
+                         CreateClubController createClubController,
+                         CreateClubViewModel createClubViewModel,
+                         Account currentUser) {
         this.viewManagerModel = viewManagerModel;
-        this.clubsDAO = clubsDAO;
+        this.createClubController = createClubController;
+        this.createClubViewModel = createClubViewModel;
         this.currentUser = currentUser;
+
         if (currentUser != null) {
             members.add(currentUser);
         }
 
+        createClubViewModel.addPropertyChangeListener(this);
+
+        // Initialize components
+        titleArea = new JTextArea(2, 20);
+        bodyArea = new JTextArea(6, 80);
+        imagesArea = new JTextArea(3, 80);
+        tagsArea = new JTextArea(1, 80);
+        memberCountLabel = new JLabel(members.size() + " members");
+
+        setupUI();
+    }
+
+    private void setupUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JLabel titleLabel = new JLabel("Create a Club");
         titleLabel.setFont(GUIConstants.FONT_TITLE);
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        JTextArea titleArea = new JTextArea("Enter club title", 2,20);
-        JTextArea bodyArea = new JTextArea("Enter club description", 6, 80);
-        bodyArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea imagesArea = new JTextArea("Enter link to club profile image", 3, 80);
-        imagesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        JTextArea tagsArea = new JTextArea("Enter club tags seperated by commas", 1, 80);
-        tagsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        textFIeldHints(titleArea, "Enter club title");
-        textFIeldHints(bodyArea, "Enter club description");
-        textFIeldHints(tagsArea, "Enter club tags seperated by commas");
-        textFIeldHints(imagesArea, "Enter link to club profile image");
-
-        contentPanel.add(titleArea);
-        contentPanel.add(bodyArea);
-        contentPanel.add(imagesArea);
-        contentPanel.add(tagsArea);
-
-        JPanel memberPanel = new JPanel();
-        memberPanel.setLayout(new BoxLayout(memberPanel, BoxLayout.X_AXIS));
-
-        JButton addMembersButton = new JButton("Add Members");
-        JLabel memberCountLabel = new JLabel(members.size() + " members");
-
-        addMembersButton.addActionListener(e -> {
-            if (currentUser == null) {
-                JOptionPane.showMessageDialog(this, "Please log in to add members to the club");
-                return;
-            }
-
-            JDialog dialog = new JDialog();
-            dialog.setTitle("Add Members");
-            dialog.setModal(true);
-            dialog.setLayout(new BorderLayout());
-
-            JPanel memberListPanel = new JPanel();
-            memberListPanel.setLayout(new BoxLayout(memberListPanel, BoxLayout.Y_AXIS));
-
-            ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
-
-            try {
-                String content = new String(Files.readAllBytes(Paths.get("src/main/java/data_access/user_data.json")));
-                JSONObject data = new JSONObject(content);
-                if (data.has("users")) {
-                    JSONObject users = data.getJSONObject("users");
-                    for (String username : users.keySet()) {
-                        if (!username.equals(currentUser.getUsername())) {
-                            JCheckBox checkBox = new JCheckBox(username);
-                            // Pre-select if user is already a member
-                            checkBox.setSelected(members.stream().anyMatch(m -> m.getUsername().equals(username)));
-                            checkBoxes.add(checkBox);
-                            memberListPanel.add(checkBox);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error loading users: " + ex.getMessage());
-                return;
-            }
-
-            if (checkBoxes.isEmpty()) {
-                JLabel noUsersLabel = new JLabel("No other users available to add");
-                noUsersLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                memberListPanel.add(noUsersLabel);
-            }
-
-            JScrollPane scrollPane = new JScrollPane(memberListPanel);
-            dialog.add(scrollPane, BorderLayout.CENTER);
-
-            JButton okButton = new JButton("OK");
-            okButton.addActionListener(ev -> {
-                members.clear();
-                if (currentUser != null) {
-                    members.add(currentUser);
-                }
-
-                for (JCheckBox checkBox : checkBoxes) {
-                    if (checkBox.isSelected()) {
-                        Account member = (Account) userDataAccessObject.get(checkBox.getText());
-                        if (member != null) {
-                            members.add(member);
-                        }
-                    }
-                }
-
-                memberCountLabel.setText(members.size() + " members");
-                dialog.dispose();
-            });
-
-            dialog.add(okButton, BorderLayout.SOUTH);
-            dialog.setSize(300, 400);
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
-        });
-
-        memberPanel.add(addMembersButton);
-        memberPanel.add(Box.createHorizontalStrut(10));
-        memberPanel.add(memberCountLabel);
-
-        contentPanel.add(Box.createVerticalStrut(10));
-        contentPanel.add(memberPanel);
-
-        JButton createButton = new JButton("Create Club");
-        createButton.addActionListener(e -> {
-            String title = titleArea.getText();
-            String description = bodyArea.getText();
-            String tagsText = tagsArea.getText();
-
-            if (title.equals("Enter club title") || description.equals("Enter club description")
-                || tagsText.equals("Enter club tags seperated by commas")) {
-                JOptionPane.showMessageDialog(this, "Please fill in all fields");
-                return;
-            }
-
-            ArrayList<String> tags = new ArrayList<>(Arrays.asList(tagsText.split("\\s*,\\s*")));
-
-            ArrayList<Post> posts = new ArrayList<>();
-
-            // Generate a unique club ID using current timestamp
-            long clubId = System.currentTimeMillis();
-
-            try {
-                clubsDAO.writeClub(clubId, members, title, description, posts, tags);
-                JOptionPane.showMessageDialog(this, "Club created successfully!");
-                clearFields(titleArea, bodyArea, tagsArea, imagesArea);
-                members.clear();
-                if (currentUser != null) {
-                    members.add(currentUser);
-                }
-                memberCountLabel.setText(members.size() + " members");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error creating club: " + ex.getMessage());
-            }
-        });
-
-        contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(createButton);
-
+        JPanel contentPanel = createContentPanel();
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
         MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
@@ -190,38 +69,163 @@ public class CreateClubView extends JPanel {
         this.add(mainPanel);
     }
 
-    /**
-     * Function for TextField/TextAreas to display a grey hint message when no text has been entered.
-     *
-     * @param titleField The text component to add hint to
-     * @param hint       the hint message
-     */
-    private void textFIeldHints(JTextComponent titleField, String hint) {
+    private JPanel createContentPanel() {
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        titleField.setForeground(Color.GRAY);
+        setupTextAreas();
 
-        titleField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (titleField.getText().equals(hint)) {
-                    titleField.setText("");
-                    titleField.setForeground(Color.BLACK);
+        contentPanel.add(titleArea);
+        contentPanel.add(bodyArea);
+        contentPanel.add(imagesArea);
+        contentPanel.add(tagsArea);
+
+        JPanel memberPanel = createMemberPanel();
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(memberPanel);
+
+        JButton createButton = new JButton("Create Club");
+        createButton.addActionListener(e -> handleCreateClub());
+
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(createButton);
+
+        return contentPanel;
+    }
+
+    private void setupTextAreas() {
+        setupTextArea(titleArea, "Enter club title");
+        setupTextArea(bodyArea, "Enter club description");
+        setupTextArea(imagesArea, "Enter link to club profile image");
+        setupTextArea(tagsArea, "Enter club tags separated by commas");
+
+        bodyArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        imagesArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        tagsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    }
+
+    private JPanel createMemberPanel() {
+        JPanel memberPanel = new JPanel();
+        memberPanel.setLayout(new BoxLayout(memberPanel, BoxLayout.X_AXIS));
+
+        JButton addMembersButton = new JButton("Add Members");
+        addMembersButton.addActionListener(e -> handleAddMembers());
+
+        memberPanel.add(addMembersButton);
+        memberPanel.add(Box.createHorizontalStrut(10));
+        memberPanel.add(memberCountLabel);
+
+        return memberPanel;
+    }
+
+    private void handleCreateClub() {
+        String title = titleArea.getText();
+        String description = bodyArea.getText();
+        String tagsText = tagsArea.getText();
+
+        if (isDefaultText(title) || isDefaultText(description) || isDefaultText(tagsText)) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields");
+            return;
+        }
+
+        ArrayList<String> tags = new ArrayList<>();
+        for (String tag : tagsText.split("\\s*,\\s*")) {
+            if (!tag.isEmpty()) {
+                tags.add(tag);
+            }
+        }
+
+        ArrayList<String> memberUsernames = new ArrayList<>();
+        for (Account member : members) {
+            memberUsernames.add(member.getUsername());
+        }
+
+        createClubController.createClub(title, description, memberUsernames, tags);
+    }
+
+    private void handleAddMembers() {
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(this, "Please log in to add members to the club");
+            return;
+        }
+
+        // For now, just show a simple dialog to add members
+        String username = JOptionPane.showInputDialog(this, "Enter username to add:");
+        if (username != null && !username.trim().isEmpty()) {
+            Account newMember = new Account(username.trim(), "");
+            if (!members.contains(newMember)) {
+                members.add(newMember);
+                memberCountLabel.setText(members.size() + " members");
+            }
+        }
+    }
+
+    private void setupTextArea(JTextArea textArea, String hint) {
+        textArea.setText(hint);
+        textArea.setForeground(Color.GRAY);
+
+        textArea.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textArea.getText().equals(hint)) {
+                    textArea.setText("");
+                    textArea.setForeground(Color.BLACK);
                 }
             }
 
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (titleField.getText().isEmpty()) {
-                    titleField.setForeground(Color.GRAY);
-                    titleField.setText(hint);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textArea.getText().isEmpty()) {
+                    textArea.setForeground(Color.GRAY);
+                    textArea.setText(hint);
                 }
             }
         });
     }
 
-    private void clearFields(JTextComponent... fields) {
-        for (JTextComponent field : fields) {
-            field.setText("");
-            field.dispatchEvent(new java.awt.event.FocusEvent(field, java.awt.event.FocusEvent.FOCUS_LOST));
+    private boolean isDefaultText(String text) {
+        return text.equals("Enter club title") ||
+               text.equals("Enter club description") ||
+               text.equals("Enter club tags separated by commas") ||
+               text.equals("Enter link to club profile image");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())) {
+            String error = createClubViewModel.getState().getError();
+            if (error != null) {
+                JOptionPane.showMessageDialog(this, error);
+            } else {
+                // Club creation was successful
+                clearFields();
+                JOptionPane.showMessageDialog(this, "Club created successfully!");
+                viewManagerModel.setState("club view");
+            }
         }
+    }
+
+    private void clearFields() {
+        titleArea.setText("");
+        bodyArea.setText("");
+        imagesArea.setText("");
+        tagsArea.setText("");
+
+        // Reset to default state
+        titleArea.dispatchEvent(new FocusEvent(titleArea, FocusEvent.FOCUS_LOST));
+        bodyArea.dispatchEvent(new FocusEvent(bodyArea, FocusEvent.FOCUS_LOST));
+        imagesArea.dispatchEvent(new FocusEvent(imagesArea, FocusEvent.FOCUS_LOST));
+        tagsArea.dispatchEvent(new FocusEvent(tagsArea, FocusEvent.FOCUS_LOST));
+
+        members.clear();
+        if (currentUser != null) {
+            members.add(currentUser);
+        }
+        memberCountLabel.setText(members.size() + " members");
+    }
+
+    public void setCreateClubController(CreateClubController controller) {
+        this.createClubController = controller;
     }
 
     public String getViewName() {

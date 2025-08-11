@@ -513,4 +513,53 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             System.out.println("User not found, delete unsuccessful");
         }
     }
+
+    /**
+     * Removes a club from a user's clubs list
+     * @param username The username of the user
+     * @param clubId The ID of the club to remove
+     */
+    public void removeClubFromUser(String username, String clubId) {
+        JSONObject data = getJsonObject();
+        if (data.has("users")) {
+            JSONObject users = data.getJSONObject("users");
+            if (users.has(username)) {
+                JSONObject userJson = users.getJSONObject(username);
+                if (userJson.has("clubs")) {
+                    JSONArray clubs = userJson.getJSONArray("clubs");
+                    JSONArray newClubs = new JSONArray();
+
+                    // Create new array without the club to remove
+                    for (int i = 0; i < clubs.length(); i++) {
+                        String currentClub = clubs.getString(i);
+                        if (!currentClub.equals(clubId)) {
+                            newClubs.put(currentClub);
+                        }
+                    }
+
+                    userJson.put("clubs", newClubs);
+                    users.put(username, userJson);
+                    data.put("users", users);
+                    writeToFile(data);
+                }
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<Account> getAllUsers() {
+        ArrayList<Account> users = new ArrayList<>();
+        JSONObject data = getJsonObject();
+        JSONObject usersJSON = data.getJSONObject("users");
+
+        for (String username : usersJSON.keySet()) {
+            JSONObject userData = usersJSON.getJSONObject(username);
+            Account account = (Account) get(username);
+            if (account != null) {
+                users.add(account);
+            }
+        }
+
+        return users;
+    }
 }

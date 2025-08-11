@@ -1,41 +1,34 @@
 package view;
 
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.FileUserDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
-import data_access.UserDataAccessObject;
-import entity.Account;
-import entity.Club;
-import entity.Post;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
-import interface_adapter.get_comments.GetCommentsViewModel;
-import interface_adapter.like_post.LikePostController;
 import interface_adapter.create_post_view.CreatePostViewModel;
-import use_case.create_post.CreatePostInteractor;
-import view.ui_components.EventsPanel;
-import view.ui_components.MenuBarPanel;
-import view.ui_components.PostPanel;
-import view.ui_components.RoundImagePanel;
+import interface_adapter.specific_club.SpecificClubController;
+import interface_adapter.specific_club.SpecificClubViewModel;
+import interface_adapter.like_post.LikePostController;
+import entity.Club;
+import entity.Post;
+import entity.Account;
+import view.ui_components.*;
+import app.Session;
 
 import javax.swing.*;
-import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-public class SpecificClubView extends JPanel {
+public class SpecificClubView extends JPanel implements PropertyChangeListener {
     private final String viewName = "specific club view";
     private final ViewManagerModel viewManagerModel;
     private final JPanel cardPanel;
-    private final GetCommentsViewModel getCommentsViewModel;
-    private final AnalyzeRecipeViewModel analyzeRecipeViewModel;
-    private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject = FilePostCommentLikesDataAccessObject.getInstance();
+    private final SpecificClubViewModel specificClubViewModel;
+    private SpecificClubController specificClubController;
     private LikePostController likePostController;
-    private final Club club;
+    private Club club;
 
     /**
      * Constructor for the SpecificClubView.
@@ -43,37 +36,73 @@ public class SpecificClubView extends JPanel {
      * @param viewManagerModel The ViewManagerModel that manages the state of the view.
      * @param cardPanel        The JPanel that contains this view.
      * @param club              The Club object containing club information.
+     * @param specificClubViewModel The view model for specific club view
+     * @param specificClubController The controller for specific club features
      */
-    public SpecificClubView(ViewManagerModel viewManagerModel, JPanel cardPanel, Club club) {
+    public SpecificClubView(ViewManagerModel viewManagerModel,
+                          JPanel cardPanel,
+                          Club club,
+                          SpecificClubViewModel specificClubViewModel,
+                          SpecificClubController specificClubController) {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
-        this.getCommentsViewModel = new GetCommentsViewModel();
-        this.analyzeRecipeViewModel = new AnalyzeRecipeViewModel();
         this.club = club;
+        this.specificClubViewModel = specificClubViewModel;
+        this.specificClubController = specificClubController;
+
+        specificClubViewModel.addPropertyChangeListener(this);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
+        setupHeaderPanel(mainPanel);
+        setupContentPanels(mainPanel);
+        setupMenuBar(mainPanel);
 
+        this.add(mainPanel);
+    }
+
+    private void setupHeaderPanel(JPanel mainPanel) {
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
+        // Club image
         RoundImagePanel exploreRoundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
         exploreRoundPanel.setPreferredSize(new Dimension(150, 150));
         headerPanel.add(exploreRoundPanel);
 
+        // Club info
+        JPanel headerTextPanel = createHeaderTextPanel();
+        headerPanel.add(headerTextPanel);
+
+        // Members count
+        JPanel membersPanel = createMembersPanel();
+        headerPanel.add(membersPanel);
+
+        // Buttons
+        JPanel buttonsPanel = createButtonsPanel();
+        headerPanel.add(buttonsPanel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+    }
+
+    private JPanel createHeaderTextPanel() {
         JPanel headerTextPanel = new JPanel(new BorderLayout(10, 5));
 
         JLabel titleLabel = new JLabel(club.getName());
         titleLabel.setFont(GUIConstants.FONT_TITLE);
         headerTextPanel.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel descriptionLabel = new JLabel("<html><div style='width: 700px;'>" + club.getDescription() + "</div></html>");
+        JLabel descriptionLabel = new JLabel("<html><div style='width: 700px;'>" +
+            club.getDescription() + "</div></html>");
         descriptionLabel.setFont(GUIConstants.FONT_TEXT);
         headerTextPanel.add(descriptionLabel, BorderLayout.CENTER);
 
-        headerPanel.add(headerTextPanel);
+        return headerTextPanel;
+    }
 
+    private JPanel createMembersPanel() {
         JPanel membersPanel = new JPanel(new BorderLayout());
 
-        ImageIcon membersIcon = new ImageIcon(getClass().getResource("/images/toppng.com-white-person-icon-people-white-icon-abstract-backgrounds-436x368.png"));
+        ImageIcon membersIcon = new ImageIcon(getClass().getResource(
+            "/images/toppng.com-white-person-icon-people-white-icon-abstract-backgrounds-436x368.png"));
         Image scaledImage = membersIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(scaledImage));
         membersPanel.add(iconLabel, BorderLayout.NORTH);
@@ -82,47 +111,81 @@ public class SpecificClubView extends JPanel {
         membersLabel.setFont(GUIConstants.FONT_TEXT);
         membersPanel.add(membersLabel, BorderLayout.SOUTH);
 
-        headerPanel.add(membersPanel);
+        return membersPanel;
+    }
+
+    private JPanel createButtonsPanel() {
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         // Create Post Button
-        JPanel createPostPanel = new JPanel(new BorderLayout());
         JButton createPostButton = new JButton("Create Post");
         createPostButton.setFont(GUIConstants.FONT_TEXT);
         createPostButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        createPostButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Account currentUser = app.Session.getCurrentAccount();
-                if (currentUser == null) {
-                    JOptionPane.showMessageDialog(null,
-                        "Please log in to create a post",
-                        "Login Required",
-                        JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+        createPostButton.addActionListener(e -> handleCreatePost());
+        buttonsPanel.add(createPostButton);
 
-                PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
-                UserDataAccessObject userDAO = FileUserDataAccessObject.getInstance();
-                CreatePostViewModel createPostViewModel = new CreatePostViewModel();
+        // Leave Club Button
+        JButton leaveClubButton = new JButton("Leave Club");
+        leaveClubButton.setFont(GUIConstants.FONT_TEXT);
+        leaveClubButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        leaveClubButton.addActionListener(e -> handleLeaveClub());
+        buttonsPanel.add(leaveClubButton);
 
-                // Create the required objects for post creation
-                CreatePostPresenter createPostPresenter = new CreatePostPresenter(createPostViewModel);
-                CreatePostInteractor createPostInteractor = new CreatePostInteractor(postDAO, userDAO, createPostPresenter);
-                CreatePostController createPostController = new CreatePostController(createPostInteractor);
+        return buttonsPanel;
+    }
 
-                // Create the view and pass the club
-                CreateNewPostView createNewPostView = new CreateNewPostView(viewManagerModel, createPostViewModel, club);
-                createNewPostView.setCreatePostController(createPostController);
+    private void handleCreatePost() {
+        Account currentUser = Session.getCurrentAccount();
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(null,
+                    "Please log in to create a post",
+                    "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-                cardPanel.add(createNewPostView, createNewPostView.getViewName());
-                viewManagerModel.setState(createNewPostView.getViewName());
-            }
-        });
-        createPostPanel.add(createPostButton, BorderLayout.CENTER);
-        headerPanel.add(createPostPanel);
+        // Get the existing CreateNewPostView from ViewManagerModel
+        CreateNewPostView existingView = viewManagerModel.getCreateNewPostView();
+        // Update it with the current club context
+        existingView.setClub(club);
+        viewManagerModel.setState(existingView.getViewName());
+    }
 
+    private void handleLeaveClub() {
+        Account currentUser = Session.getCurrentAccount();
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(null,
+                    "Please log in to leave the club",
+                    "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int result = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to leave " + club.getName() + "?",
+                "Leave Club",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            specificClubController.leaveClub(currentUser.getUsername(), club.getId());
+            viewManagerModel.setState("clubs view");
+        }
+    }
+
+    private void setupContentPanels(JPanel mainPanel) {
         JPanel leftPanel = new JPanel(new BorderLayout());
+        setupAnnouncementsPanel(leftPanel);
+        setupEventsPanel(leftPanel);
+        mainPanel.add(leftPanel, BorderLayout.WEST);
 
+        JPanel feedPanel = new JPanel(new BorderLayout());
+        setupFeedPanel(feedPanel);
+        mainPanel.add(feedPanel, BorderLayout.EAST);
+
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.CENTER);
+    }
+
+    private void setupAnnouncementsPanel(JPanel leftPanel) {
         JPanel announcementsPanel = new JPanel(new BorderLayout());
 
         JLabel announcementsLabel = new JLabel("Announcements");
@@ -176,7 +239,9 @@ public class SpecificClubView extends JPanel {
 
         announcementsPanel.add(scrollPane, BorderLayout.CENTER);
         leftPanel.add(announcementsPanel, BorderLayout.NORTH);
+    }
 
+    private void setupEventsPanel(JPanel leftPanel) {
         // Events section
         JPanel eventsPanel = new JPanel(new BorderLayout());
         JLabel eventsLabel = new JLabel("Events");
@@ -207,8 +272,9 @@ public class SpecificClubView extends JPanel {
 
         eventsPanel.add(eventsScrollPane, BorderLayout.CENTER);
         leftPanel.add(eventsPanel, BorderLayout.CENTER);
+    }
 
-        JPanel feedPanel = new JPanel(new BorderLayout());
+    private void setupFeedPanel(JPanel feedPanel) {
         JLabel feedLabel = new JLabel("Feed");
         feedLabel.setFont(GUIConstants.FONT_HEADER);
         feedPanel.add(feedLabel, BorderLayout.NORTH);
@@ -229,18 +295,6 @@ public class SpecificClubView extends JPanel {
         feedScrollPane.setPreferredSize(new Dimension(1000, 800));
 
         feedPanel.add(feedScrollPane, BorderLayout.CENTER);
-
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(leftPanel, BorderLayout.WEST);
-        mainPanel.add(feedPanel, BorderLayout.EAST);
-
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.CENTER);
-
-        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
-        mainPanel.add(menuBar, BorderLayout.SOUTH);
-
-        this.add(mainPanel);
-
     }
 
     private void setupPostsPanel(JPanel postsPanel) {
@@ -286,10 +340,41 @@ public class SpecificClubView extends JPanel {
         }
     }
 
+    private void setupMenuBar(JPanel mainPanel) {
+        MenuBarPanel menuBar = new MenuBarPanel(viewManagerModel);
+        mainPanel.add(menuBar, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())) {
+            // Handle state changes from the view model
+            this.revalidate();
+            this.repaint();
+        }
+    }
+
+    public void setSpecificClubController(SpecificClubController controller) {
+        this.specificClubController = controller;
+    }
+
     public String getViewName() {
         return viewName;
     }
+
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
+    }
+
+    public void updateClub(Club newClub) {
+        this.club = newClub;
+        this.removeAll();
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        setupHeaderPanel(mainPanel);
+        setupContentPanels(mainPanel);
+        setupMenuBar(mainPanel);
+        this.add(mainPanel);
+        this.revalidate();
+        this.repaint();
     }
 }

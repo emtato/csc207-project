@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import entity.Account;
 import entity.User;
 
 /**
@@ -197,5 +198,30 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
             save(follower);
         }
         users.remove(username);
+    }
+
+    @Override
+    public ArrayList<Account> getAllUsers() {
+        ArrayList<Account> allUsers = new ArrayList<>();
+        for (User user : users.values()) {
+            if (user instanceof Account) {
+                allUsers.add((Account) user);
+            }
+        }
+        return allUsers;
+    }
+
+    @Override
+    public void removeClubFromUser(String username, String clubId) {
+        User user = users.get(username);
+        if (user instanceof Account) {
+            Account account = (Account) user;
+            ArrayList<String> clubs = account.getClubs();
+            if (clubs != null) {
+                clubs.remove(clubId);
+                account.setClubs(clubs);
+                users.put(username, account);
+            }
+        }
     }
 }

@@ -299,7 +299,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
                         final EditProfileState currentState = editProfileViewModel.getState();
-                        this.profileController.executeViewProfile(currentState.getUsername());
+                        this.profileController.executeViewProfile(currentState.getUsername(),
+                                currentState.getUsername());
                         this.editProfileController.switchToProfileView();
                     }
                 }

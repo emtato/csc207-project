@@ -15,10 +15,11 @@ public class ProfileController {
 
     /**
      * Executes the View Profile Use Case.
-     * @param username the username of the user whose profile is being viewed
+     * @param username the username of the logged-in user
+     * @param targetUsername the username of the user whose profile is being viewed
      */
-    public void executeViewProfile(String username) {
-        final ProfileInputData profileInputData = new ProfileInputData(username);
+    public void executeViewProfile(String username, String targetUsername) {
+        final ProfileInputData profileInputData = new ProfileInputData(username, targetUsername);
         profileUseCaseInteractor.executeViewProfile(profileInputData);
     }
 
@@ -27,7 +28,7 @@ public class ProfileController {
      * @param username the username of the current user
      */
     public void switchToEditProfileView(String username) {
-        final ProfileInputData inputData = new ProfileInputData(username);
+        final ProfileInputData inputData = new ProfileInputData(username, username);
         profileUseCaseInteractor.switchToEditProfileView(inputData);
     }
 
@@ -36,7 +37,7 @@ public class ProfileController {
      * @param username the username of the current user
      */
     public void switchToManageFollowingView(String username) {
-        final ProfileInputData inputData = new ProfileInputData(username);
+        final ProfileInputData inputData = new ProfileInputData(username, username);
         profileUseCaseInteractor.switchToManageFollowingView(inputData);
     }
 
@@ -45,7 +46,7 @@ public class ProfileController {
      * @param username the username of the current user
      */
     public void switchToManageFollowersView(String username) {
-        final ProfileInputData inputData = new ProfileInputData(username);
+        final ProfileInputData inputData = new ProfileInputData(username, username);
         profileUseCaseInteractor.switchToManageFollowersView(inputData);
     }
 }

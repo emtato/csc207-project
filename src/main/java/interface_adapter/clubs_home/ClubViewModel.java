@@ -1,4 +1,4 @@
-package interface_adapter.clubs;
+package interface_adapter.clubs_home;
 
 import interface_adapter.ViewModel;
 

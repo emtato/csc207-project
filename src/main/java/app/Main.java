@@ -18,10 +18,10 @@ public class Main {
                 .addLoginView()
                 .addSignupView()
                 .addClubHomePageView()
+                .addClubUseCase()  // Added this line to initialize ClubController
                 .addHomePageView()
                 .addExploreView()
                 .addEventsView()
-                .addNotificationsView()
                 .addProfileView()
                 .addEditProfileView()
                 .addSettingsView()
@@ -29,8 +29,10 @@ public class Main {
                 .addManageFollowingView()
                 .addPostView()
                 .addSpecificClubView()
+                .addSpecificClubUseCase()  // Moved right after addSpecificClubView
                 .addCreateClubView()
                 .addCreatePostView()
+                .addCreatePostUseCase()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
@@ -46,6 +48,7 @@ public class Main {
                 .addGetCommentsUseCase()
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
+                .addCreateClubUseCase()
                 .build();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();

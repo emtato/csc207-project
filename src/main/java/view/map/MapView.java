@@ -1,74 +1,125 @@
 package view.map;
 
 import app.AppProperties;
-import data_access.places.GooglePlacesAPI;
-import data_access.places.RestaurantMapper;
 import entity.Restaurant;
 import interface_adapter.map.MapViewModel;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.util.Properties;
 
-// TODO: differentiate Google Reviews and app reviews
-// TODO: GUI and apply API
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+
+
+// Source: https://stackoverflow.com/questions/17598074/google-map-in-java-swing
 public class MapView {
     private final MapViewModel mapViewModel;
+    public MapView(MapViewModel mapViewModel, Restaurant restaurant) {
+        this.mapViewModel = mapViewModel;
 
-    public MapView(MapViewModel viewModel, Restaurant restaurant) {
-        this.mapViewModel = viewModel;
-        // GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
-        AppProperties appProps = new AppProperties();
-        GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
+        JFrame test = new JFrame("Google Maps");
 
         try {
+            // Load API key from AppProperties
+            AppProperties appProps = new AppProperties();
+            Properties props = appProps.getProperties();
+            String apiKey = props.getProperty("PLACES_API_KEY");
+            String location =  ""; // e.g. "43.9559913,-78.8758528"
 
-            // Use name and location to search
-            String query = restaurant.getCuisines() + "food near " + restaurant.getLocation();
-            List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
-
-            if (!results.isEmpty()) {
-                List<Restaurant> restaurants = new ArrayList<>();
-                for (HashMap<String, Object> result : results) {
-                    // Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
-                    Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(results.size() - 1));
-                    restaurants.add(apiRestaurant);
-                    // FIXME: delete this line:
-                    System.out.println(result.toString());
-                }
-                updateViewModel(restaurants.get(0));
-
-                //               Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
- //               updateViewModel(apiRestaurant);
-            } else {
-                updateViewModel(restaurant); // fallback
+            if (restaurant != null) {
+                 location = restaurant.getLocation();
             }
 
-        } catch (IOException | InterruptedException e) {
+            // Build valid Static Maps API URL
+            String imageUrl = "https://maps.googleapis.com/maps/api/staticmap"
+                    + "?center=" + location
+                    + "&zoom=15"
+                    + "&size=800x800"
+                    + "&key=" + apiKey;
+
+            // Download the image
+            String destinationFile = "image.jpg";
+            URL url = new URL(imageUrl);
+            InputStream is = url.openStream();
+            OutputStream os = new FileOutputStream(destinationFile);
+
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+
+            is.close();
+            os.close();
+
+            // Display the image in a JFrame
+            ImageIcon icon = new ImageIcon(new ImageIcon(destinationFile)
+                    .getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH));
+
+            test.add(new JLabel(icon));
+            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            test.pack();
+            test.setVisible(true);
+
+        } catch (IOException e) {
             e.printStackTrace();
-            updateViewModel(restaurant); // fallback in error case
+            System.exit(1);
         }
     }
 
-    private void updateViewModel(Restaurant restaurant) {
-        mapViewModel.setName(restaurant.getName());
-        mapViewModel.setAddress(restaurant.getAddress());
-        mapViewModel.setPhone(restaurant.getPhone());
-        mapViewModel.setLocation(restaurant.getLocation());
-        mapViewModel.setCuisines(restaurant.getCuisines());
-        mapViewModel.setReviews(restaurant.getReviews());
-        mapViewModel.setPriceRange(restaurant.getPriceRange());
-    }
+//    public static void main(String[] args) {
+//        JFrame test = new JFrame("Google Maps");
+//
+//        try {
+//            // Load API key from AppProperties
+//            AppProperties appProps = new AppProperties();
+//            Properties props = appProps.getProperties();
+//            String apiKey = props.getProperty("PLACES_API_KEY");
+//
+//            // Build valid Static Maps API URL
+//            String imageUrl = "https://maps.googleapis.com/maps/api/staticmap"
+//                    + "?center=43.9559913,-78.8758528"
+//                    + "&zoom=14"
+//                    + "&size=800x800"
+//                    + "&key=" + apiKey;
+//
+//            // Download the image
+//            String destinationFile = "image.jpg";
+//            URL url = new URL(imageUrl);
+//            InputStream is = url.openStream();
+//            OutputStream os = new FileOutputStream(destinationFile);
+//
+//            byte[] b = new byte[2048];
+//            int length;
+//            while ((length = is.read(b)) != -1) {
+//                os.write(b, 0, length);
+//            }
+//
+//            is.close();
+//            os.close();
+//
+//            // Display the image in a JFrame
+//            ImageIcon icon = new ImageIcon(new ImageIcon(destinationFile)
+//                    .getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH));
+//
+//            test.add(new JLabel(icon));
+//            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            test.pack();
+//            test.setVisible(true);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+//    }
 
-    public String getViewName() {
+        public String getViewName() {
         return "map view";
-    }
-
-    public static void main(String[] args) {
-        MapView mapView = new MapView(new MapViewModel(), new Restaurant(new ArrayList<String>(Arrays
-                .asList("Indian", "Spicy Foods")), "Toronto"));
     }
 }

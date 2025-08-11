@@ -1,6 +1,7 @@
 package app;
 
-import data_access.DBClubsDataAccessObject;
+import data_access.ClubsDataAccessObject;
+import data_access.FileClubsDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import data_access.spoonacular.SpoonacularAPI;
@@ -10,6 +11,10 @@ import interface_adapter.analyze_recipe.AnalyzeRecipeController;
 import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.clubs_home.ClubController;
+import interface_adapter.clubs_home.ClubPresenter;
+import interface_adapter.create_club.CreateClubController;
+import interface_adapter.create_club.CreateClubPresenter;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostViewModel;
@@ -32,6 +37,8 @@ import interface_adapter.manage_following.ManageFollowingController;
 import interface_adapter.manage_following.ManageFollowingPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
+import interface_adapter.specific_club.SpecificClubController;
+import interface_adapter.specific_club.SpecificClubPresenter;
 import interface_adapter.toggle_settings.SettingsController;
 import interface_adapter.toggle_settings.SettingsPresenter;
 import interface_adapter.view_profile.ProfileController;
@@ -43,10 +50,15 @@ import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.clubs_home.ClubInputBoundary;
+import use_case.clubs_home.ClubInteractor;
+import use_case.clubs_home.ClubOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.create_club.CreateClubInputBoundary;
+import use_case.create_club.CreateClubInteractor;
+import use_case.create_club.CreateClubOutputBoundary;
 import use_case.create_post.CreatePostInputBoundary;
-import use_case.create_post.CreatePostInputData;
 import use_case.create_post.CreatePostInteractor;
 import use_case.create_post.CreatePostOutputBoundary;
 import use_case.delete_account.DeleteAccountInputBoundary;
@@ -78,6 +90,9 @@ import use_case.manage_following.ManageFollowingOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.specific_club.SpecificClubInputBoundary;
+import use_case.specific_club.SpecificClubInteractor;
+import use_case.specific_club.SpecificClubOutputBoundary;
 import use_case.toggle_settings.SettingsInputBoundary;
 import use_case.toggle_settings.SettingsInteractor;
 import use_case.toggle_settings.SettingsOutputBoundary;
@@ -89,7 +104,8 @@ import javax.swing.*;
 
 public class UseCaseBuilder {
     // DAOS
-    private DBClubsDataAccessObject dbClubsDataAccessObject;
+    // private FileClubsDataAccessObject dbClubsDataAccessObject;
+    private ClubsDataAccessObject dbClubsDataAccessObject;
     private UserDataAccessObject userDataAccessObject;
     private PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
 
@@ -97,10 +113,12 @@ public class UseCaseBuilder {
     private ViewBuilder viewBuilder;
     private UserFactory userFactory = new CreateAccount();
 
-    public UseCaseBuilder(DBClubsDataAccessObject clubsDataAccessObject,
-                          UserDataAccessObject userDataAccessObject,
-                          PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
-                          ViewBuilder viewBuilder) {
+    public UseCaseBuilder(
+            // FileClubsDataAccessObject clubsDataAccessObject,
+            ClubsDataAccessObject clubsDataAccessObject,
+            UserDataAccessObject userDataAccessObject,
+            PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject,
+            ViewBuilder viewBuilder) {
         this.dbClubsDataAccessObject = clubsDataAccessObject;
         this.userDataAccessObject = userDataAccessObject;
         this.postCommentsLikesDataAccessObject = postCommentsLikesDataAccessObject;
@@ -376,6 +394,63 @@ public class UseCaseBuilder {
         final CreatePostInputBoundary createpostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject, createPostOutputBoundary);
         final CreatePostController createPostController = new CreatePostController(createpostInteractor);
         viewBuilder.getCreateNewPostView().setCreatePostController(createPostController);
+        return this;
+    }
+    /**
+     * Adds the Club Home Page Use Case to the application.
+     *
+     * @return this builder
+     */
+    /**
+     * Adds the Specific Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addSpecificClubUseCase() {
+        final SpecificClubOutputBoundary specificClubOutputBoundary = new SpecificClubPresenter(viewBuilder.getSpecificClubViewModel());
+        final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                specificClubOutputBoundary
+        );
+
+        final SpecificClubController specificClubController = new SpecificClubController(specificClubInteractor);
+        viewBuilder.getSpecificClubView().setSpecificClubController(specificClubController);
+        return this;
+    }
+
+    /**
+     * Adds the Create Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addCreateClubUseCase() {
+        final CreateClubOutputBoundary createClubOutputBoundary = new CreateClubPresenter(viewBuilder.getCreateClubViewModel());
+        final CreateClubInputBoundary createClubInteractor = new CreateClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                createClubOutputBoundary
+        );
+
+        final CreateClubController createClubController = new CreateClubController(createClubInteractor);
+        viewBuilder.getCreateClubView().setCreateClubController(createClubController);
+        return this;
+    }
+
+    /**
+     * Adds the Club Use Case to the application.
+     *
+     * @return this builder
+     */
+    public UseCaseBuilder addClubUseCase() {
+        final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(viewBuilder.getViewManagerModel(), viewBuilder.getClubViewModel());
+        final ClubInputBoundary clubInteractor = new ClubInteractor(
+                dbClubsDataAccessObject,
+                userDataAccessObject,
+                clubOutputBoundary
+        );
+        final ClubController clubController = new ClubController(clubInteractor);
+        viewBuilder.getClubHomePageView().setClubController(clubController);
         return this;
     }
 }

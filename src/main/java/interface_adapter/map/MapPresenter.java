@@ -3,7 +3,7 @@ package interface_adapter.map;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.homepage.HomePageViewModel;
 import interface_adapter.explore.ExploreViewModel;
-import interface_adapter.clubs.ClubViewModel;
+import interface_adapter.clubs_home.ClubViewModel;
 import interface_adapter.view_profile.ProfileViewModel;
 import interface_adapter.toggle_settings.SettingsViewModel;
 import use_case.map.MapOutputBoundary;

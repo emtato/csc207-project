@@ -44,13 +44,6 @@ public class MenuBarPanel extends JPanel {
         exploreButton.setToolTipText("Explore");
         styleButton(exploreButton, buttonSize);
 
-        // Create notifications button with system icon
-        ImageIcon notificationsIcon = new ImageIcon(getClass().getResource("/images/appointment-reminders.png"));
-        Image notificationsImg = notificationsIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-        JButton notificationsButton = new JButton(new ImageIcon(notificationsImg));
-        notificationsButton.setToolTipText("Notifications");
-        styleButton(notificationsButton, buttonSize);
-
         // Create profile button with system icon
         ImageIcon profileIcon = new ImageIcon(getClass().getResource("/images/pngaaa.com-4877784.png"));
         Image profileImg = profileIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -64,8 +57,6 @@ public class MenuBarPanel extends JPanel {
         add(Box.createHorizontalStrut(5));
         add(exploreButton);
         add(Box.createHorizontalStrut(5));
-        add(notificationsButton);
-        add(Box.createHorizontalStrut(5));
         add(clubsButton);
         add(Box.createHorizontalStrut(5));
         add(profileButton);
@@ -77,7 +68,6 @@ public class MenuBarPanel extends JPanel {
         clubsButton.addActionListener(e -> viewManagerModel.setState("club view"));
         settingsButton.addActionListener(e -> viewManagerModel.setState("settings"));
         exploreButton.addActionListener(e -> viewManagerModel.setState("explore view"));
-        notificationsButton.addActionListener(e -> viewManagerModel.setState("notifications view"));
         profileButton.addActionListener(e -> viewManagerModel.setState("profile"));
     }
 

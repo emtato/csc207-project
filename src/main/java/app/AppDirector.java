@@ -1,7 +1,7 @@
 package app;
 
-import data_access.DBClubsDataAccessObject;
 import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.FileClubsDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 
@@ -39,15 +39,15 @@ public class AppDirector {
                 .addClubHomePageView()
                 .addSpecificClubView()
                 .addEventsView()
-                .addNotificationsView()
                 .addMapView()
                 .addExploreView()
-                .addCreatePostView();
+                .addCreatePostView()
+                .addCreateClubView();
 
         // create the use case builder with the File daos
         PostCommentsLikesDataAccessObject postDAO = FilePostCommentLikesDataAccessObject.getInstance();
         useCaseBuilder = new UseCaseBuilder(
-                new DBClubsDataAccessObject(postDAO),
+                new FileClubsDataAccessObject(postDAO),
                 FileUserDataAccessObject.getInstance(),
                 postDAO,
                 viewBuilder);
@@ -70,6 +70,9 @@ public class AppDirector {
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
                 .addCreatePostUseCase()
+                .addSpecificClubUseCase()
+                .addCreateClubUseCase()
+                .addClubUseCase()
                 .build();
     }
 }
