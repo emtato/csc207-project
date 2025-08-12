@@ -32,14 +32,13 @@ public class ExploreView extends JPanel {
     private final String viewName = "explore view";
     private final ViewManagerModel viewManagerModel;
     private static JPanel cardPanel;
-    private Account currentUser;
+    private final Account currentUser;
 
     public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
         this.setLayout(new BorderLayout(10, 10));
 
-        // Session init (example). In production you would not set a username here.
         Session.setCurrentUsername("example_user");
         Session.setCurrentAccount();
         this.currentUser = Session.getCurrentAccount();
@@ -134,8 +133,7 @@ public class ExploreView extends JPanel {
                                 JLabel addressLabel = new JLabel(rFinal.getAddress() == null ? "Address unknown" : rFinal.getAddress());
                                 addressLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                                // show "N/A" for missing/unknown price levels (more user-friendly than "?")
-                                String rawPrice = rFinal.getPriceRange();
+                                String rawPrice = rFinal.getPriceLevel();
                                 String priceText = (rawPrice == null || rawPrice.isBlank() || rawPrice.equals("?")) ? "N/A" : rawPrice;
                                 JLabel priceRange = new JLabel("Price range: " + priceText);
                                 priceRange.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -306,11 +304,12 @@ public class ExploreView extends JPanel {
         JDialog dlg = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Map / Details", true);
         dlg.setLayout(new BorderLayout(8, 8));
 
+
         MapPanel mapPanel = new MapPanel();
         // Give the MapPanel a sensible preferred size so dialog reserves space for it immediately.
-        mapPanel.setPreferredSize(new Dimension(520, 320));
-        // show a quick loading label inside the MapPanel (MapPanel.update() should overwrite it)
-        mapPanel.update("Loading...", "", "", "", "");
+        mapPanel.setPreferredSize(new Dimension(800, 600));
+        MapViewModel mapViewModel = new MapViewModel();
+        mapPanel.update(mapViewModel, restaurant);
         dlg.add(mapPanel, BorderLayout.CENTER);
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -358,37 +357,21 @@ public class ExploreView extends JPanel {
             protected MapState doInBackground() {
                 MapViewModel mapViewModel = new MapViewModel();
                 // MapView will populate the viewModel (may perform network IO internally)
-                new MapView(mapViewModel, restaurant);
+                new MapView(mapViewModel, restaurant, new JPanel());
                 return mapViewModel.getState();
             }
 
             @Override
             protected void done() {
                 try {
-                    MapState state = get(); // runs on EDT
-                    String name = state.getName();
-                    String address = state.getAddress();
-                    String phone = state.getPhone();
-                    List<String> cuisinesList = state.getCuisines() == null ? new ArrayList<>() : state.getCuisines();
-                    String cuisines = String.join(", ", cuisinesList);
-                    String priceRaw = state.getPriceRange();
-                    String price = (priceRaw == null || priceRaw.isBlank() || priceRaw.equals("?")) ? "N/A" : priceRaw;
-
-                    mapPanel.update(name, address, phone, cuisines, price);
-
+                    mapPanel.update(mapViewModel, restaurant);
                     // enable website if restaurant got one (usually set during search)
                     openWebsite.setEnabled(restaurant.getURI() != null);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     // fallback to Restaurant's own fields
-                    mapPanel.update(
-                            restaurant.getName(),
-                            restaurant.getAddress(),
-                            restaurant.getPhone(),
-                            restaurant.getCuisines() == null ? "" : String.join(", ", restaurant.getCuisines()),
-                            restaurant.getPriceRange() == null || restaurant.getPriceRange().equals("?") ? "N/A" : restaurant.getPriceRange()
-                    );
+                    mapPanel.update(mapViewModel, restaurant);
                     openWebsite.setEnabled(restaurant.getURI() != null);
                 }
             }
