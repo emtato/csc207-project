@@ -22,7 +22,7 @@ public class FetchPostInteractorTest {
         //write dummy post
         HashMap<String, ArrayList<String>> map = new HashMap<>();
         map.put("steps", new ArrayList<>(Arrays.asList("hi")));
-        dao.writePost(103332, new Account("hi", "hi"), "post title", "recipe", "description", map, new ArrayList<>(Arrays.asList("aa")), new ArrayList<>(Arrays.asList("aba")), "2025-08-07 02:12 AM", new ArrayList<>());
+        dao.writePost(103332, new Account("hi", "hi"), "post title", "recipe", "description", map, new ArrayList<>(Arrays.asList("aa")), new ArrayList<>(Arrays.asList("aba")), "2025-08-07 02:12 a.m.", new ArrayList<>());
 
 
         FetchPostOutputBoundary successPresenter = new FetchPostOutputBoundary() {

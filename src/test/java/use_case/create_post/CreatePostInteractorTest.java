@@ -33,6 +33,9 @@ public class CreatePostInteractorTest {
         PostCommentsLikesDataAccessObject dao = InMemoryPostCommentLikesDataAccessObject.getInstance();
         UserDataAccessObject userDao = InMemoryUserDataAccessObject.getInstance();
 
+        //save dummy user into memory db
+        Account user = new Account("username", "password");
+        userDao.save(user);
 
         CreatePostOutputBoundary successPresenter = new CreatePostOutputBoundary() {
 
@@ -40,7 +43,7 @@ public class CreatePostInteractorTest {
             public void prepareSuccessView(CreatePostOutputData outputData) {
                 long postID = outputData.getPostID();
                 Post post = dao.getPost(postID);
-                assertEquals("hi", post.getUser().getUsername());
+                assertEquals("username", post.getUser().getUsername());
                 assertEquals("post title", post.getTitle());
                 assertEquals("recipe", post.getType());
                 assertEquals("description", post.getDescription());
@@ -54,55 +57,14 @@ public class CreatePostInteractorTest {
 
             @Override
             public void prepareFailView(CreatePostOutputData outputData) {
-
-                //fail("Use case failure is unexpected.");
+                System.out.println(":C");
+                fail("Use case failure is unexpected.");
             }
         };
 
-        //dummy club
-
-        ArrayList<Club> clb = new ArrayList<Club>(Arrays.asList(new Club("name", "descrpitoin", new ArrayList<>(Arrays.asList(new Account("h", "h"))), new ArrayList<>(Arrays.asList("foodpref")), new ArrayList<>(Arrays.asList(new Post(new Account("hi", "hi"), 399l, "post title", "description"))), 399l, new ArrayList<>(Arrays.asList("tags")))));
         CreatePostInteractor interactor = new CreatePostInteractor(dao, userDao, successPresenter);
-        final CreatePostInputData inputData = new CreatePostInputData(new Account("hi", "hi"), "post title", "recipe", "description", new ArrayList<>(Arrays.asList("ingredients")), "steps", new ArrayList<>(Arrays.asList("tags")), new ArrayList<>(Arrays.asList("images")), clb);
 
+        final CreatePostInputData inputData = new CreatePostInputData(user, "post title", "recipe", "description", new ArrayList<>(Arrays.asList("ingredients")), "steps", new ArrayList<>(Arrays.asList("tags")), new ArrayList<>(Arrays.asList("images")), new ArrayList<>());
         interactor.execute(inputData);
     }
-
-//    @Test
-//    void failTest() {
-//        PostCommentsLikesDataAccessObject dao = InMemoryPostCommentLikesDataAccessObject.getInstance();
-//        UserDataAccessObject userDao = InMemoryUserDataAccessObject.getInstance();
-//
-//
-//        CreatePostOutputBoundary successPresenter = new CreatePostOutputBoundary() {
-//
-//            @Override
-//            public void prepareSuccessView(CreatePostOutputData outputData) {
-//                long postID = outputData.getPostID();
-//                Post post = dao.getPost(postID);
-//                assertEquals("hi", post.getUser().getUsername());
-//                assertEquals("post title", post.getTitle());
-//                assertEquals("recipe", post.getType());
-//                assertEquals("description", post.getDescription());
-//                Recipe recpie = (Recipe) post;
-//                assertEquals("steps", recpie.getSteps());
-//                assertEquals(new ArrayList<>(Arrays.asList("ingredients")), recpie.getIngredients());
-//                assertEquals(new ArrayList<>(Arrays.asList("tags")), post.getTags());
-//                assertEquals(new ArrayList<>(Arrays.asList("images")), post.getImageURLs());
-//                dao.deletePost(post.getID());
-//            }
-//
-//            @Override
-//            public void prepareFailView(CreatePostOutputData outputData) {
-//                fail("Use case failure is unexpected.");
-//            }
-//        };
-//
-//        CreatePostInteractor interactor = new CreatePostInteractor(dao, userDao, successPresenter);
-//        final CreatePostInputData inputData = new CreatePostInputData(new Account("hi", "hi"),
-//                "post title", "recipe", "description", new ArrayList<>(Arrays.asList("ingredients")),
-//                "steps", new ArrayList<>(Arrays.asList("tags")), new ArrayList<>(Arrays.asList("images")), new ArrayList<Club>());
-//
-//        interactor.execute(inputData);
-//    }
 }
