@@ -339,7 +339,7 @@ public class UseCaseBuilder {
     public UseCaseBuilder addWriteCommentUseCase() {
         final CommentPostOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter();
         final CommentPostInputBoundary writeCommentInteractor =
-                new CommentPostInteractor(postCommentsLikesDataAccessObject,writeCommentOutputBoundary);
+                new CommentPostInteractor(postCommentsLikesDataAccessObject, writeCommentOutputBoundary);
         final WriteCommentController writeCommentController =
                 new WriteCommentController(writeCommentInteractor);
         viewBuilder.getPostView().setWriteCommentController(writeCommentController);
@@ -359,6 +359,8 @@ public class UseCaseBuilder {
         final GetCommentsController getCommentsController =
                 new GetCommentsController(getCommentsInteractor);
         viewBuilder.getPostView().setGetCommentsController(getCommentsController);
+        viewBuilder.getHomePageView().setGetCommentsController(getCommentsController);
+
         return this;
     }
 
@@ -388,9 +390,11 @@ public class UseCaseBuilder {
         final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         viewBuilder.getHomePageView().setFetchPostController(fetchPostController);
+
         return this;
     }
-     public UseCaseBuilder addCreatePostUseCase() {
+
+    public UseCaseBuilder addCreatePostUseCase() {
         final CreatePostViewModel viewModel = new CreatePostViewModel();
         final CreatePostOutputBoundary createPostOutputBoundary = new CreatePostPresenter(viewModel);
         final CreatePostInputBoundary createpostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject, createPostOutputBoundary);
