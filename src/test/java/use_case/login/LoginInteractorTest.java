@@ -8,6 +8,8 @@ import entity.User;
 import entity.UserFactory;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginInteractorTest {
@@ -28,6 +30,17 @@ class LoginInteractorTest {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("Paul", user.getUsername());
+                assertEquals("password", user.getPassword());
+                assertEquals("", user.getDisplayName());
+                assertEquals("", user.getBio());
+                assertEquals("https://i.imgur.com/eA9NeJ1.jpeg", user.getProfilePictureUrl());
+                assertEquals(0, user.getNumFollowers());
+                assertEquals(0, user.getNumFollowing());
+                assertEquals(new HashMap<>(), user.getPosts());
+                assertEquals(true, user.isNotificationsEnabled());
+                assertEquals(true, user.isPublic());
+                assertEquals(false, user.isUseCaseFailed());
+
             }
 
             @Override

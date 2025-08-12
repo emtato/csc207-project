@@ -246,7 +246,7 @@ class ProfileInteractorTest {
         final UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
         final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // Add User1 to the user repository
+        // Add Caf Feine to the user repository
         final UserFactory factory = new CreateAccount();
         final User user = factory.create("Caf Feine", "Password");
         userRepository.save(user);
@@ -278,5 +278,133 @@ class ProfileInteractorTest {
 
         ProfileInputBoundary interactor = new ProfileInteractor(userRepository, dataRepository, successPresenter);
         interactor.executeViewProfile(inputData);
+    }
+
+    @Test
+    void switchToEditProfileViewTest() {
+        final ProfileInputData inputData = new ProfileInputData("Caf Feine", "Caf Feine");
+        final UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
+
+        // Add Caf Feine to the user repository
+        final UserFactory factory = new CreateAccount();
+        final User user = factory.create("Caf Feine", "Password");
+        userRepository.save(user);
+
+        // This creates a successPresenter that tests whether the test case is as we expect.
+        ProfileOutputBoundary successPresenter = new ProfileOutputBoundary() {
+            @Override
+            public void prepareSuccessView(ProfileOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+            @Override
+            public void prepareFailView(String error) {
+                fail("Use case failure is unexpected.");
+            }
+
+            @Override
+            public void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData) {
+                assertEquals("Caf Feine", outputData.getUsername());
+                assertEquals("", outputData.getDisplayName());
+                assertEquals("", outputData.getBio());
+                assertEquals("https://i.imgur.com/eA9NeJ1.jpeg", outputData.getProfilePictureUrl());
+                assertEquals(new ArrayList<>(), outputData.getPreferences());
+            }
+            @Override
+            public void switchToManageFollowingView(SwitchToFollowingViewOutputData data) {
+                fail("This switch view use case is unexpected.");
+            }
+            @Override
+            public void switchToManageFollowersView(SwitchToFollowersViewOutputData data) {
+                fail("This switch view use case is unexpected.");
+            }
+        };
+
+        ProfileInputBoundary interactor = new ProfileInteractor(userRepository, dataRepository, successPresenter);
+        interactor.switchToEditProfileView(inputData);
+    }
+
+    @Test
+    void switchToFollowingViewTest() {
+        final ProfileInputData inputData = new ProfileInputData("Caf Feine", "Caf Feine");
+        final UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
+
+        // Add Caf Feine to the user repository
+        final UserFactory factory = new CreateAccount();
+        final User user = factory.create("Caf Feine", "Password");
+        userRepository.save(user);
+
+        // This creates a successPresenter that tests whether the test case is as we expect.
+        ProfileOutputBoundary successPresenter = new ProfileOutputBoundary() {
+            @Override
+            public void prepareSuccessView(ProfileOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+            @Override
+            public void prepareFailView(String error) {
+                fail("Use case failure is unexpected.");
+            }
+
+            @Override
+            public void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData) {
+                fail("This switch view use case is unexpected.");
+            }
+            @Override
+            public void switchToManageFollowingView(SwitchToFollowingViewOutputData outputData) {
+                assertEquals("Caf Feine", outputData.getUsername());
+                assertEquals(new ArrayList<>(), outputData.getFollowing());
+                assertEquals(new ArrayList<>(), outputData.getRequested());
+            }
+            @Override
+            public void switchToManageFollowersView(SwitchToFollowersViewOutputData data) {
+                fail("This switch view use case is unexpected.");
+            }
+        };
+
+        ProfileInputBoundary interactor = new ProfileInteractor(userRepository, dataRepository, successPresenter);
+        interactor.switchToManageFollowingView(inputData);
+    }
+
+    @Test
+    void switchToFollowersViewTest() {
+        final ProfileInputData inputData = new ProfileInputData("Caf Feine", "Caf Feine");
+        final UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
+        final PostCommentsLikesDataAccessObject dataRepository = InMemoryPostCommentLikesDataAccessObject.getInstance();
+
+        // Add Caf Feine to the user repository
+        final UserFactory factory = new CreateAccount();
+        final User user = factory.create("Caf Feine", "Password");
+        userRepository.save(user);
+
+        // This creates a successPresenter that tests whether the test case is as we expect.
+        ProfileOutputBoundary successPresenter = new ProfileOutputBoundary() {
+            @Override
+            public void prepareSuccessView(ProfileOutputData outputData) {
+                fail("Use case success is unexpected.");
+            }
+            @Override
+            public void prepareFailView(String error) {
+                fail("Use case failure is unexpected.");
+            }
+
+            @Override
+            public void switchToEditProfileView(SwitchToEditProfileViewOutputData outputData) {
+                fail("This switch view use case is unexpected.");
+            }
+            @Override
+            public void switchToManageFollowingView(SwitchToFollowingViewOutputData outputData) {
+                fail("This switch view use case is unexpected.");
+            }
+            @Override
+            public void switchToManageFollowersView(SwitchToFollowersViewOutputData outputData) {
+                assertEquals("Caf Feine", outputData.getUsername());
+                assertEquals(new ArrayList<>(), outputData.getFollowers());
+                assertEquals(new ArrayList<>(), outputData.getRequesters());
+            }
+        };
+
+        ProfileInputBoundary interactor = new ProfileInteractor(userRepository, dataRepository, successPresenter);
+        interactor.switchToManageFollowersView(inputData);
     }
 }

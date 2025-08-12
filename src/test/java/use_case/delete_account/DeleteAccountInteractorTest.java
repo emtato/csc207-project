@@ -4,10 +4,17 @@ import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
-import entity.CreateAccount;
-import entity.User;
-import entity.UserFactory;
+import entity.*;
 import org.junit.jupiter.api.Test;
+import use_case.create_post.CreatePostInputData;
+import use_case.create_post.CreatePostInteractor;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +33,11 @@ class DeleteAccountInteractorTest {
         final String otherPassword = "password!";
         final User otherUser = factory.create(otherUsername, otherPassword);
 
+        // Create a post for the user
+        ArrayList<Long> posts = new ArrayList<>();
+        posts.add(1L);
+        user.setUserPosts(posts);
+
         user.getFollowingAccounts().put(otherUsername, otherUser);
         otherUser.getFollowerAccounts().put(username, user);
 
@@ -34,8 +46,13 @@ class DeleteAccountInteractorTest {
         userRepository.save(user);
         userRepository.save(otherUser);
 
+        // Add post to the repository
         PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
                 InMemoryPostCommentLikesDataAccessObject.getInstance();
+
+        postCommentsLikesDataAccessObject.writePost(103332, new Account("hi", "hi"), "post title", "test",
+                "description", new HashMap<>(), new ArrayList<>(List.of("aa")),
+                new ArrayList<>(List.of("aa")), "2025-08-07 02:12 AM", new ArrayList<>());
 
         DeleteAccountInputData inputData = new DeleteAccountInputData(username);
 
@@ -46,6 +63,7 @@ class DeleteAccountInteractorTest {
                 assertEquals(username, outputData.getUsername());
                 assertNull(userRepository.get(username));
                 assertNull(userRepository.get(otherUsername).getFollowerAccounts().get(username));
+                assertNull(postCommentsLikesDataAccessObject.getPost(1L));
             }
             @Override
             public void prepareFailView(String error) {
