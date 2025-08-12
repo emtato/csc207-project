@@ -229,19 +229,19 @@ public class ViewBuilder {
     }
 
 
-    /**
-     * Adds Map View to the application
-     *
-     * @return this builder
-     */
-    public ViewBuilder addMapView() {
-        Restaurant exampleRestaurant = new Restaurant(new ArrayList<String>(Arrays
-                .asList("French", "Italian", "Swiss")), "Toronto");
-        mapViewModel = new MapViewModel();
-        mapView = new MapView(mapViewModel, exampleRestaurant);
-        //cardPanel.add(mapView, mapView.getViewName());
-        return this;
-    }
+//    /**
+//     * Adds Map View to the application
+//     *
+//     * @return this builder
+//     */
+//    public ViewBuilder addMapView() {
+//        Restaurant exampleRestaurant = new Restaurant(new ArrayList<String>(Arrays
+//                .asList("French", "Italian", "Swiss")), "Toronto");
+//        mapViewModel = new MapViewModel();
+//        mapView = new MapView(mapViewModel, exampleRestaurant);
+//        //cardPanel.add(mapView, mapView.getViewName());
+//        return this;
+//    }
 
     /**
      * Adds Explore View to the application

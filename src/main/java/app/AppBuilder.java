@@ -348,19 +348,19 @@ public class AppBuilder {
         return this;
     }
 
-    /**
-     * Adds Map View to the application
-     *
-     * @return this builder
-     */
-    public AppBuilder addMapView() {
-        Restaurant exampleRestaurant = new Restaurant(new ArrayList<String>(Arrays
-                .asList("French", "Italian", "Swiss")), "Toronto");
-        mapViewModel = new MapViewModel();
-        mapView = new MapView(mapViewModel, exampleRestaurant);
-        //cardPanel.add(mapView, mapView.getViewName());
-        return this;
-    }
+//    /**
+//     * Adds Map View to the application
+//     *
+//     * @return this builder
+//     */
+//    public AppBuilder addMapView() {
+//        Restaurant exampleRestaurant = new Restaurant(new ArrayList<String>(Arrays
+//                .asList("French", "Italian", "Swiss")), "Toronto");
+//        mapViewModel = new MapViewModel();
+//        mapView = new MapView(mapViewModel, exampleRestaurant);
+//        //cardPanel.add(mapView, mapView.getViewName());
+//        return this;
+//    }
 
     /**
      * Adds the ClubHomePage View to the application.
