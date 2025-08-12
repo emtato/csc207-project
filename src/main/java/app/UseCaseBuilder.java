@@ -44,6 +44,7 @@ import interface_adapter.toggle_settings.SettingsPresenter;
 import interface_adapter.view_profile.ProfileController;
 import interface_adapter.view_profile.ProfilePresenter;
 import interface_adapter.write_comment.WriteCommentController;
+import interface_adapter.write_comment.WriteCommentPresenter;
 import use_case.analyze_recipe.AnalyzeRecipeInputBoundary;
 import use_case.analyze_recipe.AnalyzeRecipeInteractor;
 import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
@@ -55,6 +56,7 @@ import use_case.clubs_home.ClubInteractor;
 import use_case.clubs_home.ClubOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.comment.CommentPostOutputBoundary;
 import use_case.create_club.CreateClubInputBoundary;
 import use_case.create_club.CreateClubInteractor;
 import use_case.create_club.CreateClubOutputBoundary;
@@ -335,9 +337,9 @@ public class UseCaseBuilder {
      * @return this builder
      */
     public UseCaseBuilder addWriteCommentUseCase() {
-        //final WriteCommentOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter(viewManagerModel);
+        final CommentPostOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter();
         final CommentPostInputBoundary writeCommentInteractor =
-                new CommentPostInteractor(postCommentsLikesDataAccessObject);
+                new CommentPostInteractor(postCommentsLikesDataAccessObject, writeCommentOutputBoundary);
         final WriteCommentController writeCommentController =
                 new WriteCommentController(writeCommentInteractor);
         viewBuilder.getPostView().setWriteCommentController(writeCommentController);
@@ -357,6 +359,8 @@ public class UseCaseBuilder {
         final GetCommentsController getCommentsController =
                 new GetCommentsController(getCommentsInteractor);
         viewBuilder.getPostView().setGetCommentsController(getCommentsController);
+        viewBuilder.getHomePageView().setGetCommentsController(getCommentsController);
+
         return this;
     }
 
@@ -386,9 +390,11 @@ public class UseCaseBuilder {
         final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         viewBuilder.getHomePageView().setFetchPostController(fetchPostController);
+
         return this;
     }
-     public UseCaseBuilder addCreatePostUseCase() {
+
+    public UseCaseBuilder addCreatePostUseCase() {
         final CreatePostViewModel viewModel = new CreatePostViewModel();
         final CreatePostOutputBoundary createPostOutputBoundary = new CreatePostPresenter(viewModel);
         final CreatePostInputBoundary createpostInteractor = new CreatePostInteractor(postCommentsLikesDataAccessObject, userDataAccessObject, createPostOutputBoundary);

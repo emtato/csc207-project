@@ -12,7 +12,7 @@ import java.util.HashMap;
  * In-memory implementation of the DAO for storing Post, Comment, Likes data. This implementation does
  * NOT persist data between runs of the program.
  */
-public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
+public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
     private static PostCommentsLikesDataAccessObject instance;
 
     HashMap<Long, ArrayList<Comment>> commentsMap = new HashMap<>();
@@ -31,7 +31,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     }
 
     @Override
-    public void deletePost(long postID){
+    public void deletePost(long postID) {
         postsMap.remove(postID);
     }
 
@@ -77,23 +77,27 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
 
     @Override
     public void writePost(long postID, Account user, String title, String postType,
-                        String description, HashMap<String, ArrayList<String>> contents,
-                        ArrayList<String> tags, ArrayList<String> images, String time,
-                        ArrayList<Club> clubs) {
+                          String description, HashMap<String, ArrayList<String>> contents,
+                          ArrayList<String> tags, ArrayList<String> images, String time,
+                          ArrayList<Club> clubs) {
         Post post;
+
         if (postType.equals("recipe")) {
             ArrayList<String> ingredients = contents.get("ingredients");
             String steps = String.join("<br>", contents.get("steps"));
             String cuisines = String.join(",", contents.getOrDefault("cuisines", new ArrayList<>()));
             post = new Recipe(new Post(user, postID, title, description), ingredients, steps,
-                            new ArrayList<>(Arrays.asList(cuisines.split(","))));
+                    new ArrayList<>(Arrays.asList(cuisines.split(","))));
+
         }
         else if (postType.equals("review")) {
             double rating = -1;
             if (contents.containsKey("rating") && !contents.get("rating").isEmpty()) {
                 try {
                     rating = Double.parseDouble(contents.get("rating").get(0));
-                } catch (NumberFormatException ignored) {}
+                }
+                catch (NumberFormatException ignored) {
+                }
             }
             Review review = new Review(user, postID, title, description);
             review.setRating(rating);
@@ -109,7 +113,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         else {
             post = new Post(user, postID, title, description);
         }
-
+        post.setType(postType);
         post.setTags(tags);
         post.setImageURLs(images);
         post.setDateTimeFromString(time);
@@ -129,10 +133,10 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
 
     @Override
     public void updateLikesForPost(long postID, int likeDifference) {
-       if (postsMap.containsKey(postID)) {
-           Post post = postsMap.get(postID);
-           post.setLikes(post.getLikes() + likeDifference);
-       }
+        if (postsMap.containsKey(postID)) {
+            Post post = postsMap.get(postID);
+            post.setLikes(post.getLikes() + likeDifference);
+        }
         else {
             throw new RuntimeException("post not found");
         }

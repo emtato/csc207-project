@@ -3,6 +3,7 @@ package view.ui_components;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.get_comments.GetCommentsViewModel;
 import interface_adapter.like_post.LikePostController;
 import view.PostView;
 
@@ -51,6 +52,7 @@ public class PostPanel extends JPanel {
     private JPanel centerPanel;
     private JPanel bottomPanel;
     private LikePostController likePostController;
+    private GetCommentsViewModel getCommentsViewModel;
 
     public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
                      LikePostController likePostController) {
@@ -241,5 +243,9 @@ public class PostPanel extends JPanel {
             currentPostView.displayPost(this.post);   // push the chosen post into it
 
         }
+    }
+
+    public void setGetCommentsViewModel(GetCommentsViewModel getCommentsViewModel) {
+        this.getCommentsViewModel = getCommentsViewModel;
     }
 }

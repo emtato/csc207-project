@@ -3,6 +3,7 @@ package use_case.get_comments;/**
  * Description:
  * ^ • ω • ^
  */
+
 import entity.Comment;
 import data_access.PostCommentsLikesDataAccessObject;
 
@@ -20,7 +21,12 @@ public class GetCommentsInteractor implements GetCommentsInputBoundary {
     @Override
     public void execute(GetCommentsInputData inputData) {
         List<Comment> comments = postDAO.getComments(inputData.getPostID());
-        GetCommentsOutputData outputData = new GetCommentsOutputData(comments);
-        presenter.present(outputData);
+        if (comments.isEmpty()) {
+            presenter.prepareFailView("no comments found");
+        }
+        else {
+            GetCommentsOutputData outputData = new GetCommentsOutputData(comments);
+            presenter.prepareSuccessView(outputData);
+        }
     }
 }

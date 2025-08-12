@@ -42,6 +42,11 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
             String timestamp = now.format(formatter);
+//            if(timestamp.charAt(timestamp.length() - 4) == 'a') {
+//                timestamp = timestamp.substring(0, timestamp.length() - 4) + "AM";
+//            }else{
+//                timestamp = timestamp.substring(0, timestamp.length() - 4) + "PM";
+//            }
 
             // Generate unique ID for the post
             long postId = System.currentTimeMillis();
@@ -55,9 +60,10 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
                 inputData.getImages(),
                 map,
                 inputData.getType(),  // Pass the type explicitly
-                timestamp,
+                now,
                 inputData.getTags()
             );
+
 
             // Save the post using writePost with the same type
             postDAO.writePost(
@@ -92,6 +98,7 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
 
             CreatePostOutputData outputData = new CreatePostOutputData(0L, errorTimestamp);
             createPostPresenter.prepareFailView(outputData);
+            System.out.println(e.getMessage());
         }
     }
 }

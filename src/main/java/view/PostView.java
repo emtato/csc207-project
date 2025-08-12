@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -207,7 +208,7 @@ public class PostView extends JPanel {
      */
     public void displayPost(Post newPost) {
         currentLoggedInUser = Session.getCurrentAccount();
-
+        getCommentsViewModel.setComments(new ArrayList<>());
         centerPanel.removeAll();
         liked = false;
         likeButton.setText("like");
@@ -285,24 +286,29 @@ public class PostView extends JPanel {
         commentsPanel.setLayout(new BoxLayout(commentsPanel, BoxLayout.Y_AXIS));
 
         getCommentsController.getComments(post.getID());
-        ArrayList<Comment> comments = new ArrayList<>(getCommentsViewModel.getComments());
-        for (Comment comment : comments) {
-            JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
-            commentUser.setFont(subtite2);
+        List<Comment> comments = getCommentsViewModel.getComments();
+        System.out.println( comments == null);
+        if (comments != null && !comments.isEmpty()) {
+            for (Comment comment : comments) {
+                JLabel commentUser = new JLabel(comment.getAccount().getUsername() + " on " + comment.getDate().format(formatter));
+                commentUser.setFont(subtite2);
 
-            JLabel commentContent = new JLabel("<html>" + wrapText(comment.getComment(), 150) + "</html>");
-            commentContent.setFont(commenter);
-            commentContent.setForeground(Color.GRAY);
+                JLabel commentContent = new JLabel("<html>" + wrapText(comment.getComment(), 150) + "</html>");
+                commentContent.setFont(commenter);
+                commentContent.setForeground(Color.GRAY);
 
-            commentsPanel.add(commentUser);
-            commentsPanel.add(Box.createRigidArea(new Dimension(10, 5)));
-            commentsPanel.add(commentContent);
-            commentsPanel.add(Box.createRigidArea(new Dimension(10, 12)));
+                commentsPanel.add(commentUser);
+                commentsPanel.add(Box.createRigidArea(new Dimension(10, 5)));
+                commentsPanel.add(commentContent);
+                commentsPanel.add(Box.createRigidArea(new Dimension(10, 12)));
+            }
+
+            postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
+            postText.add(Box.createRigidArea(new Dimension(10, 20)));
         }
-
-        postText.setLayout(new BoxLayout(postText, BoxLayout.Y_AXIS));
-        postText.add(Box.createRigidArea(new Dimension(10, 20)));
-
+        else{
+            commentsPanel.removeAll();
+        }
         //redraw right buttons
         rightPanel.removeAll();
         ArrayList<JButton> rightButtons = new ArrayList<>();
@@ -579,12 +585,15 @@ public class PostView extends JPanel {
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
     }
+
     public void setWriteCommentController(WriteCommentController controller) {
         this.writeCommentController = controller;
     }
+
     public void setGetCommentsController(GetCommentsController controller) {
         this.getCommentsController = controller;
     }
+
     public void setAnalyzeRecipeController(AnalyzeRecipeController controller) {
         this.analyzeRecipeController = controller;
     }
