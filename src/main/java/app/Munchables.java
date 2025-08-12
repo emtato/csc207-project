@@ -14,7 +14,7 @@ public class Munchables {
      */
     public static void main(String[] args) {
         final AppDirector appDirector = AppDirector.getInstance();
-        final JFrame application = appDirector.buildFileApp();
+        final JFrame application = appDirector.buildDBApp();
         application.setPreferredSize(new Dimension(1440, 900));
         application.pack();
         application.setVisible(true);

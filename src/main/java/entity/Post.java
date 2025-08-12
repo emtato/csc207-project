@@ -30,6 +30,7 @@ public class Post {
     private boolean isClub;
 
     private LocalDateTime dateTime;
+    private String time;
     //can probably delete since comments are stored in JSON
     //private ArrayList<Comment> comments;
     private long likes = 0;
@@ -71,13 +72,29 @@ public class Post {
         this.isPublic = false;
         this.isClub = false;
     }
+     public Post(Account user, long ID, String title, String description,
+                ArrayList<String> imageURLs, HashMap<String, ArrayList<String>> contents,
+                String type, LocalDateTime timestamp, ArrayList<String> tags) {
+        this.user = user;
+        this.postID = ID;
+        this.title = title;
+        this.description = description;
+        this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
+        this.imageURLs = imageURLs != null ? new ArrayList<>(imageURLs) : new ArrayList<>();
+        this.type = type;
+       this.dateTime = timestamp;
+        this.isImageVideo = false;
+        this.isReview = false;
+        this.isPublic = false;
+        this.isClub = false;
+    }
 
     /**
      * Basic constructor for legacy compatibility
      */
     public Post(Account user, long ID, String title, String description,
                 ArrayList<String> imageURLs, String type) {
-        this(user, ID, title, description, imageURLs, new HashMap<>(), type, null, new ArrayList<>());
+        this(user, ID, title, description, imageURLs, new HashMap<>(), type, LocalDateTime.now(), new ArrayList<>());
     }
 
     /**
