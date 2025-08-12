@@ -22,8 +22,8 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
     private final CreatePostOutputBoundary createPostPresenter;
 
     public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO,
-                              UserDataAccessObject userDAO,
-                              CreatePostOutputBoundary createPostPresenter) {
+                                UserDataAccessObject userDAO,
+                                CreatePostOutputBoundary createPostPresenter) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
         this.createPostPresenter = createPostPresenter;
@@ -53,30 +53,30 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
 
             // Create the post with the explicit type from inputData
             Post post = new Post(
-                inputData.getUser(),
-                postId,
-                inputData.getTitle(),
-                inputData.getBody(),
-                inputData.getImages(),
-                map,
-                inputData.getType(),  // Pass the type explicitly
-                now,
-                inputData.getTags()
+                    inputData.getUser(),
+                    postId,
+                    inputData.getTitle(),
+                    inputData.getBody(),
+                    inputData.getImages(),
+                    map,
+                    inputData.getType(),  // Pass the type explicitly
+                    now,
+                    inputData.getTags()
             );
-
 
             // Save the post using writePost with the same type
             postDAO.writePost(
-                postId,
-                inputData.getUser(),
-                inputData.getTitle(),
-                inputData.getType(),  // Use the same type here
-                inputData.getBody(),
-                map,
-                inputData.getTags(),
-                inputData.getImages(),
-                timestamp,
-                inputData.getClubs()
+                    postId,
+                    inputData.getUser(),
+                    inputData.getTitle(),
+                    inputData.getType(),  // Use the same type here
+                    inputData.getBody(),
+                    map,
+                    inputData.getTags(),
+                    inputData.getImages(),
+                    timestamp,
+                    inputData.getClubs()
+
             );
 
             // associate with user
@@ -90,15 +90,17 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             CreatePostOutputData outputData = new CreatePostOutputData(post.getID(), timestamp);
             createPostPresenter.prepareSuccessView(outputData);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // Get current timestamp for error case
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
             String errorTimestamp = now.format(formatter);
 
             CreatePostOutputData outputData = new CreatePostOutputData(0L, errorTimestamp);
+
             createPostPresenter.prepareFailView(outputData);
-            System.out.println(e.getMessage());
+
         }
     }
 }

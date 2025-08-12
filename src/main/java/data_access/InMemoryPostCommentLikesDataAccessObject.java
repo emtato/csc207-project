@@ -118,6 +118,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         post.setImageURLs(images);
         post.setDateTimeFromString(time);
 
+
         postsMap.put(postID, post);
 
         // Store clubs associated with the post

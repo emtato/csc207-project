@@ -41,6 +41,7 @@ public class Post {
 
     /**
      * Constructor for creating a new post
+     *
      * @param user        The user who created the post
      * @param ID          The unique identifier of the post
      * @param title       The title of the post
@@ -64,7 +65,8 @@ public class Post {
         if (timestamp != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
             this.dateTime = LocalDateTime.parse(timestamp, formatter);
-        } else {
+        }
+        else {
             this.dateTime = LocalDateTime.now();
         }
         this.isImageVideo = false;
@@ -72,7 +74,8 @@ public class Post {
         this.isPublic = false;
         this.isClub = false;
     }
-     public Post(Account user, long ID, String title, String description,
+
+    public Post(Account user, long ID, String title, String description,
                 ArrayList<String> imageURLs, HashMap<String, ArrayList<String>> contents,
                 String type, LocalDateTime timestamp, ArrayList<String> tags) {
         this.user = user;
@@ -82,7 +85,7 @@ public class Post {
         this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
         this.imageURLs = imageURLs != null ? new ArrayList<>(imageURLs) : new ArrayList<>();
         this.type = type;
-       this.dateTime = timestamp;
+        this.dateTime = timestamp;
         this.isImageVideo = false;
         this.isReview = false;
         this.isPublic = false;
@@ -159,6 +162,14 @@ public class Post {
      * @param dateTime A string representing datetime in "yyyy-MM-dd HH:mm AM/PM" format
      */
     public void setDateTimeFromString(String dateTime) {
+        if (dateTime.charAt(dateTime.length() - 4) == 'a' || dateTime.charAt(dateTime.length() - 4) == 'p') {
+            if (dateTime.charAt(dateTime.length() - 4) == 'a') {
+                dateTime = dateTime.substring(0, dateTime.length() - 4) + "AM";
+            }
+            else {
+                dateTime = dateTime.substring(0, dateTime.length() - 4) + "PM";
+            }
+        }
         this.dateTime = LocalDateTime.parse(dateTime.trim(), dateTimeFormatter);
     }
 

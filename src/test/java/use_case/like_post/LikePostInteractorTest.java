@@ -27,7 +27,7 @@ class LikePostInteractorTest {
         //create example post with the same postid to like
         HashMap<String, ArrayList<String>> map = new HashMap<>();
         map.put("steps", new ArrayList<>(Arrays.asList("hi")));
-        dao.writePost(103332, new Account("hi", "hi"), "post title", "recipe", "description", map, new ArrayList<>(Arrays.asList("aa")), new ArrayList<>(Arrays.asList("aa")), "2025-08-07 02:12 AM", new ArrayList<>());
+        dao.writePost(103332, new Account("hi", "hi"), "post title", "recipe", "description", map, new ArrayList<>(Arrays.asList("aa")), new ArrayList<>(Arrays.asList("aa")), "2025-08-07 02:12 a.m.", new ArrayList<>());
 
         interactor.execute(inputData);
         assertEquals(1, dao.getPost(103332).getLikes());
