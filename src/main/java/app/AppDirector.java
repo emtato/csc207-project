@@ -39,7 +39,7 @@ public class AppDirector {
                 .addClubHomePageView()
                 .addSpecificClubView()
                 .addEventsView()
-                .addMapView()
+                // .addMapView()
                 .addExploreView()
                 .addCreatePostView()
                 .addCreateClubView();

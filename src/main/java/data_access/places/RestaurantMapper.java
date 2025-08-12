@@ -17,6 +17,7 @@ public class RestaurantMapper {
         String address = (String) place.getOrDefault("formattedAddress", "");
         String phone = (String) place.getOrDefault("internationalPhoneNumber", "");
         String location = place.getOrDefault("location", "").toString();
+        String priceLevel = (String) place.getOrDefault("priceLevel", "PRICE_LEVEL_UNSPECIFIED");
 
         // Parse website URI if provided and valid
         URI uri = null;
@@ -42,24 +43,14 @@ public class RestaurantMapper {
         Object primary = place.get("primaryType");
         if (primary != null) cuisines.add(primary.toString());
 
-        // price level -> human readable priceRange
-        int priceLevel = -1;
-        Object plObj = place.get("priceLevel");
-        if (plObj instanceof Number) {
-            priceLevel = ((Number) plObj).intValue();
-        } else if (plObj != null) {
-            try {
-                priceLevel = Integer.parseInt(plObj.toString());
-            } catch (NumberFormatException ignored) {}
-        }
+        // price level
 
-        String priceRange;
         switch (priceLevel) {
-            case 0 -> priceRange = "$";
-            case 1 -> priceRange = "$$";
-            case 2 -> priceRange = "$$$";
-            case 3 -> priceRange = "$$$$";
-            default -> priceRange = "?";
+            case "PRICE_LEVEL_FREE" -> priceLevel = "$";
+            case "PRICE_LEVEL_MODERATE" -> priceLevel = "$$";
+            case "PRICE_LEVEL_EXPENSIVE" -> priceLevel = "$$$";
+            case "PRICE_LEVEL_VERY_EXPENSIVE" -> priceLevel = "$$$$";
+            default -> priceLevel = "?";
         }
 
         // Build Restaurant (assumes Restaurant has setters used below)
@@ -67,7 +58,7 @@ public class RestaurantMapper {
         r.setName(name);
         r.setAddress(address);
         r.setPhone(phone);
-        r.setPriceRange(priceRange);
+        r.setPriceLevel(priceLevel);
         r.setURI(uri);
 
         return r;

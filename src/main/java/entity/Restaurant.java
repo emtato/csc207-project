@@ -10,7 +10,7 @@ public class Restaurant {
     private final String location;
     private final ArrayList<String> cuisines;
     private final ArrayList<entity.Review> reviews;
-    private String priceRange;
+    private String priceLevel;
     private URI uri;
 
     // Restaurants based on cuisines and location
@@ -21,7 +21,7 @@ public class Restaurant {
         this.location = location;
         this.cuisines = cuisines;
         this.reviews = new ArrayList<>();
-        this.priceRange = null;
+        this.priceLevel = null;
         this.uri = null;
     }
 
@@ -50,8 +50,8 @@ public class Restaurant {
         return reviews;
     }
 
-    public String getPriceRange() {
-        return priceRange;
+    public String getPriceLevel() {
+        return priceLevel;
     }
 
     public URI getURI() {
@@ -66,5 +66,5 @@ public class Restaurant {
     }
     public void setURI(URI uri) { this.uri = uri;
     }
-    public void setPriceRange(String priceRange) { this.priceRange = priceRange; }
+    public void setPriceLevel(String priceLevel) { this.priceLevel = priceLevel; }
     }

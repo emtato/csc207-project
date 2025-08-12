@@ -107,7 +107,7 @@ public class GooglePlacesAPI {
         map.put("primaryType", p.optString("primaryType", null));
         map.put("rating", p.has("rating") ? p.optDouble("rating") : null);
         map.put("websiteUri", p.optString("websiteUri", null));
-        map.put("priceLevel", p.optInt("priceLevel", -1));
+        map.put("priceLevel", p.optString("priceLevel", "PRICE_LEVEL_UNSPECIFIED"));
 
         if (p.has("location")) {
             JSONObject location = p.getJSONObject("location");
@@ -127,11 +127,11 @@ public class GooglePlacesAPI {
 
     private String defaultSearchFieldMask() {
         return "places.id,places.displayName,places.formattedAddress,places.primaryType," +
-                "places.location,places.rating,places.websiteUri";
+                "places.location,places.rating,places.websiteUri,places.priceLevel";
     }
 
     private String defaultDetailsFieldMask() {
-        return "id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,location,primaryType";
+        return "id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,location,primaryType,priceLevel";
     }
 
     private boolean isBlank(String str) {

@@ -11,19 +11,16 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
+import javax.swing.*;
 
 
 // Source: https://stackoverflow.com/questions/17598074/google-map-in-java-swing
 public class MapView {
     private final MapViewModel mapViewModel;
-    public MapView(MapViewModel mapViewModel, Restaurant restaurant) {
+    public MapView(MapViewModel mapViewModel, Restaurant restaurant, JPanel test) {
         this.mapViewModel = mapViewModel;
 
-        JFrame test = new JFrame("Google Maps");
+  //      JFrame test = new JFrame("Google Maps");
 
         try {
             // Load API key from AppProperties
@@ -63,9 +60,10 @@ public class MapView {
                     .getImage().getScaledInstance(630, 600, java.awt.Image.SCALE_SMOOTH));
 
             test.add(new JLabel(icon));
-            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            test.pack();
+//            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            test.pack();
             test.setVisible(true);
+            test.repaint();
 
         } catch (IOException e) {
             e.printStackTrace();
