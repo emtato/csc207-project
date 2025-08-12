@@ -15,8 +15,12 @@ public class GetCommentsPresenter implements GetCommentsOutputBoundary {
     }
 
     @Override
-    public void present(GetCommentsOutputData outputData) {
+    public void prepareSuccessView(GetCommentsOutputData outputData) {
         viewModel.setComments(outputData.getComments());
         viewModel.firePropertyChanged();
+    }
+
+    public void prepareFailView(String errorMessage) {
+        System.err.println("Failed to get comments: " + errorMessage);
     }
 }

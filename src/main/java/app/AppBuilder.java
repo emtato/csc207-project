@@ -65,6 +65,7 @@ import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostState;
+import interface_adapter.write_comment.WriteCommentPresenter;
 import use_case.analyze_recipe.AnalyzeRecipeInputBoundary;
 import use_case.analyze_recipe.AnalyzeRecipeInteractor;
 import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
@@ -75,6 +76,7 @@ import use_case.clubs_home.ClubInputBoundary;
 import use_case.clubs_home.ClubInteractor;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
+import use_case.comment.CommentPostOutputBoundary;
 import use_case.create_club.CreateClubInputBoundary;
 import use_case.create_club.CreateClubInteractor;
 import use_case.create_club.CreateClubOutputBoundary;
@@ -637,9 +639,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addWriteCommentUseCase() {
-        //final WriteCommentOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter(viewManagerModel);
+        final CommentPostOutputBoundary writeCommentOutputBoundary = new WriteCommentPresenter();
         final CommentPostInputBoundary writeCommentInteractor =
-                new CommentPostInteractor(postCommentsLikesDataAccessObject);
+                new CommentPostInteractor(postCommentsLikesDataAccessObject,writeCommentOutputBoundary);
         final WriteCommentController writeCommentController =
                 new WriteCommentController(writeCommentInteractor);
         postView.setWriteCommentController(writeCommentController);

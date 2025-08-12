@@ -5,5 +5,7 @@ package use_case.get_comments;/**
  */
 
 public interface GetCommentsOutputBoundary {
-    void present(GetCommentsOutputData outputData);
+    void prepareSuccessView(GetCommentsOutputData outputData);
+    void prepareFailView(String errorMessage);
 }
+
