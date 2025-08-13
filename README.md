@@ -33,13 +33,8 @@ Doug Ford is a foodie who just heard about this app and wants to create an accou
 Caf Feine wants to manage her account to personalize it to her needs; in the edit profile page, she changes her display name to her nickname, “Java,” adds a fun bio, a new profile picture, and updates a list of things she is interested in. In the settings page, she changes her account's privacy to private, disables notifications, and changes her password.​ In the following page, she scrolls through a list of accounts she is following, and a list of accounts she has requested to follow. She enters her friend's username and sends a follow
 request, which her friend soon accepts.​ Finally, she returns to her profile to view her new account information displayed.​
 
-- Edit Profile
-
-<p align="center">
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/54f883db-6063-4d34-9bfa-a5a20be755e1" />
-</p>
-
-- Settings related use cases:
+- Edit Profile and Settings
+    - Edit profile/save changes
     - Change account privacy​
     - Enable/disable notifications​
     - Change password
@@ -47,7 +42,8 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
     - Logout​
 
 <p align="center">
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/a5840b6e-7209-4f77-9250-7ee055b5da71" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/54f883db-6063-4d34-9bfa-a5a20be755e1" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/a5840b6e-7209-4f77-9250-7ee055b5da71" />
 </p>
 
 - View profile:​
@@ -55,8 +51,8 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
     - View other users' profiles​
 
 <p align="center">
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/c736a5a1-dcf5-4b12-847d-05b8f2732797" />
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/4f611ee9-539e-44c2-9750-31b05e3a2519" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/c736a5a1-dcf5-4b12-847d-05b8f2732797" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/4f611ee9-539e-44c2-9750-31b05e3a2519" />
 
 </p>
 
@@ -66,8 +62,8 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
     - Delete follower​
 
 <p align="center">
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/deb2401c-c6b8-4051-9daf-597e1d2dd4d1" />
-  <img width="600" alt="image" src="https://github.com/user-attachments/assets/ba24e80c-6c20-4a8b-b54a-62cd27d7bb70" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/deb2401c-c6b8-4051-9daf-597e1d2dd4d1" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/ba24e80c-6c20-4a8b-b54a-62cd27d7bb70" />
 </p>
 
 ## Installation Instructions
