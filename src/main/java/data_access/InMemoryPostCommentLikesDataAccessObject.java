@@ -18,6 +18,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     HashMap<Long, ArrayList<Comment>> commentsMap = new HashMap<>();
     HashMap<Long, Club> clubsMap = new HashMap<>();
     HashMap<Long, Post> postsMap = new HashMap<>();
+    HashMap<Long, Review> reviewsMap = new HashMap<>();
     HashMap<Account, ArrayList<Long>> likesMap = new HashMap<>();
 
     private InMemoryPostCommentLikesDataAccessObject() {
@@ -31,9 +32,9 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     }
 
     @Override
-    public void deletePost(long postID) {
-        postsMap.remove(postID);
-    }
+    public void deletePost(long postID) { postsMap.remove(postID); }
+
+//    public void deleteReview(long reviewID) { reviewsMap.remove(reviewID); }
 
     @Override
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
@@ -127,10 +128,30 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         }
     }
 
+//    public void writeReview(long reviewID, Account user, String title, String body,
+//                            ArrayList<String> tags, String timestamp) {
+//        Review review = new Review(user, reviewID, title, body);
+//        review.setDateTimeFromString(timestamp);
+//        review.setTags(tags);
+//
+//
+//        // Store in in-memory map
+//        postsMap.put(reviewID, review);
+//    }
+
     @Override
     public Post getPost(long postID) {
         return postsMap.getOrDefault(postID, null);
     }
+
+//    @Override
+//    public Review getReview(long id) {
+//        Post p = getPost(id);
+//        if (p instanceof Review) {
+//            return (Review) p;
+//        }
+//        return null;
+//    }
 
     @Override
     public void updateLikesForPost(long postID, int likeDifference) {
@@ -146,6 +167,10 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     @Override
     public ArrayList<Long> getAvailablePosts() {
         return new ArrayList<>(postsMap.keySet());
+    }
+
+    public ArrayList<Long> getAvailableReviews() {
+        return new ArrayList<>(reviewsMap.keySet());
     }
 
     @Override

@@ -1,15 +1,15 @@
 package view;
 
 import app.Session;
-import entity.Account;
+import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
+import entity.*;
 import entity.Event;
-import entity.Recipe;
-import entity.Restaurant;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.map.MapState;
 import interface_adapter.map.MapViewModel;
 import view.map.MapView;
-import view.map.RestaurantSearch;
+import data_access.places.RestaurantSearchDataAccessObject;
 import view.ui_components.MapPanel;
 import view.ui_components.MenuBarPanel;
 
@@ -34,14 +34,17 @@ public class ExploreView extends JPanel {
     private static JPanel cardPanel;
     private Account currentUser; // no longer final; resolved lazily
     private boolean initialized = false;
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
+            FilePostCommentLikesDataAccessObject.getInstance();
 
     public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
         this.setLayout(new BorderLayout(10, 10));
 
-        // Attempt initial fetch; may be null if user not logged in yet when view constructed
-        currentUser = Session.getCurrentAccount();
+//        Session.setCurrentUsername("example_user");
+//        Session.setCurrentAccount();
+        this.currentUser = Session.getCurrentAccount();
 
         if (currentUser == null) {
             // Placeholder until user logs in; we'll rebuild when shown and user available
@@ -124,12 +127,12 @@ public class ExploreView extends JPanel {
 
         // Run RestaurantSearch off the EDT
         try {
-            RestaurantSearch searcher = new RestaurantSearch();
+            RestaurantSearchDataAccessObject searcher = new RestaurantSearchDataAccessObject();
             final Restaurant seed = new Restaurant(new ArrayList<>(cuisines), location);
 
             new SwingWorker<List<Restaurant>, Void>() {
                 @Override
-                protected List<Restaurant> doInBackground() {
+                protected List<Restaurant> doInBackground()  throws Exception {
                     return searcher.search(seed);
                 }
 
@@ -139,6 +142,13 @@ public class ExploreView extends JPanel {
                     try {
                         List<Restaurant> liveRestaurants = get(); // runs on EDT inside done()
                         if (liveRestaurants == null || liveRestaurants.isEmpty()) {
+                            // try again
+                            liveRestaurants = searcher.search(seed);
+                        }
+
+                        if (liveRestaurants == null || liveRestaurants.isEmpty()) {
+
+
                             JLabel none = new JLabel("No restaurants found for your preferences.");
                             none.setAlignmentX(Component.LEFT_ALIGNMENT);
                             restaurantsPanel.add(none);
@@ -171,14 +181,15 @@ public class ExploreView extends JPanel {
                                 buttons.setAlignmentX(Component.LEFT_ALIGNMENT);
                                 JButton viewMapBtn = new JButton("View Map");
                                 final JButton websiteBtn = new JButton("Website");
+                                JButton reviewBtn = new JButton("Post Review");
 
                                 // Website enabled only if restaurant has URI
                                 websiteBtn.setEnabled(rFinal.getURI() != null);
 
-                                // View Map — open dialog and populate MapPanel
+                                // View Map - open dialog and populate MapPanel
                                 viewMapBtn.addActionListener(ev -> showMapDialog(rFinal));
 
-                                // Website — open URI if present
+                                // Website - open URI if present
                                 websiteBtn.addActionListener(ev -> {
                                     URI uri = rFinal.getURI();
                                     if (uri != null) openWebpage(uri);
@@ -187,8 +198,15 @@ public class ExploreView extends JPanel {
                                             "No website", JOptionPane.INFORMATION_MESSAGE);
                                 });
 
+                                // Post Review - open Review Panel
+                                reviewBtn.addActionListener(ev -> {
+                                    Window owner = SwingUtilities.getWindowAncestor(ExploreView.this);
+                                    CreateNewReviewView.showDialog(owner, viewManagerModel);
+                                });
+
                                 buttons.add(viewMapBtn);
                                 buttons.add(websiteBtn);
+                                buttons.add(reviewBtn);
 
                                 // Add components
                                 restBox.add(name);
@@ -334,7 +352,6 @@ public class ExploreView extends JPanel {
 
 
         MapPanel mapPanel = new MapPanel();
-        // Give the MapPanel a sensible preferred size so dialog reserves space for it immediately.
         mapPanel.setPreferredSize(new Dimension(800, 600));
         MapViewModel mapViewModel = new MapViewModel();
         mapPanel.update(mapViewModel, restaurant);

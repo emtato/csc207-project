@@ -1,6 +1,7 @@
 package interface_adapter;
 
 import view.CreateNewPostView;
+import view.CreateNewReviewView;
 import view.HomePageView;
 import view.PostView;
 import view.ClubHomePageView;
@@ -13,6 +14,7 @@ public class ViewManagerModel extends ViewModel<String> {
     private PostView postView;
     private HomePageView homePageView;
     private CreateNewPostView createNewPostView;
+    private CreateNewReviewView createNewReviewView;
     private view.SpecificClubView specificClubView;
     private ClubHomePageView clubHomePageView;
 
@@ -48,6 +50,8 @@ public class ViewManagerModel extends ViewModel<String> {
     public void setCreateNewPostView(CreateNewPostView postView){
         this.createNewPostView = postView;
     }
+    public CreateNewReviewView getCreateNewReviewView() { return createNewReviewView; }
+    public void setNewReviewView(CreateNewReviewView newReviewView) { this.createNewReviewView = newReviewView; }
     public view.SpecificClubView getSpecificClubView() {
         return specificClubView;
     }
