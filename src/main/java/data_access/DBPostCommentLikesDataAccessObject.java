@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject{
     private static PostCommentsLikesDataAccessObject instance;
@@ -28,6 +30,22 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String MESSAGE = "message";
+
+    // Simple in-memory cache to mitigate rate limit issues
+    private static final long CACHE_TTL_MS = 60_000; // 1 minute TTL
+    private static class CacheEntry { Post post; long time; CacheEntry(Post p){this.post=p; this.time=System.currentTimeMillis();} }
+    private static final Map<Long, CacheEntry> POST_CACHE = new ConcurrentHashMap<>();
+    private static boolean isRateLimitMessage(String msg){
+        if (msg == null) return false;
+        String lower = msg.toLowerCase();
+        return lower.contains("too many requests") || lower.contains("rate limit");
+    }
+    private static Post getCachedIfFresh(long id){
+        CacheEntry ce = POST_CACHE.get(id);
+        if (ce == null) return null;
+        if (System.currentTimeMillis() - ce.time > CACHE_TTL_MS) { POST_CACHE.remove(id); return null; }
+        return ce.post;
+    }
 
     private DBPostCommentLikesDataAccessObject() {
     }
@@ -404,6 +422,12 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         data.put("posts", posts);
         try {
             saveJSONObject(data);
+            try {
+                // Build a Post object for cache (lightweight reconstruction)
+                HashMap<String, ArrayList<String>> copyMap = new HashMap<>(contents);
+                Post cached = new Post(user, postID, title, description, images, copyMap, postType, time, tags);
+                POST_CACHE.put(postID, new CacheEntry(cached));
+            } catch (Exception ignore) {}
         }
         catch (DataAccessException ex) {
             System.out.println(ex.getMessage());
@@ -412,11 +436,37 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public Post getPost(long postID) {
+        // First attempt cache
+        Post cached = getCachedIfFresh(postID);
+        if (cached != null) {
+            return cached;
+        }
         JSONObject data = new JSONObject();
         try {
             data = getJsonObject();
         }
+        catch (RuntimeException rte) {
+            // On rate limit / transient failure, return stale cache (even if expired) or null WITHOUT implying deletion
+            if (isRateLimitMessage(rte.getMessage())) {
+                Post stale = POST_CACHE.containsKey(postID) ? POST_CACHE.get(postID).post : null;
+                if (stale != null) {
+                    System.out.println("DEBUG[DBPosts]: Rate limit hit; returning stale cached post " + postID);
+                    return stale;
+                }
+                System.out.println("DEBUG[DBPosts]: Rate limit; no cache for post " + postID);
+                return null; // signal transient miss
+            }
+            System.out.println(rte.getMessage());
+        }
         catch (DataAccessException ex) {
+            if (isRateLimitMessage(ex.getMessage())) {
+                Post stale = POST_CACHE.containsKey(postID) ? POST_CACHE.get(postID).post : null;
+                if (stale != null) {
+                    System.out.println("DEBUG[DBPosts]: Rate limit (DAE) returning stale cached post " + postID);
+                    return stale;
+                }
+                return null;
+            }
             System.out.println(ex.getMessage());
         }
 
@@ -441,8 +491,6 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             long likeCount = postObj.optLong("likes", 0);
 
             Account user = new Account(username, "");
-
-            // Images
             ArrayList<String> images = new ArrayList<>();
             if (postObj.has("images")) {
                 JSONArray imagesJSONArray = postObj.getJSONArray("images");
@@ -450,8 +498,6 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                     images.add(imagesJSONArray.getString(i));
                 }
             }
-
-            // Tags
             ArrayList<String> tags = new ArrayList<>();
             if (postObj.has("tags")) {
                 JSONArray tagArray = postObj.getJSONArray("tags");
@@ -459,29 +505,24 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                     tags.add(tagArray.getString(i));
                 }
             }
-
-            // Contents map
             HashMap<String, ArrayList<String>> contentsMap = new HashMap<>();
             if (postObj.has("contents")) {
                 JSONObject contents = postObj.getJSONObject("contents");
                 for (String key : contents.keySet()) {
                     JSONArray arr = contents.getJSONArray(key);
                     ArrayList<String> list = new ArrayList<>();
-                    for (int i = 0; i < arr.length(); i++) {
-                        list.add(arr.getString(i));
-                    }
+                    for (int i = 0; i < arr.length(); i++) list.add(arr.getString(i));
                     contentsMap.put(key, list);
                 }
             }
-
-            // Specialized handling (keep prior behavior for recipe/review)
+            Post post;
             if ("recipe".equalsIgnoreCase(type)) {
                 ArrayList<String> ingredients = contentsMap.getOrDefault("ingredients", new ArrayList<>());
                 String steps = String.join("<br>", contentsMap.getOrDefault("steps", new ArrayList<>()));
                 ArrayList<String> cuisines = contentsMap.getOrDefault("cuisines", new ArrayList<>());
                 Post base = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
                 base.setLikes(likeCount);
-                return new Recipe(base, ingredients, steps, cuisines);
+                post = new Recipe(base, ingredients, steps, cuisines);
             } else if ("review".equalsIgnoreCase(type)) {
                 Post base = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
                 base.setLikes(likeCount);
@@ -489,12 +530,12 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
                 if (postObj.has("rating")) {
                     try { review.setRating(postObj.getDouble("rating")); } catch (Exception ignored) {}
                 }
-                return review;
+                post = review;
+            } else {
+                post = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
+                post.setLikes(likeCount);
             }
-
-            // Generic / announcement / general post
-            Post post = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
-            post.setLikes(likeCount);
+            POST_CACHE.put(postID, new CacheEntry(post));
             return post;
         } catch (Exception e) {
             System.out.println("DEBUG: Error reconstructing post " + postID + ": " + e.getMessage());
