@@ -231,7 +231,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             requestedJson.put("username", account.getRequestedAccounts().get(key).getUsername());
             requestedJson.put("displayName", account.getRequestedAccounts().get(key).getDisplayName());
             requestedJson.put("profilePictureUrl", account.getRequestedAccounts().get(key).getProfilePictureUrl());
-            followingAccountsJson.put(key, requestedJson);
+            requestedAccountsJson.put(key, requestedJson);
         }
         userJson.put("requestedAccounts", requestedAccountsJson);
 
@@ -241,7 +241,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             requesterJson.put("username", account.getRequesterAccounts().get(key).getUsername());
             requesterJson.put("displayName", account.getRequesterAccounts().get(key).getDisplayName());
             requesterJson.put("profilePictureUrl", account.getRequesterAccounts().get(key).getProfilePictureUrl());
-            followingAccountsJson.put(key, requesterJson);
+            requesterAccountsJson.put(key, requesterJson);
         }
         userJson.put("requesterAccounts", requesterAccountsJson);
 
