@@ -56,6 +56,8 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
 
 <p align="center">
   <img width="600" alt="image" src="https://github.com/user-attachments/assets/c736a5a1-dcf5-4b12-847d-05b8f2732797" />
+  <img width="600" alt="image" src="https://github.com/user-attachments/assets/4f611ee9-539e-44c2-9750-31b05e3a2519" />
+
 </p>
 
 - Manage followers/following related use cases:​
