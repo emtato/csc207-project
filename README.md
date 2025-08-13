@@ -82,6 +82,33 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
 overcome
 - Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the steps for software installation
 - Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the steps for overcoming common issues
+### Required Software
+Before installing, make sure you have the following:
+1. Java Development Kit (JDK 11 or higher)
+2. Apache Maven (3.6.0 or higher)
+  - Download: https://maven.apache.org/download.cgi
+  - Installation guide: https://maven.apache.org/install.html
+3. Git (If cloning the repository)
+
+### Installation Steps
+Cloning From Github:
+  1. Open a terminal
+  2. Enter Commands:
+     - git clone https://github.com/emtato/csc207-project.git
+     - cd csc207-project
+Downloading as ZIP File
+  1. Go to the GitHub repository page.
+  2. Click Code → Download ZIP.
+  3. Extract the ZIP file.
+  4. Open a terminal
+  5. Navigate to the extracted folder:
+     -  cd *<path to extracted folder>*
+
+### Building and Running the Project
+1. Use Maven to build the project and download dependencies:
+   - In the terminal run: mvn clean install
+2. Run the application:
+   - mvn exec:java -Dexec.mainClass="app.Munchables"
 
 ## Usage Guide
 ** TODO:
