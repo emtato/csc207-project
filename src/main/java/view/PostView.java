@@ -420,7 +420,7 @@ public class PostView extends JPanel {
     /**
      * function to executeViewProfile button presses
      *
-     * @param e action event
+     * @param e action eevent
      * @throws IOException          idk
      * @throws InterruptedException idk
      */

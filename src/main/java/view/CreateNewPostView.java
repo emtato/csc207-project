@@ -466,7 +466,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-        controller.execute(postData);
+        controller.createPost(postData);
         if (postData.getClubId() != null) {
             SpecificClubView scv = viewManagerModel.getSpecificClubView();
             try {

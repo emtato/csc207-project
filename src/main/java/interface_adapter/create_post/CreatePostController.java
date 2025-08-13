@@ -16,7 +16,7 @@ public class CreatePostController {
         this.interactor = interactor;
     }
 
-    public void execute(CreatePostInputData inputData) {
+    public void createPost(CreatePostInputData inputData) {
         interactor.execute(inputData);
     }
 }
