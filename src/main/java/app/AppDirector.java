@@ -73,7 +73,9 @@ public class AppDirector {
                 .addCreatePostUseCase()
                 .addSpecificClubUseCase()
                 .addCreateClubUseCase()
-                .addClubUseCase()
+                .addListClubsUseCase()
+                .addJoinClubUseCase()
+                .addLeaveClubUseCase()
                 .build();
     }
 
@@ -129,7 +131,9 @@ public class AppDirector {
                 .addCreatePostUseCase()
                 .addSpecificClubUseCase()
                 .addCreateClubUseCase()
-                .addClubUseCase()
+                .addListClubsUseCase()
+                .addJoinClubUseCase()
+                .addLeaveClubUseCase()
                 .build();
     }
 
@@ -185,7 +189,9 @@ public class AppDirector {
                 .addCreatePostUseCase()
                 .addSpecificClubUseCase()
                 .addCreateClubUseCase()
-                .addClubUseCase()
+                .addListClubsUseCase()
+                .addJoinClubUseCase()
+                .addLeaveClubUseCase()
                 .build();
     }
 }

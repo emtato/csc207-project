@@ -14,10 +14,6 @@ public class SpecificClubController {
         specificClubInteractor.execute(inputData);
     }
 
-    public void leaveClub(String username, long clubId) {
-        specificClubInteractor.leaveClub(username, clubId);
-    }
-
     public void loadClub(long clubId) {
         specificClubInteractor.loadClub(clubId);
     }

@@ -26,7 +26,13 @@ import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.fetch_post.FetchPostPresenter;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
+import interface_adapter.join_club.JoinClubController;
+import interface_adapter.join_club.JoinClubPresenter;
+import interface_adapter.leave_club.LeaveClubController;
+import interface_adapter.leave_club.LeaveClubPresenter;
 import interface_adapter.like_post.LikePostController;
+import interface_adapter.list_clubs.ListClubsController;
+import interface_adapter.list_clubs.ListClubsPresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.logout.LogoutController;
@@ -75,8 +81,17 @@ import use_case.fetch_post.FetchPostOutputBoundary;
 import use_case.get_comments.GetCommentsInputBoundary;
 import use_case.get_comments.GetCommentsInteractor;
 import use_case.get_comments.GetCommentsOutputBoundary;
+import use_case.join_club.JoinClubInputBoundary;
+import use_case.join_club.JoinClubInteractor;
+import use_case.join_club.JoinClubOutputBoundary;
+import use_case.leave_club.LeaveClubInputBoundary;
+import use_case.leave_club.LeaveClubInteractor;
+import use_case.leave_club.LeaveClubOutputBoundary;
 import use_case.like_post.LikePostInputBoundary;
 import use_case.like_post.LikePostInteractor;
+import use_case.list_clubs.ListClubsInputBoundary;
+import use_case.list_clubs.ListClubsInteractor;
+import use_case.list_clubs.ListClubsOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -444,10 +459,42 @@ public class UseCaseBuilder {
     }
 
     /**
-     * Adds the Club Use Case to the application.
-     *
-     * @return this builder
+     * Adds the List Clubs use case (replaces part of legacy Club use case).
      */
+    public UseCaseBuilder addListClubsUseCase() {
+        final ListClubsOutputBoundary output = new ListClubsPresenter(viewBuilder.getClubViewModel());
+        final ListClubsInputBoundary interactor = new ListClubsInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final ListClubsController controller = new ListClubsController(interactor);
+        viewBuilder.getClubHomePageView().setListClubsController(controller);
+        return this;
+    }
+
+    /**
+     * Adds the Join Club use case (replaces part of legacy Club use case).
+     */
+    public UseCaseBuilder addJoinClubUseCase() {
+        final JoinClubOutputBoundary output = new JoinClubPresenter(viewBuilder.getClubViewModel());
+        final JoinClubInputBoundary interactor = new JoinClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final JoinClubController controller = new JoinClubController(interactor);
+        viewBuilder.getClubHomePageView().setJoinClubController(controller);
+        return this;
+    }
+
+    /**
+     * Adds the Leave Club use case (moved out of SpecificClubInteractor).
+     */
+    public UseCaseBuilder addLeaveClubUseCase() {
+        final LeaveClubOutputBoundary output = new LeaveClubPresenter(viewBuilder.getClubViewModel(), viewBuilder.getSpecificClubViewModel());
+        final LeaveClubInputBoundary interactor = new LeaveClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final LeaveClubController controller = new LeaveClubController(interactor);
+        viewBuilder.getSpecificClubView().setLeaveClubController(controller);
+        return this;
+    }
+
+    /**
+     * @deprecated Use addListClubsUseCase + addJoinClubUseCase + addCreateClubUseCase instead.
+     */
+    @Deprecated
     public UseCaseBuilder addClubUseCase() {
         final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(viewBuilder.getViewManagerModel(), viewBuilder.getClubViewModel());
         final ClubInputBoundary clubInteractor = new ClubInteractor(
@@ -456,7 +503,7 @@ public class UseCaseBuilder {
                 clubOutputBoundary
         );
         final ClubController clubController = new ClubController(clubInteractor);
-        viewBuilder.getClubHomePageView().setClubController(clubController);
+        viewBuilder.getClubHomePageView().setClubController(clubController); // legacy no-op
         return this;
     }
 //     public UseCaseBuilder setSessionUserDataAccessObject() {

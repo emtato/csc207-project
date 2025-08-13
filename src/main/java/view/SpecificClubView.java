@@ -7,6 +7,7 @@ import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.specific_club.SpecificClubController;
 import interface_adapter.specific_club.SpecificClubViewModel;
 import interface_adapter.like_post.LikePostController;
+import interface_adapter.leave_club.LeaveClubController;
 import entity.Club;
 import entity.Post;
 import entity.Account;
@@ -28,6 +29,7 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     private final SpecificClubViewModel specificClubViewModel;
     private SpecificClubController specificClubController;
     private LikePostController likePostController;
+    private LeaveClubController leaveClubController;
     private Club club;
 
     /**
@@ -167,8 +169,10 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
                 JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
-            specificClubController.leaveClub(currentUser.getUsername(), club.getId());
-            viewManagerModel.setState("clubs view");
+            if (leaveClubController != null) {
+                leaveClubController.leave(currentUser.getUsername(), club.getId());
+            }
+            viewManagerModel.setState("club view");
         }
     }
 
@@ -365,6 +369,8 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     public void setLikePostController(LikePostController controller) {
         this.likePostController = controller;
     }
+
+    public void setLeaveClubController(LeaveClubController controller) { this.leaveClubController = controller; }
 
     public void updateClub(Club newClub) {
         this.club = newClub;
