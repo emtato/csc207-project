@@ -11,7 +11,7 @@ public class AnalyzeRecipeInteractorTest {
 
     @Test
     void successTest() {
-        // :(((
+
     }
 
     @Test
