@@ -65,8 +65,6 @@ class CreateNewPostViewTest {
         InMemoryPostCommentLikesDataAccessObject mem= (InMemoryPostCommentLikesDataAccessObject) InMemoryPostCommentLikesDataAccessObject.getInstance();
         InMemoryUserDataAccessObject memu = (InMemoryUserDataAccessObject) InMemoryUserDataAccessObject.getInstance();
         interface_adapter.create_post.CreatePostController stub = new interface_adapter.create_post.CreatePostController(new CreatePostInteractor(mem,memu,new CreatePostPresenter(new CreatePostViewModel()))) {
-            @Override
-            public void createPost(use_case.create_post.CreatePostInputData inputData) { }
         };
         view.setCreatePostController(stub);
     }
