@@ -25,6 +25,27 @@
 - All major features of the software are described so that a programmer or user can determine whether the software is right for them
 - Descriptions are clear and only detailed when needed
 - Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the software’s features
+### User Story 1
+Doug Ford is a foodie who just heard about this app and wants to create an account.
+- Sign up 
+- Log in
+### User Story 2
+Caf Feine wants to manage her account to personalize it to her needs; in the edit profile page, she changes her display name to her nickname, “Java,” adds a fun bio, a new profile picture, and updates a list of things she is interested in. In the settings page, she changes her account's privacy to private, disables notifications, and changes her password.​ In the following page, she scrolls through a list of accounts she is following, and a list of accounts she has requested to follow. She enters her friend's username and sends a follow
+request, which her friend soon accepts.​ Finally, she returns to her profile to view her new account information displayed.​
+- Edit Profile
+- Settings related use cases:
+  - Change account privacy​
+  - Enable/disable notifications​
+  - Change password
+  - Delete account​
+  - Logout​
+- View profile:​
+  - View personal profile​
+  - View other users' profiles​
+- Manage followers/following related use cases:​
+  - Follow/unfollow​
+  - Send/accept follow request​
+  - Delete follower​
 
 ## Installation Instructions
 ** TODO:
