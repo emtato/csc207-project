@@ -19,13 +19,15 @@ public class EditProfileInteractor implements EditProfileInputBoundary {
         userDataAccessObject.updateBio(user, editProfileInputData.getNewBio());
         userDataAccessObject.updateProfilePictureUrl(user, editProfileInputData.getNewProfilePictureUrl());
         userDataAccessObject.updatePreferences(user, editProfileInputData.getNewPreferences());
+        userDataAccessObject.updateLocation(user, editProfileInputData.getNewLocation());
 
         final EditProfileOutputData editProfileOutputData =
                 new EditProfileOutputData(
                         editProfileInputData.getNewDisplayName(),
                         editProfileInputData.getNewBio(),
                         editProfileInputData.getNewProfilePictureUrl(),
-                        editProfileInputData.getNewPreferences());
+                        editProfileInputData.getNewPreferences(),
+                        editProfileInputData.getNewLocation());
         presenter.prepareSuccessView(editProfileOutputData);
     }
 

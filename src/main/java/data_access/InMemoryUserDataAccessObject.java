@@ -87,6 +87,12 @@ public class InMemoryUserDataAccessObject implements UserDataAccessObject {
     }
 
     @Override
+    public void updateLocation(User user, String newLocation) {
+        user.setLocation(newLocation);
+        save(user);
+    }
+
+    @Override
     public void removeFollower(String username, String removedUsername) {
         final User user = get(username);
         final User removedUser = get(removedUsername);

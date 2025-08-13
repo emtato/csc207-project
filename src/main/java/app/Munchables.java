@@ -1,5 +1,7 @@
 package app;
 
+import view.GUIConstants;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,7 +17,7 @@ public class Munchables {
     public static void main(String[] args) {
         final AppDirector appDirector = AppDirector.getInstance();
         final JFrame application = appDirector.buildDBApp();
-        application.setPreferredSize(new Dimension(1440, 900));
+        application.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, GUIConstants.WINDOW_HEIGHT));
         application.pack();
         application.setVisible(true);
     }

@@ -30,8 +30,9 @@ public class EditProfileInteractorTest {
         newPreferences.add("coffee");
         newPreferences.add("tea");
         newPreferences.add("energy drinks");
+        final String newLocation = "Toronto";
         EditProfileInputData inputData = new EditProfileInputData(username, newDisplayName, newBio,
-                newProfilePictureUrl, newPreferences);
+                newProfilePictureUrl, newPreferences, newLocation);
 
         // Add user to the repository
         UserDataAccessObject userRepository = InMemoryUserDataAccessObject.getInstance();
@@ -51,6 +52,7 @@ public class EditProfileInteractorTest {
                 assertEquals(newBio, newUser.getBio());
                 assertEquals(newProfilePictureUrl, newUser.getProfilePictureUrl());
                 assertEquals(newPreferences, newUser.getFoodPreferences());
+                assertEquals(newLocation, newUser.getLocation());
             }
             @Override
             public void prepareFailView(String error) {

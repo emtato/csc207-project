@@ -10,13 +10,15 @@ public class EditProfileOutputData {
     private final String newBio;
     private final String newProfilePictureUrl;
     private final ArrayList<String> newPreferences;
+    private final String newLocation;
 
     public EditProfileOutputData(String newDisplayName, String newBio, String newProfilePictureUrl,
-                                 ArrayList<String> newPreferences) {
+                                 ArrayList<String> newPreferences, String newLocation) {
         this.newDisplayName = newDisplayName;
         this.newBio = newBio;
         this.newProfilePictureUrl = newProfilePictureUrl;
         this.newPreferences = newPreferences;
+        this.newLocation = newLocation;
     }
 
     public String getNewDisplayName() {
@@ -34,4 +36,6 @@ public class EditProfileOutputData {
     public ArrayList<String> getNewPreferences() {
         return newPreferences;
     }
+    
+    public String getNewLocation() { return newLocation; }
 }

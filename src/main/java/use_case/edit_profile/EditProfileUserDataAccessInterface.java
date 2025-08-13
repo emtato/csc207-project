@@ -38,4 +38,10 @@ public interface EditProfileUserDataAccessInterface extends UserDataAccessInterf
      */
     void updatePreferences(User user, ArrayList<String> newPreferences);
 
+    /**
+     * Updates the user's location. If null, it's based on IP address.
+     * @param user the user to save
+     * @param newLocation the new location to save
+     */
+    void updateLocation(User user, String newLocation);
 }

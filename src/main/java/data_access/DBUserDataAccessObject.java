@@ -189,6 +189,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
         userJson.put("bio", account.getBio());
         userJson.put("displayName", account.getDisplayName());
         userJson.put("profilePictureUrl", account.getProfilePictureUrl());
+        userJson.put("location", account.getLocation());
 
         // Store booleans
         userJson.put("isPublic", account.isPublic());
@@ -489,6 +490,12 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void updatePreferences(User user, ArrayList<String> newPreferences) {
         user.setFoodPreferences(newPreferences);
+        save(user);
+    }
+
+    @Override
+    public void updateLocation(User user, String newLocation) {
+        user.setLocation(newLocation);
         save(user);
     }
 

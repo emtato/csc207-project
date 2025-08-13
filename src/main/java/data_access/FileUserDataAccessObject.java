@@ -78,6 +78,7 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         userJson.put("password", account.getPassword());
         userJson.put("email", account.getEmail());
         userJson.put("bio", account.getBio());
+        userJson.put("location", account.getLocation());
         userJson.put("displayName", account.getDisplayName());
         userJson.put("profilePictureUrl", account.getProfilePictureUrl());
         userJson.put("clubs", new JSONArray(account.getClubs())); // Save club memberships
@@ -377,6 +378,12 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
     @Override
     public void updatePreferences(User user, ArrayList<String> newPreferences) {
         user.setFoodPreferences(newPreferences);
+        save(user);
+    }
+
+    @Override
+    public void updateLocation(User user, String newLocation) {
+        user.setLocation(newLocation);
         save(user);
     }
 

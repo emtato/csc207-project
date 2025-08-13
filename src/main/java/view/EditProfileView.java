@@ -40,6 +40,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
     private final JTextArea bioInputField;
     private final JTextField uploadProfilePicture;
     private final JTextArea preferencesField;
+    private final JLabel location;
+    private final JTextField locationInputField;
     private final JButton saveChangesButton;
     private final JButton backButton;
 
@@ -68,6 +70,11 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         uploadProfilePicture.setColumns(EditProfileViewModel.INPUT_FIELD_COL_NUM);
         uploadProfilePicture.setText(this.editProfileViewModel.getState().getNewProfilePictureUrl());
         preferencesField = new JTextArea(EditProfileViewModel.PREF_ROW_NUM, EditProfileViewModel.INPUT_FIELD_COL_NUM);
+        location = new GeneralJLabel(this.editProfileViewModel.getState().getLocation(), GUIConstants.SMALL_TEXT_SIZE,
+                GUIConstants.WHITE);
+        locationInputField = new JTextField();
+        locationInputField.setColumns(EditProfileViewModel.INPUT_FIELD_COL_NUM);
+        locationInputField.setText(this.editProfileViewModel.getState().getNewLocation());
         saveChangesButton = new JButton(EditProfileViewModel.SAVE_CHANGES_BUTTON_LABEL);
         saveChangesButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         saveChangesButton.setFont(GUIConstants.FONT_TEXT);
@@ -80,6 +87,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         addBioInputFieldListener();
         addUploadProfilePictureFieldListener();
         addPreferencesFieldListener();
+        addLocationInputFieldListener();
         addSaveChangesButtonListener();
         addBackButtonListener();
     }
@@ -134,6 +142,10 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         preferencesField.setText(preferences.toString());
         final JPanel editPrefsPanel = new LabelTextPanel(editPreferencesLabel, preferencesField);
         editProfilePanel.add(editPrefsPanel);
+
+        final JLabel editLocationLabel = new JLabel(EditProfileViewModel.EDIT_LOCATION_LABEL);
+        final JPanel editLocationPanel = new LabelTextPanel(editLocationLabel, locationInputField);
+        editProfilePanel.add(editLocationPanel);
 
         final JPanel saveButtonPanel = new JPanel();
         saveButtonPanel.setLayout(new BoxLayout(saveButtonPanel, BoxLayout.X_AXIS));
@@ -280,6 +292,32 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    private void addLocationInputFieldListener() {
+        locationInputField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void documentListenerHelper() {
+                final EditProfileState currentState = editProfileViewModel.getState();
+                currentState.setNewLocation(locationInputField.getText());
+                editProfileViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+    }
+
     private void addSaveChangesButtonListener() {
         saveChangesButton.addActionListener(
                 evt -> {
@@ -287,7 +325,7 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
                         final EditProfileState currentState = editProfileViewModel.getState();
                         this.editProfileController.execute(currentState.getUsername(), currentState.getNewDisplayName(),
                                 currentState.getNewBio(), currentState.getNewProfilePictureUrl(),
-                                currentState.getNewPreferences()
+                                currentState.getNewPreferences(), currentState.getNewLocation()
                         );
                     }
                 }
@@ -317,6 +355,8 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
             this.nameInputField.setText(this.editProfileViewModel.getState().getNewDisplayName());
             this.bioInputField.setText(this.editProfileViewModel.getState().getNewBio());
             this.uploadProfilePicture.setText(this.editProfileViewModel.getState().getProfilePictureUrl());
+            this.location.setText(this.editProfileViewModel.getState().getLocation());
+            this.locationInputField.setText(this.editProfileViewModel.getState().getNewLocation());
             final StringBuilder preferences = new StringBuilder();
             for (String pref : this.editProfileViewModel.getState().getPreferences()) {
                 preferences.append(pref).append(LINE_BREAK);
@@ -341,6 +381,10 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         if (evt.getPropertyName().equals("profilePicture")) {
             this.profilePicture.updateIcon(this.editProfileViewModel.getState().getNewProfilePictureUrl());
             this.uploadProfilePicture.setText(this.editProfileViewModel.getState().getProfilePictureUrl());
+        }
+        if (evt.getPropertyName().equals("location")) {
+            this.location.setText(this.editProfileViewModel.getState().getLocation());
+            this.locationInputField.setText(this.editProfileViewModel.getState().getNewLocation());
         }
     }
 
