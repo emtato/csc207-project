@@ -11,8 +11,6 @@ import interface_adapter.analyze_recipe.AnalyzeRecipeController;
 import interface_adapter.analyze_recipe.AnalyzeRecipePresenter;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
-import interface_adapter.clubs_home.ClubController;
-import interface_adapter.clubs_home.ClubPresenter;
 import interface_adapter.create_club.CreateClubController;
 import interface_adapter.create_club.CreateClubPresenter;
 import interface_adapter.create_post_view.CreatePostController;
@@ -57,9 +55,6 @@ import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.clubs_home.ClubInputBoundary;
-import use_case.clubs_home.ClubInteractor;
-import use_case.clubs_home.ClubOutputBoundary;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
 import use_case.comment.CommentPostOutputBoundary;
@@ -490,24 +485,4 @@ public class UseCaseBuilder {
         viewBuilder.getSpecificClubView().setLeaveClubController(controller);
         return this;
     }
-
-    /**
-     * @deprecated Use addListClubsUseCase + addJoinClubUseCase + addCreateClubUseCase instead.
-     */
-    @Deprecated
-    public UseCaseBuilder addClubUseCase() {
-        final ClubOutputBoundary clubOutputBoundary = new ClubPresenter(viewBuilder.getViewManagerModel(), viewBuilder.getClubViewModel());
-        final ClubInputBoundary clubInteractor = new ClubInteractor(
-                dbClubsDataAccessObject,
-                userDataAccessObject,
-                clubOutputBoundary
-        );
-        final ClubController clubController = new ClubController(clubInteractor);
-        viewBuilder.getClubHomePageView().setClubController(clubController); // legacy no-op
-        return this;
-    }
-//     public UseCaseBuilder setSessionUserDataAccessObject() {
-//        Session.setUserDataAccessObject(userDataAccessObject);
-//        return this;
-//    }
 }

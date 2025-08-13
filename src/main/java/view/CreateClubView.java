@@ -1,5 +1,6 @@
 package view;
 
+import app.Session;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_club.CreateClubController;
 import interface_adapter.create_club.CreateClubViewModel;
@@ -19,7 +20,7 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
     private final ViewManagerModel viewManagerModel;
     private CreateClubController createClubController;
     private final CreateClubViewModel createClubViewModel;
-    private final Account currentUser;
+    private final Account currentUser; // may be null at construction; runtime user retrieved via Session when creating
     private final ArrayList<Account> members = new ArrayList<>();
 
     private final JTextArea titleArea;
@@ -135,9 +136,14 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
             }
         }
 
+        // Build member username list based on current members plus the runtime current user
         ArrayList<String> memberUsernames = new ArrayList<>();
         for (Account member : members) {
             memberUsernames.add(member.getUsername());
+        }
+        String runtimeCurrentUsername = Session.getCurrentUsername();
+        if (runtimeCurrentUsername != null && !memberUsernames.contains(runtimeCurrentUsername)) {
+            memberUsernames.add(runtimeCurrentUsername);
         }
 
         createClubController.createClub(title, description, memberUsernames, tags);
@@ -218,7 +224,10 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
         tagsArea.dispatchEvent(new FocusEvent(tagsArea, FocusEvent.FOCUS_LOST));
 
         members.clear();
-        if (currentUser != null) {
+        Account runtimeCurrent = Session.getCurrentAccount();
+        if (runtimeCurrent != null) {
+            members.add(runtimeCurrent);
+        } else if (currentUser != null) { // fallback
             members.add(currentUser);
         }
         memberCountLabel.setText(members.size() + " members");

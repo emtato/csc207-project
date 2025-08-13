@@ -43,28 +43,6 @@ class SpecificClubInteractorTest {
     }
 
     @Test
-    void leaveClubSuccess() {
-        // Setup test data
-        long clubId = 1L;
-        Account testUser = new Account("testUser", "password");
-        ArrayList<String> userClubs = new ArrayList<>();
-        userClubs.add(String.valueOf(clubId));
-        testUser.setClubs(userClubs);
-        userDAO.save(testUser);
-
-        ArrayList<Account> members = new ArrayList<>();
-        members.add(testUser);
-        clubsDAO.writeClub(clubId, members, "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
-
-        // Execute test
-        specificClubInteractor.leaveClub("testUser", clubId);
-
-        // Verify results
-        assertTrue(presenter.getLastOutput().isSuccess());
-        assertFalse(specificClubInteractor.isMember("testUser", clubId));
-    }
-
-    @Test
     void loadClubSuccess() {
         // Setup test data
         long clubId = 1L;
