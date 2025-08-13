@@ -13,14 +13,6 @@ public interface SpecificClubInputBoundary {
     void execute(SpecificClubInputData inputData);
 
     /**
-     * Handles the action of a user leaving a club.
-     *
-     * @param username The username of the user leaving the club
-     * @param clubId The ID of the club being left
-     */
-    void leaveClub(String username, long clubId);
-
-    /**
      * Loads the specific club's data.
      *
      * @param clubId The ID of the club to load
