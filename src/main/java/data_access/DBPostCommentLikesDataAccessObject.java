@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -604,43 +603,72 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public void addPostToClub(Post post, long clubId) throws DataAccessException {
-        // Append post ID to local file-based clubs (data_storage.json) so club views can load it.
-        final String filePath = "src/main/java/data_access/data_storage.json";
-        JSONObject dataFile;
+        // DB-only: directly append post ID to the club's posts list in remote storage.
         try {
-            String content = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(filePath)));
-            dataFile = new JSONObject(content);
-        } catch (IOException e) {
-            dataFile = new JSONObject();
+            ClubsDataAccessObject clubsDAO = DBClubsDataAccessObject.getInstance(this);
+            if (clubsDAO instanceof DBClubsDataAccessObject) {
+                DBClubsDataAccessObject dbClubs = (DBClubsDataAccessObject) clubsDAO;
+                dbClubs.addPostIdToClub(clubId, post.getID());
+                System.out.println("DEBUG[DBPostDAO]: Added post ID " + post.getID() + " to club " + clubId + " (DB only)");
+            } else {
+                throw new DataAccessException("Clubs DAO instance is not DBClubsDataAccessObject");
+            }
+        } catch (Exception ex) {
+            if (ex instanceof DataAccessException) throw (DataAccessException) ex;
+            throw new DataAccessException("Failed to add post to club in DB: " + ex.getMessage());
         }
-        if (!dataFile.has("clubs")) {
-            throw new DataAccessException("No clubs section found when adding post to club");
+    }
+
+    @Override
+    public void deleteAllPostsByUser(String username, ClubsDataAccessObject clubsDAO, UserDataAccessObject userDAO) {
+        // Collect post IDs to delete by scanning all posts (avoid inconsistent user userPosts list)
+        ArrayList<Long> allIds = getAvailablePosts();
+        ArrayList<Long> toDelete = new ArrayList<>();
+        if (allIds != null) {
+            for (Long id : allIds) {
+                Post p = getPost(id);
+                if (p != null && p.getUser() != null && username.equals(p.getUser().getUsername())) {
+                    toDelete.add(id);
+                }
+            }
         }
-        JSONObject clubs = dataFile.getJSONObject("clubs");
-        String clubKey = String.valueOf(clubId);
-        if (!clubs.has(clubKey)) {
-            throw new DataAccessException("Club ID " + clubId + " not found when adding post");
+        // Remove references from all clubs (DB implementation knows how to persist itself)
+        if (clubsDAO != null) {
+            try {
+                ArrayList<Club> clubs = clubsDAO.getAllClubs();
+                for (Club club : clubs) {
+                    boolean changed = false;
+                    ArrayList<Post> kept = new ArrayList<>();
+                    for (Post p : club.getPosts()) {
+                        if (!toDelete.contains(p.getID())) kept.add(p); else changed = true;
+                    }
+                    if (changed) {
+                        clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), kept, club.getTags());
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("DEBUG[DBPostDAO]: Error cleaning club references: " + e.getMessage());
+            }
         }
-        JSONObject club = clubs.getJSONObject(clubKey);
-        JSONArray postsArray = club.has("posts") ? club.getJSONArray("posts") : new JSONArray();
-        boolean exists = false;
-        for (int i = 0; i < postsArray.length(); i++) {
-            if (postsArray.optLong(i) == post.getID()) { exists = true; break; }
+        // Delete posts from posts map
+        for (Long id : toDelete) {
+            deletePost(id);
+            POST_CACHE.remove(id);
         }
-        if (!exists) {
-            postsArray.put(post.getID());
-            System.out.println("DEBUG: (DB) Added post ID " + post.getID() + " to club " + clubId);
-        } else {
-            System.out.println("DEBUG: (DB) Post ID " + post.getID() + " already present in club " + clubId);
-        }
-        club.put("posts", postsArray);
-        clubs.put(clubKey, club);
-        dataFile.put("clubs", clubs);
-        try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
-            writer.write(dataFile.toString(2));
-            System.out.println("DEBUG: (DB) Persisted updated club posts for club " + clubId + ": " + postsArray);
-        } catch (IOException e) {
-            throw new DataAccessException("Error writing club update: " + e.getMessage());
+        // Update user's post list if present
+        if (userDAO != null) {
+            try {
+                User u = userDAO.get(username);
+                if (u instanceof Account) {
+                    Account acc = (Account) u;
+                    if (acc.getUserPosts() != null) {
+                        acc.getUserPosts().removeAll(toDelete);
+                        userDAO.save(acc);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("DEBUG[DBPostDAO]: Error updating user post list: " + e.getMessage());
+            }
         }
     }
 }

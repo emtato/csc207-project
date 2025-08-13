@@ -84,4 +84,13 @@ public interface PostCommentsLikesDataAccessObject {
      * @param clubId The ID of the club to add the post to
      */
     public void addPostToClub(Post post, long clubId) throws DataAccessException;
+
+    /**
+     * Delete all posts by a specific user.
+     *
+     * @param username the username of the user whose posts are to be deleted
+     * @param clubsDAO the ClubsDataAccessObject instance for club-related data access
+     * @param userDAO  the UserDataAccessObject instance for user-related data access
+     */
+    public void deleteAllPostsByUser(String username, ClubsDataAccessObject clubsDAO, UserDataAccessObject userDAO);
 }

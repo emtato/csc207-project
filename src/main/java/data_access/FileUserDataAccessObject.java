@@ -168,6 +168,49 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         writeToFile(data);
     }
 
+    private Account buildStubUser(String username) {
+        System.out.println("DEBUG[FileUserDAO]: Creating stub user for missing username: " + username);
+        Account account = new Account(username, "");
+        account.setBio("");
+        account.setDisplayName("");
+        account.setEmail("");
+        account.setLocation("");
+        account.setProfilePictureUrl("https://i.imgur.com/eA9NeJ1.jpeg");
+        account.setPublic(true);
+        account.setNotificationsEnabled(true);
+        account.setBlockedTerms(new ArrayList<>());
+        account.setFoodPreferences(new ArrayList<>());
+        account.setLikesUsernames(new ArrayList<>());
+        account.setUserPosts(new ArrayList<>());
+        account.setClubs(new ArrayList<>());
+        // Reconstruct club memberships by scanning data_storage.json clubs array
+        try {
+            JSONObject storage = getJsonObject();
+            if (storage.has("clubs")) {
+                JSONObject clubs = storage.getJSONObject("clubs");
+                for (String clubId : clubs.keySet()) {
+                    try {
+                        JSONObject clubObj = clubs.getJSONObject(clubId);
+                        if (clubObj.has("members")) {
+                            JSONArray members = clubObj.getJSONArray("members");
+                            for (int i = 0; i < members.length(); i++) {
+                                if (!members.isNull(i) && username.equals(members.getString(i))) {
+                                    account.getClubs().add(clubId);
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("DEBUG[FileUserDAO]: Failed reconstructing club memberships: " + e.getMessage());
+        }
+        // Persist new stub so future loads find it
+        save(account);
+        return account;
+    }
+
     @Override
     public User get(String username) {
         System.out.println("DEBUG[UserDAO:get]: Loading user data for: " + username);
@@ -175,7 +218,8 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
         if (!data.has("users") || !data.getJSONObject("users").has(username)) {
             System.out.println("DEBUG[UserDAO:get]: User not found in data storage");
-            return null;
+            // Auto-create stub user so application flows (posts, clubs) can proceed
+            return buildStubUser(username);
         }
 
         JSONObject userData = data.getJSONObject("users").getJSONObject(username);

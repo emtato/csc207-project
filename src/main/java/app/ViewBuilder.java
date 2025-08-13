@@ -1,5 +1,6 @@
 package app;
 
+import data_access.DBUserDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
@@ -217,6 +218,8 @@ public class ViewBuilder {
                 specificClubViewModel
         );
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
+        // Register with view manager so other views can trigger reloads
+        viewManagerModel.setClubHomePageView(clubHomePageView);
         return this;
     }
 
@@ -247,7 +250,7 @@ public class ViewBuilder {
      * @return this builder
      */
     public ViewBuilder addExploreView() {
-        Session.setUserDataAccessObject(FileUserDataAccessObject.getInstance()); //required here since explore view calls session.getuser before i can add it in usecasebuilder
+        Session.setUserDataAccessObject(DBUserDataAccessObject.getInstance()); // switched to DB DAO
         exploreView = new ExploreView(viewManagerModel, cardPanel);
         cardPanel.add(exploreView, exploreView.getViewName());
         return this;

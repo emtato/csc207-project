@@ -153,4 +153,49 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
 
     }
 
+    // New method to satisfy updated interface: bulk delete of a user's posts
+    @Override
+    public void deleteAllPostsByUser(String username, ClubsDataAccessObject clubsDAO, UserDataAccessObject userDAO) {
+        ArrayList<Long> toRemove = new ArrayList<>();
+        for (Long id : postsMap.keySet()) {
+            Post p = postsMap.get(id);
+            if (p != null && p.getUser() != null && username.equals(p.getUser().getUsername())) {
+                toRemove.add(id);
+            }
+        }
+        // Remove posts and associated comments / likes
+        for (Long id : toRemove) {
+            postsMap.remove(id);
+            commentsMap.remove(id);
+            for (ArrayList<Long> liked : likesMap.values()) {
+                liked.remove(id);
+            }
+            clubsMap.remove(id);
+        }
+        // Update user record if provided
+        if (userDAO != null) {
+            try {
+                User u = userDAO.get(username);
+                if (u instanceof Account && u.getUserPosts() != null) {
+                    u.getUserPosts().removeAll(toRemove);
+                    userDAO.save(u);
+                }
+            } catch (Exception ignored) {}
+        }
+        // Update clubs via clubsDAO (rebuild without removed posts)
+        if (clubsDAO != null) {
+            try {
+                for (Club club : clubsDAO.getAllClubs()) {
+                    boolean changed = false;
+                    ArrayList<Post> kept = new ArrayList<>();
+                    for (Post p : club.getPosts()) {
+                        if (!toRemove.contains(p.getID())) kept.add(p); else changed = true;
+                    }
+                    if (changed) {
+                        clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), kept, club.getTags());
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+    }
 }

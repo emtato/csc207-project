@@ -6,10 +6,6 @@ package use_case.create_post;/**
 
 import data_access.UserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
-import data_access.DBPostCommentLikesDataAccessObject;
-import data_access.DBUserDataAccessObject;
-import data_access.FilePostCommentLikesDataAccessObject;
-import data_access.FileUserDataAccessObject;
 import entity.Account;
 import entity.Club;
 import entity.Post;
@@ -82,46 +78,9 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             );
             System.out.println("DEBUG[CreatePost]: writePost completed for postId=" + postId);
 
-            // Bridge: if using DB post DAO but file-based views expect file posts, mirror into file storage
-            try {
-                if (postDAO instanceof DBPostCommentLikesDataAccessObject) {
-                    PostCommentsLikesDataAccessObject fileDAO = FilePostCommentLikesDataAccessObject.getInstance();
-                    if (fileDAO.getPost(postId) == null) {
-                        System.out.println("DEBUG[CreatePost]: Mirroring post " + postId + " into file storage for club view consistency");
-                        fileDAO.writePost(
-                                postId,
-                                inputData.getUser(),
-                                inputData.getTitle(),
-                                inputData.getType(),
-                                inputData.getBody(),
-                                map,
-                                inputData.getTags(),
-                                inputData.getImages(),
-                                timestamp,
-                                inputData.getClubs()
-                        );
-                    } else {
-                        System.out.println("DEBUG[CreatePost]: File storage already has postId=" + postId);
-                    }
-                }
-            } catch (Exception mirrorEx) {
-                System.out.println("DEBUG[CreatePost]: Mirror to file storage failed: " + mirrorEx.getMessage());
-            }
-
             // Associate post with user
             userDAO.addPost(postId, inputData.getUser().getUsername());
             System.out.println("DEBUG[CreatePost]: User association added for postId=" + postId + " user=" + inputData.getUser().getUsername());
-
-            // Bridge user posts if using DB user DAO
-            try {
-                if (userDAO instanceof DBUserDataAccessObject) {
-                    FileUserDataAccessObject fileUserDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
-                    System.out.println("DEBUG[CreatePost]: Mirroring user post association to file user data for user=" + inputData.getUser().getUsername());
-                    fileUserDAO.addPost(postId, inputData.getUser().getUsername());
-                }
-            } catch (Exception userMirrorEx) {
-                System.out.println("DEBUG[CreatePost]: Mirror user post failed: " + userMirrorEx.getMessage());
-            }
 
             // Club association
             if (inputData.getClubId() != null) {
