@@ -6,8 +6,6 @@ package use_case.create_post;/**
 
 import data_access.UserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
-import entity.Account;
-import entity.Club;
 import entity.Post;
 
 import java.time.LocalDateTime;
@@ -21,9 +19,7 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
     private final UserDataAccessObject userDAO;
     private final CreatePostOutputBoundary createPostPresenter;
 
-    public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO,
-                                UserDataAccessObject userDAO,
-                                CreatePostOutputBoundary createPostPresenter) {
+    public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO, UserDataAccessObject userDAO, CreatePostOutputBoundary createPostPresenter) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
         this.createPostPresenter = createPostPresenter;
@@ -31,101 +27,57 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
 
     @Override
     public void execute(CreatePostInputData inputData) {
+        // Get current timestamp
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+        String timestamp = now.format(formatter);
         try {
-            System.out.println("DEBUG[CreatePost]: Using Post DAO class = " + postDAO.getClass().getName());
-            System.out.println("DEBUG[CreatePost]: Using User DAO class = " + userDAO.getClass().getName());
-            System.out.println("DEBUG[CreatePost]: Incoming type=" + inputData.getType() + ", clubId=" + inputData.getClubId());
             // format data
             HashMap<String, ArrayList<String>> map = new HashMap<>();
             map.put("ingredients", inputData.getIngredients());
             map.put("steps", new ArrayList<>(Arrays.asList(inputData.getSteps())));
             map.put("cuisines", inputData.getTags());
 
-            // Get current timestamp
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
-            String timestamp = now.format(formatter);
-
             // Generate unique ID for the post
             long postId = System.currentTimeMillis();
-            System.out.println("DEBUG[CreatePost]: Generated postId=" + postId);
 
             // Create entity (in-memory)
-            Post post = new Post(
-                    inputData.getUser(),
-                    postId,
-                    inputData.getTitle(),
-                    inputData.getBody(),
-                    inputData.getImages(),
-                    map,
-                    inputData.getType(),
-                    now,
-                    inputData.getTags()
-            );
+            Post post = new Post(inputData.getUser(), postId, inputData.getTitle(), inputData.getBody(),
+                    inputData.getImages(), map, inputData.getType(), now, inputData.getTags());
 
             // Persist post
-            postDAO.writePost(
-                    postId,
-                    inputData.getUser(),
-                    inputData.getTitle(),
-                    inputData.getType(),
-                    inputData.getBody(),
-                    map,
-                    inputData.getTags(),
-                    inputData.getImages(),
-                    timestamp,
-                    inputData.getClubs()
-            );
-            System.out.println("DEBUG[CreatePost]: writePost completed for postId=" + postId);
+            postDAO.writePost(postId, inputData.getUser(), inputData.getTitle(), inputData.getType(),
+                    inputData.getBody(), map, inputData.getTags(), inputData.getImages(), timestamp, inputData.getClubs());
 
             // Associate post with user
             userDAO.addPost(postId, inputData.getUser().getUsername());
-            System.out.println("DEBUG[CreatePost]: User association added for postId=" + postId + " user=" + inputData.getUser().getUsername());
 
             // Club association
             if (inputData.getClubId() != null) {
                 try {
                     postDAO.addPostToClub(post, inputData.getClubId());
-                    System.out.println("DEBUG[CreatePost]: addPostToClub succeeded for clubId=" + inputData.getClubId());
-                } catch (Exception ex) {
-                    System.out.println("DEBUG[CreatePost]: addPostToClub FAILED: " + ex.getMessage());
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
                 }
                 Post persisted = postDAO.getPost(postId);
-                if (persisted == null) {
-                    System.out.println("DEBUG[CreatePost]: Persisted post retrieval FAILED after club association (post missing) postId=" + postId);
-                } else {
+                if (persisted != null) {
                     persisted.setClub(true);
-                    System.out.println("DEBUG[CreatePost]: Persisted post retrieved and club flag set.");
                 }
-            } else {
+            }
+            else {
                 Post persisted = postDAO.getPost(postId);
-                if (persisted == null) {
-                    System.out.println("DEBUG[CreatePost]: Persisted post retrieval FAILED (post missing) postId=" + postId);
-                } else {
+                if (persisted != null) {
                     persisted.setClub(false);
                 }
             }
 
-            // Sanity check: verify presence in storage (posts section if file-based)
-            try {
-                Post reload = postDAO.getPost(postId);
-                System.out.println("DEBUG[CreatePost]: Post reload after all ops => " + (reload == null ? "NULL" : ("found type=" + reload.getType())));
-            } catch (Exception ex) {
-                System.out.println("DEBUG[CreatePost]: Exception during reload check: " + ex.getMessage());
-            }
-
             CreatePostOutputData outputData = new CreatePostOutputData(post.getID(), timestamp);
             createPostPresenter.prepareSuccessView(outputData);
-
         }
         catch (Exception e) {
-            System.out.println("DEBUG[CreatePost]: Exception during execute: " + e.getClass().getName() + " - " + e.getMessage());
             // Get current timestamp for error case
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
-            String errorTimestamp = now.format(formatter);
-
-            CreatePostOutputData outputData = new CreatePostOutputData(0L, errorTimestamp);
+            CreatePostOutputData outputData = new CreatePostOutputData(0L, timestamp);
             createPostPresenter.prepareFailView(outputData);
 
         }

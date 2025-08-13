@@ -1,13 +1,12 @@
 package app;
 
 import data_access.DBUserDataAccessObject;
-import data_access.FileUserDataAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analyze_recipe.AnalyzeRecipeViewModel;
 import interface_adapter.clubs_home.ClubViewModel;
 import interface_adapter.create_club.CreateClubViewModel;
-import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.create_post.CreatePostViewModel;
 import interface_adapter.edit_profile.EditProfileViewModel;
 import interface_adapter.get_comments.GetCommentsViewModel;
 import interface_adapter.homepage.HomePageViewModel;
@@ -22,12 +21,10 @@ import interface_adapter.toggle_settings.SettingsViewModel;
 import interface_adapter.view_profile.ProfileViewModel;
 import view.*;
 import view.map.MapView;
-import view.map.RestaurantSearch;
 
 import javax.swing.*;
 import java.awt.CardLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ViewBuilder {
     private final JPanel cardPanel = new JPanel();

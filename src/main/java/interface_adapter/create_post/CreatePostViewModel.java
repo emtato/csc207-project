@@ -1,4 +1,4 @@
-package interface_adapter.create_post_view;
+package interface_adapter.create_post;
 
 import interface_adapter.ViewModel;
 import java.beans.PropertyChangeListener;
