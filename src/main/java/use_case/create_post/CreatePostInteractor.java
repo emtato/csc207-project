@@ -85,6 +85,11 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
             // If this is a club post, add it to the club's posts
             if (inputData.getClubId() != null) {
                 postDAO.addPostToClub(post, inputData.getClubId());
+                postDAO.getPost(postId).setClub(true);
+
+            }
+            else {
+                postDAO.getPost(postId).setClub(false);
             }
 
             CreatePostOutputData outputData = new CreatePostOutputData(post.getID(), timestamp);
