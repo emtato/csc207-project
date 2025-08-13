@@ -5,9 +5,11 @@ import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.specific_club.SpecificClubController;
+import interface_adapter.specific_club.SpecificClubState;
 import interface_adapter.specific_club.SpecificClubViewModel;
 import interface_adapter.like_post.LikePostController;
 import interface_adapter.leave_club.LeaveClubController;
+import interface_adapter.delete_club.DeleteClubController;
 import entity.Club;
 import entity.Post;
 import entity.Account;
@@ -30,6 +32,7 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     private SpecificClubController specificClubController;
     private LikePostController likePostController;
     private LeaveClubController leaveClubController;
+    private DeleteClubController deleteClubController;
     private Club club;
 
     /**
@@ -133,6 +136,13 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
         leaveClubButton.addActionListener(e -> handleLeaveClub());
         buttonsPanel.add(leaveClubButton);
 
+        // Delete Club Button
+        JButton deleteClubButton = new JButton("Delete Club");
+        deleteClubButton.setFont(GUIConstants.FONT_TEXT);
+        deleteClubButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        deleteClubButton.addActionListener(e -> handleDeleteClub());
+        buttonsPanel.add(deleteClubButton);
+
         return buttonsPanel;
     }
 
@@ -173,6 +183,26 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
                 leaveClubController.leave(currentUser.getUsername(), club.getId());
             }
             viewManagerModel.setState("club view");
+        }
+    }
+
+    private void handleDeleteClub() {
+        Account currentUser = Session.getCurrentAccount();
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(null,
+                    "Please log in to delete the club",
+                    "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int result = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to permanently delete '" + club.getName() + "'?",
+                "Delete Club",
+                JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            if (deleteClubController != null) {
+                deleteClubController.delete(currentUser.getUsername(), club.getId());
+            }
         }
     }
 
@@ -352,7 +382,12 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("state".equals(evt.getPropertyName())) {
-            // Handle state changes from the view model
+            SpecificClubState scState = specificClubViewModel.getState();
+            if (scState.isDeleted()) {
+                JOptionPane.showMessageDialog(this, "Club deleted successfully");
+                viewManagerModel.setState("club view");
+                return;
+            }
             this.revalidate();
             this.repaint();
         }
@@ -371,6 +406,8 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     }
 
     public void setLeaveClubController(LeaveClubController controller) { this.leaveClubController = controller; }
+
+    public void setDeleteClubController(DeleteClubController controller) { this.deleteClubController = controller; }
 
     public void updateClub(Club newClub) {
         this.club = newClub;

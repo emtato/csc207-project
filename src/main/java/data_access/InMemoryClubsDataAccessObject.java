@@ -87,4 +87,9 @@ public class InMemoryClubsDataAccessObject implements ClubsDataAccessObject {
             userDAO.removeClubFromUser(username, String.valueOf(clubID));
         }
     }
+
+    @Override
+    public void deleteClub(long clubID) {
+        clubs.remove(clubID);
+    }
 }

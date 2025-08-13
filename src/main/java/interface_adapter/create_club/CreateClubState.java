@@ -6,6 +6,7 @@ public class CreateClubState {
     private java.util.ArrayList<String> memberUsernames = new java.util.ArrayList<>();
     private java.util.ArrayList<String> tags = new java.util.ArrayList<>();
     private String error = null;
+    private boolean selectionMode = false; // indicates state holds available usernames for selection
 
     public CreateClubState(CreateClubState copy) {
         this.title = copy.title;
@@ -13,6 +14,7 @@ public class CreateClubState {
         this.memberUsernames = new java.util.ArrayList<>(copy.memberUsernames);
         this.tags = new java.util.ArrayList<>(copy.tags);
         this.error = copy.error;
+        this.selectionMode = copy.selectionMode;
     }
 
     // Default constructor
@@ -34,4 +36,7 @@ public class CreateClubState {
 
     public String getError() { return error; }
     public void setError(String error) { this.error = error; }
+
+    public boolean isSelectionMode() { return selectionMode; }
+    public void setSelectionMode(boolean selectionMode) { this.selectionMode = selectionMode; }
 }

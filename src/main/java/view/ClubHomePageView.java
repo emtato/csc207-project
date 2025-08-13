@@ -32,13 +32,11 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     public ClubHomePageView(ViewManagerModel viewManagerModel,
                           ClubViewModel clubViewModel,
                           JPanel cardPanel,
-                          SpecificClubViewModel specificClubViewModel,
-                          SpecificClubController specificClubController) {
+                          SpecificClubViewModel specificClubViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.clubViewModel = clubViewModel;
         this.cardPanel = cardPanel;
         this.specificClubViewModel = specificClubViewModel;
-        this.specificClubController = specificClubController;
 
         clubViewModel.addPropertyChangeListener(this);
 
@@ -309,4 +307,5 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
 
     public void setListClubsController(ListClubsController controller) { this.listClubsController = controller; }
     public void setJoinClubController(JoinClubController controller) { this.joinClubController = controller; }
+    public void setSpecificClubController(SpecificClubController controller) { this.specificClubController = controller; }
 }

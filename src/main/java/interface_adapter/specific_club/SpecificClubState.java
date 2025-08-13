@@ -5,6 +5,7 @@ import entity.Club;
 public class SpecificClubState {
     private Club club;
     private String error;
+    private boolean deleted = false; // new flag
 
     public SpecificClubState() {}
 
@@ -27,4 +28,7 @@ public class SpecificClubState {
     public void setError(String error) {
         this.error = error;
     }
+
+    public boolean isDeleted() { return deleted; }
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 }

@@ -42,17 +42,51 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                 return;
             }
 
-            // Convert usernames to Account objects and validate
-            ArrayList<Account> members = new ArrayList<>();
-            for (String username : memberUsernames) {
-                Account member = (Account) userDataAccessObject.get(username);
-                if (member != null) {
-                    members.add(member);
+            // Defensive null handling for memberUsernames
+            if (memberUsernames == null) {
+                memberUsernames = new ArrayList<>();
+            }
+
+            // Remove duplicate usernames while preserving order
+            List<String> dedupedUsernames = new ArrayList<>();
+            for (String u : memberUsernames) {
+                if (u != null) {
+                    String trimmed = u.trim();
+                    if (!trimmed.isEmpty() && !dedupedUsernames.contains(trimmed)) {
+                        dedupedUsernames.add(trimmed);
+                    }
                 }
             }
 
+            ArrayList<Account> members = new ArrayList<>();
+            ArrayList<String> invalidUsernames = new ArrayList<>();
+
+            for (String username : dedupedUsernames) {
+                Account member = (Account) userDataAccessObject.get(username);
+                if (member != null) {
+                    // Avoid duplicates by username
+                    boolean alreadyAdded = false;
+                    for (Account existing : members) {
+                        if (existing.getUsername().equals(member.getUsername())) {
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyAdded) {
+                        members.add(member);
+                    }
+                } else {
+                    invalidUsernames.add(username);
+                }
+            }
+
+            if (!invalidUsernames.isEmpty()) {
+                createClubPresenter.prepareFailView("Invalid member username(s): " + String.join(", ", invalidUsernames));
+                return;
+            }
+
             if (members.isEmpty()) {
-                createClubPresenter.prepareFailView("Club must have at least one member");
+                createClubPresenter.prepareFailView("Club must have at least one valid member");
                 return;
             }
 
@@ -66,17 +100,19 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                 title,
                 description,
                 new ArrayList<>(),  // New club starts with no posts
-                    (ArrayList<String>) tags
+                (ArrayList<String>) tags
             );
 
-            // Update each member's club list
+            // Update each member's club list (avoid duplicate club IDs)
             String clubIdStr = String.valueOf(clubId);
             for (Account member : members) {
                 ArrayList<String> clubList = member.getClubs();
                 if (clubList == null) {
                     clubList = new ArrayList<>();
                 }
-                clubList.add(clubIdStr);
+                if (!clubList.contains(clubIdStr)) {
+                    clubList.add(clubIdStr);
+                }
                 member.setClubs(clubList);
                 userDataAccessObject.save(member);
             }
@@ -93,13 +129,18 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
     @Override
     public void showMemberSelection(List<Account> currentMembers, String creatorUsername) {
         try {
-            // Get all users except those already in the club
             ArrayList<Account> allUsers = userDataAccessObject.getAllUsers();
             ArrayList<Account> availableUsers = new ArrayList<>();
 
             for (Account user : allUsers) {
-                // Skip users already in the club and the creator (who is automatically a member)
-                if (!currentMembers.contains(user) && !user.getUsername().equals(creatorUsername)) {
+                boolean alreadyMember = false;
+                for (Account existing : currentMembers) {
+                    if (existing.getUsername().equals(user.getUsername())) { // compare by username
+                        alreadyMember = true;
+                        break;
+                    }
+                }
+                if (!alreadyMember && !user.getUsername().equals(creatorUsername)) {
                     availableUsers.add(user);
                 }
             }

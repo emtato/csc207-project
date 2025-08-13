@@ -279,4 +279,43 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
             userDAO.removeClubFromUser(username, clubIdStr);
         }
     }
+
+    public void deleteClub(long clubID) {
+        System.out.println("[DEBUG] Attempting to delete club " + clubID);
+        JSONObject data = getJsonObject();
+        if (data.has("clubs")) {
+            JSONObject clubs = data.getJSONObject("clubs");
+            String key = String.valueOf(clubID);
+            if (clubs.has(key)) {
+                try {
+                    JSONObject clubData = clubs.getJSONObject(key);
+                    if (clubData.has("members")) {
+                        JSONArray members = clubData.getJSONArray("members");
+                        FileUserDataAccessObject userDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+                        for (int i = 0; i < members.length(); i++) {
+                            if (!members.isNull(i)) {
+                                String uname = members.getString(i);
+                                System.out.println("[DEBUG] Removing club " + key + " from user " + uname);
+                                userDAO.removeClubFromUser(uname, key);
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    System.out.println("[DEBUG] Error while removing club from members: " + ex.getMessage());
+                }
+                clubs.remove(key);
+                data.put("clubs", clubs);
+                try (FileWriter writer = new FileWriter(filePath)) {
+                    writer.write(data.toString(2));
+                    System.out.println("[DEBUG] Club " + key + " deleted and file updated.");
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to delete club: " + e.getMessage(), e);
+                }
+            } else {
+                System.out.println("[DEBUG] Club id " + key + " not found in JSON.");
+            }
+        } else {
+            System.out.println("[DEBUG] No 'clubs' section present when attempting delete.");
+        }
+    }
 }
