@@ -11,14 +11,16 @@ public class SwitchToEditProfileViewOutputData {
     private final String bio;
     private final String profilePictureUrl;
     private final ArrayList<String> preferences;
+    private final String location;
 
     public SwitchToEditProfileViewOutputData(String username, String displayName, String bio, String profilePictureUrl,
-                                             ArrayList<String> preferences) {
+                                             ArrayList<String> preferences, String location) {
         this.username = username;
         this.displayName = displayName;
         this.bio = bio;
         this.profilePictureUrl = profilePictureUrl;
         this.preferences = preferences;
+        this.location = location;
     }
 
     public String getDisplayName() {
@@ -39,5 +41,9 @@ public class SwitchToEditProfileViewOutputData {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

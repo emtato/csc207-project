@@ -308,6 +308,7 @@ class ProfileInteractorTest {
                 assertEquals("", outputData.getDisplayName());
                 assertEquals("", outputData.getBio());
                 assertEquals("https://i.imgur.com/eA9NeJ1.jpeg", outputData.getProfilePictureUrl());
+                assertEquals("", outputData.getLocation());
                 assertEquals(new ArrayList<>(), outputData.getPreferences());
             }
             @Override

@@ -60,9 +60,10 @@ public class ProfileInteractor implements ProfileInputBoundary {
         final String bio = user.getBio();
         final String profilePictureUrl = user.getProfilePictureUrl();
         final ArrayList<String> preferences = user.getFoodPreferences();
+        final String location = user.getLocation();
 
         final SwitchToEditProfileViewOutputData outputData = new SwitchToEditProfileViewOutputData(
-                username, displayName, bio, profilePictureUrl, preferences);
+                username, displayName, bio, profilePictureUrl, preferences, location);
         presenter.switchToEditProfileView(outputData);
     }
 
