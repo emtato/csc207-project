@@ -10,7 +10,7 @@
 
 ## Project Summary
 - Domain: Social Media App for Foodies
-- Description:
+- Summary: Munchables is a social media app for foodies everywhere. Users can create an account and log in to a world of all things food! Make posts, join clubs, explore restaurants, connect with like-minded peers, and more!
 
 ## Table of Contents
 1. [Features of The Software](#features-of-the-software)
@@ -44,6 +44,7 @@ overcome
 - Examples or tutorials (videos, screenshots, or code snippets) are used to clarify how to use the software once it is downloaded
 
 ## License
+Creative Commons Zero v1.0 Universal
 
 ## Feedback
 ** TODO:
@@ -53,9 +54,4 @@ overcome
 - Has guidelines for what to expect when submitting feedback
 
 ## Contributions
-** TODO:
-- Clearly says how users can contribute to the project
-- Clearly describes instructions for making a fork of the project on GitHub
-- Gives guidelines for creating a good merge request
-- Describes protocols for reviewing contributions and merging them into the project
-
+- Contributions are closed for users who are not on the team.
