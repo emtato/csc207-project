@@ -57,6 +57,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         settingsViewModel.firePropertyChanged("password changed");
 
         this.viewManagerModel.setState("homepage view");
+        this.viewManagerModel.getHomePageView().updateHomeFeed();
         this.viewManagerModel.firePropertyChanged();
     }
 

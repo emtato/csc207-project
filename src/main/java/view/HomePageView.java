@@ -120,25 +120,26 @@ public class HomePageView extends JPanel {
 
             int maxNumberOfDisplayingPosts = 10;
             //should technically make new use case, fetch_home_feed to abide by clean architecture exactly (using inputdata etc) oops
-            fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
-            List<Post> randomFeedPosts = this.homePageViewModel.getState().getRandomPosts();
+            fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts * 2);
+            List<Post> result = this.homePageViewModel.getState().getRandomPosts();
+            int actualLength = result.size();
+            List<Post> randomFeedPosts = result.subList(0, actualLength / 2);
+            List<Post> randomFeedPosts2 = result.subList(actualLength / 2, actualLength);
 
-            fetchPostController.getRandomFeedPosts(maxNumberOfDisplayingPosts);
-            List<Post> randomFeedPosts2 = this.homePageViewModel.getState().getRandomPosts();
             for (int i = 0; i < randomFeedPosts.size(); i++) {
                 JPanel feedRow = new JPanel();
                 feedRow.setLayout(new BoxLayout(feedRow, BoxLayout.X_AXIS));
                 feedRow.add(Box.createRigidArea(new Dimension(40, 0)));
                 Post post1 = randomFeedPosts.get(i);
                 PostPanel postPanel = new PostPanel(viewManagerModel, post1, 400, 400, likePostController);
-             //   postPanel.setGetCommentsViewModel(getCommentsController);
+                //   postPanel.setGetCommentsViewModel(getCommentsController);
                 postPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
                 feedRow.setMaximumSize(new Dimension(2000, 420));
                 feedRow.add(postPanel);
 
                 Post post2 = randomFeedPosts2.get(i);
                 PostPanel postTwo = new PostPanel(viewManagerModel, post2, 600, 400, likePostController);
-              //  postTwo.setGetCommentsViewModel(getCommentsController);
+                //  postTwo.setGetCommentsViewModel(getCommentsController);
                 postTwo.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
                 feedRow.add(postTwo); // second post
                 feedRow.add(Box.createHorizontalGlue());
