@@ -14,7 +14,6 @@ import entity.Account;
 import entity.Post;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create_post_view.CreatePostController;
 import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.homepage.HomePageViewModel;

@@ -3,17 +3,12 @@ package view;
 import app.Session;
 import data_access.DBClubsDataAccessObject;
 import data_access.DBPostCommentLikesDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
-import data_access.UserDataAccessObject;
 import entity.Club;
-import entity.Post;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create_post_view.CreatePostController;
-import interface_adapter.create_post_view.CreatePostPresenter;
-import interface_adapter.create_post_view.CreatePostState;
-import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.create_post.CreatePostController;
+import interface_adapter.create_post.CreatePostState;
+import interface_adapter.create_post.CreatePostViewModel;
 import use_case.create_post.CreatePostInputData;
-import use_case.create_post.CreatePostInteractor;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -471,7 +466,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-        controller.execute(postData);
+        controller.createPost(postData);
         if (postData.getClubId() != null) {
             SpecificClubView scv = viewManagerModel.getSpecificClubView();
             try {
