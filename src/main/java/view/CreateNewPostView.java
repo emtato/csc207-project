@@ -1,6 +1,8 @@
 package view;
 
 import app.Session;
+import data_access.FileClubsDataAccessObject;
+import data_access.FilePostCommentLikesDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Club;
@@ -275,6 +277,9 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 if (!imagesArea.getText().equals("Enter link to images, separated by commas, must end in .jpg, .png, etc")) {
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
+                if (!tagsArea.getText().equals("Enter cuisines and tags separated by commas if u want")) {
+                    tags = new ArrayList<>(Arrays.asList(tagsArea.getText().split(",")));
+                }
 
                 CreatePostInputData postData = new CreatePostInputData(
                         Session.getCurrentAccount(),
@@ -467,8 +472,27 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             return;
         }
         controller.execute(postData);
-        viewManagerModel.setState("homepage view");
-        HomePageView homePageView = viewManagerModel.getHomePageView();
-        homePageView.updateHomeFeed();
+        if (postData.getClubId() != null) {
+            SpecificClubView scv = viewManagerModel.getSpecificClubView();
+            try {
+                // Reload club from persistent storage to include newly added post ID
+                FileClubsDataAccessObject clubsDAO = new FileClubsDataAccessObject(FilePostCommentLikesDataAccessObject.getInstance());
+                Club refreshed = clubsDAO.getClub(postData.getClubId());
+                if (refreshed != null) {
+                    scv.updateClub(refreshed);
+                } else {
+                    // fallback to existing in-memory club object
+                    scv.updateClub(club);
+                }
+            } catch (Exception ex) {
+                System.err.println("Failed to refresh club after post creation: " + ex.getMessage());
+                scv.updateClub(club);
+            }
+            viewManagerModel.setState(scv.getViewName());
+        } else {
+            viewManagerModel.setState("homepage view");
+            HomePageView homePageView = viewManagerModel.getHomePageView();
+            homePageView.updateHomeFeed();
+        }
     }
 }

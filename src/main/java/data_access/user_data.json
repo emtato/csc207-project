@@ -109,7 +109,12 @@
       "userPosts": [
         1754913984348,
         1754915549095,
-        1754916224414
+        1754916224414,
+        1755064303464,
+        1755064322328,
+        1755064562428,
+        1755064577806,
+        1755064619527
       ],
       "requesterAccounts": {},
       "password": "123",
@@ -123,6 +128,7 @@
       "followingAccounts": {},
       "isPublic": true,
       "mutedAccounts": [],
+      "location": "",
       "email": "",
       "followerAccounts": {},
       "username": "123"
