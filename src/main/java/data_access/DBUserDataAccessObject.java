@@ -1,5 +1,6 @@
 package data_access;
 
+import app.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -284,6 +285,41 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     }
 
+    private Account ensureUserExists(String username) {
+        User existing = null;
+        try { existing = get(username); } catch (Exception ignored) {}
+        if (existing != null) return (Account) existing;
+        // Try to pull from file-based DAO as fallback
+        try {
+            FileUserDataAccessObject fileDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+            User fileUser = fileDAO.get(username);
+            if (fileUser instanceof Account) {
+                System.out.println("DEBUG[DBUserDAO]: Bridging missing DB user from file store: " + username);
+                save(fileUser);
+                return (Account) fileUser;
+            }
+        } catch (Exception e) {
+            System.out.println("DEBUG[DBUserDAO]: File bridge failed for user " + username + ": " + e.getMessage());
+        }
+        // Try session current account
+        try {
+            if (Session.getCurrentAccount() != null && Session.getCurrentAccount().getUsername().equals(username)) {
+                System.out.println("DEBUG[DBUserDAO]: Bridging missing DB user from session: " + username);
+                save(Session.getCurrentAccount());
+                return Session.getCurrentAccount();
+            }
+        } catch (Exception e) {
+            System.out.println("DEBUG[DBUserDAO]: Session bridge failed: " + e.getMessage());
+        }
+        // Create minimal stub
+        System.out.println("DEBUG[DBUserDAO]: Creating stub DB user for missing username: " + username);
+        Account stub = new Account(username, "");
+        stub.setClubs(new ArrayList<>());
+        stub.setUserPosts(new ArrayList<>());
+        save(stub);
+        return stub;
+    }
+
     @Override
     public User get(String username) {
         JSONObject data = new JSONObject();
@@ -462,9 +498,19 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void addPost(long id, String username) {
-        User user = get(username);
-        user.getUserPosts().add(id);
+        Account user = ensureUserExists(username);
+        if (user.getUserPosts() == null) user.setUserPosts(new ArrayList<>());
+        if (!user.getUserPosts().contains(id)) {
+            user.getUserPosts().add(id);
+        }
         save(user);
+        // Mirror to file for UI consistency
+        try {
+            FileUserDataAccessObject fileDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
+            fileDAO.addPost(id, username);
+        } catch (Exception e) {
+            System.out.println("DEBUG[DBUserDAO]: File mirror addPost failed: " + e.getMessage());
+        }
     }
 
     @Override
@@ -514,8 +560,11 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollower(String username, String removedUsername) {
-        final User user = get(username);
-        User removedUser = get(removedUsername);
+        final User userObj = get(username);
+        final User removedUserObj = get(removedUsername);
+        if (userObj == null || removedUserObj == null) return;
+        final Account user = (Account) userObj;
+        final Account removedUser = (Account) removedUserObj;
         user.getFollowerAccounts().remove(removedUsername);
         removedUser.getFollowingAccounts().remove(username);
         save(user);
@@ -524,8 +573,11 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollowing(String username, String removedUsername) {
-        User user = get(username);
-        User removedUser = get(removedUsername);
+        User userObj = get(username);
+        User removedUserObj = get(removedUsername);
+        if (userObj == null || removedUserObj == null) return;
+        Account user = (Account) userObj;
+        Account removedUser = (Account) removedUserObj;
         user.getFollowingAccounts().remove(removedUsername);
         removedUser.getFollowerAccounts().remove(username);
         save(user);
@@ -534,8 +586,11 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollowRequest(String username, String removedUsername) {
-        final User user = get(username);
-        final User removedUser = get(removedUsername);
+        final User userObj = get(username);
+        final User removedUserObj = get(removedUsername);
+        if (userObj == null || removedUserObj == null) return;
+        final Account user = (Account) userObj;
+        final Account removedUser = (Account) removedUserObj;
         removedUser.getRequesterAccounts().remove(username);
         user.getRequestedAccounts().remove(removedUsername);
         save(user);
@@ -544,8 +599,11 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void removeFollowRequester(String username, String removedUsername) {
-        final User user = get(username);
-        final User removedUser = get(removedUsername);
+        final User userObj = get(username);
+        final User removedUserObj = get(removedUsername);
+        if (userObj == null || removedUserObj == null) return;
+        final Account user = (Account) userObj;
+        final Account removedUser = (Account) removedUserObj;
         removedUser.getRequestedAccounts().remove(username);
         user.getRequesterAccounts().remove(removedUsername);
         save(user);
@@ -568,23 +626,25 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
     public boolean canRequestFollow(String username, String otherUsername) {
         final User user = get(username);
         final User otherUser = get(otherUsername);
-        return otherUser != null && !user.getRequestedAccounts().containsKey(otherUsername)
-                && !username.equals(otherUsername) && !user.getFollowingAccounts().containsKey(otherUsername)
-                && !otherUser.isPublic();
+        if (user == null || otherUser == null) return false;
+        return otherUser != null && !((Account) user).getRequestedAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && !((Account) user).getFollowingAccounts().containsKey(otherUsername)
+                && !((Account) otherUser).isPublic();
     }
 
     @Override
     public boolean canFollow(String username, String otherUsername) {
         final User user = get(username);
         final User otherUser = get(otherUsername);
-        return otherUser != null && !user.getFollowingAccounts().containsKey(otherUsername)
-                && !username.equals(otherUsername) && otherUser.isPublic();
+        if (user == null || otherUser == null) return false;
+        return otherUser != null && !((Account) user).getFollowingAccounts().containsKey(otherUsername)
+                && !username.equals(otherUsername) && ((Account) otherUser).isPublic();
     }
 
     @Override
     public void addFollowRequest(String username, String otherUsername) {
-        final User user = get(username);
-        final User requestedUser = get(otherUsername);
+        final Account user = ensureUserExists(username);
+        final Account requestedUser = ensureUserExists(otherUsername);
         user.getRequestedAccounts().put(otherUsername, requestedUser);
         requestedUser.getRequesterAccounts().put(username, user);
         save(requestedUser);
@@ -593,8 +653,8 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void addFollowing(String username, String otherUsername) {
-        final User user = get(username);
-        final User followedUser = get(otherUsername);
+        final Account user = ensureUserExists(username);
+        final Account followedUser = ensureUserExists(otherUsername);
         user.getFollowingAccounts().put(otherUsername, followedUser);
         followedUser.getFollowerAccounts().put(username, user);
         if (user.getRequestedAccounts().containsKey(otherUsername)) {

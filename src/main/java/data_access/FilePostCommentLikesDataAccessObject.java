@@ -241,6 +241,11 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         newPost.put("tags", tags);
         newPost.put("images", images);
 
+        // Ensure a likes field exists so later updates don't fail
+        if (!newPost.has("likes")) {
+            newPost.put("likes", 0);
+        }
+
         // Convert clubs to JSON array of club objects
         JSONArray clubsArray = new JSONArray();
         for (Club club : clubs) {

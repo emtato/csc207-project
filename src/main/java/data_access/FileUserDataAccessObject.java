@@ -170,11 +170,11 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public User get(String username) {
-        System.out.println("DEBUG: Loading user data for: " + username);
+        System.out.println("DEBUG[UserDAO:get]: Loading user data for: " + username);
         JSONObject data = getJsonObject();
 
         if (!data.has("users") || !data.getJSONObject("users").has(username)) {
-            System.out.println("DEBUG: User not found in data storage");
+            System.out.println("DEBUG[UserDAO:get]: User not found in data storage");
             return null;
         }
 
@@ -338,6 +338,8 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
                 posts.add(postsJsonArray.getLong(i));
             }
             account.setUserPosts(posts);
+        } else {
+            account.setUserPosts(new ArrayList<>()); // ensure non-null list
         }
 
         return account;
@@ -345,8 +347,21 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public void addPost(long id, String username) {
+        System.out.println("DEBUG[UserDAO:addPost]: Adding post " + id + " to user " + username);
         User user = get(username);
-        user.getUserPosts().add(id);
+        if (user == null) {
+            System.out.println("DEBUG[UserDAO:addPost]: User not found; aborting addPost");
+            return;
+        }
+        if (user.getUserPosts() == null) {
+            System.out.println("DEBUG[UserDAO:addPost]: userPosts list null; initializing");
+            user.setUserPosts(new ArrayList<>());
+        }
+        if (!user.getUserPosts().contains(id)) {
+            user.getUserPosts().add(id);
+        } else {
+            System.out.println("DEBUG[UserDAO:addPost]: Post ID already present in userPosts");
+        }
         save(user);
     }
 
