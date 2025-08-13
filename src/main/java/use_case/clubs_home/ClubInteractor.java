@@ -26,32 +26,75 @@ public class ClubInteractor implements ClubInputBoundary {
     @Override
     public ClubOutputData getClubsData(String username) {
         try {
+            System.out.println("DEBUG: Fetching clubs data for user: " + username);
+            Account currentUser = (Account) userDataAccessObject.get(username);
+            if (currentUser == null) {
+                System.out.println("DEBUG: User not found: " + username);
+                return new ClubOutputData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false, "User not found");
+            }
+            ArrayList<String> userClubIds = currentUser.getClubs();
+            if (userClubIds == null) {
+                userClubIds = new ArrayList<>();
+                currentUser.setClubs(userClubIds);
+                userDataAccessObject.save(currentUser);
+            }
+            System.out.println("DEBUG: Retrieved user's club IDs from Account: " + userClubIds);
+
+            boolean reconstructed = false;
+            if (userClubIds.isEmpty()) {
+                System.out.println("DEBUG: User club list empty; attempting reconstruction from club member rosters");
+                ArrayList<Club> scan = clubsDataAccessObject.getAllClubs();
+                for (Club c : scan) {
+                    if (c.getMembers().stream().anyMatch(m -> m.getUsername().equals(username))) {
+                        String cid = String.valueOf(c.getId());
+                        if (!userClubIds.contains(cid)) {
+                            userClubIds.add(cid);
+                            reconstructed = true;
+                            System.out.println("DEBUG: Reconstructed membership for club ID: " + cid);
+                        }
+                    }
+                }
+                if (reconstructed) {
+                    currentUser.setClubs(userClubIds);
+                    userDataAccessObject.save(currentUser);
+                    System.out.println("DEBUG: Reconstruction complete. Updated user clubs: " + userClubIds);
+                } else {
+                    System.out.println("DEBUG: Reconstruction found no memberships");
+                }
+            }
+
             ArrayList<Club> allClubs = clubsDataAccessObject.getAllClubs();
+            System.out.println("DEBUG: Total clubs found: " + allClubs.size());
             ArrayList<Club> memberClubs = new ArrayList<>();
             ArrayList<Club> nonMemberClubs = new ArrayList<>();
             ArrayList<Post> announcements = new ArrayList<>();
 
-            Account currentUser = (Account) userDataAccessObject.get(username);
-            ArrayList<String> userClubIds = currentUser != null && currentUser.getClubs() != null ?
-                    currentUser.getClubs() : new ArrayList<>();
-
-            // Sort clubs into member and non-member lists
             for (Club club : allClubs) {
-                if (userClubIds.contains(String.valueOf(club.getId()))) {
+                String cid = String.valueOf(club.getId());
+                System.out.println("DEBUG: Processing club: " + club.getName() + " (ID: " + cid + ")");
+                System.out.println("DEBUG: Checking if " + cid + " is in user's clubs: " + userClubIds.contains(cid));
+                if (userClubIds.contains(cid)) {
                     memberClubs.add(club);
-                    // Collect announcements from member clubs
-                    if (club.getPosts() != null) {
-                        announcements.addAll(club.getPosts());
+                    ArrayList<Post> clubPosts = club.getPosts();
+                    if (clubPosts != null) {
+                        int before = announcements.size();
+                        for (Post p : clubPosts) {
+                            if (p != null && p.getType() != null && p.getType().trim().equalsIgnoreCase("announcement")) {
+                                announcements.add(p);
+                            }
+                        }
+                        System.out.println("DEBUG: Added " + (announcements.size() - before) + " announcements from club: " + club.getName());
                     }
                 } else {
                     nonMemberClubs.add(club);
                 }
             }
-
-            ClubOutputData outputData = new ClubOutputData(memberClubs, nonMemberClubs, announcements, true, null);
-            clubPresenter.prepareSuccessView(outputData);
-            return outputData;
+            System.out.println("DEBUG: Final counts - Member clubs: " + memberClubs.size() + ", Non-member clubs: " + nonMemberClubs.size() + ", Announcements: " + announcements.size());
+            ClubOutputData out = new ClubOutputData(memberClubs, nonMemberClubs, announcements, true, null);
+            clubPresenter.prepareSuccessView(out);
+            return out;
         } catch (Exception e) {
+            e.printStackTrace();
             clubPresenter.prepareFailView("Error fetching clubs data: " + e.getMessage());
             return new ClubOutputData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false, e.getMessage());
         }

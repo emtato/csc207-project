@@ -139,7 +139,7 @@
       "name": "asdf",
       "description": "adfs",
       "id": 1754332203250,
-      "posts": [1754504939611],
+      "posts": [],
       "tags": ["adf"]
     },
     "1754429844109": {
@@ -149,12 +149,12 @@
         "rotmaxxer",
         "jinufan333",
         "123",
-        null
+        "123"
       ],
       "name": "fries",
       "description": "fries",
       "id": 1754429844109,
-      "posts": [1754916224414],
+      "posts": [1755062542651],
       "tags": ["fries"]
     },
     "2435234": {
@@ -167,10 +167,7 @@
       "name": "Blue Cheese Lovers",
       "description": "A club for people who like to cook and eat blue cheese",
       "id": 2435234,
-      "posts": [
-        1754506019545,
-        1754913984348
-      ],
+      "posts": [1755062573792],
       "tags": [
         "blue cheese",
         "cooking",
@@ -218,9 +215,43 @@
       "name": "adfhdjn",
       "description": "adsgfh",
       "id": 1754332830329,
-      "posts": [],
+      "posts": [1755062732907],
       "tags": ["adsg"]
     }
+  },
+  "1754547077251": {
+    "images": [
+      "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538",
+      "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538",
+      "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538"
+    ],
+    "contents": {
+      "ingredients": [],
+      "steps": [""],
+      "cuisines": []
+    },
+    "clubs": [],
+    "description": "doot doot doooot doot doot",
+    "time": "2025-08-07 02:11 AM",
+    "title": "Doot Doot",
+    "type": "general",
+    "user": "amansda666",
+    "tags": []
+  },
+  "1755029316640": {
+    "images": [],
+    "contents": {
+      "ingredients": ["Enter list of ingredients separated by commas"],
+      "steps": ["Enter steps to make the yum yum"],
+      "cuisines": []
+    },
+    "clubs": [],
+    "description": "yop",
+    "time": "2025-08-12 04:08 PM",
+    "title": "meowwer",
+    "type": "recipe",
+    "user": "a",
+    "tags": []
   },
   "posts": {
     "123454321": {
@@ -392,6 +423,7 @@
       "user": "amansda666",
       "tags": []
     },
+    "description": "Enter post description",
     "1754548723653": {
       "images": [],
       "contents": {
@@ -422,6 +454,8 @@
       "user": "caf_feine",
       "tags": []
     },
+    "title": "Enter post title",
+    "type": "announcement",
     "188868779587": {
       "images": ["https://static.wikia.nocookie.net/fictspedia/images/e/e5/Maxresdefault.jpg/"],
       "contents": {
@@ -455,135 +489,90 @@
       "user": "123",
       "tags": []
     },
-    "1754506019545": {
-      "images": [],
+    "595960484838": {
+      "images": ["https://www.shutterstock.com/image-illustration/metallic-gears-cogs-3d-rendered-260nw-1708381105.jpg"],
       "contents": {
-        "ingredients": [],
-        "steps": [""],
-        "cuisines": []
-      },
-      "595960484838": {
-        "images": ["https://www.shutterstock.com/image-illustration/metallic-gears-cogs-3d-rendered-260nw-1708381105.jpg"],
-        "contents": {
-          "ingredients": [
-            "gears",
-            " bolts",
-            " screws",
-            " gasoline"
-          ],
-          "steps": ["crunch crunch"],
-          "cuisines": ["totally edible food"]
-        },
-        "clubs": [],
-        "description": "beep boop beep boop",
-        "time": "2025-08-06 01:40 PM",
-        "title": "Robot dinner",
-        "type": "recipe",
-        "user": "not_a_robot",
-        "tags": []
-      },
-      "clubs": [{
-        "foodPreferences": [],
-        "members": [],
-        "name": "Blue Cheese Lovers",
-        "description": "",
-        "id": 1754506019545,
-        "posts": [],
-        "tags": []
-      }],
-      "description": "Enter post description",
-      "362171472867": {
-        "images": [
-          "https://i.imgur.com/eA9NeJ1.jpeg",
-          "https://i.imgur.com/wzX83Zc.jpeg",
-          "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg"
+        "ingredients": [
+          "gears",
+          " bolts",
+          " screws",
+          " gasoline"
         ],
-        "contents": {
-          "ingredients": [
-            "glorbles",
-            "beans",
-            "tile",
-            "dandelion"
-          ],
-          "steps": ["1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n2.sprinkle in 2 blinks of mystery flakes, scream gently\n3.serve upside-down on a warm tile\n"],
-          "cuisines": []
-        },
-        "description": "i made it for the tiger but the bird keeps taking it",
-        "time": "8000-05-05 01:33 PM",
-        "title": "repice for glunking",
-        "type": "recipe",
-        "user": "jinufan333",
-        "tags": ["Enter cuisines and tags separated by commas if u want"],
-        "likes": 2
+        "steps": ["crunch crunch"],
+        "cuisines": ["totally edible food"]
       },
-      "time": "2025-08-06 02:46 PM",
-      "528862940581": {
-        "images": ["https://images-prod.dazeddigital.com/1246/azure/dazed-prod/1370/0/1370201.PNG"],
-        "contents": {
-          "ingredients": ["IDK HELP "],
-          "steps": ["HELP HELP HELP HEAMKL"],
-          "cuisines": []
-        },
-        "description": "i was minding my own business eating cheese and hating corfee when i \"fell\" and found myself here.. what is this?? ",
-        "time": "2025-08-02 10:40 PM",
-        "title": "uhhh guys? ",
-        "type": "recipe",
-        "user": "rotmaxxer",
-        "likes": 0,
-        "tags": []
-      },
-      "title": "Enter post title",
-      "type": "announcement",
-      "1754504939611": {
-        "images": [],
-        "contents": {
-          "ingredients": [],
-          "steps": [""],
-          "cuisines": []
-        },
-        "clubs": [],
-        "description": "asgdfhgkj",
-        "time": "2025-08-06 02:28 PM",
-        "title": "adsfghjk",
-        "type": "general",
-        "user": "123",
-        "tags": []
-      },
-      "user": "123"
+      "clubs": [],
+      "description": "beep boop beep boop",
+      "time": "2025-08-06 01:40 PM",
+      "title": "Robot dinner",
+      "type": "recipe",
+      "user": "not_a_robot",
+      "tags": []
     },
-    "1754547077251": {
+    "clubs": [{
+      "foodPreferences": [],
+      "members": [],
+      "name": "Blue Cheese Lovers",
+      "description": "",
+      "id": 1754506019545,
+      "posts": [],
+      "tags": []
+    }],
+    "362171472867": {
       "images": [
-        "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538",
-        "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538",
-        "https://static.wikia.nocookie.net/houkai-star-rail/images/5/5b/NPC_Little_Ica.png/revision/latest?cb=20250521103538"
+        "https://i.imgur.com/eA9NeJ1.jpeg",
+        "https://i.imgur.com/wzX83Zc.jpeg",
+        "https://i.ytimg.com/vi/4mr2dqI0VVs/maxresdefault.jpg"
       ],
       "contents": {
+        "ingredients": [
+          "glorbles",
+          "beans",
+          "tile",
+          "dandelion"
+        ],
+        "steps": ["1. smash 4 glorbles of bean paste into a sock, microwave till it sings\n2.sprinkle in 2 blinks of mystery flakes, scream gently\n3.serve upside-down on a warm tile\n"],
+        "cuisines": []
+      },
+      "description": "i made it for the tiger but the bird keeps taking it",
+      "time": "8000-05-05 01:33 PM",
+      "title": "repice for glunking",
+      "type": "recipe",
+      "user": "jinufan333",
+      "tags": ["Enter cuisines and tags separated by commas if u want"],
+      "likes": 2
+    },
+    "time": "2025-08-06 02:46 PM",
+    "528862940581": {
+      "images": ["https://images-prod.dazeddigital.com/1246/azure/dazed-prod/1370/0/1370201.PNG"],
+      "contents": {
+        "ingredients": ["IDK HELP "],
+        "steps": ["HELP HELP HELP HEAMKL"],
+        "cuisines": []
+      },
+      "description": "i was minding my own business eating cheese and hating corfee when i \"fell\" and found myself here.. what is this?? ",
+      "time": "2025-08-02 10:40 PM",
+      "title": "uhhh guys? ",
+      "type": "recipe",
+      "user": "rotmaxxer",
+      "likes": 0,
+      "tags": []
+    },
+    "1754504939611": {
+      "images": [],
+      "contents": {
         "ingredients": [],
         "steps": [""],
         "cuisines": []
       },
       "clubs": [],
-      "description": "doot doot doooot doot doot",
-      "time": "2025-08-07 02:11 AM",
-      "title": "Doot Doot",
+      "description": "asgdfhgkj",
+      "time": "2025-08-06 02:28 PM",
+      "title": "adsfghjk",
       "type": "general",
-      "user": "amansda666",
+      "user": "123",
       "tags": []
     },
-    "1755029316640": {
-      "images": [],
-      "contents": {
-        "ingredients": ["Enter list of ingredients separated by commas"],
-        "steps": ["Enter steps to make the yum yum"],
-        "cuisines": []
-      },
-      "clubs": [],
-      "description": "yop",
-      "time": "2025-08-12 04:08 PM",
-      "title": "meowwer",
-      "type": "recipe",
-      "user": "a",
-      "tags": []
-    }
+    "user": "123"
   }
 }

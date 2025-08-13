@@ -191,6 +191,9 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
         userJson.put("profilePictureUrl", account.getProfilePictureUrl());
         userJson.put("location", account.getLocation());
 
+        // Persist clubs list (missing before)
+        userJson.put("clubs", new JSONArray(account.getClubs() == null ? new ArrayList<>() : account.getClubs()));
+
         // Store booleans
         userJson.put("isPublic", account.isPublic());
         userJson.put("notificationsEnabled", account.isNotificationsEnabled());
@@ -309,6 +312,16 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
                 "https://i.imgur.com/eA9NeJ1.jpeg"));
         account.setPublic(userJson.optBoolean("isPublic", true));
         account.setNotificationsEnabled(userJson.optBoolean("notificationsEnabled", true));
+
+        // Load clubs list
+        if (userJson.has("clubs")) {
+            ArrayList<String> clubs = new ArrayList<>();
+            JSONArray clubsArray = userJson.getJSONArray("clubs");
+            for (int i = 0; i < clubsArray.length(); i++) {
+                clubs.add(clubsArray.getString(i));
+            }
+            account.setClubs(clubs);
+        }
 
         // Load lists
         if (userJson.has("likesUsernames")) {

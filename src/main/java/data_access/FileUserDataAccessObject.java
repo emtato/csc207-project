@@ -170,38 +170,46 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public User get(String username) {
+        System.out.println("DEBUG: Loading user data for: " + username);
         JSONObject data = getJsonObject();
+
         if (!data.has("users") || !data.getJSONObject("users").has(username)) {
+            System.out.println("DEBUG: User not found in data storage");
             return null;
         }
 
-        JSONObject userJson = data.getJSONObject("users").getJSONObject(username);
-        Account account = new Account(username, userJson.getString("password"));
+        JSONObject userData = data.getJSONObject("users").getJSONObject(username);
+        Account account = new Account(username, userData.getString("password"));
 
         // Load account data
-        account.setEmail(userJson.optString("email", ""));
-        account.setBio(userJson.optString("bio", ""));
-        account.setDisplayName(userJson.optString("displayName", ""));
-        account.setProfilePictureUrl(userJson.optString("profilePictureUrl", ""));
+        account.setEmail(userData.optString("email", ""));
+        account.setBio(userData.optString("bio", ""));
+        account.setDisplayName(userData.optString("displayName", ""));
+        account.setProfilePictureUrl(userData.optString("profilePictureUrl", ""));
+        account.setLocation(userData.optString("location", ""));
 
-        // Load club memberships - make sure to handle the case where clubs field doesn't exist
+        // Load club memberships - IMPORTANT: do this before setting other properties
         ArrayList<String> clubs = new ArrayList<>();
-        if (userJson.has("clubs")) {
-            JSONArray clubsArray = userJson.getJSONArray("clubs");
-            for (int i = 0; i < clubsArray.length(); i++) {
-                clubs.add(clubsArray.getString(i));
+        if (userData.has("clubs")) {
+            JSONArray clubsJson = userData.getJSONArray("clubs");
+            System.out.println("DEBUG: Loading clubs from user data, found " + clubsJson.length() + " clubs");
+            for (int i = 0; i < clubsJson.length(); i++) {
+                String clubId = clubsJson.getString(i);
+                clubs.add(clubId);
+                System.out.println("DEBUG: Added club ID to user's clubs: " + clubId);
             }
         }
         account.setClubs(clubs);
+        System.out.println("DEBUG: Set user's clubs list: " + account.getClubs());
 
         // Load booleans
-        account.setPublic(userJson.optBoolean("isPublic", true));
-        account.setNotificationsEnabled(userJson.optBoolean("notificationsEnabled", true));
+        account.setPublic(userData.optBoolean("isPublic", true));
+        account.setNotificationsEnabled(userData.optBoolean("notificationsEnabled", true));
 
         // Load lists
-        if (userJson.has("likesUsernames")) {
+        if (userData.has("likesUsernames")) {
             ArrayList<Long> likes = new ArrayList<>();
-            JSONArray likesArray = userJson.getJSONArray("likesUsernames");
+            JSONArray likesArray = userData.getJSONArray("likesUsernames");
             for (int i = 0; i < likesArray.length(); i++) {
                 likes.add(likesArray.getLong(i));
             }
@@ -209,18 +217,18 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         }
 
         // Load blocked terms and food preferences
-        if (userJson.has("blockedTerms")) {
+        if (userData.has("blockedTerms")) {
             ArrayList<String> blockedTerms = new ArrayList<>();
-            JSONArray termsArray = userJson.getJSONArray("blockedTerms");
+            JSONArray termsArray = userData.getJSONArray("blockedTerms");
             for (int i = 0; i < termsArray.length(); i++) {
                 blockedTerms.add(termsArray.getString(i));
             }
             account.setBlockedTerms(blockedTerms);
         }
 
-        if (userJson.has("foodPreferences")) {
+        if (userData.has("foodPreferences")) {
             ArrayList<String> foodPrefs = new ArrayList<>();
-            JSONArray prefsArray = userJson.getJSONArray("foodPreferences");
+            JSONArray prefsArray = userData.getJSONArray("foodPreferences");
             for (int i = 0; i < prefsArray.length(); i++) {
                 foodPrefs.add(prefsArray.getString(i));
             }
@@ -232,9 +240,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         // profile picture urls, and create stub Account objects.
         // Full account data would need to be loaded separately if needed.
 
-        if (userJson.has("followerAccounts")) {
+        if (userData.has("followerAccounts")) {
             HashMap<String, User> followers = new HashMap<>();
-            JSONObject followersJson = userJson.getJSONObject("followerAccounts");
+            JSONObject followersJson = userData.getJSONObject("followerAccounts");
             for (String key : followersJson.keySet()) {
                 String followerUsername = followersJson.getJSONObject(key).getString("username");
                 String followerDisplayName = followersJson.getJSONObject(key).getString("displayName");
@@ -247,9 +255,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             account.setFollowerAccounts(followers);
         }
 
-        if (userJson.has("followingAccounts")) {
+        if (userData.has("followingAccounts")) {
             HashMap<String, User> following = new HashMap<>();
-            JSONObject followingJson = userJson.getJSONObject("followingAccounts");
+            JSONObject followingJson = userData.getJSONObject("followingAccounts");
             for (String key : followingJson.keySet()) {
                 String followingUsername = followingJson.getJSONObject(key).getString("username");
                 String followingDisplayName = followingJson.getJSONObject(key).getString("displayName");
@@ -262,9 +270,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             account.setFollowingAccounts(following);
         }
 
-        if (userJson.has("requestedAccounts")) {
+        if (userData.has("requestedAccounts")) {
             HashMap<String, User> requested = new HashMap<>();
-            JSONObject requestedJson = userJson.getJSONObject("requestedAccounts");
+            JSONObject requestedJson = userData.getJSONObject("requestedAccounts");
             for (String key : requestedJson.keySet()) {
                 String requestedUsername = requestedJson.getJSONObject(key).getString("username");
                 String requestedDisplayName = requestedJson.getJSONObject(key).getString("displayName");
@@ -277,9 +285,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             account.setRequestedAccounts(requested);
         }
 
-        if (userJson.has("requesterAccounts")) {
+        if (userData.has("requesterAccounts")) {
             HashMap<String, User> requesters = new HashMap<>();
-            JSONObject requesterJson = userJson.getJSONObject("requesterAccounts");
+            JSONObject requesterJson = userData.getJSONObject("requesterAccounts");
             for (String key : requesterJson.keySet()) {
                 String requesterUsername = requesterJson.getJSONObject(key).getString("username");
                 String requesterDisplayName = requesterJson.getJSONObject(key).getString("displayName");
@@ -292,9 +300,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             account.setRequesterAccounts(requesters);
         }
 
-        if (userJson.has("blockedAccounts")) {
+        if (userData.has("blockedAccounts")) {
             HashMap<String, User> blocked = new HashMap<>();
-            JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
+            JSONObject blockedJson = userData.getJSONObject("blockedAccounts");
             for (String key : blockedJson.keySet()) {
                 String blockedUsername = blockedJson.getJSONObject(key).getString("username");
                 String blockedDisplayName = blockedJson.getJSONObject(key).getString("displayName");
@@ -307,9 +315,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
             account.setBlockedAccounts(blocked);
         }
 
-        if (userJson.has("mutedAccounts")) {
+        if (userData.has("mutedAccounts")) {
             ArrayList<User> muted = new ArrayList<>();
-            JSONArray mutedArray = userJson.getJSONArray("mutedAccounts");
+            JSONArray mutedArray = userData.getJSONArray("mutedAccounts");
             for (int i = 0; i < mutedArray.length(); i++) {
                 String mutedUsername = mutedArray.getJSONObject(i).getString("username");
                 String mutedDisplayName = mutedArray.getJSONObject(i).getString("displayName");
@@ -323,9 +331,9 @@ public class FileUserDataAccessObject implements UserDataAccessObject {
         }
 
         // Load user posts
-        if (userJson.has("userPosts")) {
+        if (userData.has("userPosts")) {
             ArrayList<Long> posts = new ArrayList<>();
-            JSONArray postsJsonArray = userJson.getJSONArray("userPosts");
+            JSONArray postsJsonArray = userData.getJSONArray("userPosts");
             for (int i = 0; i < postsJsonArray.length(); i++) {
                 posts.add(postsJsonArray.getLong(i));
             }

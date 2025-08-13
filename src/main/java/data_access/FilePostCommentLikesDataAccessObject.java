@@ -15,12 +15,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDataAccessObject {
     private static PostCommentsLikesDataAccessObject instance;
     private final String filePath = "src/main/java/data_access/data_storage.json";
+    private static final Logger LOGGER = Logger.getLogger(FilePostCommentLikesDataAccessObject.class.getName());
 
     private FilePostCommentLikesDataAccessObject() {
     }
@@ -30,29 +31,6 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             instance = new FilePostCommentLikesDataAccessObject();
         }
         return instance;
-    }
-
-    @Override
-    public void deletePost(long postID){
-        final JSONObject data = getJsonObject();
-        JSONObject posts;
-        if (data.has("posts")) {
-            posts = data.getJSONObject("posts"); //posts is mapping between id and the remaining info
-            if (posts.has(String.valueOf(postID))) {
-                posts.remove(String.valueOf(postID));
-            }
-        }
-        else {
-            posts = new JSONObject();
-        }
-
-        data.put("posts", posts);
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
-        }
-        catch (IOException e) {
-            throw new RuntimeException("i am sad :(", e);
-        }
     }
 
     /**
@@ -66,11 +44,31 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             data = new JSONObject(content);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             data = new JSONObject();
         }
         return data;
+    }
+
+    @Override
+    public void deletePost(long postID) {
+        final JSONObject data = getJsonObject();
+        JSONObject posts;
+        if (data.has("posts")) {
+            posts = data.getJSONObject("posts");
+            if (posts.has(String.valueOf(postID))) {
+                posts.remove(String.valueOf(postID));
+            }
+        } else {
+            posts = new JSONObject();
+        }
+
+        data.put("posts", posts);
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete post: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -87,15 +85,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         ArrayList<Object> both = new ArrayList<>();
         if (data.has("comments")) {
             commentsMap = data.getJSONObject("comments");
-        }
-        else {
+        } else {
             commentsMap = new JSONObject();
         }
 
         if (commentsMap.has(parentPostID)) {
             comments = commentsMap.getJSONArray(parentPostID);
-        }
-        else {
+        } else {
             comments = new JSONArray();
         }
         both.add(comments);
@@ -124,8 +120,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
@@ -158,8 +153,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
-        }
-        else {
+        } else {
             likeMap = new JSONObject();
         }
 
@@ -168,8 +162,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         if (likeMap.has(username)) {
             likedPosts = likeMap.getJSONArray(username);
-        }
-        else {
+        } else {
             likedPosts = new JSONArray();
         }
 
@@ -182,8 +175,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
@@ -196,15 +188,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             data = new JSONObject(content);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return false;
         }
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
-        }
-        else {
+        } else {
             return false;
         }
 
@@ -239,8 +229,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         JSONObject posts;
         if (data.has("posts")) {
             posts = data.getJSONObject("posts");
-        }
-        else {
+        } else {
             posts = new JSONObject();
         }
         JSONObject newPost = new JSONObject();
@@ -271,8 +260,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         if (time.charAt(time.length() - 4) == 'a') {
             String cutTime = time.substring(0, time.length() - 4) + "AM";
             newPost.put("time", cutTime);
-        }
-        else {
+        } else {
             String cutTime = time.substring(0, time.length() - 4) + "PM";
             newPost.put("time", cutTime);
         }
@@ -283,7 +271,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 try {
                     double rating = Double.parseDouble(ratingList.get(0));
                     newPost.put("rating", rating);
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
 
@@ -291,92 +280,131 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
 
     @Override
-    public Post getPost(long postID) {
+    public Post getPost(long id) {
+        System.out.println("DEBUG: Attempting to load post with ID: " + id);
         JSONObject data = getJsonObject();
 
+        // Create posts section if it doesn't exist
         if (!data.has("posts")) {
+            System.out.println("DEBUG: Creating posts section in data storage");
+            data.put("posts", new JSONObject());
+            try (FileWriter writer = new FileWriter(filePath)) {
+                writer.write(data.toString(2));
+            } catch (IOException e) {
+                System.out.println("DEBUG: Error creating posts section: " + e.getMessage());
+            }
             return null;
         }
 
         JSONObject posts = data.getJSONObject("posts");
-        String parentPostID = String.valueOf(postID);
+        String postId = String.valueOf(id);
 
-        if (!posts.has(parentPostID)) {
+        if (!posts.has(postId)) {
+            System.out.println("DEBUG: Post ID " + id + " not found in posts data. This could mean the post was deleted or not properly saved.");
+            // Remove the post ID from any clubs that reference it
+            cleanupDeletedPost(id);
             return null;
         }
 
-        JSONObject postObj = posts.getJSONObject(parentPostID);
+        try {
+            JSONObject postData = posts.getJSONObject(postId);
+            System.out.println("DEBUG: Found post data for ID: " + id + ", keys: " + postData.keySet());
 
-        String username = postObj.getString("user");
-        String title = postObj.getString("title");
-        String description = postObj.getString("description");
-        String type = postObj.optString("type", "general");  // Get type, default to "general" if not found
-        long likeCount = postObj.optLong("likes", 0);
+            // Get basic post info
+            String title = postData.optString("title", "Untitled Post");
+            String description = postData.optString("description", "");
+            String username = postData.optString("user", "unknown");
 
-        Account user = new Account(username, "password");
+            // Create Account object for the user
+            Account postUser = new Account(username, "");
 
-        // Create post with the proper type
-        Post post = new Post(user, postID, title, description, new ArrayList<>(), type);
-        post.setLikes(likeCount);
-
-        if (postObj.has("images")) {
-            JSONArray imagesJSONArray = postObj.getJSONArray("images");
-            ArrayList<String> imagesArray = new ArrayList<>();
-            for (int i = 0; i < imagesJSONArray.length(); i++) {
-                imagesArray.add(imagesJSONArray.getString(i));
+            // Get image URLs
+            ArrayList<String> imageURLs = new ArrayList<>();
+            if (postData.has("images")) {
+                JSONArray imagesJson = postData.getJSONArray("images");
+                for (int i = 0; i < imagesJson.length(); i++) {
+                    imageURLs.add(imagesJson.getString(i));
+                }
             }
-            post.setImageURLs(imagesArray);
-        }
-        if (postObj.has("tags")) {
-            JSONArray tagArray = postObj.getJSONArray("tags");
+
+            // Handle contents map
+            HashMap<String, ArrayList<String>> contents = new HashMap<>();
+            if (postData.has("contents")) {
+                JSONObject contentsJson = postData.getJSONObject("contents");
+                for (String key : contentsJson.keySet()) {
+                    JSONArray valueArray = contentsJson.getJSONArray(key);
+                    ArrayList<String> values = new ArrayList<>();
+                    for (int i = 0; i < valueArray.length(); i++) {
+                        values.add(valueArray.getString(i));
+                    }
+                    contents.put(key, values);
+                }
+            }
+
+            // Get tags
             ArrayList<String> tags = new ArrayList<>();
-            for (int i = 0; i < tagArray.length(); i++) {
-                tags.add(tagArray.getString(i));
+            if (postData.has("tags")) {
+                JSONArray tagsJson = postData.getJSONArray("tags");
+                for (int i = 0; i < tagsJson.length(); i++) {
+                    tags.add(tagsJson.getString(i));
+                }
             }
-            post.setTags(tags);
+
+            // Get timestamp
+            String timestamp = postData.optString("time", null);
+
+            // Create post with all required parameters
+            Post post = new Post(postUser, id, title, description, imageURLs, contents,
+                               postData.optString("type", ""), timestamp, tags);
+
+            System.out.println("DEBUG: Successfully created Post object for ID: " + id);
+            return post;
+
+        } catch (Exception e) {
+            System.out.println("DEBUG: Error loading post " + id + ": " + e.getMessage());
+            return null;
         }
-        String time = postObj.getString("time");
-        post.setDateTimeFromString(time);
+    }
 
-        if (postObj.has("contents")) {
-            JSONObject contents = postObj.getJSONObject("contents");
-            if (postObj.get("type").equals("recipe")) {
-                JSONArray ingredients = contents.getJSONArray("ingredients");
-                ArrayList<String> ingredientList = new ArrayList<>();
-                for (int i = 0; i < ingredients.length(); i++) {
-                    ingredientList.add(ingredients.getString(i));
-                }
+    private void cleanupDeletedPost(long postId) {
+        JSONObject data = getJsonObject();
+        if (!data.has("clubs")) {
+            return;
+        }
 
-                JSONArray stepsArray = contents.getJSONArray("steps");
-                StringBuilder steps = new StringBuilder();
-                for (int i = 0; i < stepsArray.length(); i++) {
-                    steps.append(stepsArray.getString(i)).append("<br>");
+        boolean madeChanges = false;
+        JSONObject clubs = data.getJSONObject("clubs");
+        for (String clubId : clubs.keySet()) {
+            JSONObject club = clubs.getJSONObject(clubId);
+            if (club.has("posts")) {
+                JSONArray posts = club.getJSONArray("posts");
+                JSONArray newPosts = new JSONArray();
+                for (int i = 0; i < posts.length(); i++) {
+                    if (posts.getLong(i) != postId) {
+                        newPosts.put(posts.getLong(i));
+                    } else {
+                        madeChanges = true;
+                        System.out.println("DEBUG: Removing deleted post " + postId + " from club " + clubId);
+                    }
                 }
-
-                String cuisines = contents.get("cuisines").toString();
-                if (cuisines.equals("Enter cuisine separated by commas if u want")) {
-                    cuisines = "";
-                }
-                return new Recipe(post, ingredientList, steps.toString(), new ArrayList<>(Arrays.asList(cuisines.split(","))));
-            }
-            else if ("review".equals(type)) {
-                double rating = postObj.has("rating") ? postObj.getDouble("rating") : -1;
-                Review review = new Review(user, postID, title, description);
-                review.setRating(rating);
-                return review;
-            }
-            else if (postObj.get("type").equals("other")) {
-                return new Post(user, postID, title, description);
+                club.put("posts", newPosts);
             }
         }
-        return post;
+
+        if (madeChanges) {
+            try (FileWriter writer = new FileWriter(filePath)) {
+                writer.write(data.toString(2));
+                System.out.println("DEBUG: Updated clubs to remove references to deleted post " + postId);
+            } catch (IOException e) {
+                System.out.println("DEBUG: Error updating clubs data: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -392,17 +420,14 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 data.put("posts", posts);
                 try (FileWriter writer = new FileWriter(filePath)) {
                     writer.write(data.toString(2));
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     throw new RuntimeException("i am sad :(", e);
                 }
-            }
-            else {
+            } else {
                 throw new RuntimeException("bwahhh D: post not found");
 
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("bwahhh D: post not found");
 
         }

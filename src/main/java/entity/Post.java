@@ -63,8 +63,29 @@ public class Post {
         this.imageURLs = imageURLs != null ? new ArrayList<>(imageURLs) : new ArrayList<>();
         this.type = type;
         if (timestamp != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
-            this.dateTime = LocalDateTime.parse(timestamp, formatter);
+            String normalized = timestamp.trim().replaceAll("\\s+", " ");
+            // Try multiple patterns (12-hour & 24-hour) in case of format inconsistency
+            String[] patterns = {"yyyy-MM-dd hh:mm a", "yyyy-MM-dd HH:mm a"};
+            LocalDateTime parsed = null;
+            for (String p : patterns) {
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(p, Locale.ENGLISH);
+                    parsed = LocalDateTime.parse(normalized, formatter);
+                    break;
+                } catch (Exception ignored) {}
+            }
+            if (parsed == null) {
+                try {
+                    // Last resort: drop AM/PM and parse 24h
+                    String noMeridiem = normalized.replace(" AM", "").replace(" PM", "");
+                    DateTimeFormatter fallback = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+                    parsed = LocalDateTime.parse(noMeridiem, fallback);
+                } catch (Exception e) {
+                    System.out.println("DEBUG: Fallback timestamp parse failed for '" + timestamp + "' -> using now()");
+                    parsed = LocalDateTime.now();
+                }
+            }
+            this.dateTime = parsed;
         }
         else {
             this.dateTime = LocalDateTime.now();
