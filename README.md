@@ -1,3 +1,5 @@
+# Munchables
+
 ## Team Members
 
 - Amanda Li (amansdali) implementing user story 2
