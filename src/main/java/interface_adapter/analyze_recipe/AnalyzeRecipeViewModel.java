@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class AnalyzeRecipeViewModel {
     private Map<String, String> result;
+    private String error;
 
     public Map<String, String> getResult() {
         return result;
@@ -15,5 +16,13 @@ public class AnalyzeRecipeViewModel {
 
     public void setResult(Map<String, String> result) {
         this.result = result;
+    }
+
+    public void setFailureMessage(String message) {
+        this.error = message;
+    }
+
+    public String getError() {
+        return error;
     }
 }

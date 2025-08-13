@@ -6,4 +6,5 @@ package use_case.analyze_recipe;/**
 
 public interface AnalyzeRecipeOutputBoundary {
     void present(AnalyzeRecipeOutputData outputData);
+    void prepareFailView(AnalyzeRecipeOutputData outputData);
 }

@@ -10,4 +10,6 @@ import java.io.IOException;
 
 public interface SpoonacularAccessInterface {
     String analyzeRecipe(Recipe recipe) throws IOException, InterruptedException;
+        String analyzeRecipeTest(Recipe recipe); //test analyze recipe function
+
 }
