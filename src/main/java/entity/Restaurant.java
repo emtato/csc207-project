@@ -46,9 +46,7 @@ public class Restaurant {
         return cuisines;
     }
 
-    public ArrayList<Review> getReviews() {
-        return reviews;
-    }
+    public ArrayList<Review> getReviews() { return reviews; }
 
     public String getPriceLevel() {
         return priceLevel;
@@ -67,4 +65,4 @@ public class Restaurant {
     public void setURI(URI uri) { this.uri = uri;
     }
     public void setPriceLevel(String priceLevel) { this.priceLevel = priceLevel; }
-    }
+}

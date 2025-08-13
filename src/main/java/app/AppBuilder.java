@@ -27,6 +27,8 @@ import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.fetch_post.FetchPostController;
 import interface_adapter.fetch_post.FetchPostPresenter;
+import interface_adapter.fetch_review.FetchReviewController;
+import interface_adapter.fetch_review.FetchReviewPresenter;
 import interface_adapter.get_comments.GetCommentsController;
 import interface_adapter.get_comments.GetCommentsPresenter;
 import interface_adapter.get_comments.GetCommentsViewModel;
@@ -89,6 +91,9 @@ import use_case.edit_profile.EditProfileOutputBoundary;
 import use_case.fetch_post.FetchPostInputBoundary;
 import use_case.fetch_post.FetchPostInteractor;
 import use_case.fetch_post.FetchPostOutputBoundary;
+import use_case.fetch_review.FetchReviewInputBoundary;
+import use_case.fetch_review.FetchReviewInteractor;
+import use_case.fetch_review.FetchReviewOutputBoundary;
 import use_case.get_comments.GetCommentsInputBoundary;
 import use_case.get_comments.GetCommentsInteractor;
 import use_case.get_comments.GetCommentsOutputBoundary;
@@ -689,6 +694,14 @@ public class AppBuilder {
         final FetchPostInputBoundary fetchPostInteractor = new FetchPostInteractor(postCommentsLikesDataAccessObject, fetchPostOutputBoundary);
         final FetchPostController fetchPostController = new FetchPostController(fetchPostInteractor);
         homePageView.setFetchPostController(fetchPostController);
+        return this;
+    }
+
+    public AppBuilder addFetchReviewUseCase() {
+        final FetchReviewOutputBoundary fetchReviewOutputBoundary = new FetchReviewPresenter(homePageViewModel);
+        final FetchReviewInputBoundary fetchReviewInteractor = new FetchReviewInteractor(postCommentsLikesDataAccessObject, fetchReviewOutputBoundary);
+        final FetchReviewController fetchReviewController = new FetchReviewController(fetchReviewInteractor);
+        homePageView.setFetchReviewController(fetchReviewController);
         return this;
     }
 

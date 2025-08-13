@@ -1,5 +1,7 @@
 package app;
 
+import view.GUIConstants;
+
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
@@ -48,10 +50,11 @@ public class Main {
                 .addGetCommentsUseCase()
                 .addAnalyzeRecipeUseCase()
                 .addFetchPostUseCase()
+                .addFetchReviewUseCase()
                 .addCreateClubUseCase()
                 .setSessionUserDataAccessObject()
                 .build();
-        application.setPreferredSize(new Dimension(1440, 900));
+        application.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, GUIConstants.WINDOW_HEIGHT));
         application.pack();
         application.setVisible(true);
     }

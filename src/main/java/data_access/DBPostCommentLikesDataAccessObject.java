@@ -87,6 +87,35 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     }
 
+    public void deleteReview(long reviewID){
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        JSONObject reviews;
+        if (data.has("reviews")) {
+            reviews = data.getJSONObject("reviews"); //reviews is mapping between id and the remaining info
+            if (reviews.has(String.valueOf(reviewID))) {
+                reviews.remove(String.valueOf(reviewID));
+            }
+        }
+        else {
+            reviews = new JSONObject();
+        }
+
+        data.put("reviews", reviews);
+        try {
+            saveJSONObject(data);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     /**
      * method to reduce duplicate code, retrieves JSONObject of post, comment, like data from database
      *
@@ -434,6 +463,49 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
         }
     }
 
+    public void writeReview(long reviewID, Account user, String title, String body,
+                            ArrayList<String> tags, String time) {
+        JSONObject data;
+        try {
+            data = getJsonObject();
+        } catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+            data = new JSONObject();
+        }
+
+        JSONObject posts = data.has("posts") ? data.getJSONObject("posts") : new JSONObject();
+
+        JSONObject newReview = new JSONObject();
+        newReview.put("user", user.getUsername());
+        newReview.put("title", title);
+        newReview.put("description", body);
+        newReview.put("type", "review");
+        newReview.put("likes", 0);
+        newReview.put("tags", tags);
+        newReview.put("images", new ArrayList<>()); // optional images
+        newReview.put("rating", -1); // default, can be updated later
+
+        // Adjust AM/PM formatting
+        if (time.charAt(time.length() - 4) == 'a') {
+            newReview.put("time", time.substring(0, time.length() - 4) + "AM");
+        } else {
+            newReview.put("time", time.substring(0, time.length() - 4) + "PM");
+        }
+
+        posts.put(String.valueOf(reviewID), newReview);
+        data.put("posts", posts);
+
+        try {
+            saveJSONObject(data);
+            // Optionally cache the review
+            Review cached = new Review(user, reviewID, title, body);
+            POST_CACHE.put(reviewID, new CacheEntry(cached));
+        } catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+
     @Override
     public Post getPost(long postID) {
         // First attempt cache
@@ -544,6 +616,15 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
     }
 
     @Override
+    public Review getReview(long id) {
+        Post p = getPost(id);
+        if (p instanceof Review) {
+            return (Review) p;
+        }
+        return null;
+    }
+
+    @Override
     public void updateLikesForPost(long postID, int likeDifference) {
         JSONObject data = new JSONObject();
         try {
@@ -600,6 +681,29 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             postIDs.add(postID);
         }
         return postIDs;
+    }
+
+
+    public ArrayList<Long> getAvailableReviews() {
+        JSONObject data = new JSONObject();
+        try {
+            data = getJsonObject();
+        }
+        catch (DataAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        if (!data.has("reviews")) {
+            return new ArrayList<>();
+        }
+
+        JSONObject reviews = data.getJSONObject("reviews");
+        ArrayList<Long> reviewIDs = new ArrayList<>();
+        for (String key : reviews.keySet()) {
+            long reviewID = Long.parseLong(key);
+            reviewIDs.add(reviewID);
+        }
+        return reviewIDs;
     }
 
     @Override

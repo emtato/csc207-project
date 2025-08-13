@@ -35,7 +35,7 @@ public class MapPanel extends JPanel {
         add(cuisinesLabel);
         add(Box.createRigidArea(new Dimension(0,4)));
         add(priceLabel);
-        add(mapViewPanel, BorderLayout.NORTH);
+        add(mapViewPanel);
     }
 
     public void update(MapViewModel mapViewModel, Restaurant restaurant) {
