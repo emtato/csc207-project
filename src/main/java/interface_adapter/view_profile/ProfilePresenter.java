@@ -69,10 +69,13 @@ public class ProfilePresenter implements ProfileOutputBoundary {
         editProfileState.setProfilePictureUrl(outputData.getProfilePictureUrl());
         editProfileState.setBio(outputData.getBio());
         editProfileState.setPreferences(outputData.getPreferences());
+        editProfileState.setLocation(outputData.getLocation());
         editProfileState.setNewDisplayName(outputData.getDisplayName());
         editProfileState.setNewProfilePictureUrl(outputData.getProfilePictureUrl());
         editProfileState.setNewBio(outputData.getBio());
         editProfileState.setNewPreferences(outputData.getPreferences());
+        editProfileState.setNewLocation(outputData.getLocation());
+
         editProfileViewModel.setState(editProfileState);
         editProfileViewModel.firePropertyChanged();
         viewManagerModel.setState(editProfileViewModel.getViewName());
