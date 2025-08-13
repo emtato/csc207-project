@@ -32,24 +32,51 @@ public class ExploreView extends JPanel {
     private final String viewName = "explore view";
     private final ViewManagerModel viewManagerModel;
     private static JPanel cardPanel;
-    private final Account currentUser;
-
+    private Account currentUser; // no longer final; resolved lazily
+    private boolean initialized = false;
 
     public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
         this.setLayout(new BorderLayout(10, 10));
 
-        Session.setCurrentUsername("example_user");
-        Session.setCurrentAccount();
-        this.currentUser = Session.getCurrentAccount();
+        // Attempt initial fetch; may be null if user not logged in yet when view constructed
+        currentUser = Session.getCurrentAccount();
 
         if (currentUser == null) {
-            System.err.println("Warning: current user not set in Session");
+            // Placeholder until user logs in; we'll rebuild when shown and user available
             this.add(new JLabel("No logged-in user."), BorderLayout.CENTER);
-            return;
+        } else {
+            buildContent();
         }
 
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                ensureInitialized();
+            }
+        });
+    }
+
+    private void ensureInitialized() {
+        if (initialized) return;
+        if (Session.getCurrentAccount() == null) {
+            // Try to load from DAO if username is set
+            Session.setCurrentAccount();
+        }
+        currentUser = Session.getCurrentAccount();
+        if (currentUser == null) {
+            // Still no user; keep placeholder
+            return;
+        }
+        this.removeAll();
+        buildContent();
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void buildContent() {
+        initialized = true;
         // Example Event & Recipe (social posts)
         Event exampleEvent = new Event(currentUser, 1234567890, "Local Food Festival",
                 "A gathering to celebrate local cuisines.", "Downtown Park",

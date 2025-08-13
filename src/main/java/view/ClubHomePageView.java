@@ -52,8 +52,14 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     }
 
     private void refresh() {
-        String username = app.Session.getCurrentAccount().getUsername();
-        if (listClubsController != null) {
+        // Safely obtain the username; fall back to stored currentUsername if Account not loaded
+        String username;
+        if (app.Session.getCurrentAccount() != null) {
+            username = app.Session.getCurrentAccount().getUsername();
+        } else {
+            username = app.Session.getCurrentUsername();
+        }
+        if (listClubsController != null && username != null) {
             listClubsController.fetch(username);
         }
     }
@@ -253,9 +259,10 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
 
     private JButton createJoinButton(Club club) {
         JButton joinButton = new JButton("Join Club");
-        String username = app.Session.getCurrentAccount().getUsername();
+        String username = app.Session.getCurrentAccount() != null ?
+                app.Session.getCurrentAccount().getUsername() : app.Session.getCurrentUsername();
         joinButton.addActionListener(e -> {
-            if (joinClubController != null) {
+            if (joinClubController != null && username != null) {
                 joinClubController.join(username, club.getId());
             }
         });
@@ -308,4 +315,9 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     public void setListClubsController(ListClubsController controller) { this.listClubsController = controller; }
     public void setJoinClubController(JoinClubController controller) { this.joinClubController = controller; }
     public void setSpecificClubController(SpecificClubController controller) { this.specificClubController = controller; }
+
+    // Allow other views (e.g., CreateNewPostView) to trigger a clubs refresh after posting
+    public void reloadClubs() {
+        refresh();
+    }
 }

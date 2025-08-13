@@ -3,6 +3,7 @@ package interface_adapter;
 import view.CreateNewPostView;
 import view.HomePageView;
 import view.PostView;
+import view.ClubHomePageView;
 
 /**
  * Model for the View Manager. Its state is the name of the View which
@@ -13,6 +14,7 @@ public class ViewManagerModel extends ViewModel<String> {
     private HomePageView homePageView;
     private CreateNewPostView createNewPostView;
     private view.SpecificClubView specificClubView;
+    private ClubHomePageView clubHomePageView;
 
     public ViewManagerModel() {
         super("view manager");
@@ -53,4 +55,7 @@ public class ViewManagerModel extends ViewModel<String> {
     public void setSpecificClubView(view.SpecificClubView specificClubView) {
         this.specificClubView = specificClubView;
     }
+
+    public ClubHomePageView getClubHomePageView() { return clubHomePageView; }
+    public void setClubHomePageView(ClubHomePageView clubHomePageView) { this.clubHomePageView = clubHomePageView; }
 }

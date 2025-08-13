@@ -288,30 +288,10 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
     private Account ensureUserExists(String username) {
         User existing = null;
         try { existing = get(username); } catch (Exception ignored) {}
-        if (existing != null) return (Account) existing;
-        // Try to pull from file-based DAO as fallback
-        try {
-            FileUserDataAccessObject fileDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
-            User fileUser = fileDAO.get(username);
-            if (fileUser instanceof Account) {
-                System.out.println("DEBUG[DBUserDAO]: Bridging missing DB user from file store: " + username);
-                save(fileUser);
-                return (Account) fileUser;
-            }
-        } catch (Exception e) {
-            System.out.println("DEBUG[DBUserDAO]: File bridge failed for user " + username + ": " + e.getMessage());
+        if (existing instanceof Account) {
+            return (Account) existing;
         }
-        // Try session current account
-        try {
-            if (Session.getCurrentAccount() != null && Session.getCurrentAccount().getUsername().equals(username)) {
-                System.out.println("DEBUG[DBUserDAO]: Bridging missing DB user from session: " + username);
-                save(Session.getCurrentAccount());
-                return Session.getCurrentAccount();
-            }
-        } catch (Exception e) {
-            System.out.println("DEBUG[DBUserDAO]: Session bridge failed: " + e.getMessage());
-        }
-        // Create minimal stub
+        // Pure DB-only stub creation (no file/session bridging)
         System.out.println("DEBUG[DBUserDAO]: Creating stub DB user for missing username: " + username);
         Account stub = new Account(username, "");
         stub.setClubs(new ArrayList<>());
@@ -504,13 +484,6 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             user.getUserPosts().add(id);
         }
         save(user);
-        // Mirror to file for UI consistency
-        try {
-            FileUserDataAccessObject fileDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
-            fileDAO.addPost(id, username);
-        } catch (Exception e) {
-            System.out.println("DEBUG[DBUserDAO]: File mirror addPost failed: " + e.getMessage());
-        }
     }
 
     @Override

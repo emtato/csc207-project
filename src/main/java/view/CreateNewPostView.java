@@ -1,8 +1,8 @@
 package view;
 
 import app.Session;
-import data_access.FileClubsDataAccessObject;
-import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.DBClubsDataAccessObject;
+import data_access.DBPostCommentLikesDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Club;
@@ -20,6 +20,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.JLabel;
+import javax.swing.text.JTextComponent;
 
 /**
  * Created by Emilia on 2025-07-27!
@@ -29,16 +39,6 @@ import java.beans.PropertyChangeListener;
 
 // This view is for the user to fill in information for their new post. It could be a recipe, an event, clubs or images
 // Emilia- recipes
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.swing.JLabel;
-import javax.swing.text.JTextComponent;
-
 
 public class CreateNewPostView extends JPanel implements PropertyChangeListener {
     private final JPanel contentPanel;
@@ -222,7 +222,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         steps,
                         tags,
                         imagesList,
-                        new ArrayList<>()
+                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
                 );
                 if (club != null) {
                     postData.setClubId(club.getId());
@@ -290,7 +290,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         "",
                         tags,
                         imagesList,
-                        new ArrayList<>()
+                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
                 );
                 if (club != null) {
                     postData.setClubId(club.getId());
@@ -346,7 +346,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         "",
                         new ArrayList<>(),
                         imagesList,
-                        new ArrayList<>()
+                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
                 );
 
                 if (club != null) {
@@ -475,19 +475,17 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         if (postData.getClubId() != null) {
             SpecificClubView scv = viewManagerModel.getSpecificClubView();
             try {
-                // Reload club from persistent storage to include newly added post ID
-                FileClubsDataAccessObject clubsDAO = new FileClubsDataAccessObject(FilePostCommentLikesDataAccessObject.getInstance());
-                Club refreshed = clubsDAO.getClub(postData.getClubId());
+                Club refreshed = DBClubsDataAccessObject.getInstance(DBPostCommentLikesDataAccessObject.getInstance()).getClub(postData.getClubId());
                 if (refreshed != null) {
                     scv.updateClub(refreshed);
                 } else {
-                    // fallback to existing in-memory club object
                     scv.updateClub(club);
                 }
             } catch (Exception ex) {
-                System.err.println("Failed to refresh club after post creation: " + ex.getMessage());
+                System.err.println("Failed to refresh club after post creation (DB): " + ex.getMessage());
                 scv.updateClub(club);
             }
+            try { viewManagerModel.getClubHomePageView().reloadClubs(); } catch (Exception ignore) {}
             viewManagerModel.setState(scv.getViewName());
         } else {
             viewManagerModel.setState("homepage view");

@@ -106,7 +106,7 @@ public class AppDirector {
         // create the use case builder with the DB daos
         PostCommentsLikesDataAccessObject postDAO = DBPostCommentLikesDataAccessObject.getInstance();
         useCaseBuilder = new UseCaseBuilder(
-                new FileClubsDataAccessObject(postDAO),
+                DBClubsDataAccessObject.getInstance(postDAO),
                 DBUserDataAccessObject.getInstance(),
                 postDAO,
                 viewBuilder);

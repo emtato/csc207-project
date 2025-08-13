@@ -488,4 +488,51 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             throw new DataAccessException("Error writing to file: " + e.getMessage());
         }
     }
+
+    @Override
+    public void deleteAllPostsByUser(String username, ClubsDataAccessObject clubsDAO, UserDataAccessObject userDAO) {
+        ArrayList<Long> all = getAvailablePosts();
+        if (all == null) return;
+        ArrayList<Long> toDelete = new ArrayList<>();
+        for (Long id : all) {
+            Post p = getPost(id);
+            if (p != null && p.getUser() != null && username.equals(p.getUser().getUsername())) {
+                toDelete.add(id);
+            }
+        }
+        // Clean club references
+        if (clubsDAO != null) {
+            try {
+                for (Club club : clubsDAO.getAllClubs()) {
+                    boolean changed = false;
+                    ArrayList<Post> kept = new ArrayList<>();
+                    for (Post p : club.getPosts()) {
+                        if (!toDelete.contains(p.getID())) kept.add(p); else changed = true;
+                    }
+                    if (changed) {
+                        clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), kept, club.getTags());
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("DEBUG[FilePostDAO]: club cleanup error: " + e.getMessage());
+            }
+        }
+        // Delete posts
+        for (Long id : toDelete) deletePost(id);
+        // Update user post list
+        if (userDAO != null) {
+            try {
+                User u = userDAO.get(username);
+                if (u instanceof Account) {
+                    Account acc = (Account) u;
+                    if (acc.getUserPosts() != null) {
+                        acc.getUserPosts().removeAll(toDelete);
+                        userDAO.save(acc);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("DEBUG[FilePostDAO]: user post list update error: " + e.getMessage());
+            }
+        }
+    }
 }
