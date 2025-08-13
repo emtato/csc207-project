@@ -29,18 +29,18 @@ public class PostPanel extends JPanel {
 
     private final ViewManagerModel viewManagerModel;
 
-    private Post post;
-    private Recipe repice;
+    private final Post post;
+    private Recipe recipe;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
     // fonts & styles
     private final Font fontTitle = new Font("Roboto", Font.BOLD, 16);
-    private final Font subtite = new Font("Roboto", Font.PLAIN, 15);
+    private final Font subTitle = new Font("Roboto", Font.PLAIN, 15);
     private final Font text = new Font("Roboto", Font.PLAIN, 13);
     // middle
-    private JTextPane postText = new JTextPane();
+    private final JTextPane postText = new JTextPane();
     // bottom
-    private RoundedButton likeButton = new RoundedButton("Like");
+    private final RoundedButton likeButton = new RoundedButton("Like");
     private final RoundedButton saveButton = new RoundedButton("Add to list");
     private final RoundedButton shareButton = new RoundedButton("Share");
     private final RoundedButton viewFullPost = new RoundedButton("view full post");
@@ -49,9 +49,9 @@ public class PostPanel extends JPanel {
     private final JLabel subtitle;
 
     private boolean liked;
-    private JPanel centerPanel;
-    private JPanel bottomPanel;
-    private LikePostController likePostController;
+    private final JPanel centerPanel;
+    private final JPanel bottomPanel;
+    private final LikePostController likePostController;
     private GetCommentsViewModel getCommentsViewModel;
 
     public PostPanel(ViewManagerModel viewManagerModel, Post post, int postWidth, int postHeight,
@@ -81,7 +81,7 @@ public class PostPanel extends JPanel {
 
         topPanel.add(title); //TODO: fix datetime thing
         subtitle = new javax.swing.JLabel(post.getUser().getUsername() + " | " + post.getDateTime().format(formatter) + " | " + post.getLikes() + " likes"); // post author and date
-        subtitle.setFont(subtite);
+        subtitle.setFont(subTitle);
         subtitle.setForeground(Color.GRAY);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         javax.swing.JLabel tags = new JLabel("tags: " + post.getTags());
@@ -144,13 +144,13 @@ public class PostPanel extends JPanel {
         postText.setPreferredSize(new Dimension(postWidth, postHeight));
         postText.setMaximumSize(new Dimension(postWidth, Integer.MAX_VALUE));
         if (post instanceof Recipe) {
-            this.repice = (Recipe) post;
+            this.recipe = (Recipe) post;
             //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
             String mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>
                         <h1 style='font-size: 18pt; color: #333'> <strong>Description</strong> </h1>
-                        <p style='font-size: 14pt;'> """ + this.repice.getDescription() + """ 
+                        <p style='font-size: 14pt;'> """ + this.recipe.getDescription() + """ 
                     </p>
                           </body>
                         </html>

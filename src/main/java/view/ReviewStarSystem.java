@@ -1,18 +1,18 @@
 package view;
 
+import entity.Review;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
-// TODO: implement Review into this
-
-public class ReviewStarSystem extends JFrame {
+public class ReviewStarSystem extends JPanel {
 
     private final JPanel starPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     private final JLabel[] starLabels = new JLabel[5];
-    private double rating = 0.0;
+    private double rating = 0;
 
     private final ImageIcon emptyStarIcon = new ImageIcon(Objects
             .requireNonNull(getClass().getResource("/images/empty_star.png")));
@@ -21,9 +21,11 @@ public class ReviewStarSystem extends JFrame {
     private final ImageIcon fullStarIcon = new ImageIcon(Objects
             .requireNonNull(getClass().getResource("/images/filled_star.png")));
 
-    public ReviewStarSystem() {
-        setTitle("Star Rating System");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    private final Review review;
+    private final JLabel ratingLabel = new JLabel("Rating: N/A");
+
+    public ReviewStarSystem(Review review) {
+        this.review = review;
         setLayout(new FlowLayout());
 
         for (int i = 0; i < 5; i++) {
@@ -47,8 +49,9 @@ public class ReviewStarSystem extends JFrame {
         });
 
         add(starPanel);
-        setSize(550, 150);
-        setLocationRelativeTo(null);
+        add(ratingLabel);
+
+        setSize(550, 175);
         setVisible(true);
     }
 
@@ -56,7 +59,11 @@ public class ReviewStarSystem extends JFrame {
         int x = Math.max(0, Math.min(e.getX(), starPanel.getWidth())); // Clamp within bounds
         double rawRating = (5.0 * x) / starPanel.getWidth();           // Map to 0.0–5.0
         rating = Math.round(rawRating * 2) / 2.0;                      // Round to nearest 0.5
+
+        review.setRating(rating);
+
         updateStarIcons();
+        ratingLabel.setText("Rating: " + rating);
     }
 
     private void updateStarIcons() {
@@ -75,7 +82,11 @@ public class ReviewStarSystem extends JFrame {
         return rating;
     }
 
+    // TESTING
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ReviewStarSystem::new);
+        // Example usage:
+        entity.Account acc = new entity.Account("testUser", "testPassword"); // Assuming Account exists
+        Review review = new Review(acc, 1, "Great Place!", "Had a wonderful time.");
+        SwingUtilities.invokeLater(() -> new ReviewStarSystem(review));
     }
 }

@@ -1,12 +1,11 @@
 package data_access;
 
-import entity.Account;
-import entity.Club;
-import entity.Comment;
-import entity.Post;
+import entity.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface PostCommentsLikesDataAccessObject {
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp);
@@ -19,6 +18,13 @@ public interface PostCommentsLikesDataAccessObject {
      * @param postID post ID to delete
      */
     public void deletePost(long postID);
+
+    /**
+     * Deletes a review given a review ID.
+     *
+     * @param reviewID review ID to delete
+     */
+    public void deleteReview(long reviewID);
 
     /**
      * keep a record of which account has liked which post
@@ -54,6 +60,8 @@ public interface PostCommentsLikesDataAccessObject {
                          HashMap<String, ArrayList<String>> contents, ArrayList<String> tags,
                          ArrayList<String> images, String time, ArrayList<Club> clubs);
 
+    void writeReview(long reviewId, Account user, String title, String body, ArrayList<String> tags, String timestamp);
+
     /**
      * Get post object from postID.
      *
@@ -61,6 +69,14 @@ public interface PostCommentsLikesDataAccessObject {
      * @return Post object
      */
     public Post getPost(long postID);
+
+    /**
+     * Get review object from reviewID.
+     *
+     * @param reviewID unique review ID
+     * @return Review object
+     */
+    Review getReview(long reviewID);
 
     /**
      * function to update a post's likes in database. The system to update likes should be used when the
@@ -77,6 +93,7 @@ public interface PostCommentsLikesDataAccessObject {
      * @return ArrayList of long
      */
     public ArrayList<Long> getAvailablePosts();
+    public ArrayList<Long> getAvailableReviews();
 
     /**
      * Add a post to a specific club

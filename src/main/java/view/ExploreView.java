@@ -1,17 +1,21 @@
 package view;
 
 import app.Session;
-import entity.Account;
+import data_access.FilePostCommentLikesDataAccessObject;
+import data_access.PostCommentsLikesDataAccessObject;
+import entity.*;
 import entity.Event;
-import entity.Recipe;
-import entity.Restaurant;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.like_post.LikePostController;
 import interface_adapter.map.MapState;
 import interface_adapter.map.MapViewModel;
+import use_case.like_post.LikePostInputBoundary;
+import use_case.like_post.LikePostInteractor;
 import view.map.MapView;
 import view.map.RestaurantSearch;
 import view.ui_components.MapPanel;
 import view.ui_components.MenuBarPanel;
+import view.ui_components.ReviewPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +38,9 @@ public class ExploreView extends JPanel {
     private static JPanel cardPanel;
     private Account currentUser; // no longer final; resolved lazily
     private boolean initialized = false;
+    private final Account currentUser;
+    private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
+            FilePostCommentLikesDataAccessObject.getInstance();
 
     public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
@@ -171,14 +178,15 @@ public class ExploreView extends JPanel {
                                 buttons.setAlignmentX(Component.LEFT_ALIGNMENT);
                                 JButton viewMapBtn = new JButton("View Map");
                                 final JButton websiteBtn = new JButton("Website");
+                                JButton reviewBtn = new JButton("Post Review");
 
                                 // Website enabled only if restaurant has URI
                                 websiteBtn.setEnabled(rFinal.getURI() != null);
 
-                                // View Map — open dialog and populate MapPanel
+                                // View Map - open dialog and populate MapPanel
                                 viewMapBtn.addActionListener(ev -> showMapDialog(rFinal));
 
-                                // Website — open URI if present
+                                // Website - open URI if present
                                 websiteBtn.addActionListener(ev -> {
                                     URI uri = rFinal.getURI();
                                     if (uri != null) openWebpage(uri);
@@ -187,8 +195,15 @@ public class ExploreView extends JPanel {
                                             "No website", JOptionPane.INFORMATION_MESSAGE);
                                 });
 
+                                // Post Review - open Review Panel
+                                reviewBtn.addActionListener(ev -> {
+                                    Window owner = SwingUtilities.getWindowAncestor(ExploreView.this);
+                                    CreateNewReviewView.showDialog(owner, viewManagerModel);
+                                });
+
                                 buttons.add(viewMapBtn);
                                 buttons.add(websiteBtn);
+                                buttons.add(reviewBtn);
 
                                 // Add components
                                 restBox.add(name);
@@ -334,7 +349,6 @@ public class ExploreView extends JPanel {
 
 
         MapPanel mapPanel = new MapPanel();
-        // Give the MapPanel a sensible preferred size so dialog reserves space for it immediately.
         mapPanel.setPreferredSize(new Dimension(800, 600));
         MapViewModel mapViewModel = new MapViewModel();
         mapPanel.update(mapViewModel, restaurant);
