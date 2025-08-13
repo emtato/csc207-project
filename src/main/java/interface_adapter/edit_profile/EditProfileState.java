@@ -11,10 +11,12 @@ public class EditProfileState {
     private String bio = "";
     private String profilePictureUrl = "https://i.imgur.com/eA9NeJ1.jpeg";
     private ArrayList<String> preferences = new ArrayList<>();
+    private String location = "";
     private String newDisplayName;
     private String newBio;
     private String newProfilePictureUrl;
     private ArrayList<String> newPreferences;
+    private String newLocation;
 
     public String getNewDisplayName() {
         return newDisplayName;
@@ -87,4 +89,12 @@ public class EditProfileState {
     public void setPreferences(ArrayList<String> preferences) {
         this.preferences = preferences;
     }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public String getNewLocation() { return newLocation; }
+
+    public void setNewLocation(String newLocation) { this.newLocation = newLocation; }
 }

@@ -34,6 +34,7 @@ public class ExploreView extends JPanel {
     private static JPanel cardPanel;
     private final Account currentUser;
 
+
     public ExploreView(ViewManagerModel viewManagerModel, JPanel cardPanel) {
         this.viewManagerModel = viewManagerModel;
         this.cardPanel = cardPanel;
@@ -382,18 +383,18 @@ public class ExploreView extends JPanel {
         dlg.setVisible(true);
     }
 
-    /** helper: open browser for a URI */
-    public static boolean openWebpage(URI uri) {
+    /**
+     * helper: open browser for a URI
+     */
+    public static void openWebpage(URI uri) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
             try {
                 desktop.browse(uri);
-                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     public String getViewName() {

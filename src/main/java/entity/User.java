@@ -57,6 +57,18 @@ public interface User {
     void setBio(String newBio);
 
     /**
+     * Returns the location of the user.
+     * @return the location of the user.
+     */
+    String getLocation();
+
+    /**
+     * Sets the bio of the user.
+     * @param newLocation the new bio of the user.
+     */
+    void setLocation(String newLocation);
+
+    /**
      * Returns the number of followers of the user.
      * @return the number of followers of the user.
      */

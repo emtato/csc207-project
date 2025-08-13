@@ -22,11 +22,12 @@ public class EditProfileController {
      * @param newBio the new bio
      * @param newProfilePictureUrl the new profile picture url address
      * @param newPreferences a new list of the user's preference tags
+     * @param newLocation the new location
      */
     public void execute(String username, String newDisplayName, String newBio, String newProfilePictureUrl,
-                        ArrayList<String> newPreferences) {
+                        ArrayList<String> newPreferences, String newLocation) {
         final EditProfileInputData editProfileInputData = new EditProfileInputData(username, newDisplayName, newBio,
-                newProfilePictureUrl, newPreferences);
+                newProfilePictureUrl, newPreferences, newLocation);
         editProfileUseCaseInteractor.execute(editProfileInputData);
     }
 

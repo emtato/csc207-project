@@ -18,6 +18,7 @@ public class EditProfileViewModel extends ViewModel<EditProfileState> {
     public static final String EDIT_BIO_LABEL = "Bio";
     public static final String UPLOAD_PFP_LABEL = "Profile Picture URL";
     public static final String PREFERENCE_TAGS_LABEL = "Preference Tags";
+    public static final String EDIT_LOCATION_LABEL = "Location";
     public static final String SAVE_CHANGES_BUTTON_LABEL = "Save Changes";
     public static final int EDIT_PANEL_WIDTH = 1200;
     public static final int EDIT_PANEL_HEIGHT = 800;
