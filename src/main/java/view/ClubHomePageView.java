@@ -17,7 +17,6 @@ import interface_adapter.specific_club.SpecificClubViewModel;
 import view.ui_components.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import interface_adapter.clubs_home.ClubController; // legacy support
 
 public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     private final String viewName = "club view";
@@ -29,11 +28,9 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     private LikePostController likePostController;
     private final SpecificClubViewModel specificClubViewModel;
     private SpecificClubController specificClubController;  // Remove final to allow setting later
-    private ClubController legacyClubController; // keep for backward compatibility
 
     public ClubHomePageView(ViewManagerModel viewManagerModel,
                           ClubViewModel clubViewModel,
-                          ClubController clubController,
                           JPanel cardPanel,
                           SpecificClubViewModel specificClubViewModel,
                           SpecificClubController specificClubController) {
@@ -42,7 +39,6 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         this.cardPanel = cardPanel;
         this.specificClubViewModel = specificClubViewModel;
         this.specificClubController = specificClubController;
-        this.legacyClubController = clubController; // store legacy
 
         clubViewModel.addPropertyChangeListener(this);
 
@@ -313,11 +309,4 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
 
     public void setListClubsController(ListClubsController controller) { this.listClubsController = controller; }
     public void setJoinClubController(JoinClubController controller) { this.joinClubController = controller; }
-
-    // Keep existing setter for legacy clubController but deprecate
-    @Deprecated
-    public void setClubController(ClubController clubController) { this.legacyClubController = clubController; }
-
-    @Deprecated
-    public ClubController getClubController() { return this.legacyClubController; }
 }

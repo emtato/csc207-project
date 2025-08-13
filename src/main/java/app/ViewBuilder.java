@@ -213,10 +213,9 @@ public class ViewBuilder {
         clubHomePageView = new ClubHomePageView(
                 viewManagerModel,
                 clubViewModel,
-                null,  // ClubController will be set in addClubUseCase
                 cardPanel,
                 specificClubViewModel,
-                null   // SpecificClubController will be set in addSpecificClubUseCase
+                null   // SpecificClubController will be set later
         );
         cardPanel.add(clubHomePageView, clubHomePageView.getViewName());
         return this;
