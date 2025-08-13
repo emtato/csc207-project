@@ -96,13 +96,14 @@ Cloning From Github:
   2. Enter Commands:
      - git clone https://github.com/emtato/csc207-project.git
      - cd csc207-project
-Downloading as ZIP File
+       
+Downloading as ZIP File:
   1. Go to the GitHub repository page.
   2. Click Code → Download ZIP.
   3. Extract the ZIP file.
   4. Open a terminal
   5. Navigate to the extracted folder:
-     -  cd *<path to extracted folder>*
+     -  cd *path to extracted folder*
 
 ### Building and Running the Project
 1. Use Maven to build the project and download dependencies:
