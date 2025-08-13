@@ -19,4 +19,8 @@ public class AnalyzeRecipePresenter implements AnalyzeRecipeOutputBoundary {
     public void present(AnalyzeRecipeOutputData outputData) {
         viewModel.setResult(outputData.getAnalysis());
     }
+
+    public void prepareFailView(AnalyzeRecipeOutputData outputData) {
+        viewModel.setFailureMessage(outputData.getFailureMessage());
+    }
 }
