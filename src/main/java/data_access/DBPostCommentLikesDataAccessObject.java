@@ -431,71 +431,75 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             return null;
         }
 
-        JSONObject postObj = posts.getJSONObject(parentPostID);
+        try {
+            JSONObject postObj = posts.getJSONObject(parentPostID);
+            String username = postObj.optString("user", "unknown");
+            String title = postObj.optString("title", "Untitled Post");
+            String description = postObj.optString("description", "");
+            String type = postObj.optString("type", "general");
+            String timestamp = postObj.optString("time", null);
+            long likeCount = postObj.optLong("likes", 0);
 
-        String username = postObj.getString("user");
-        String title = postObj.getString("title");
-        String description = postObj.getString("description");
-        long likeCount = postObj.getLong("likes");
+            Account user = new Account(username, "");
 
-        Account user = new Account(username, "password");
-        Post post = new Post(user, postID, title, description);
-        post.setLikes(likeCount);
-
-        if (postObj.has("images")) {
-            JSONArray imagesJSONArray = postObj.getJSONArray("images");
-            ArrayList<String> imagesArray = new ArrayList<>();
-            for (int i = 0; i < imagesJSONArray.length(); i++) {
-                imagesArray.add(imagesJSONArray.getString(i));
+            // Images
+            ArrayList<String> images = new ArrayList<>();
+            if (postObj.has("images")) {
+                JSONArray imagesJSONArray = postObj.getJSONArray("images");
+                for (int i = 0; i < imagesJSONArray.length(); i++) {
+                    images.add(imagesJSONArray.getString(i));
+                }
             }
-            post.setImageURLs(imagesArray);
-        }
-        if (postObj.has("tags")) {
-            JSONArray tagArray = postObj.getJSONArray("tags");
+
+            // Tags
             ArrayList<String> tags = new ArrayList<>();
-            for (int i = 0; i < tagArray.length(); i++) {
-                tags.add(tagArray.getString(i));
+            if (postObj.has("tags")) {
+                JSONArray tagArray = postObj.getJSONArray("tags");
+                for (int i = 0; i < tagArray.length(); i++) {
+                    tags.add(tagArray.getString(i));
+                }
             }
-            post.setTags(tags);
-        }
-        String time = postObj.getString("time");
-        post.setDateTimeFromString(time);
 
-        if (postObj.has("contents")) {
-            JSONObject contents = postObj.getJSONObject("contents");
-            if (postObj.get("type").equals("recipe")) {
-
-                JSONArray ingredients = contents.getJSONArray("ingredients");
-                ArrayList<String> ingredientList = new ArrayList<>();
-                for (int i = 0; i < ingredients.length(); i++) {
-                    ingredientList.add(ingredients.getString(i));
+            // Contents map
+            HashMap<String, ArrayList<String>> contentsMap = new HashMap<>();
+            if (postObj.has("contents")) {
+                JSONObject contents = postObj.getJSONObject("contents");
+                for (String key : contents.keySet()) {
+                    JSONArray arr = contents.getJSONArray(key);
+                    ArrayList<String> list = new ArrayList<>();
+                    for (int i = 0; i < arr.length(); i++) {
+                        list.add(arr.getString(i));
+                    }
+                    contentsMap.put(key, list);
                 }
-
-                JSONArray stepsArray = contents.getJSONArray("steps");
-                String steps = "";
-                for (int i = 0; i < stepsArray.length(); i++) {
-                    steps += stepsArray.getString(i) + "<br>";
-                }
-
-                String cuisines = contents.get("cuisines").toString();
-                if (cuisines.equals("Enter cuisine separated by commas if u want")) {
-                    cuisines = "";
-                }
-                Recipe rep = new Recipe(post, ingredientList, steps, new ArrayList<>(Arrays.asList(cuisines.split(","))));
-                return rep;
-                //early return since its a recipe we dont wanna return the post one, eventually probably all should be early returns
             }
-            else if (postObj.get("type").equals("review")) {
-                double rating = postObj.has("rating") ? postObj.getDouble("rating") : -1;
+
+            // Specialized handling (keep prior behavior for recipe/review)
+            if ("recipe".equalsIgnoreCase(type)) {
+                ArrayList<String> ingredients = contentsMap.getOrDefault("ingredients", new ArrayList<>());
+                String steps = String.join("<br>", contentsMap.getOrDefault("steps", new ArrayList<>()));
+                ArrayList<String> cuisines = contentsMap.getOrDefault("cuisines", new ArrayList<>());
+                Post base = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
+                base.setLikes(likeCount);
+                return new Recipe(base, ingredients, steps, cuisines);
+            } else if ("review".equalsIgnoreCase(type)) {
+                Post base = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
+                base.setLikes(likeCount);
                 Review review = new Review(user, postID, title, description);
-                review.setRating(rating);
+                if (postObj.has("rating")) {
+                    try { review.setRating(postObj.getDouble("rating")); } catch (Exception ignored) {}
+                }
                 return review;
             }
-            else if (postObj.get("type").equals("other?")) {
 
-            }
+            // Generic / announcement / general post
+            Post post = new Post(user, postID, title, description, images, contentsMap, type, timestamp, tags);
+            post.setLikes(likeCount);
+            return post;
+        } catch (Exception e) {
+            System.out.println("DEBUG: Error reconstructing post " + postID + ": " + e.getMessage());
+            return null;
         }
-        return post;
     }
 
     @Override
@@ -559,6 +563,43 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
     @Override
     public void addPostToClub(Post post, long clubId) throws DataAccessException {
-
+        // Append post ID to local file-based clubs (data_storage.json) so club views can load it.
+        final String filePath = "src/main/java/data_access/data_storage.json";
+        JSONObject dataFile;
+        try {
+            String content = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(filePath)));
+            dataFile = new JSONObject(content);
+        } catch (IOException e) {
+            dataFile = new JSONObject();
+        }
+        if (!dataFile.has("clubs")) {
+            throw new DataAccessException("No clubs section found when adding post to club");
+        }
+        JSONObject clubs = dataFile.getJSONObject("clubs");
+        String clubKey = String.valueOf(clubId);
+        if (!clubs.has(clubKey)) {
+            throw new DataAccessException("Club ID " + clubId + " not found when adding post");
+        }
+        JSONObject club = clubs.getJSONObject(clubKey);
+        JSONArray postsArray = club.has("posts") ? club.getJSONArray("posts") : new JSONArray();
+        boolean exists = false;
+        for (int i = 0; i < postsArray.length(); i++) {
+            if (postsArray.optLong(i) == post.getID()) { exists = true; break; }
+        }
+        if (!exists) {
+            postsArray.put(post.getID());
+            System.out.println("DEBUG: (DB) Added post ID " + post.getID() + " to club " + clubId);
+        } else {
+            System.out.println("DEBUG: (DB) Post ID " + post.getID() + " already present in club " + clubId);
+        }
+        club.put("posts", postsArray);
+        clubs.put(clubKey, club);
+        dataFile.put("clubs", clubs);
+        try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
+            writer.write(dataFile.toString(2));
+            System.out.println("DEBUG: (DB) Persisted updated club posts for club " + clubId + ": " + postsArray);
+        } catch (IOException e) {
+            throw new DataAccessException("Error writing club update: " + e.getMessage());
+        }
     }
 }

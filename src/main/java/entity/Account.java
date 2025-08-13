@@ -36,19 +36,19 @@ public class Account implements User {
         this.bio = "";
         this.displayName = "";
         this.email = "";
-        likesUsernames = new ArrayList<>();
-        followingAccounts = new HashMap<>();
-        followerAccounts = new HashMap<>();
-        requestedAccounts = new HashMap<>();
-        requesterAccounts = new HashMap<>();
-        blockedAccounts = new HashMap<>();
-        blockedTerms = new ArrayList<>();
-        mutedAccounts = new ArrayList<>();
-        foodPreferences = new ArrayList<>();
-        userPosts = new ArrayList<>();
-        clubs = new ArrayList<>();  // Initialize clubs list
-        isPublic = true;
-        notificationsEnabled = true;
+        this.location = "";
+        this.likesUsernames = new ArrayList<>();
+        this.followingAccounts = new HashMap<>();
+        this.followerAccounts = new HashMap<>();
+        this.requestedAccounts = new HashMap<>();
+        this.requesterAccounts = new HashMap<>();
+        this.blockedAccounts = new HashMap<>();
+        this.blockedTerms = new ArrayList<>();
+        this.mutedAccounts = new ArrayList<>();
+        this.foodPreferences = new ArrayList<>();
+        this.userPosts = new ArrayList<>();
+        this.isPublic = true;
+        this.notificationsEnabled = true;
     }
 
     @Override

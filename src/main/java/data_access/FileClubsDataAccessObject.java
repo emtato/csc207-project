@@ -51,48 +51,63 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
 
     public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
         JSONObject data = getJsonObject();
-        JSONObject clubs;
-        if (data.has("clubs")) {
-            clubs = data.getJSONObject("clubs");
-        }
-        else {
-            clubs = new JSONObject();
-        }
-        JSONObject newClub = new JSONObject();
-        newClub.put("id", clubID);
+        JSONObject clubs = data.getJSONObject("clubs");
 
-        // Handle null members list
-        JSONArray memberArray = new JSONArray();
-        if (members != null) {
-            for (Account member : members) {
-                if (member != null) {
-                    memberArray.put(member.getUsername());
-                }
+        // Existing club (if present) to preserve posts
+        JSONObject existingClub = clubs.has(String.valueOf(clubID)) ? clubs.getJSONObject(String.valueOf(clubID)) : new JSONObject();
+
+        // Collect existing post IDs
+        java.util.LinkedHashSet<Long> postIds = new java.util.LinkedHashSet<>();
+        if (existingClub.has("posts")) {
+            JSONArray existingPosts = existingClub.getJSONArray("posts");
+            for (int i = 0; i < existingPosts.length(); i++) {
+                try { postIds.add(existingPosts.getLong(i)); } catch (Exception ignored) {}
             }
         }
-        newClub.put("members", memberArray);
+        // Merge provided posts list (typically empty for membership updates)
+        if (posts != null) {
+            for (Post p : posts) {
+                if (p != null) postIds.add(p.getID());
+            }
+        }
+
+        // Build new club JSON
+        JSONObject newClub = new JSONObject();
+        newClub.put("id", clubID);
         newClub.put("name", name);
         newClub.put("description", description);
 
-        // Handle null posts list
-        JSONArray postArray = new JSONArray();
-        if (posts != null) {
-            for (Post post : posts) {
-                postArray.put(post.getID());
+        // Members: dedupe + skip nulls
+        java.util.LinkedHashSet<String> memberUsernames = new java.util.LinkedHashSet<>();
+        if (members != null) {
+            for (Account m : members) {
+                if (m != null && m.getUsername() != null) {
+                    memberUsernames.add(m.getUsername());
+                }
             }
         }
-        newClub.put("posts", postArray);
+        JSONArray memberArray = new JSONArray();
+        for (String uname : memberUsernames) memberArray.put(uname);
+        newClub.put("members", memberArray);
 
-        // Handle null tags list
-        newClub.put("tags", new JSONArray(tags != null ? tags : new ArrayList<>()));
+        // Posts
+        JSONArray postsArray = new JSONArray();
+        for (Long id : postIds) postsArray.put(id);
+        newClub.put("posts", postsArray);
+
+        // Tags: dedupe, skip null
+        JSONArray tagArray = new JSONArray();
+        if (tags != null) {
+            java.util.LinkedHashSet<String> tagSet = new java.util.LinkedHashSet<>(tags);
+            for (String t : tagSet) if (t != null) tagArray.put(t);
+        }
+        newClub.put("tags", tagArray);
 
         clubs.put(String.valueOf(clubID), newClub);
         data.put("clubs", clubs);
-
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to write club data to file: " + e.getMessage(), e);
         }
     }
@@ -125,15 +140,18 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         JSONObject clubs = data.getJSONObject("clubs");
 
         if (!clubs.has(clubId)) {
+            System.out.println("DEBUG: Club not found with ID: " + clubId);
             return null;
         }
 
         JSONObject clubData = clubs.getJSONObject(clubId);
+        System.out.println("DEBUG: Loading club data for ID: " + clubId);
 
         // Get basic club info
         String name = clubData.getString("name");
         String description = clubData.getString("description");
         long id = clubData.getLong("id");
+        System.out.println("DEBUG: Club basic info - Name: " + name + ", ID: " + id);
 
         // Get members
         JSONArray membersJson = clubData.getJSONArray("members");
@@ -143,22 +161,47 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
                 members.add(new Account(membersJson.getString(i), ""));
             }
         }
+        System.out.println("DEBUG: Club members count: " + members.size());
 
         // Get food preferences
         ArrayList<String> foodPreferences = new ArrayList<>();
 
-        // Get posts - handle them as numbers (Long)
+        // Get posts
         ArrayList<Post> posts = new ArrayList<>();
         if (clubData.has("posts")) {
             JSONArray postsJson = clubData.getJSONArray("posts");
+            System.out.println("DEBUG: Found " + postsJson.length() + " post IDs in club data");
             for (int i = 0; i < postsJson.length(); i++) {
-                long postId = postsJson.getLong(i);
-                Post post = postDAO.getPost(postId);
-                if (post != null) {
-                    posts.add(post);
+                try {
+                    long postId = postsJson.getLong(i);
+                    System.out.println("DEBUG: Loading post with ID: " + postId);
+                    Post post = postDAO.getPost(postId);
+                    if (post != null) {
+                        posts.add(post);
+                        System.out.println("DEBUG: Successfully loaded post: " + postId);
+                    } else {
+                        System.out.println("DEBUG: Failed to load post: " + postId + " - Post does not exist");
+                        // Remove this post ID from the club's posts array since it doesn't exist
+                        postsJson.remove(i);
+                        i--; // Adjust index since we removed an element
+                        clubData.put("posts", postsJson);
+                        clubs.put(clubId, clubData);
+                        try (FileWriter writer = new FileWriter(filePath)) {
+                            data.put("clubs", clubs);
+                            writer.write(data.toString(2));
+                            System.out.println("DEBUG: Removed invalid post ID from club data");
+                        } catch (IOException e) {
+                            System.out.println("DEBUG: Failed to update club data: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("DEBUG: Error loading post at index " + i + ": " + e.getMessage());
                 }
             }
+        } else {
+            System.out.println("DEBUG: No posts array found in club data");
         }
+        System.out.println("DEBUG: Successfully loaded " + posts.size() + " posts for club");
 
         // Get tags
         ArrayList<String> tags = new ArrayList<>();
@@ -177,18 +220,29 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         JSONObject data = getJsonObject();
         ArrayList<Club> allClubs = new ArrayList<>();
 
+        System.out.println("DEBUG: Loading all clubs from storage");
+        System.out.println("DEBUG: Data has 'clubs' key: " + data.has("clubs"));
+
         if (!data.has("clubs")) {
+            System.out.println("DEBUG: No clubs found in storage");
             return allClubs;
         }
 
         JSONObject clubs = data.getJSONObject("clubs");
+        System.out.println("DEBUG: Found clubs in storage. Club IDs: " + clubs.keySet());
+
         for (String clubId : clubs.keySet()) {
+            System.out.println("\nDEBUG: Loading club with ID: " + clubId);
             Club club = getClub(Long.parseLong(clubId));
             if (club != null) {
+                System.out.println("DEBUG: Successfully loaded club: " + club.getName());
                 allClubs.add(club);
+            } else {
+                System.out.println("DEBUG: Failed to load club with ID: " + clubId);
             }
         }
 
+        System.out.println("DEBUG: Finished loading clubs. Total loaded: " + allClubs.size());
         return allClubs;
     }
 

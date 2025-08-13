@@ -307,4 +307,7 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     public void setSpecificClubController(SpecificClubController specificClubController) {
         this.specificClubController = specificClubController;
     }
+
+    public ClubController getClubController() { return this.clubController; }
+    public SpecificClubController getSpecificClubController() { return this.specificClubController; }
 }
