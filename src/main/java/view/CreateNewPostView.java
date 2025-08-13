@@ -94,7 +94,8 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             add(topPanel, BorderLayout.NORTH);
             contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
             add(contentPanel, BorderLayout.CENTER);
-        } else {
+        }
+        else {
             ButtonGroup group = new ButtonGroup();
             group.add(recipes);
             group.add(generalPost);
@@ -134,12 +135,14 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         // Store the controller before clearing the panel
         final CreatePostController currentController = this.createPostController;
         contentPanel.removeAll();
-
-        if (e.getSource() == recipes) {
+        JButton button = (JButton) e.getSource();
+        if (button.getText().equals(recipes.getText())) {
             recipePostView();
-        } else if (e.getSource() == generalPost) {
+        }
+        else if (button.getText().equals(generalPost.getText())) {
             generalPostView();
-        } else if (e.getSource() == announcementPost) {
+        }
+        else if (button.getText().equals(announcementPost.getText())) {
             announcementPostView();
         }
         // Restore the controller after rebuilding the view
@@ -219,10 +222,26 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         imagesList,
                         club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
                 );
+                ArrayList<Club> clubList;
+                if (club != null) {
+                    clubList = new ArrayList<>(Collections.singletonList(club));
+                }
+                else {
+                    clubList = new ArrayList<>();
+                }
+
                 if (club != null) {
                     postData.setClubId(club.getId());
                 }
-                handlePostCreation(postData);
+//                handlePostCreation(Session.getCurrentAccount(),
+//                        title,
+//                        "recipe",
+//                        body,
+//                        ingredients,
+//                        steps,
+//                        tags,
+//                        imagesList,
+//                        club);
             }
         });
         contentPanel.add(okButton);
@@ -461,9 +480,9 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         if (controller == null) {
             System.err.println("Error: CreatePostController is null when trying to create post");
             JOptionPane.showMessageDialog(this,
-                "Unable to create post at this time. Please try again.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Unable to create post at this time. Please try again.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
         controller.createPost(postData);
@@ -473,16 +492,23 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                 Club refreshed = DBClubsDataAccessObject.getInstance(DBPostCommentLikesDataAccessObject.getInstance()).getClub(postData.getClubId());
                 if (refreshed != null) {
                     scv.updateClub(refreshed);
-                } else {
+                }
+                else {
                     scv.updateClub(club);
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 System.err.println("Failed to refresh club after post creation (DB): " + ex.getMessage());
                 scv.updateClub(club);
             }
-            try { viewManagerModel.getClubHomePageView().reloadClubs(); } catch (Exception ignore) {}
+            try {
+                viewManagerModel.getClubHomePageView().reloadClubs();
+            }
+            catch (Exception ignore) {
+            }
             viewManagerModel.setState(scv.getViewName());
-        } else {
+        }
+        else {
             viewManagerModel.setState("homepage view");
             HomePageView homePageView = viewManagerModel.getHomePageView();
             homePageView.updateHomeFeed();
