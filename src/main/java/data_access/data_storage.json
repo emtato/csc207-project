@@ -126,30 +126,11 @@
     }]
   },
   "clubs": {
-    "1754332018447": {
-      "members": [],
-      "name": "adsg",
-      "description": "asdgf",
-      "id": 1754332018447,
-      "posts": [],
-      "tags": ["asdfg"]
-    },
-    "1754332203250": {
-      "members": [],
-      "name": "asdf",
-      "description": "adfs",
-      "id": 1754332203250,
-      "posts": [],
-      "tags": ["adf"]
-    },
     "1754429844109": {
       "members": [
-        "123",
         "john pork of texus",
         "rotmaxxer",
-        "jinufan333",
-        "123",
-        "123"
+        "jinufan333"
       ],
       "name": "fries",
       "description": "fries",
@@ -177,6 +158,18 @@
         "cooking",
         "food"
       ]
+    },
+    "1755098634325": {
+      "members": [
+        "newuser12903913991943919",
+        "john pork",
+        "123"
+      ],
+      "name": "yogurt",
+      "description": "gurt",
+      "id": 1755098634325,
+      "posts": [],
+      "tags": ["ggg"]
     },
     "1755068428737": {
       "members": ["123"],
@@ -220,21 +213,13 @@
         "food"
       ]
     },
-    "1754332830329": {
-      "members": [
-        "123",
-        "caf_feine666",
-        "rotmaxxer",
-        "jinufan333"
-      ],
-      "name": "adfhdjn",
-      "description": "adsgfh",
-      "id": 1754332830329,
-      "posts": [
-        1755065178634,
-        1755065200348
-      ],
-      "tags": ["adsg"]
+    "1755098149478": {
+      "members": [],
+      "name": "ramen life",
+      "description": "ramen is life",
+      "id": 1755098149478,
+      "posts": [],
+      "tags": ["miso soup"]
     }
   },
   "1754547077251": {

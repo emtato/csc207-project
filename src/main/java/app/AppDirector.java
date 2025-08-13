@@ -76,6 +76,7 @@ public class AppDirector {
                 .addListClubsUseCase()
                 .addJoinClubUseCase()
                 .addLeaveClubUseCase()
+                .addDeleteClubUseCase() // wire delete club use case
                 .build();
     }
 
@@ -134,6 +135,7 @@ public class AppDirector {
                 .addListClubsUseCase()
                 .addJoinClubUseCase()
                 .addLeaveClubUseCase()
+                .addDeleteClubUseCase() // wire delete club use case
                 .build();
     }
 
@@ -192,6 +194,7 @@ public class AppDirector {
                 .addListClubsUseCase()
                 .addJoinClubUseCase()
                 .addLeaveClubUseCase()
+                .addDeleteClubUseCase() // wire delete club use case
                 .build();
     }
 }

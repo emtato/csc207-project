@@ -17,6 +17,7 @@ public class CreateClubPresenter implements CreateClubOutputBoundary {
     public void prepareSuccessView(CreateClubOutputData outputData) {
         CreateClubState state = createClubViewModel.getState();
         state.setError(null);
+        state.setSelectionMode(false);
         createClubViewModel.setState(state);
         createClubViewModel.firePropertyChanged();
     }
@@ -25,6 +26,7 @@ public class CreateClubPresenter implements CreateClubOutputBoundary {
     public void prepareFailView(String error) {
         CreateClubState state = createClubViewModel.getState();
         state.setError(error);
+        state.setSelectionMode(false);
         createClubViewModel.setState(state);
         createClubViewModel.firePropertyChanged();
     }
@@ -38,6 +40,7 @@ public class CreateClubPresenter implements CreateClubOutputBoundary {
             availableUsernames.add(user.getUsername());
         }
         state.setMemberUsernames(availableUsernames);
+        state.setSelectionMode(true);
         createClubViewModel.setState(state);
         createClubViewModel.firePropertyChanged();
     }

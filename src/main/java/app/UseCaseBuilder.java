@@ -18,6 +18,8 @@ import interface_adapter.create_post_view.CreatePostPresenter;
 import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.delete_account.DeleteAccountPresenter;
+import interface_adapter.delete_club.DeleteClubController;
+import interface_adapter.delete_club.DeleteClubPresenter;
 import interface_adapter.edit_profile.EditProfileController;
 import interface_adapter.edit_profile.EditProfilePresenter;
 import interface_adapter.fetch_post.FetchPostController;
@@ -67,6 +69,9 @@ import use_case.create_post.CreatePostOutputBoundary;
 import use_case.delete_account.DeleteAccountInputBoundary;
 import use_case.delete_account.DeleteAccountInteractor;
 import use_case.delete_account.DeleteAccountOutputBoundary;
+import use_case.delete_club.DeleteClubInputBoundary;
+import use_case.delete_club.DeleteClubInteractor;
+import use_case.delete_club.DeleteClubOutputBoundary;
 import use_case.edit_profile.EditProfileInputBoundary;
 import use_case.edit_profile.EditProfileInteractor;
 import use_case.edit_profile.EditProfileOutputBoundary;
@@ -483,6 +488,17 @@ public class UseCaseBuilder {
         final LeaveClubInputBoundary interactor = new LeaveClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
         final LeaveClubController controller = new LeaveClubController(interactor);
         viewBuilder.getSpecificClubView().setLeaveClubController(controller);
+        return this;
+    }
+
+    /**
+     * Adds the Delete Club use case (replaces part of legacy Club use case).
+     */
+    public UseCaseBuilder addDeleteClubUseCase() {
+        final DeleteClubOutputBoundary output = new DeleteClubPresenter(viewBuilder.getClubViewModel(), viewBuilder.getSpecificClubViewModel());
+        final DeleteClubInputBoundary interactor = new DeleteClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final DeleteClubController controller = new DeleteClubController(interactor);
+        viewBuilder.getSpecificClubView().setDeleteClubController(controller);
         return this;
     }
 }

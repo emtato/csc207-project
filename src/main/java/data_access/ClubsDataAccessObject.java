@@ -13,4 +13,5 @@ public interface ClubsDataAccessObject{
     public ArrayList<Club> getAllClubs();
     public boolean clubExists(String clubName);
     public void removeMemberFromClub(String username, long clubID);
+    public void deleteClub(long clubID);
 }
