@@ -9,6 +9,11 @@ import use_case.create_club.CreateClubInputData;
 
 import java.util.ArrayList;
 
+/**
+ * @deprecated Replaced by separate use cases: ListClubsInteractor, JoinClubInteractor, CreateClubInteractor, LeaveClubInteractor.
+ * This interactor bundles multiple responsibilities and is retained only for backward compatibility during migration.
+ */
+@Deprecated
 public class ClubInteractor implements ClubInputBoundary {
     private final ClubsDataAccessObject clubsDataAccessObject;
     private final UserDataAccessObject userDataAccessObject;
