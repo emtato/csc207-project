@@ -32,7 +32,9 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     }
 
     @Override
-    public void deletePost(long postID) { postsMap.remove(postID); }
+    public void deletePost(long postID) {
+        postsMap.remove(postID);
+    }
 
 //    public void deleteReview(long reviewID) { reviewsMap.remove(reviewID); }
 
@@ -205,7 +207,9 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
                     u.getUserPosts().removeAll(toRemove);
                     userDAO.save(u);
                 }
-            } catch (Exception ignored) {}
+            }
+            catch (Exception ignored) {
+            }
         }
         // Update clubs via clubsDAO (rebuild without removed posts)
         if (clubsDAO != null) {
@@ -214,13 +218,24 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
                     boolean changed = false;
                     ArrayList<Post> kept = new ArrayList<>();
                     for (Post p : club.getPosts()) {
-                        if (!toRemove.contains(p.getID())) kept.add(p); else changed = true;
+                        if (!toRemove.contains(p.getID())) kept.add(p);
+                        else changed = true;
                     }
                     if (changed) {
                         clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), club.getImageUrl(), kept, club.getTags());
                     }
                 }
-            } catch (Exception ignored) {}
+            }
+            catch (Exception ignored) {
+            }
         }
     }
+     public void clearAll() {
+        commentsMap.clear();
+        clubsMap.clear();
+        postsMap.clear();
+        likesMap.clear();
+    }
+
+
 }

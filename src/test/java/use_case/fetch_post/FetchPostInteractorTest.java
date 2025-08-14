@@ -4,6 +4,7 @@ import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Recipe;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,6 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class FetchPostInteractorTest {
+
+    @BeforeEach
+    void resetDao() {
+        ((InMemoryPostCommentLikesDataAccessObject)
+                InMemoryPostCommentLikesDataAccessObject.getInstance())
+                .clearAll();
+    }
 
     @Test
     void successTest() {
