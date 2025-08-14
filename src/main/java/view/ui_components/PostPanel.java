@@ -143,9 +143,12 @@ public class PostPanel extends JPanel {
         postText.setEditable(false);
         postText.setPreferredSize(new Dimension(postWidth, postHeight));
         postText.setMaximumSize(new Dimension(postWidth, Integer.MAX_VALUE));
+        if (post.isImageVideo()) {
+            postText.setMaximumSize(new Dimension(postWidth, 250));
+            postText.setPreferredSize(new Dimension(postWidth, 250));
+        }
         if (post instanceof Recipe) {
             this.recipe = (Recipe) post;
-            //TODO: hiii em its me work on this part next html formatting to make things pretty okay thanks bye + add comments
             String mainContent = """
                     <html>
                       <body style='font-family: comic sans, sans-serif'>

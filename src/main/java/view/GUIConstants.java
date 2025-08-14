@@ -6,7 +6,7 @@ import java.awt.Font;
 public class GUIConstants {
     // GENERAL (MULTIPLE PAGES)
     public static final int WINDOW_WIDTH = 1440;
-    public static int WINDOW_HEIGHT = 800;
+    public static int WINDOW_HEIGHT = 900;
     public static final int BUTTON_WIDTH = 268;
     public static final int BUTTON_HEIGHT = 73;
 

@@ -44,7 +44,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             data = new JSONObject(content);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             data = new JSONObject();
         }
         return data;
@@ -59,14 +60,16 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             if (posts.has(String.valueOf(postID))) {
                 posts.remove(String.valueOf(postID));
             }
-        } else {
+        }
+        else {
             posts = new JSONObject();
         }
 
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Failed to delete post: " + e.getMessage(), e);
         }
     }
@@ -90,6 +93,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 //            throw new RuntimeException("Failed to delete review: " + e.getMessage(), e);
 //        }
 //    }
+
     /**
      * reduce duplicate code for get comments in data_storage.JSON
      *
@@ -104,13 +108,15 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         ArrayList<Object> both = new ArrayList<>();
         if (data.has("comments")) {
             commentsMap = data.getJSONObject("comments");
-        } else {
+        }
+        else {
             commentsMap = new JSONObject();
         }
 
         if (commentsMap.has(parentPostID)) {
             comments = commentsMap.getJSONArray(parentPostID);
-        } else {
+        }
+        else {
             comments = new JSONArray();
         }
         both.add(comments);
@@ -139,7 +145,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
@@ -172,7 +179,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
-        } else {
+        }
+        else {
             likeMap = new JSONObject();
         }
 
@@ -181,7 +189,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         if (likeMap.has(username)) {
             likedPosts = likeMap.getJSONArray(username);
-        } else {
+        }
+        else {
             likedPosts = new JSONArray();
         }
 
@@ -194,7 +203,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
@@ -207,13 +217,15 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             data = new JSONObject(content);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
 
         if (data.has("likes")) {
             likeMap = data.getJSONObject("likes");
-        } else {
+        }
+        else {
             return false;
         }
 
@@ -242,13 +254,14 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
      */
     @Override
     public void writePost(long postID, Account user, String title, String postType, String description,
-                         HashMap<String, ArrayList<String>> contents, ArrayList<String> tags,
-                         ArrayList<String> images, String time, ArrayList<Club> clubs) {
+                          HashMap<String, ArrayList<String>> contents, ArrayList<String> tags,
+                          ArrayList<String> images, String time, ArrayList<Club> clubs) {
         JSONObject data = getJsonObject();
         JSONObject posts;
         if (data.has("posts")) {
             posts = data.getJSONObject("posts");
-        } else {
+        }
+        else {
             posts = new JSONObject();
         }
         JSONObject newPost = new JSONObject();
@@ -284,7 +297,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         if (time.charAt(time.length() - 4) == 'a') {
             String cutTime = time.substring(0, time.length() - 4) + "AM";
             newPost.put("time", cutTime);
-        } else {
+        }
+        else {
             String cutTime = time.substring(0, time.length() - 4) + "PM";
             newPost.put("time", cutTime);
         }
@@ -295,7 +309,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 try {
                     double rating = Double.parseDouble(ratingList.get(0));
                     newPost.put("rating", rating);
-                } catch (NumberFormatException ignored) {
+                }
+                catch (NumberFormatException ignored) {
                 }
             }
         }
@@ -304,7 +319,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         data.put("posts", posts);
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("i am sad :(", e);
         }
     }
@@ -362,7 +378,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             data.put("posts", new JSONObject());
             try (FileWriter writer = new FileWriter(filePath)) {
                 writer.write(data.toString(2));
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 System.out.println("DEBUG: Error creating posts section: " + e.getMessage());
             }
             return null;
@@ -427,12 +444,13 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
 
             // Create post with all required parameters
             Post post = new Post(postUser, id, title, description, imageURLs, contents,
-                               postData.optString("type", ""), timestamp, tags);
+                    postData.optString("type", ""), timestamp, tags);
 
             System.out.println("DEBUG: Successfully created Post object for ID: " + id);
             return post;
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("DEBUG: Error loading post " + id + ": " + e.getMessage());
             return null;
         }
@@ -513,7 +531,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 for (int i = 0; i < posts.length(); i++) {
                     if (posts.getLong(i) != postId) {
                         newPosts.put(posts.getLong(i));
-                    } else {
+                    }
+                    else {
                         madeChanges = true;
                         System.out.println("DEBUG: Removing deleted post " + postId + " from club " + clubId);
                     }
@@ -526,7 +545,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
             try (FileWriter writer = new FileWriter(filePath)) {
                 writer.write(data.toString(2));
                 System.out.println("DEBUG: Updated clubs to remove references to deleted post " + postId);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 System.out.println("DEBUG: Error updating clubs data: " + e.getMessage());
             }
         }
@@ -545,14 +565,17 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                 data.put("posts", posts);
                 try (FileWriter writer = new FileWriter(filePath)) {
                     writer.write(data.toString(2));
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     throw new RuntimeException("i am sad :(", e);
                 }
-            } else {
+            }
+            else {
                 throw new RuntimeException("bwahhh D: post not found");
 
             }
-        } else {
+        }
+        else {
             throw new RuntimeException("bwahhh D: post not found");
 
         }
@@ -620,7 +643,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         // Save back to file
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(data.toString(2));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new DataAccessException("Error writing to file: " + e.getMessage());
         }
     }
@@ -643,13 +667,15 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                     boolean changed = false;
                     ArrayList<Post> kept = new ArrayList<>();
                     for (Post p : club.getPosts()) {
-                        if (!toDelete.contains(p.getID())) kept.add(p); else changed = true;
+                        if (!toDelete.contains(p.getID())) kept.add(p);
+                        else changed = true;
                     }
                     if (changed) {
                         clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), club.getImageUrl(), kept, club.getTags());
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println("DEBUG[FilePostDAO]: club cleanup error: " + e.getMessage());
             }
         }
@@ -666,7 +692,8 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                         userDAO.save(acc);
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println("DEBUG[FilePostDAO]: user post list update error: " + e.getMessage());
             }
         }
