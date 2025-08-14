@@ -21,5 +21,6 @@ public class Munchables {
         application.pack();
         application.setLocationRelativeTo(null);
         application.setVisible(true);
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
