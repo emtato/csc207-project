@@ -21,7 +21,7 @@ public class GetCommentsInteractor implements GetCommentsInputBoundary {
     @Override
     public void execute(GetCommentsInputData inputData) {
         List<Comment> comments = postDAO.getComments(inputData.getPostID());
-        if (comments == null || comments.isEmpty()) {
+        if (comments.isEmpty()) {
             presenter.prepareFailView("no comments found");
         }
         else {
