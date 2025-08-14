@@ -138,45 +138,4 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
             createClubPresenter.prepareFailView("Error creating club: " + e.getMessage());
         }
     }
-
-    @Override
-    public void showMemberSelection(List<Account> currentMembers, String creatorUsername) {
-        try {
-            // Invalidate user cache (if supported) to ensure we see latest users
-            try {
-                userGateway.getClass().getMethod("invalidateCache").invoke(userGateway);
-                System.out.println("[CreateClub][DEBUG] Invoked userGateway.invalidateCache()");
-            } catch (Exception ignore) {
-                System.out.println("[CreateClub][DEBUG] invalidateCache not available on userGateway");
-            }
-
-            ArrayList<Account> allUsers = userGateway.getAllUsers();
-            System.out.println("[CreateClub][DEBUG] Total users fetched from DB = " + (allUsers == null ? 0 : allUsers.size()));
-            if (allUsers != null) {
-                for (Account a : allUsers) {
-                    System.out.println("[CreateClub][DEBUG] User candidate: " + a.getUsername());
-                }
-            }
-            ArrayList<Account> availableUsers = new ArrayList<>();
-
-            for (Account user : allUsers) {
-                boolean alreadyMember = false;
-                for (Account existing : currentMembers) {
-                    if (existing.getUsername().equals(user.getUsername())) { // compare by username
-                        alreadyMember = true;
-                        break;
-                    }
-                }
-                if (!alreadyMember && !user.getUsername().equals(creatorUsername)) {
-                    availableUsers.add(user);
-                }
-            }
-            System.out.println("[CreateClub][DEBUG] Available (non-member) users count = " + availableUsers.size());
-
-            createClubPresenter.prepareMemberSelectionView(availableUsers);
-
-        } catch (Exception e) {
-            createClubPresenter.prepareFailView("Error loading users: " + e.getMessage());
-        }
-    }
 }
