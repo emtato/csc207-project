@@ -6,6 +6,7 @@ import entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors; // added
 
 public class CreateClubInteractor implements CreateClubInputBoundary {
     private final CreateClubClubsDataAccessInterface clubsGateway;
@@ -25,9 +26,13 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
     public void execute(CreateClubInputData inputData) {
         String title = inputData.getTitle();
         String description = inputData.getDescription();
+        String imageUrl = inputData.getImageUrl();
         List<String> tags = inputData.getTags();
         List<String> memberUsernames = inputData.getMemberUsernames();
         try {
+            System.out.println("[CreateClub][DEBUG] Requested create: title='" + title + "' imageUrl='" + imageUrl + "'");
+            System.out.println("[CreateClub][DEBUG] Initial member usernames list: " + memberUsernames);
+
             // Input validation
             if (title == null || title.trim().isEmpty()) {
                 createClubPresenter.prepareFailView("Title cannot be empty");
@@ -58,6 +63,8 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                     }
                 }
             }
+
+            System.out.println("[CreateClub][DEBUG] Deduped usernames: " + dedupedUsernames);
 
             ArrayList<Account> members = new ArrayList<>();
             ArrayList<String> invalidUsernames = new ArrayList<>();
@@ -97,11 +104,13 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
 
             // Create the club
             ArrayList<String> tagList = tags == null ? new ArrayList<>() : new ArrayList<>(tags);
+            System.out.println("[CreateClub][DEBUG] Persisting club id=" + clubId + " with members=" + members.stream().map(Account::getUsername).collect(Collectors.toList()) + " imageUrl='" + imageUrl + "'");
             clubsGateway.writeClub(
                 clubId,
                 members,
                 title,
                 description,
+                imageUrl,
                 new ArrayList<>(),  // New club starts with no posts
                 tagList
             );
@@ -122,6 +131,7 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
 
             // Get the created club and prepare success view
             Club createdClub = clubsGateway.getClub(clubId);
+            System.out.println("[CreateClub][DEBUG] Club created successfully. Stored club imageUrl='" + createdClub.getImageUrl() + "'");
             createClubPresenter.prepareSuccessView(new CreateClubOutputData(createdClub, true, null));
 
         } catch (Exception e) {
@@ -132,7 +142,21 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
     @Override
     public void showMemberSelection(List<Account> currentMembers, String creatorUsername) {
         try {
+            // Invalidate user cache (if supported) to ensure we see latest users
+            try {
+                userGateway.getClass().getMethod("invalidateCache").invoke(userGateway);
+                System.out.println("[CreateClub][DEBUG] Invoked userGateway.invalidateCache()");
+            } catch (Exception ignore) {
+                System.out.println("[CreateClub][DEBUG] invalidateCache not available on userGateway");
+            }
+
             ArrayList<Account> allUsers = userGateway.getAllUsers();
+            System.out.println("[CreateClub][DEBUG] Total users fetched from DB = " + (allUsers == null ? 0 : allUsers.size()));
+            if (allUsers != null) {
+                for (Account a : allUsers) {
+                    System.out.println("[CreateClub][DEBUG] User candidate: " + a.getUsername());
+                }
+            }
             ArrayList<Account> availableUsers = new ArrayList<>();
 
             for (Account user : allUsers) {
@@ -147,6 +171,7 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                     availableUsers.add(user);
                 }
             }
+            System.out.println("[CreateClub][DEBUG] Available (non-member) users count = " + availableUsers.size());
 
             createClubPresenter.prepareMemberSelectionView(availableUsers);
 

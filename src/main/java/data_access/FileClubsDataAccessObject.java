@@ -49,7 +49,7 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         return data;
     }
 
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
+    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) {
         JSONObject data = getJsonObject();
         JSONObject clubs = data.getJSONObject("clubs");
 
@@ -76,6 +76,7 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         newClub.put("id", clubID);
         newClub.put("name", name);
         newClub.put("description", description);
+        newClub.put("imageUrl", imageUrl);
 
         // Members: dedupe + skip nulls
         java.util.LinkedHashSet<String> memberUsernames = new java.util.LinkedHashSet<>();
@@ -150,6 +151,7 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
         // Get basic club info
         String name = clubData.getString("name");
         String description = clubData.getString("description");
+        String imageUrl = clubData.has("imageUrl") ? clubData.optString("imageUrl", null) : null;
         long id = clubData.getLong("id");
         System.out.println("DEBUG: Club basic info - Name: " + name + ", ID: " + id);
 
@@ -212,7 +214,7 @@ public class FileClubsDataAccessObject implements ClubsDataAccessObject {
             }
         }
 
-        return new Club(name, description, members, foodPreferences, posts, id, tags);
+        return new Club(name, description, imageUrl, members, foodPreferences, posts, id, tags);
     }
 
     @Override

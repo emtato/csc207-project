@@ -1,11 +1,6 @@
 package data_access;
 
-import app.Session;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import entity.Account;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -19,13 +14,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /**
  * The DAO for user data.
  */
 public class DBUserDataAccessObject implements UserDataAccessObject {
     private static UserDataAccessObject instance;
-    private final Map<String, User> users = new HashMap<>();
+    private JSONObject cachedUsersRoot; // cache of full users JSON object (the 'users' JSONObject)
+    private long cacheTimestampMs = 0L;
+    private static final long CACHE_TTL_MS = 5_000; // 5 seconds; adjust if needed
     private final String DATABASE_USERNAME = "csc207munchablesusername";
     private final String DATABASE_PASSWORD = "csc207munchablespassword";
     private final String DATA_KEY = "usersinformation";
@@ -156,18 +156,144 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
         }
     }
 
+    private synchronized JSONObject getUsersRootCached() throws DataAccessException {
+        long now = System.currentTimeMillis();
+        if (cachedUsersRoot != null && (now - cacheTimestampMs) < CACHE_TTL_MS) {
+            return cachedUsersRoot;
+        }
+        int attempts = 0;
+        DataAccessException last = null;
+        while (attempts < 3) {
+            attempts++;
+            try {
+                JSONObject data = getJsonObject();
+                cachedUsersRoot = data.has("users") ? data.getJSONObject("users") : new JSONObject();
+                cacheTimestampMs = System.currentTimeMillis();
+                return cachedUsersRoot;
+            } catch (DataAccessException e) {
+                last = e;
+                // Simple backoff
+                try { Thread.sleep(150L * attempts); } catch (InterruptedException ignored) {}
+            }
+        }
+        throw last != null ? last : new DataAccessException("Unknown error loading users");
+    }
+
+    // Helper to build an Account from its JSON (subset needed for club creation/member selection)
+    private Account buildAccountFromJson(String username, JSONObject userJson) {
+        Account account = new Account(userJson.optString("username", username), userJson.optString("password", ""));
+        account.setDisplayName(userJson.optString("displayName", ""));
+        account.setEmail(userJson.optString("email", ""));
+        account.setBio(userJson.optString("bio", ""));
+        account.setProfilePictureUrl(userJson.optString("profilePictureUrl", "https://i.imgur.com/eA9NeJ1.jpeg"));
+        account.setPublic(userJson.optBoolean("isPublic", true));
+        account.setNotificationsEnabled(userJson.optBoolean("notificationsEnabled", true));
+        if (userJson.has("clubs")) {
+            ArrayList<String> clubs = new ArrayList<>();
+            JSONArray arr = userJson.getJSONArray("clubs");
+            for (int i = 0; i < arr.length(); i++) clubs.add(arr.optString(i));
+            account.setClubs(clubs);
+        }
+        return account;
+    }
+
     @Override
     public boolean existsByName(String identifier) {
-        JSONObject data = new JSONObject();
+        if (identifier == null || identifier.trim().isEmpty()) return false;
         try {
-            data = getJsonObject();
+            JSONObject usersRoot = getUsersRootCached();
+            if (usersRoot.has(identifier)) return true;
+            // Fallback: force refresh once if not found
+            cachedUsersRoot = null; cacheTimestampMs = 0L;
+            try {
+                JSONObject refreshed = getUsersRootCached();
+                if (refreshed.has(identifier)) return true;
+            } catch (DataAccessException ignored) {}
+            // Last resort: direct raw fetch bypassing cache
+            try {
+                JSONObject raw = getJsonObject();
+                if (raw.has("users") && raw.getJSONObject("users").has(identifier)) return true;
+            } catch (DataAccessException ignored) {}
+            return false;
+        } catch (DataAccessException e) {
+            // Direct attempt if cache retrieval failed
+            try {
+                JSONObject raw = getJsonObject();
+                return raw.has("users") && raw.getJSONObject("users").has(identifier);
+            } catch (DataAccessException ignored) { return false; }
         }
-        catch (DataAccessException ex) {}
-        return data.has("users") && data.getJSONObject("users").has(identifier);
+    }
+
+    @Override
+    public ArrayList<Account> getAllUsers() {
+        ArrayList<Account> allUsers = new ArrayList<>();
+        try {
+            JSONObject usersRoot = getUsersRootCached();
+            System.out.println("[DBUserDAO][DEBUG] getAllUsers(): cached/root key count=" + usersRoot.keySet().size());
+            if (usersRoot.keySet().size() <= 10) {
+                System.out.println("[DBUserDAO][DEBUG] Keys (cached): " + usersRoot.keySet());
+            }
+            for (String username : usersRoot.keySet()) {
+                try {
+                    JSONObject uJson = usersRoot.getJSONObject(username);
+                    allUsers.add(buildAccountFromJson(username, uJson));
+                } catch (Exception ex) {
+                    System.out.println("[DBUserDAO][WARN] Skipping user '" + username + "' due to error: " + ex.getMessage());
+                }
+            }
+            // If suspiciously few users (<3) force one cache refresh attempt (might have been rate-limited)
+            if (allUsers.size() < 3) {
+                System.out.println("[DBUserDAO][DEBUG] User count " + allUsers.size() + " < 3, forcing fresh fetch bypassing cache");
+                cachedUsersRoot = null; // invalidate
+                try {
+                    JSONObject usersRoot2 = getUsersRootCached();
+                    System.out.println("[DBUserDAO][DEBUG] After refresh key count=" + usersRoot2.keySet().size());
+                    if (usersRoot2.keySet().size() <= 10) {
+                        System.out.println("[DBUserDAO][DEBUG] Keys (refreshed): " + usersRoot2.keySet());
+                    }
+                    allUsers.clear();
+                    for (String username : usersRoot2.keySet()) {
+                        try { allUsers.add(buildAccountFromJson(username, usersRoot2.getJSONObject(username))); } catch (Exception ignored) {}
+                    }
+                } catch (Exception e2) {
+                    System.out.println("[DBUserDAO][WARN] Fresh fetch failed: " + e2.getMessage());
+                }
+            }
+            // Second heuristic: If still small (<5) attempt a direct raw fetch ignoring cache method
+            if (allUsers.size() < 5) {
+                try {
+                    JSONObject raw = getJsonObject();
+                    if (raw.has("users")) {
+                        JSONObject rawUsers = raw.getJSONObject("users");
+                        System.out.println("[DBUserDAO][DEBUG] Direct raw fetch user key count=" + rawUsers.keySet().size());
+                        if (rawUsers.keySet().size() <= 10) {
+                            System.out.println("[DBUserDAO][DEBUG] Keys (raw): " + rawUsers.keySet());
+                        }
+                        // If raw has more entries than we loaded, rebuild list
+                        if (rawUsers.keySet().size() > allUsers.size()) {
+                            allUsers.clear();
+                            for (String username : rawUsers.keySet()) {
+                                try { allUsers.add(buildAccountFromJson(username, rawUsers.getJSONObject(username))); } catch (Exception ignored) {}
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    System.out.println("[DBUserDAO][WARN] Direct raw fetch failed: " + ex.getMessage());
+                }
+            }
+        } catch (DataAccessException e) {
+            System.out.println("Error fetching users: " + e.getMessage());
+        }
+        System.out.println("[DBUserDAO][DEBUG] getAllUsers() final count=" + allUsers.size());
+        return allUsers;
     }
 
     @Override
     public void save(User user) {
+        // Invalidate cache so subsequent reads reflect latest state
+        cachedUsersRoot = null;
+        cacheTimestampMs = 0L;
+
         // Cast User to Account since we're working with Account implementation
         Account account = (Account) user;
         JSONObject data = new JSONObject();
@@ -302,21 +428,19 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
 
     @Override
     public User get(String username) {
-        JSONObject data = new JSONObject();
+        // Try cache first to avoid extra HTTP call
         try {
-            data = getJsonObject();
-        }
-        catch (DataAccessException ex) {}
-
-        if (!data.has("users")) {
-            return null;
-        }
-
+            JSONObject usersRoot = getUsersRootCached();
+            if (usersRoot.has(username)) {
+                return buildAccountFromJson(username, usersRoot.getJSONObject(username));
+            }
+        } catch (DataAccessException ignored) {}
+        // Fallback to original logic if not in cache or cache retrieval failed
+        JSONObject data = new JSONObject();
+        try { data = getJsonObject(); } catch (DataAccessException ex) {}
+        if (!data.has("users")) { return null; }
         JSONObject users = data.getJSONObject("users");
-        if (!users.has(username)) {
-            return null;
-        }
-
+        if (!users.has(username)) { return null; }
         JSONObject userJson = users.getJSONObject(username);
         Account account = new Account(userJson.getString("username"), userJson.getString("password"));
 
@@ -681,25 +805,6 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             System.out.println(e.getMessage());
         }
     }
-    @Override
-    public ArrayList<Account> getAllUsers() {
-        ArrayList<Account> allUsers = new ArrayList<>();
-        try {
-            JSONObject data = getJsonObject();
-            if (data.has("users")) {
-                JSONObject usersJson = data.getJSONObject("users");
-                for (String username : usersJson.keySet()) {
-                    User user = get(username);
-                    if (user instanceof Account) {
-                        allUsers.add((Account) user);
-                    }
-                }
-            }
-        } catch (DataAccessException e) {
-            System.out.println("Error fetching users: " + e.getMessage());
-        }
-        return allUsers;
-    }
 
     @Override
     public void removeClubFromUser(String username, String clubId) {
@@ -708,8 +813,7 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             if (user instanceof Account) {
                 Account account = (Account) user;
                 ArrayList<String> clubs = account.getClubs();
-                if (clubs != null) {
-                    clubs.remove(clubId);
+                if (clubs != null && clubs.remove(clubId)) {
                     account.setClubs(clubs);
                     save(account);
                 }
@@ -717,5 +821,56 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
         } catch (Exception e) {
             System.out.println("Error removing club from user: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void bulkRemoveClubFromUsers(String clubId, java.util.List<String> usernames) {
+        if (clubId == null || usernames == null || usernames.isEmpty()) return;
+        try {
+            // Work directly on cached root or fresh fetch to minimize network calls
+            cachedUsersRoot = null; cacheTimestampMs = 0L; // force refresh for consistency
+            JSONObject usersRoot = getUsersRootCached();
+            boolean changed = false;
+            for (String uname : usernames) {
+                if (uname == null) continue;
+                if (!usersRoot.has(uname)) continue;
+                try {
+                    JSONObject uJson = usersRoot.getJSONObject(uname);
+                    if (uJson.has("clubs")) {
+                        JSONArray clubsArr = uJson.getJSONArray("clubs");
+                        JSONArray newArr = new JSONArray();
+                        boolean removed = false;
+                        for (int i = 0; i < clubsArr.length(); i++) {
+                            String cid = clubsArr.optString(i, null);
+                            if (cid == null) continue;
+                            if (cid.equals(clubId)) { removed = true; continue; }
+                            newArr.put(cid);
+                        }
+                        if (removed) {
+                            uJson.put("clubs", newArr);
+                            usersRoot.put(uname, uJson);
+                            changed = true;
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+            if (changed) {
+                // Persist entire users root once
+                JSONObject data = getJsonObject();
+                data.put("users", usersRoot);
+                saveJSONObject(data);
+                // Invalidate cache after save
+                cachedUsersRoot = null; cacheTimestampMs = 0L;
+            }
+        } catch (Exception ex) {
+            System.out.println("[DBUserDAO][WARN] bulkRemoveClubFromUsers failed: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void invalidateCache() {
+        cachedUsersRoot = null;
+        cacheTimestampMs = 0L;
+        System.out.println("[DBUserDAO][DEBUG] User cache invalidated");
     }
 }

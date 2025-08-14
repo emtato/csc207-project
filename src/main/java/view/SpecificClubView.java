@@ -63,8 +63,9 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
     private void setupHeaderPanel(JPanel mainPanel) {
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-        // Club image
-        RoundImagePanel exploreRoundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
+        // Club image (use dynamic image URL with fallback handled by RoundImagePanel)
+        String img = club.getImageUrl();
+        RoundImagePanel exploreRoundPanel = new RoundImagePanel(img);
         exploreRoundPanel.setPreferredSize(new Dimension(150, 150));
         headerPanel.add(exploreRoundPanel);
 
@@ -381,6 +382,11 @@ public class SpecificClubView extends JPanel implements PropertyChangeListener {
             if (scState.isDeleted()) {
                 JOptionPane.showMessageDialog(this, "Club deleted successfully");
                 viewManagerModel.setState("club view");
+                // Force an immediate refresh of club listings (componentShown may not fire in some layouts)
+                ClubHomePageView chv = viewManagerModel.getClubHomePageView();
+                if (chv != null) {
+                    chv.reloadClubs();
+                }
                 return;
             }
             this.revalidate();

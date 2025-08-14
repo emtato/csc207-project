@@ -108,7 +108,7 @@ class CreateClubInteractorTest {
     void exceptionDuringCreateHandled() {
         // Custom gateway throws after validation passes
         class ThrowingClubsGateway implements CreateClubClubsDataAccessInterface {
-            public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<entity.Post> posts, ArrayList<String> tags) { throw new RuntimeException("boom"); }
+            public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<entity.Post> posts, ArrayList<String> tags) { throw new RuntimeException("boom"); }
             public Club getClub(long clubID) { return null; }
             public boolean clubExists(String clubName) { return false; }
         }

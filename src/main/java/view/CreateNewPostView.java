@@ -136,14 +136,15 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         // Store the controller before clearing the panel
         final CreatePostController currentController = this.createPostController;
         contentPanel.removeAll();
-        JButton button = (JButton) e.getSource();
-        if (button.getText().equals(recipes.getText())) {
+        // Fix: source may be a JRadioButton (was causing ClassCastException when cast to JButton)
+        Object source = e.getSource();
+        if (source == recipes) {
             recipePostView();
         }
-        else if (button.getText().equals(generalPost.getText())) {
+        else if (source == generalPost) {
             generalPostView();
         }
-        else if (button.getText().equals(announcementPost.getText())) {
+        else if (source == announcementPost) {
             announcementPostView();
         }
         // Restore the controller after rebuilding the view

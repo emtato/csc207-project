@@ -151,9 +151,14 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
     private void handleCreateClub() {
         String title = titleArea.getText();
         String description = bodyArea.getText();
+        String imageUrl = imagesArea.getText();
         String tagsText = tagsArea.getText();
 
-        if (isDefaultText(title) || isDefaultText(description) || isDefaultText(tagsText)) {
+        if (isDefaultText(title) || isDefaultText(description) || isDefaultText(tagsText) || isDefaultText(imageUrl)) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields");
+            return;
+        }
+        if (title.trim().isEmpty() || description.trim().isEmpty() || imageUrl.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in all fields");
             return;
         }
@@ -175,7 +180,7 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
             memberUsernames.add(runtimeCurrentUsername);
         }
 
-        createClubController.createClub(title, description, memberUsernames, tags);
+        createClubController.createClub(title, description, imageUrl, memberUsernames, tags);
     }
 
     private void handleAddMembers() {

@@ -12,9 +12,8 @@ public class CreateClubController {
         this.createClubUseCaseInteractor = createClubUseCaseInteractor;
     }
 
-    public void createClub(String title, String description, List<String> memberUsernames, List<String> tags) {
-        // imageUrl currently null / placeholder
-        CreateClubInputData inputData = new CreateClubInputData(title, description, null, tags, memberUsernames);
+    public void createClub(String title, String description, String imageUrl, List<String> memberUsernames, List<String> tags) {
+        CreateClubInputData inputData = new CreateClubInputData(title, description, imageUrl, tags, memberUsernames);
         createClubUseCaseInteractor.execute(inputData);
     }
 

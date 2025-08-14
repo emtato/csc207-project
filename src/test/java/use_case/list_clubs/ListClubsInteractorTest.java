@@ -38,8 +38,8 @@ public class ListClubsInteractorTest {
 
         ArrayList<Account> members1 = new ArrayList<>();
         members1.add(a);
-        clubsDAO.writeClub(100L, members1, "MemberClub", "desc", new ArrayList<Post>(), new ArrayList<>());
-        clubsDAO.writeClub(200L, new ArrayList<>(), "OtherClub", "desc", new ArrayList<Post>(), new ArrayList<>());
+        clubsDAO.writeClub(100L, members1, "MemberClub", "desc", null, new ArrayList<Post>(), new ArrayList<>());
+        clubsDAO.writeClub(200L, new ArrayList<>(), "OtherClub", "desc", null, new ArrayList<Post>(), new ArrayList<>());
 
         interactor.execute(new ListClubsInputData("alice"));
 
@@ -62,7 +62,7 @@ public class ListClubsInteractorTest {
         Account user = new Account("bob", "pw");
         user.setClubs(null); // force null path
         userDAO.save(user);
-        clubsDAO.writeClub(300L, new ArrayList<>(), "SomeClub", "d", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(300L, new ArrayList<>(), "SomeClub", "d", null, new ArrayList<>(), new ArrayList<>());
 
         interactor.execute(new ListClubsInputData("bob"));
 
@@ -84,11 +84,11 @@ public class ListClubsInteractorTest {
         posts.add(null);
         posts.add(new Post(user, 2L, "Other", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-01 09:05 AM", new ArrayList<>()));
         posts.add(new Post(user, 3L, "Ann2", "d", new ArrayList<>(), new HashMap<>(), " Announcement ", "2024-01-01 09:10 AM", new ArrayList<>()));
-        clubsDAO.writeClub(400L, memberList, "PostClub", "d", posts, new ArrayList<>());
+        clubsDAO.writeClub(400L, memberList, "PostClub", "d", null, posts, new ArrayList<>());
         // Non-member club with posts shouldn't appear in announcements
         ArrayList<Post> otherPosts = new ArrayList<>();
         otherPosts.add(new Post(user, 4L, "AnnOther", "d", new ArrayList<>(), new HashMap<>(), "announcement", "2024-01-01 09:15 AM", new ArrayList<>()));
-        clubsDAO.writeClub(401L, new ArrayList<>(), "Other", "d", otherPosts, new ArrayList<>());
+        clubsDAO.writeClub(401L, new ArrayList<>(), "Other", "d", null, otherPosts, new ArrayList<>());
 
         interactor.execute(new ListClubsInputData("carol"));
 
@@ -102,7 +102,7 @@ public class ListClubsInteractorTest {
     void exceptionHandlingShowsFailView() {
         Account user = new Account("dave", "pw"); userDAO.save(user);
         class ExplodingClubsDAO implements ClubsDataAccessObject {
-            public void writeClub(long id, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public void writeClub(long id, ArrayList<Account> m, String n, String d, String imageUrl, ArrayList<Post> p, ArrayList<String> t) {}
             public Club getClub(long id) { return null; }
             public boolean clubExists(String name) { return false; }
             public ArrayList<Club> getAllClubs() { throw new RuntimeException("boom"); }

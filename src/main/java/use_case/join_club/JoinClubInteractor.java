@@ -42,7 +42,7 @@ public class JoinClubInteractor implements JoinClubInputBoundary {
             if (!already) {
                 ArrayList<Account> members = club.getMembers();
                 members.add(user);
-                clubsDataAccessObject.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getPosts(), club.getTags());
+                clubsDataAccessObject.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getImageUrl(), club.getPosts(), club.getTags());
             }
 
             // Update user club list
@@ -84,4 +84,3 @@ public class JoinClubInteractor implements JoinClubInputBoundary {
         }
     }
 }
-
