@@ -61,7 +61,7 @@ public class AnalyzeRecipeInteractorTest {
         );
 
         final AnalyzeRecipeInputData inputData = new AnalyzeRecipeInputData(sampleRecipe);
-        interactor.executeTest(inputData);
+        interactor.execute(inputData,true);
     }
 
     @Test
@@ -95,9 +95,8 @@ public class AnalyzeRecipeInteractorTest {
                 null
         );
 
-
         final AnalyzeRecipeInputData inputData = new AnalyzeRecipeInputData(sampleRecipe);
-        interactor.executeTest(inputData);
+        interactor.execute(inputData, true);
 
     }
 }

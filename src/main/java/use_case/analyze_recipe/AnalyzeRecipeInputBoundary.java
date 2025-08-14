@@ -9,5 +9,5 @@ import java.io.IOException;
  */
 
 public interface AnalyzeRecipeInputBoundary {
-    void execute(AnalyzeRecipeInputData inputData) throws IOException, InterruptedException;
+    void execute(AnalyzeRecipeInputData inputData, boolean testStatus) throws IOException, InterruptedException;
 }

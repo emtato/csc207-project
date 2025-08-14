@@ -152,5 +152,8 @@ class HomePageInteractorTest {
         interactor.switchToSettingsView();
 
         assertEquals(true, called[0]);
+
+        interactor.executeViewProfile();
+
     }
 }

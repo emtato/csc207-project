@@ -2,6 +2,8 @@ package use_case.homepage;
 
 public interface HomePageInputBoundary {
 
+    void executeViewProfile();
+
     /**
      * Switches to the Signup View.
      */

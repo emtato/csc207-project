@@ -20,6 +20,6 @@ public class AnalyzeRecipeController {
 
     public void analyze(Recipe recipe) throws IOException, InterruptedException {
         AnalyzeRecipeInputData inputData = new AnalyzeRecipeInputData(recipe);
-        interactor.execute(inputData);
+        interactor.execute(inputData, false);
     }
 }
