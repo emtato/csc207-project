@@ -22,9 +22,7 @@
 
 ## Features of The Software
 
-
-
-## User Story 1
+### User Story 1
 Doug Ford is a foodie who just heard about this app and wants to create an account.
 - Sign up
 - Log in
@@ -64,25 +62,6 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
   <img width="500" alt="image" src="https://github.com/user-attachments/assets/deb2401c-c6b8-4051-9daf-597e1d2dd4d1" />
   <img width="500" alt="image" src="https://github.com/user-attachments/assets/ba24e80c-6c20-4a8b-b54a-62cd27d7bb70" />
 </p>
-
-### User Story 3
-
-John Pork has recently been disconcerted about how much processed food he eats and wants to find healthier but still delicious recipes that suit his tastes. He uses this app to analyze the recipes he picks, to quickly and easily evaluate his choices and balance between flavours, cuisines, and health. The app uses Spoonacular API to analyze the nutritional value of the recipes, which takes in a string input of the recipe, then outputs data such as the recipe’s nutrition in JSON format. John then experiments with the recipes, posting his own alterations.
-
-Use cases
-
-- Analyze recipe (API) 
-
-- Browse recipes and posts 
-
-- Interactions with posts: 
-
-    - Commenting on posts
-  - Liking posts
-   - Creating new posts
-  - saving posts and comments and likes to database
-  - fetching posts, likes and comments from database
-    
 
 ## Installation Instructions
 
