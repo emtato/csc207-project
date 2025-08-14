@@ -33,7 +33,7 @@ class SpecificClubInteractorTest {
     void executeSuccess() {
         // Setup test data
         long clubId = 1L;
-        clubsDAO.writeClub(clubId, new ArrayList<>(), "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Test Club", "Description", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.execute(new SpecificClubInputData(clubId, "Test Club", "Description"));
@@ -54,7 +54,7 @@ class SpecificClubInteractorTest {
     void executeExceptionCaught() {
         // DAO that throws in getClub
         class ThrowingClubsDAO implements ClubsDataAccessObject {
-            public void writeClub(long c, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public void writeClub(long c, ArrayList<Account> m, String n, String d, String imageUrl, ArrayList<Post> p, ArrayList<String> t) {}
             public Club getClub(long id) { throw new RuntimeException("boom"); }
             public boolean clubExists(String name) { return false; }
             public ArrayList<entity.Club> getAllClubs() { return new ArrayList<>(); }
@@ -71,7 +71,7 @@ class SpecificClubInteractorTest {
     void loadClubSuccess() {
         // Setup test data
         long clubId = 2L;
-        clubsDAO.writeClub(clubId, new ArrayList<>(), "Load Club", "Desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Load Club", "Desc", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.loadClub(clubId);
@@ -92,7 +92,7 @@ class SpecificClubInteractorTest {
     void fetchAnnouncementsDelegatesSuccess() {
         // Setup test data
         long clubId = 3L;
-        clubsDAO.writeClub(clubId, new ArrayList<>(), "Ann Club", "Desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Ann Club", "Desc", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.fetchAnnouncements(clubId);
@@ -113,7 +113,7 @@ class SpecificClubInteractorTest {
     void fetchPostsDelegatesSuccess() {
         // Setup test data
         long clubId = 4L;
-        clubsDAO.writeClub(clubId, new ArrayList<>(), "Posts Club", "Desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Posts Club", "Desc", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.fetchPosts(clubId);
@@ -136,7 +136,7 @@ class SpecificClubInteractorTest {
         long clubId = 10L;
         Account testUser = new Account("testUser", "password");
         ArrayList<Account> members = new ArrayList<>(); members.add(testUser);
-        clubsDAO.writeClub(clubId, members, "Member Club", "Desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, members, "Member Club", "Desc", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test and verify
         assertTrue(specificClubInteractor.isMember("testUser", clubId));
@@ -146,7 +146,7 @@ class SpecificClubInteractorTest {
     void isMemberFalseUserNotInClub() {
         // Setup test data
         long clubId = 11L;
-        clubsDAO.writeClub(clubId, new ArrayList<>(), "Empty Club", "Desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Empty Club", "Desc", "img", new ArrayList<>(), new ArrayList<>());
 
         // Execute test and verify
         assertFalse(specificClubInteractor.isMember("other", clubId));
@@ -161,7 +161,7 @@ class SpecificClubInteractorTest {
     @Test
     void isMemberExceptionReturnsFalse() {
         class ThrowingClubsDAO implements ClubsDataAccessObject {
-            public void writeClub(long c, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public void writeClub(long c, ArrayList<Account> m, String n, String d, String imageUrl, ArrayList<Post> p, ArrayList<String> t) {}
             public Club getClub(long id) { throw new RuntimeException("boom"); }
             public boolean clubExists(String name) { return false; }
             public ArrayList<entity.Club> getAllClubs() { return new ArrayList<>(); }

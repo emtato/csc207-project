@@ -6,6 +6,7 @@ import interface_adapter.create_club.CreateClubController;
 import interface_adapter.create_club.CreateClubState;
 import interface_adapter.create_club.CreateClubViewModel;
 import entity.Account;
+import interface_adapter.select_club_members.SelectClubMembersController;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
     private final String viewName = "create club view";
     private final ViewManagerModel viewManagerModel;
     private CreateClubController createClubController;
+    private SelectClubMembersController selectClubMembersController; // new controller for member selection
     private final CreateClubViewModel createClubViewModel;
     private final Account currentUser; // may be null at construction; runtime user retrieved via Session when creating
     private final ArrayList<Account> members = new ArrayList<>();
@@ -189,8 +191,8 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, "Please log in to add members to the club");
             return;
         }
-        if (createClubController != null) {
-            createClubController.showMemberSelection(new ArrayList<>(members), runtimeCurrent.getUsername());
+        if (selectClubMembersController != null) {
+            selectClubMembersController.showMemberSelection(new ArrayList<>(members), runtimeCurrent.getUsername());
         }
     }
 
@@ -289,6 +291,10 @@ public class CreateClubView extends JPanel implements PropertyChangeListener {
 
     public void setCreateClubController(CreateClubController controller) {
         this.createClubController = controller;
+    }
+
+    public void setSelectClubMembersController(SelectClubMembersController controller) { // setter for new controller
+        this.selectClubMembersController = controller;
     }
 
     public String getViewName() {

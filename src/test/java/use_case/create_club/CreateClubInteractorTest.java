@@ -119,38 +119,11 @@ class CreateClubInteractorTest {
         assertTrue(presenter.lastError.startsWith("Error creating club:"));
     }
 
-    @Test
-    void showMemberSelectionSuccess() {
-        Account creator = new Account("creator", "pw");
-        Account member1 = new Account("m1", "pw");
-        Account member2 = new Account("m2", "pw");
-        userGateway.save(creator); userGateway.save(member1); userGateway.save(member2);
-        List<Account> current = Collections.singletonList(member1);
-        interactor.showMemberSelection(current, "creator");
-        assertNotNull(presenter.lastAvailableMembers);
-        // Should exclude creator and existing member1 leaving only member2
-        assertEquals(1, presenter.lastAvailableMembers.size());
-        assertEquals("m2", presenter.lastAvailableMembers.get(0).getUsername());
-    }
-
-    @Test
-    void showMemberSelectionHandlesException() {
-        class ThrowingUserGateway implements CreateClubUserDataAccessInterface {
-            public User get(String username) { return null; }
-            public void save(User user) {}
-            public ArrayList<Account> getAllUsers() { throw new RuntimeException("fail"); }
-        }
-        CreateClubInteractor throwing = new CreateClubInteractor(clubsGateway, new ThrowingUserGateway(), presenter);
-        throwing.showMemberSelection(Collections.emptyList(), "creator");
-        assertTrue(presenter.lastError != null && presenter.lastError.startsWith("Error loading users:"));
-    }
-
     // Presenter
     private static class TestCreateClubPresenter implements CreateClubOutputBoundary {
-        CreateClubOutputData lastOutput; String lastError; List<Account> lastAvailableMembers;
+        CreateClubOutputData lastOutput; String lastError;
         public void prepareSuccessView(CreateClubOutputData outputData) { this.lastOutput = outputData; }
         public void prepareFailView(String error) { this.lastError = error; }
-        public void prepareMemberSelectionView(List<Account> availableUsers) { this.lastAvailableMembers = availableUsers; }
-        void reset() { lastOutput = null; lastError = null; lastAvailableMembers = null; }
+        void reset() { lastOutput = null; lastError = null; }
     }
 }

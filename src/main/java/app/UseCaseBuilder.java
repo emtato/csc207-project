@@ -122,6 +122,11 @@ import use_case.view_profile.ProfileInteractor;
 import use_case.view_profile.ProfileOutputBoundary;
 
 import javax.swing.*;
+import interface_adapter.select_club_members.SelectClubMembersController;
+import interface_adapter.select_club_members.SelectClubMembersPresenter;
+import use_case.select_club_members.SelectClubMembersInputBoundary;
+import use_case.select_club_members.SelectClubMembersInteractor;
+import use_case.select_club_members.SelectClubMembersOutputBoundary;
 
 public class UseCaseBuilder {
     // DAOS
@@ -426,6 +431,7 @@ public class UseCaseBuilder {
 
         return this;
     }
+
     public UseCaseBuilder addCreatePostUseCase() {
         final CreatePostViewModel viewModel = new CreatePostViewModel();
         final CreatePostOutputBoundary createPostOutputBoundary = new CreatePostPresenter(viewModel);
@@ -434,11 +440,7 @@ public class UseCaseBuilder {
         viewBuilder.getCreateNewPostView().setCreatePostController(createPostController);
         return this;
     }
-    /**
-     * Adds the Club Home Page Use Case to the application.
-     *
-     * @return this builder
-     */
+
     /**
      * Adds the Specific Club Use Case to the application.
      *
@@ -472,6 +474,15 @@ public class UseCaseBuilder {
 
         final CreateClubController createClubController = new CreateClubController(createClubInteractor);
         viewBuilder.getCreateClubView().setCreateClubController(createClubController);
+
+        // New: wire select club members use case (separate SRP)
+        final SelectClubMembersOutputBoundary selectMembersOutput =
+                new SelectClubMembersPresenter(viewBuilder.getCreateClubViewModel());
+        final SelectClubMembersInputBoundary selectMembersInteractor =
+                new SelectClubMembersInteractor(userDataAccessObject, selectMembersOutput);
+        final SelectClubMembersController selectMembersController =
+                new SelectClubMembersController(selectMembersInteractor);
+        viewBuilder.getCreateClubView().setSelectClubMembersController(selectMembersController);
         return this;
     }
 
