@@ -21,10 +21,7 @@
 6. [Contributions](#contributions)
 
 ## Features of The Software
-** TODO:
-- All major features of the software are described so that a programmer or user can determine whether the software is right for them
-- Descriptions are clear and only detailed when needed
-- Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the software’s features
+
 ### User Story 1
 Doug Ford is a foodie who just heard about this app and wants to create an account.
 - Sign up
@@ -98,8 +95,7 @@ Downloading as ZIP File:
     - mvn exec:java -Dexec.mainClass="app.Munchables"
 
 ## Usage Guide
-** TODO:
-- Examples or tutorials (videos, screenshots, or code snippets) are used to clarify how to use the software once it is downloaded
+Simply sign up with a new account or log in to an existing one, and explore the app however you'd like.
 
 ## License
 Creative Commons Zero v1.0 Universal
