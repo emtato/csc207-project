@@ -38,7 +38,6 @@ public class ExploreView extends JPanel {
     private static JPanel cardPanel;
     private Account currentUser; // no longer final; resolved lazily
     private boolean initialized = false;
-    private final Account currentUser;
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject =
             FilePostCommentLikesDataAccessObject.getInstance();
 
@@ -47,8 +46,9 @@ public class ExploreView extends JPanel {
         this.cardPanel = cardPanel;
         this.setLayout(new BorderLayout(10, 10));
 
-        // Attempt initial fetch; may be null if user not logged in yet when view constructed
-        currentUser = Session.getCurrentAccount();
+//        Session.setCurrentUsername("example_user");
+//        Session.setCurrentAccount();
+        this.currentUser = Session.getCurrentAccount();
 
         if (currentUser == null) {
             // Placeholder until user logs in; we'll rebuild when shown and user available
@@ -136,7 +136,7 @@ public class ExploreView extends JPanel {
 
             new SwingWorker<List<Restaurant>, Void>() {
                 @Override
-                protected List<Restaurant> doInBackground() {
+                protected List<Restaurant> doInBackground()  throws Exception {
                     return searcher.search(seed);
                 }
 
@@ -146,6 +146,13 @@ public class ExploreView extends JPanel {
                     try {
                         List<Restaurant> liveRestaurants = get(); // runs on EDT inside done()
                         if (liveRestaurants == null || liveRestaurants.isEmpty()) {
+                            // try again
+                            liveRestaurants = searcher.search(seed);
+                        }
+
+                        if (liveRestaurants == null || liveRestaurants.isEmpty()) {
+
+
                             JLabel none = new JLabel("No restaurants found for your preferences.");
                             none.setAlignmentX(Component.LEFT_ALIGNMENT);
                             restaurantsPanel.add(none);

@@ -684,6 +684,8 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
 
 
     public ArrayList<Long> getAvailableReviews() {
+
+        ArrayList<Long> reviewIDs = new ArrayList<>();
         JSONObject data = new JSONObject();
         try {
             data = getJsonObject();
@@ -692,16 +694,38 @@ public class DBPostCommentLikesDataAccessObject implements PostCommentsLikesData
             System.out.println(ex.getMessage());
         }
 
-        if (!data.has("reviews")) {
-            return new ArrayList<>();
-        }
+        JSONObject posts = data.getJSONObject("posts");
+        for (String key : posts.keySet()) {
+            JSONObject post = (JSONObject)posts.get(key);
+            Object oType = post.get("type");
+            if (oType instanceof String && ((String)oType).equals("review")) {
+                long postID = Long.parseLong(key);
+                reviewIDs.add(postID);
+            }
 
-        JSONObject reviews = data.getJSONObject("reviews");
-        ArrayList<Long> reviewIDs = new ArrayList<>();
-        for (String key : reviews.keySet()) {
-            long reviewID = Long.parseLong(key);
-            reviewIDs.add(reviewID);
+
         }
+//
+//
+//
+//        JSONObject data = new JSONObject();
+//        try {
+//            data = getJsonObject();
+//        }
+//        catch (DataAccessException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//
+//        if (!data.has("reviews")) {
+//            return new ArrayList<>();
+//        }
+//
+//        JSONObject reviews = data.getJSONObject("reviews");
+//        ArrayList<Long> reviewIDs = new ArrayList<>();
+//        for (String key : reviews.keySet()) {
+//            long reviewID = Long.parseLong(key);
+//            reviewIDs.add(reviewID);
+//        }
         return reviewIDs;
     }
 
