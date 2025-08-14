@@ -1,9 +1,9 @@
-package use_case.create_post;/**
+/**
  * Created by Emilia on 2025-08-03!
  * Description:
  * ^ • ω • ^
  */
-
+package use_case.create_post;
 import data_access.UserDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Post;
@@ -19,7 +19,8 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
     private final UserDataAccessObject userDAO;
     private final CreatePostOutputBoundary createPostPresenter;
 
-    public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO, UserDataAccessObject userDAO, CreatePostOutputBoundary createPostPresenter) {
+    public CreatePostInteractor(PostCommentsLikesDataAccessObject postDAO, UserDataAccessObject
+            userDAO, CreatePostOutputBoundary createPostPresenter) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
         this.createPostPresenter = createPostPresenter;

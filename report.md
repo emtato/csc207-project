@@ -33,7 +33,17 @@ Write a paragraph about whether or not your program is less likely to be used by
     - Future features to implement: We want to implement the ability to resize the screen, keeping the layout of views consistent. This will allow the app to run well on any size screen, accomodating users who use significantly smaller or larger screens.
 
 ## Paragraph Aboht Target Demographic
-Foodies (Anyone interested in food)
+Thanks to its flexibility and variety of content, the app can appeal to a wide range of users. 
+While “foodies” are a natural core audience, it’s equally suited for people who simply want to discover restaurants in their area that match their particularly picky tastes, 
+or for those who are more interested in healthy eating. Its social features also make it appealing to users who enjoy sharing experiences, connecting with like-minded people, 
+and exploring new culinary trends. 
+We’d market our app through social media campaigns and ads targeted at young people in major urban centers. 
+According to a Forbes report, modern consumers, especially younger millennials and Gen Z—are increasingly paying for unique 
+memories and events rather than material goods https://www.forbes.com/sites/jefffromm/2025/01/03/travel-and-live-events-will-drive--experience-economy-growth-in-2025/.
+Thus, targeting young people in cities aligns well with their preference for experiences over possessions, 
+offering them the excitement of discovering new restaurants, joining in-person club events, and sharing these moments with friends. 
+The urban setting also ensures that many of the experiences featured in the app are actually accessible nearby, 
+which might not be the case in smaller towns.
 
 ## Paragraph About Demographics Less Likely to Use Our Product
 - older population
