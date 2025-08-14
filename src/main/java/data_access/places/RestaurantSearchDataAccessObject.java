@@ -1,24 +1,15 @@
-package view.map;
+package data_access.places;
 
 import app.AppProperties;
-import data_access.places.GooglePlacesAPI;
-import data_access.places.RestaurantMapper;
 import entity.Restaurant;
-import interface_adapter.map.MapViewModel;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-// TODO: differentiate Google Reviews and app reviews
-// TODO: GUI and apply API
-
-public class RestaurantSearch {
+public class RestaurantSearchDataAccessObject {
     private final GooglePlacesAPI googlePlacesAPI;
 
-    public RestaurantSearch(Restaurant restaurant) {
+    public RestaurantSearchDataAccessObject(Restaurant restaurant) {
         // GooglePlacesAPI googlePlacesAPI = new GooglePlacesAPI(System.getenv("PLACES_API_KEY"));
         AppProperties appProps = new AppProperties();
         this.googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
@@ -30,7 +21,7 @@ public class RestaurantSearch {
             List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
 
             if (!results.isEmpty()) {
-                List<Restaurant> restaurants = new ArrayList<>();
+                ArrayList<Restaurant> restaurants = new ArrayList<>();
                 for (HashMap<String, Object> result : results) {
                     // Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(0));
                     Restaurant apiRestaurant = RestaurantMapper.fromPlace(results.get(results.size() - 1));
@@ -47,7 +38,7 @@ public class RestaurantSearch {
 
 
 // ========================================================
-    public RestaurantSearch() throws IOException {
+    public RestaurantSearchDataAccessObject() throws IOException {
         AppProperties appProps = new AppProperties();
         this.googlePlacesAPI = new GooglePlacesAPI(appProps.getProperties().getProperty("PLACES_API_KEY"));
     }
@@ -74,11 +65,21 @@ public class RestaurantSearch {
         }
         return restaurants;
     }
-// ==========================================================
+    public ArrayList<Restaurant> searchText(String query, String params)
+            throws IOException, InterruptedException {
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        List<HashMap<String, Object>> results = googlePlacesAPI.searchText(query, null);
+        for (HashMap<String, Object> place : results) {
+            restaurants.add(RestaurantMapper.fromPlace(place));
+        }
+        return restaurants;
+    }
 
 
+
+    // ======= TEST ========
     public static void main(String[] args) {
-        RestaurantSearch mapView = new RestaurantSearch(new Restaurant(new ArrayList<String>(Arrays
+        RestaurantSearchDataAccessObject mapView = new RestaurantSearchDataAccessObject(new Restaurant(new ArrayList<>(Arrays
                 .asList("Indian", "Spicy Foods")), "Toronto"));
     }
 }

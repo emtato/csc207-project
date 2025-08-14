@@ -9,7 +9,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.map.MapState;
 import interface_adapter.map.MapViewModel;
 import view.map.MapView;
-import view.map.RestaurantSearch;
+import data_access.places.RestaurantSearchDataAccessObject;
 import view.ui_components.MapPanel;
 import view.ui_components.MenuBarPanel;
 
@@ -127,7 +127,7 @@ public class ExploreView extends JPanel {
 
         // Run RestaurantSearch off the EDT
         try {
-            RestaurantSearch searcher = new RestaurantSearch();
+            RestaurantSearchDataAccessObject searcher = new RestaurantSearchDataAccessObject();
             final Restaurant seed = new Restaurant(new ArrayList<>(cuisines), location);
 
             new SwingWorker<List<Restaurant>, Void>() {
