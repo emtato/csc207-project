@@ -108,6 +108,7 @@ public class GooglePlacesAPI {
         map.put("rating", p.has("rating") ? p.optDouble("rating") : null);
         map.put("websiteUri", p.optString("websiteUri", null));
         map.put("priceLevel", p.optString("priceLevel", "PRICE_LEVEL_UNSPECIFIED"));
+        map.put("userRatingCount", p.optInt("userRatingCount", 0));
 
         if (p.has("location")) {
             JSONObject location = p.getJSONObject("location");

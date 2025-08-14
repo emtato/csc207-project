@@ -1,6 +1,7 @@
 package interface_adapter.edit_profile;
 
 import interface_adapter.ViewModel;
+import view.GUIConstants;
 
 /**
  * The View Model for the Edit Profile View.
@@ -20,8 +21,8 @@ public class EditProfileViewModel extends ViewModel<EditProfileState> {
     public static final String PREFERENCE_TAGS_LABEL = "Preference Tags";
     public static final String EDIT_LOCATION_LABEL = "Location";
     public static final String SAVE_CHANGES_BUTTON_LABEL = "Save Changes";
-    public static final int EDIT_PANEL_WIDTH = 1200;
-    public static final int EDIT_PANEL_HEIGHT = 800;
+    public static final int EDIT_PANEL_WIDTH = GUIConstants.WINDOW_WIDTH;
+    public static final int EDIT_PANEL_HEIGHT = GUIConstants.WINDOW_HEIGHT;
 
     public EditProfileViewModel() {
         super("edit profile");

@@ -1,6 +1,7 @@
 package interface_adapter.view_profile;
 
 import interface_adapter.ViewModel;
+import view.GUIConstants;
 
 /**
  * The View Model for the Profile View.
@@ -19,8 +20,8 @@ public class ProfileViewModel extends ViewModel<ProfileState> {
     public static final int INFO_PANEL_HEIGHT = 300;
     public static final int PFP_WIDTH = 200;
     public static final int PFP_HEIGHT = 200;
-    public static final int MAIN_PANEL_WIDTH = 1200;
-    public static final int MAIN_PANEL_HEIGHT = 300;
+    public static final int MAIN_PANEL_WIDTH = GUIConstants.WINDOW_WIDTH;
+    public static final int MAIN_PANEL_HEIGHT = GUIConstants.WINDOW_HEIGHT;
     public static final int POST_WIDTH = 600;
     public static final int POST_HEIGHT = 400;
     public static final String SEE_MY_PROFILE_BUTTON_LABEL = "View My Profile";
