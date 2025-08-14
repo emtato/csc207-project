@@ -79,7 +79,31 @@ Use cases:
    - Creating new posts
   - saving posts and comments and likes to database
   - fetching posts, likes and comments from database
-    
+
+### User Story 6
+
+Jean Armstrong runs his own French bakery, and wants to interact with other French pastry chefs to talk about French baked goods and meet more people in the industry.​
+
+He joins a French bakery club and creates posts in the specific French bakery club feed, where he can make posts tailored to French pastries and users interested in the same topic. He also scrolls through the club feed to view and interact with posts that other members in the club have made.
+
+Create Club: Create a new club with a name, description, profile image, tags​
+
+- Select Club Members: Selecting users from database of existing users to join the club​ from a drop down menu
+
+Delete Club: delete an existing club​
+
+Joining/Deleting Club: the user can join or leave an existing club​ by clicking their respective buttons
+
+Making Announcements and Posts: Users can make an announcement or post through a specific club that will only show up on that specific club's feed. Announcement and general posts are separated into different feeds, while announcement posts will also show up on the general club home page.
+
+Club Homepage View
+<img width="1615" height="961" alt="image" src="https://github.com/user-attachments/assets/e03bf1e6-3b1e-4ce1-a367-3644017114d4" />
+
+Club-Specific View
+<img width="1729" height="1097" alt="image" src="https://github.com/user-attachments/assets/377386fd-609a-4a7e-8f0f-999be251783e" />
+
+Create Club View
+<img width="1329" height="507" alt="image" src="https://github.com/user-attachments/assets/d10b7a69-db76-4c8a-99c7-1219da6a5b9c" />
 
 ## Installation Instructions
 
