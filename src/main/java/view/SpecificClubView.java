@@ -1,9 +1,6 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create_post_view.CreatePostController;
-import interface_adapter.create_post_view.CreatePostPresenter;
-import interface_adapter.create_post_view.CreatePostViewModel;
 import interface_adapter.specific_club.SpecificClubController;
 import interface_adapter.specific_club.SpecificClubState;
 import interface_adapter.specific_club.SpecificClubViewModel;
@@ -18,8 +15,6 @@ import app.Session;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;

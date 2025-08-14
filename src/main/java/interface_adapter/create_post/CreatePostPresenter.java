@@ -1,4 +1,4 @@
-package interface_adapter.create_post_view;
+package interface_adapter.create_post;
 
 import use_case.create_post.CreatePostOutputBoundary;
 import use_case.create_post.CreatePostOutputData;

@@ -3,17 +3,13 @@ package view;
 import app.Session;
 import data_access.DBClubsDataAccessObject;
 import data_access.DBPostCommentLikesDataAccessObject;
-import data_access.PostCommentsLikesDataAccessObject;
-import data_access.UserDataAccessObject;
+import entity.Account;
 import entity.Club;
-import entity.Post;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create_post_view.CreatePostController;
-import interface_adapter.create_post_view.CreatePostPresenter;
-import interface_adapter.create_post_view.CreatePostState;
-import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.create_post.CreatePostController;
+import interface_adapter.create_post.CreatePostState;
+import interface_adapter.create_post.CreatePostViewModel;
 import use_case.create_post.CreatePostInputData;
-import use_case.create_post.CreatePostInteractor;
 import view.ui_components.MenuBarPanel;
 
 import javax.swing.*;
@@ -99,7 +95,8 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
             add(topPanel, BorderLayout.NORTH);
             contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
             add(contentPanel, BorderLayout.CENTER);
-        } else {
+        }
+        else {
             ButtonGroup group = new ButtonGroup();
             group.add(recipes);
             group.add(generalPost);
@@ -139,12 +136,14 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         // Store the controller before clearing the panel
         final CreatePostController currentController = this.createPostController;
         contentPanel.removeAll();
-
-        if (e.getSource() == recipes) {
+        JButton button = (JButton) e.getSource();
+        if (button.getText().equals(recipes.getText())) {
             recipePostView();
-        } else if (e.getSource() == generalPost) {
+        }
+        else if (button.getText().equals(generalPost.getText())) {
             generalPostView();
-        } else if (e.getSource() == announcementPost) {
+        }
+        else if (button.getText().equals(announcementPost.getText())) {
             announcementPostView();
         }
         // Restore the controller after rebuilding the view
@@ -213,8 +212,14 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
 
-                CreatePostInputData postData = new CreatePostInputData(
-                        Session.getCurrentAccount(),
+                ArrayList<Club> clubList;
+                if (club != null) {
+                    clubList = new ArrayList<>(Collections.singletonList(club));
+                }
+                else {
+                    clubList = new ArrayList<>();
+                }
+                handlePostCreation(Session.getCurrentAccount(),
                         title,
                         "recipe",
                         body,
@@ -222,12 +227,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         steps,
                         tags,
                         imagesList,
-                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
-                );
-                if (club != null) {
-                    postData.setClubId(club.getId());
-                }
-                handlePostCreation(postData);
+                        clubList);
             }
         });
         contentPanel.add(okButton);
@@ -281,21 +281,22 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     tags = new ArrayList<>(Arrays.asList(tagsArea.getText().split(",")));
                 }
 
-                CreatePostInputData postData = new CreatePostInputData(
-                        Session.getCurrentAccount(),
+                  ArrayList<Club> clubList;
+                if (club != null) {
+                    clubList = new ArrayList<>(Collections.singletonList(club));
+                }
+                else {
+                    clubList = new ArrayList<>();
+                }
+                handlePostCreation(Session.getCurrentAccount(),
                         title,
                         "general",
                         body,
-                        new ArrayList<>(),
+                       new ArrayList<>(),
                         "",
                         tags,
                         imagesList,
-                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
-                );
-                if (club != null) {
-                    postData.setClubId(club.getId());
-                }
-                handlePostCreation(postData);
+                        clubList);
             }
         });
         contentPanel.add(okButton);
@@ -337,8 +338,16 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                     imagesList = new ArrayList<>(Arrays.asList(imagesArea.getText().split(",")));
                 }
 
-                CreatePostInputData postData = new CreatePostInputData(
-                        Session.getCurrentAccount(),
+
+
+  ArrayList<Club> clubList;
+                if (club != null) {
+                    clubList = new ArrayList<>(Collections.singletonList(club));
+                }
+                else {
+                    clubList = new ArrayList<>();
+                }
+                handlePostCreation(Session.getCurrentAccount(),
                         title,
                         "announcement",
                         body,
@@ -346,13 +355,7 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
                         "",
                         new ArrayList<>(),
                         imagesList,
-                        club != null ? new ArrayList<>(Collections.singletonList(club)) : new ArrayList<>()
-                );
-
-                if (club != null) {
-                    postData.setClubId(club.getId());
-                }
-                handlePostCreation(postData);
+                        clubList);
             }
         });
 
@@ -461,33 +464,41 @@ public class CreateNewPostView extends JPanel implements PropertyChangeListener 
         repaint();
     }
 
-    private void handlePostCreation(CreatePostInputData postData) {
+    private void handlePostCreation(Account user, String title, String recipe, String body, ArrayList<String> ingredients, String steps, ArrayList<String> tags, ArrayList<String> imageslist, ArrayList<Club> clubs) {
         final CreatePostController controller = this.createPostController;
         if (controller == null) {
             System.err.println("Error: CreatePostController is null when trying to create post");
             JOptionPane.showMessageDialog(this,
-                "Unable to create post at this time. Please try again.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Unable to create post at this time. Please try again.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        controller.execute(postData);
-        if (postData.getClubId() != null) {
+        controller.createPost(user, title, recipe, body, ingredients, steps, tags, imageslist, clubs);
+
+        if (club != null) {
             SpecificClubView scv = viewManagerModel.getSpecificClubView();
             try {
-                Club refreshed = DBClubsDataAccessObject.getInstance(DBPostCommentLikesDataAccessObject.getInstance()).getClub(postData.getClubId());
+                Club refreshed = DBClubsDataAccessObject.getInstance(DBPostCommentLikesDataAccessObject.getInstance()).getClub(club.getId());
                 if (refreshed != null) {
                     scv.updateClub(refreshed);
-                } else {
+                }
+                else {
                     scv.updateClub(club);
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 System.err.println("Failed to refresh club after post creation (DB): " + ex.getMessage());
                 scv.updateClub(club);
             }
-            try { viewManagerModel.getClubHomePageView().reloadClubs(); } catch (Exception ignore) {}
+            try {
+                viewManagerModel.getClubHomePageView().reloadClubs();
+            }
+            catch (Exception ignore) {
+            }
             viewManagerModel.setState(scv.getViewName());
-        } else {
+        }
+        else {
             viewManagerModel.setState("homepage view");
             HomePageView homePageView = viewManagerModel.getHomePageView();
             homePageView.updateHomeFeed();

@@ -1,7 +1,6 @@
 package app;
 
 import data_access.ClubsDataAccessObject;
-import data_access.FileClubsDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import data_access.spoonacular.SpoonacularAPI;
@@ -13,9 +12,9 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.create_club.CreateClubController;
 import interface_adapter.create_club.CreateClubPresenter;
-import interface_adapter.create_post_view.CreatePostController;
-import interface_adapter.create_post_view.CreatePostPresenter;
-import interface_adapter.create_post_view.CreatePostViewModel;
+import interface_adapter.create_post.CreatePostController;
+import interface_adapter.create_post.CreatePostPresenter;
+import interface_adapter.create_post.CreatePostViewModel;
 import interface_adapter.delete_account.DeleteAccountController;
 import interface_adapter.delete_account.DeleteAccountPresenter;
 import interface_adapter.delete_club.DeleteClubController;
