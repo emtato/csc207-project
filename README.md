@@ -67,17 +67,7 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
 </p>
 
 ## Installation Instructions
-** TODO:
-- Clear, accurate descriptions of how to install the project from start to finish
-- Mentions all packages and software which must be downloaded for the project to work
-- Provides links to any other packages or software needed
-- Includes all technical requirements and information needed to download each part of the project
-- Includes required versions for all packages or software needed
-- Explains if the software is only meant to be installed on a certain OS, hardware system, or otherwise (for example, Windows only or Mac only)
-- Mentions common issues in the installation process and how they can be
-  overcome
-- Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the steps for software installation
-- Examples or tutorials (videos, screenshots, or code snippets) are used to clarify the steps for overcoming common issues
+
 ### Required Software
 Before installing, make sure you have the following:
 1. Java Development Kit (JDK 11 or higher)
@@ -115,11 +105,7 @@ Downloading as ZIP File:
 Creative Commons Zero v1.0 Universal
 
 ## Feedback
-** TODO:
-- Clearly says how users can give feedback on the software (via Google Forms, a discussion board, etc.)
-- Clearly provides any necessary links (for example, to a Google Form)
-- Has rules for what counts as valid feedback
-- Has guidelines for what to expect when submitting feedback
+- Feedback is currently not accepted. A form for providing feedback will be provided in the future.
 
 ## Contributions
 - Contributions are closed for users who are not on the team.
