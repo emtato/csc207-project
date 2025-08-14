@@ -1,6 +1,8 @@
 package use_case.list_clubs;
 
-import data_access.ClubsDataAccessObject;
+import use_case.club.ClubAnnouncementCollector;
+import use_case.club.ClubAnnouncementResult;
+import use_case.club.ClubReadOperations;
 import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ListClubsInteractor implements ListClubsInputBoundary {
-    private final ClubsDataAccessObject clubsDataAccessObject;
+    private final ClubReadOperations clubRead;
     private final UserDataAccessObject userDataAccessObject;
     private final ListClubsOutputBoundary presenter;
 
@@ -19,10 +21,10 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
     private static final Map<String, Long> LAST_FETCH = new HashMap<>();
     private static final long MIN_INTERVAL_MS = 1500; // throttle repeated fetches
 
-    public ListClubsInteractor(ClubsDataAccessObject clubsDataAccessObject,
+    public ListClubsInteractor(ClubReadOperations clubRead,
                                UserDataAccessObject userDataAccessObject,
                                ListClubsOutputBoundary presenter) {
-        this.clubsDataAccessObject = clubsDataAccessObject;
+        this.clubRead = clubRead;
         this.userDataAccessObject = userDataAccessObject;
         this.presenter = presenter;
     }
@@ -62,7 +64,7 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
 
             boolean reconstructed = false;
             if (userClubIds.isEmpty()) {
-                ArrayList<Club> scan = clubsDataAccessObject.getAllClubs();
+                ArrayList<Club> scan = clubRead.getAllClubs();
                 for (Club c : scan) {
                     if (c.getMembers().stream().anyMatch(m -> m.getUsername().equals(username))) {
                         String cid = String.valueOf(c.getId());
@@ -78,27 +80,12 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
                 }
             }
 
-            ArrayList<Club> allClubs = clubsDataAccessObject.getAllClubs();
-            ArrayList<Club> memberClubs = new ArrayList<>();
-            ArrayList<Club> nonMemberClubs = new ArrayList<>();
-            ArrayList<Post> announcements = new ArrayList<>();
+            ArrayList<Club> allClubs = clubRead.getAllClubs();
+            ClubAnnouncementResult res = ClubAnnouncementCollector.collect(currentUser, allClubs);
+            ArrayList<Club> memberClubs = new ArrayList<>(res.memberClubs());
+            ArrayList<Club> nonMemberClubs = new ArrayList<>(res.nonMemberClubs());
+            ArrayList<Post> announcements = new ArrayList<>(res.announcements());
 
-            for (Club club : allClubs) {
-                String cid = String.valueOf(club.getId());
-                if (userClubIds.contains(cid)) {
-                    memberClubs.add(club);
-                    ArrayList<Post> clubPosts = club.getPosts();
-                    if (clubPosts != null) {
-                        for (Post p : clubPosts) {
-                            if (p != null && p.getType() != null && p.getType().trim().equalsIgnoreCase("announcement")) {
-                                announcements.add(p);
-                            }
-                        }
-                    }
-                } else {
-                    nonMemberClubs.add(club);
-                }
-            }
             ListClubsOutputData out = new ListClubsOutputData(memberClubs, nonMemberClubs, announcements, true, null);
             CACHE.put(username, out);
             LAST_FETCH.put(username, now);

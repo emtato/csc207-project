@@ -383,7 +383,13 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
             @Override public Dimension getPreferredSize() { return new Dimension(JOIN_BUTTON_WIDTH, JOIN_BUTTON_HEIGHT); }
             @Override public Dimension getMinimumSize() { return getPreferredSize(); }
             @Override public Dimension getMaximumSize() { return getPreferredSize(); }
-            @Override public void updateUI() { /* lock UI so LAF doesn't inflate size */ }
+            @Override public void updateUI() {
+                super.updateUI(); // ensure UI delegate (and its listeners) are installed
+                setContentAreaFilled(false);
+                setFocusPainted(false);
+                setBorder(BorderFactory.createEmptyBorder());
+                setOpaque(false);
+            }
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -404,31 +410,32 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
                 g2.dispose();
             }
         };
-        // Remove all padding; our preferred size is authoritative.
-        joinButton.setMargin(new Insets(0,0,0,0));
-        joinButton.setBorder(BorderFactory.createEmptyBorder());
-        joinButton.setContentAreaFilled(false); // we custom paint
-        joinButton.setFocusPainted(false);
-        joinButton.setOpaque(false);
+        // Ensure UI initialized now that we've overridden updateUI
+        joinButton.updateUI();
 
-        // Fit font to height (simple shrink loop) but do not tie actual height to font.
-        Font base = GUIConstants.SMALL_FONT_TEXT != null ? GUIConstants.SMALL_FONT_TEXT : joinButton.getFont();
-        int target = JOIN_BUTTON_HEIGHT - 4;
-        int size = base.getSize();
-        Font trial = base;
-        FontMetrics fm = joinButton.getFontMetrics(trial);
-        while (size > 6 && fm.getHeight() > target) {
-            size -= 1;
-            trial = base.deriveFont((float) size);
-            fm = joinButton.getFontMetrics(trial);
-        }
-        joinButton.setFont(trial);
-
-        String username = app.Session.getCurrentAccount() != null ?
-                app.Session.getCurrentAccount().getUsername() : app.Session.getCurrentUsername();
+        // Remove original captured username; resolve dynamically on click.
         joinButton.addActionListener(e -> {
-            if (joinClubController != null && username != null) {
-                joinClubController.join(username, club.getId());
+            String dynamicUsername = app.Session.getCurrentAccount() != null ?
+                    app.Session.getCurrentAccount().getUsername() : app.Session.getCurrentUsername();
+            System.out.println("[ClubHome][DEBUG] Join button clicked clubId=" + club.getId() +
+                    " user=" + dynamicUsername + " controllerNull=" + (joinClubController == null));
+            if (joinClubController == null) {
+                JOptionPane.showMessageDialog(this, "Join controller not initialized yet.", "Join Club", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (dynamicUsername == null || dynamicUsername.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "User session not ready. Please log in again.", "Join Club", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            try {
+                joinClubController.join(dynamicUsername, club.getId());
+                // Optionally trigger a refresh to reflect new membership sooner if presenter latency.
+                if (listClubsController != null) {
+                    listClubsController.fetch(dynamicUsername);
+                }
+            } catch (Exception ex) {
+                System.out.println("[ClubHome][DEBUG] Join action error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Failed to join club: " + ex.getMessage(), "Join Club", JOptionPane.ERROR_MESSAGE);
             }
         });
         // Remove tooltip that showed full text to avoid confusion

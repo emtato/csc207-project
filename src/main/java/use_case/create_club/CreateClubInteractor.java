@@ -6,18 +6,17 @@ import entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors; // added
 
 public class CreateClubInteractor implements CreateClubInputBoundary {
-    private final CreateClubClubsDataAccessInterface clubsGateway;
+    private final ClubWriteOperations clubWrite; // was ClubCreationWrite
     private final CreateClubUserDataAccessInterface userGateway;
     private final CreateClubOutputBoundary createClubPresenter;
 
     public CreateClubInteractor(
-            CreateClubClubsDataAccessInterface clubsGateway,
+            ClubWriteOperations clubWrite,
             CreateClubUserDataAccessInterface userGateway,
             CreateClubOutputBoundary createClubPresenter) {
-        this.clubsGateway = clubsGateway;
+        this.clubWrite = clubWrite;
         this.userGateway = userGateway;
         this.createClubPresenter = createClubPresenter;
     }
@@ -30,9 +29,6 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
         List<String> tags = inputData.getTags();
         List<String> memberUsernames = inputData.getMemberUsernames();
         try {
-            System.out.println("[CreateClub][DEBUG] Requested create: title='" + title + "' imageUrl='" + imageUrl + "'");
-            System.out.println("[CreateClub][DEBUG] Initial member usernames list: " + memberUsernames);
-
             // Input validation
             if (title == null || title.trim().isEmpty()) {
                 createClubPresenter.prepareFailView("Title cannot be empty");
@@ -44,7 +40,7 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                 return;
             }
 
-            if (clubsGateway.clubExists(title)) {
+            if (clubWrite.clubExists(title)) {
                 createClubPresenter.prepareFailView("A club with this name already exists");
                 return;
             }
@@ -63,8 +59,6 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                     }
                 }
             }
-
-            System.out.println("[CreateClub][DEBUG] Deduped usernames: " + dedupedUsernames);
 
             ArrayList<Account> members = new ArrayList<>();
             ArrayList<String> invalidUsernames = new ArrayList<>();
@@ -101,21 +95,20 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
 
             // Generate unique club ID
             long clubId = System.currentTimeMillis();
-
-            // Create the club
             ArrayList<String> tagList = tags == null ? new ArrayList<>() : new ArrayList<>(tags);
-            System.out.println("[CreateClub][DEBUG] Persisting club id=" + clubId + " with members=" + members.stream().map(Account::getUsername).collect(Collectors.toList()) + " imageUrl='" + imageUrl + "'");
-            clubsGateway.writeClub(
+
+            // Persist the club (no read-back needed for creation use case)
+            clubWrite.writeClub(
                 clubId,
                 members,
                 title,
                 description,
                 imageUrl,
-                new ArrayList<>(),  // New club starts with no posts
+                new ArrayList<>(),
                 tagList
             );
 
-            // Update each member's club list (avoid duplicate club IDs)
+            // Update each member's club list
             String clubIdStr = String.valueOf(clubId);
             for (Account member : members) {
                 ArrayList<String> clubList = member.getClubs();
@@ -129,9 +122,17 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                 userGateway.save(member);
             }
 
-            // Get the created club and prepare success view
-            Club createdClub = clubsGateway.getClub(clubId);
-            System.out.println("[CreateClub][DEBUG] Club created successfully. Stored club imageUrl='" + createdClub.getImageUrl() + "'");
+            // Construct the created club object directly (avoids lookup dependency)
+            Club createdClub = new Club(
+                    title,
+                    description,
+                    imageUrl,
+                    members,
+                    new ArrayList<>(), // food preferences placeholder
+                    new ArrayList<>(), // posts
+                    clubId,
+                    tagList
+            );
             createClubPresenter.prepareSuccessView(new CreateClubOutputData(createdClub, true, null));
 
         } catch (Exception e) {

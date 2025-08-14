@@ -1,0 +1,105 @@
+'idea.partialRender
+'idea.disableSyntaxCheck
+@startuml
+participant Actor
+participant CreateClubView
+participant CreateClubController
+participant CreateClubInteractor
+participant ClubWriteOperations
+participant CreateClubUserDataAccessInterface
+participant CreateClubPresenter
+
+Actor -> CreateClubView : actionPerformed
+CreateClubView -> CreateClubController : createClub(title, desc, image, members, tags)
+CreateClubController -> CreateClubInteractor : execute(inputData)
+CreateClubInteractor -> ClubWriteOperations : clubExists(title)?
+CreateClubInteractor -> CreateClubUserDataAccessInterface : get(username)*
+CreateClubInteractor -> ClubWriteOperations : writeClub(id,...)
+CreateClubInteractor -> CreateClubUserDataAccessInterface : save(member)*
+CreateClubInteractor -> CreateClubPresenter : prepareSuccessView(club)
+CreateClubPresenter -> CreateClubView : showSuccess
+@enduml
+
+@startuml
+participant CreateClubController
+participant CreateClubInputData
+participant CreateClubInteractor
+CreateClubController -> CreateClubInputData : new(...)
+CreateClubController -> CreateClubInteractor : execute(inputData)
+@enduml
+
+@startuml
+participant CreateClubInteractor
+participant CreateClubPresenter
+participant CreateClubView
+CreateClubInteractor -> CreateClubPresenter : prepareSuccessView(club)
+CreateClubPresenter -> CreateClubView : showSuccess
+== or ==
+CreateClubInteractor -> CreateClubPresenter : prepareFailView(error)
+CreateClubPresenter -> CreateClubView : showError
+@enduml
+
+@startuml
+participant CreateClubInteractor
+participant CreateClubUserDataAccessInterface
+CreateClubInteractor -> CreateClubUserDataAccessInterface : get(username1)
+CreateClubInteractor -> CreateClubUserDataAccessInterface : get(username2)
+CreateClubInteractor -> CreateClubUserDataAccessInterface : get(usernameN)
+@enduml
+
+@startuml
+participant CreateClubInteractor
+participant CreateClubUserDataAccessInterface
+CreateClubInteractor -> CreateClubUserDataAccessInterface : save(member1)
+CreateClubInteractor -> CreateClubUserDataAccessInterface : save(member2)
+CreateClubInteractor -> CreateClubUserDataAccessInterface : save(memberN)
+@enduml
+
+@startuml
+participant CreateClubInteractor
+participant CreateClubPresenter
+participant CreateClubOutputData
+participant CreateClubView
+CreateClubInteractor -> CreateClubPresenter : prepareSuccessView(club)
+CreateClubPresenter -> CreateClubOutputData : new(club,...)
+CreateClubPresenter -> CreateClubView : showSuccess
+@enduml
+
+' * get(username) and save(member) repeat per member
+' Possible failure errors: empty title, empty description, duplicate title, invalid usernames, no valid members, unexpected exception
+
+@startuml
+' Username normalization & de-dup loop
+participant CreateClubInteractor
+loop for each rawUsername
+  CreateClubInteractor -> CreateClubInteractor : trim / null check
+  alt valid & not duplicate
+    CreateClubInteractor -> CreateClubInteractor : add to deduped list
+  else skip
+  end
+end
+@enduml
+
+@startuml
+' Fetch users loop with branch on validity
+participant CreateClubInteractor
+participant CreateClubUserDataAccessInterface
+loop for each username in deduped list
+  CreateClubInteractor -> CreateClubUserDataAccessInterface : get(username)
+  alt found Account
+    CreateClubInteractor -> CreateClubInteractor : add member (if not already)
+  else invalid
+    CreateClubInteractor -> CreateClubInteractor : record invalid username
+  end
+end
+@enduml
+
+@startuml
+' Member save/update loop
+participant CreateClubInteractor
+participant CreateClubUserDataAccessInterface
+loop for each member
+  CreateClubInteractor -> CreateClubInteractor : ensure clubId present in member.clubs
+  CreateClubInteractor -> CreateClubUserDataAccessInterface : save(member)
+end
+@enduml

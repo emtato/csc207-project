@@ -3,7 +3,6 @@ package use_case.create_club;
 import data_access.*;
 import entity.Account;
 import entity.Club;
-import entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -107,7 +106,7 @@ class CreateClubInteractorTest {
     @Test
     void exceptionDuringCreateHandled() {
         // Custom gateway throws after validation passes
-        class ThrowingClubsGateway implements CreateClubClubsDataAccessInterface {
+        class ThrowingClubsGateway implements ClubWriteOperations, ClubReadOperations {
             public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<entity.Post> posts, ArrayList<String> tags) { throw new RuntimeException("boom"); }
             public Club getClub(long clubID) { return null; }
             public boolean clubExists(String clubName) { return false; }
