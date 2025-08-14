@@ -148,6 +148,20 @@ Downloading as ZIP File:
 ## Usage Guide
 Simply sign up with a new account or log in to an existing one, and explore the app however you'd like.
 
+Fill in the following text fields to sign up, then click on "sign up"
+<img width="2215" height="1096" alt="image" src="https://github.com/user-attachments/assets/796b619c-1344-47bf-adfd-ee1e3db9fdac" />
+
+After signing up, click on the "log in" button to proceed to the login page and then type in the same credentials you used to sign up. Then click on "log in" to gain access to the rest of the program.
+Log in page:
+<img width="2210" height="972" alt="image" src="https://github.com/user-attachments/assets/2b7c94a6-186a-4d48-8bcc-a4fc76eb481a" />
+
+Homepage:
+<img width="1492" height="763" alt="image" src="https://github.com/user-attachments/assets/47b03b7f-7925-4e41-a38e-9de95da06ab2" />
+
+You did it! Feel free to explore the rest of the app :))
+
+
+
 ## License
 Creative Commons Zero v1.0 Universal
 
