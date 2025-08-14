@@ -19,6 +19,7 @@ public class Munchables {
         final JFrame application = appDirector.buildDBApp();
         application.setPreferredSize(new Dimension(GUIConstants.WINDOW_WIDTH, GUIConstants.WINDOW_HEIGHT));
         application.pack();
+        application.setLocationRelativeTo(null);
         application.setVisible(true);
     }
 }

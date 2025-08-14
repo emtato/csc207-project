@@ -1,12 +1,11 @@
 package use_case.create_review;
 
-import data_access.PostCommentsLikesDataAccessObject;
-import data_access.UserDataAccessObject;
-import entity.Review;
-
+import data_access.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class CreateReviewInteractor implements CreateReviewInputBoundary {
 
@@ -25,38 +24,61 @@ public class CreateReviewInteractor implements CreateReviewInputBoundary {
     @Override
     public void execute(CreateReviewInputData inputData) {
         try {
-            // Get timestamp
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
             String timestamp = now.format(formatter);
 
-            // Generate unique ID for review
             long reviewId = System.currentTimeMillis();
 
-            // Create Review entity
-            Review review = new Review(
-                    inputData.getUser(),
+            HashMap<String, ArrayList<String>> contents = new HashMap<>();
+            contents.put("rating", new ArrayList<>(Collections.singletonList(Double.toString(inputData.getRating()))));
+
+            ArrayList<String> tags = inputData.getTags() != null ? inputData.getTags() : new ArrayList<>();
+            ArrayList<String> images = new ArrayList<>(); // no images
+
+            // Persist using writePost with type "review"
+            postDAO.writePost(
                     reviewId,
-                    inputData.getTitle(),
-                    inputData.getBody()
-            );
-            review.setRating(inputData.getRating());
-
-            // Persist review
-            postDAO.writeReview(reviewId,
                     inputData.getUser(),
                     inputData.getTitle(),
+                    "review",
                     inputData.getBody(),
-                    inputData.getTags(),
-                    timestamp
+                    contents,
+                    tags,
+                    images,
+                    timestamp,
+                    new ArrayList<>() // no clubs by default
             );
 
-            // Associate review with user
+            // Mirror to file storage (if necessary, so file-based UI code sees it)
+            try {
+                if (postDAO instanceof DBPostCommentLikesDataAccessObject) {
+                    PostCommentsLikesDataAccessObject fileDAO = FilePostCommentLikesDataAccessObject.getInstance();
+                    if (fileDAO.getPost(reviewId) == null) {
+                        fileDAO.writePost(
+                                reviewId,
+                                inputData.getUser(),
+                                inputData.getTitle(),
+                                "review",
+                                inputData.getBody(),
+                                contents,
+                                tags,
+                                images,
+                                timestamp,
+                                new ArrayList<>()
+                        );
+                    }
+                }
+            } catch (Exception mirrorEx) {
+                System.out.println("DEBUG[CreateReview]: Mirror to file storage failed: " + mirrorEx.getMessage());
+            }
+
+            // associate with user
             userDAO.addPost(reviewId, inputData.getUser().getUsername());
 
-            // Success
-            CreateReviewOutputData outputData = new CreateReviewOutputData(reviewId, timestamp);
-            createReviewPresenter.prepareSuccessView(outputData);
+            // respond success
+            CreateReviewOutputData out = new CreateReviewOutputData(reviewId, timestamp);
+            createReviewPresenter.prepareSuccessView(out);
 
         } catch (Exception e) {
             System.err.println("CreateReviewInteractor failed: " + e.getMessage());

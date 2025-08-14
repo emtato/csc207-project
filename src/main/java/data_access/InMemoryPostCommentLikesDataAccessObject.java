@@ -34,8 +34,7 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
     @Override
     public void deletePost(long postID) { postsMap.remove(postID); }
 
-    @Override
-    public void deleteReview(long reviewID) { reviewsMap.remove(reviewID); }
+//    public void deleteReview(long reviewID) { reviewsMap.remove(reviewID); }
 
     @Override
     public void addComment(long parentID, Account user, String contents, LocalDateTime timestamp) {
@@ -129,30 +128,30 @@ public class InMemoryPostCommentLikesDataAccessObject implements PostCommentsLik
         }
     }
 
-    public void writeReview(long reviewID, Account user, String title, String body,
-                            ArrayList<String> tags, String timestamp) {
-        Review review = new Review(user, reviewID, title, body);
-        review.setDateTimeFromString(timestamp);
-        review.setTags(tags);
-        review.setType("review");
-
-        // Store in in-memory map
-        postsMap.put(reviewID, review);
-    }
+//    public void writeReview(long reviewID, Account user, String title, String body,
+//                            ArrayList<String> tags, String timestamp) {
+//        Review review = new Review(user, reviewID, title, body);
+//        review.setDateTimeFromString(timestamp);
+//        review.setTags(tags);
+//
+//
+//        // Store in in-memory map
+//        postsMap.put(reviewID, review);
+//    }
 
     @Override
     public Post getPost(long postID) {
         return postsMap.getOrDefault(postID, null);
     }
 
-    @Override
-    public Review getReview(long id) {
-        Post p = getPost(id);
-        if (p instanceof Review) {
-            return (Review) p;
-        }
-        return null;
-    }
+//    @Override
+//    public Review getReview(long id) {
+//        Post p = getPost(id);
+//        if (p instanceof Review) {
+//            return (Review) p;
+//        }
+//        return null;
+//    }
 
     @Override
     public void updateLikesForPost(long postID, int likeDifference) {

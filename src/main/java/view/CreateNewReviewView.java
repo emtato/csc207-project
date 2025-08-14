@@ -7,9 +7,9 @@ import data_access.PostCommentsLikesDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Review;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create_review_view.CreateReviewController; // optional: if present
-import interface_adapter.create_review_view.CreateReviewPresenter; // may or may not exist in your codebase
-import interface_adapter.create_review_view.CreateReviewViewModel; // may or may not exist
+import interface_adapter.create_review.CreateReviewController;
+import interface_adapter.create_review.CreateReviewPresenter;
+import interface_adapter.create_review.CreateReviewViewModel;
 import use_case.create_review.CreateReviewInputData;
 import use_case.create_review.CreateReviewInteractor;
 import use_case.create_review.CreateReviewInputBoundary;

@@ -71,25 +71,25 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         }
     }
 
-    public void deleteReview(long reviewID) {
-        final JSONObject data = getJsonObject();
-        JSONObject reviews;
-        if (data.has("reviews")) {
-            reviews = data.getJSONObject("reviews");
-            if (reviews.has(String.valueOf(reviewID))) {
-                reviews.remove(String.valueOf(reviewID));
-            }
-        } else {
-            reviews = new JSONObject();
-        }
-
-        data.put("reviews", reviews);
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to delete review: " + e.getMessage(), e);
-        }
-    }
+//    public void deleteReview(long reviewID) {
+//        final JSONObject data = getJsonObject();
+//        JSONObject reviews;
+//        if (data.has("reviews")) {
+//            reviews = data.getJSONObject("reviews");
+//            if (reviews.has(String.valueOf(reviewID))) {
+//                reviews.remove(String.valueOf(reviewID));
+//            }
+//        } else {
+//            reviews = new JSONObject();
+//        }
+//
+//        data.put("reviews", reviews);
+//        try (FileWriter writer = new FileWriter(filePath)) {
+//            writer.write(data.toString(2));
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to delete review: " + e.getMessage(), e);
+//        }
+//    }
     /**
      * reduce duplicate code for get comments in data_storage.JSON
      *
@@ -309,47 +309,47 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         }
     }
 
-    /**
-     * Writes a review to the JSON file.
-     *
-     * @param reviewID unique identifier for the review
-     * @param user     account posting the review
-     * @param title    review title
-     * @param body     review body/content
-     * @param tags     tags associated with the review
-     * @param time     timestamp of review creation
-     */
-    public void writeReview(long reviewID, Account user, String title, String body,
-                            ArrayList<String> tags, String time) {
-        JSONObject data = getJsonObject();
-        JSONObject posts = data.has("posts") ? data.getJSONObject("posts") : new JSONObject();
-
-        JSONObject newReview = new JSONObject();
-        newReview.put("user", user.getUsername());
-        newReview.put("title", title);
-        newReview.put("description", body);
-        newReview.put("type", "review");
-        newReview.put("likes", 0);
-        newReview.put("tags", tags);
-        newReview.put("images", new JSONArray()); // optional
-        newReview.put("rating", -1); // default rating
-
-        // Adjust AM/PM
-        if (time.charAt(time.length() - 4) == 'a') {
-            newReview.put("time", time.substring(0, time.length() - 4) + "AM");
-        } else {
-            newReview.put("time", time.substring(0, time.length() - 4) + "PM");
-        }
-
-        posts.put(String.valueOf(reviewID), newReview);
-        data.put("posts", posts);
-
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(data.toString(2));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write review: " + e.getMessage(), e);
-        }
-    }
+//    /**
+//     * Writes a review to the JSON file.
+//     *
+//     * @param reviewID unique identifier for the review
+//     * @param user     account posting the review
+//     * @param title    review title
+//     * @param body     review body/content
+//     * @param tags     tags associated with the review
+//     * @param time     timestamp of review creation
+//     */
+//    public void writeReview(long reviewID, Account user, String title, String body,
+//                            ArrayList<String> tags, String time) {
+//        JSONObject data = getJsonObject();
+//        JSONObject posts = data.has("posts") ? data.getJSONObject("posts") : new JSONObject();
+//
+//        JSONObject newReview = new JSONObject();
+//        newReview.put("user", user.getUsername());
+//        newReview.put("title", title);
+//        newReview.put("description", body);
+//        newReview.put("type", "review");
+//        newReview.put("likes", 0);
+//        newReview.put("tags", tags);
+//        newReview.put("images", new JSONArray()); // optional
+//        newReview.put("rating", -1); // default rating
+//
+//        // Adjust AM/PM
+//        if (time.charAt(time.length() - 4) == 'a') {
+//            newReview.put("time", time.substring(0, time.length() - 4) + "AM");
+//        } else {
+//            newReview.put("time", time.substring(0, time.length() - 4) + "PM");
+//        }
+//
+//        posts.put(String.valueOf(reviewID), newReview);
+//        data.put("posts", posts);
+//
+//        try (FileWriter writer = new FileWriter(filePath)) {
+//            writer.write(data.toString(2));
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to write review: " + e.getMessage(), e);
+//        }
+//    }
 
     @Override
     public Post getPost(long id) {
@@ -438,64 +438,64 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
         }
     }
 
-    @Override
-    public Review getReview(long id) {
-        JSONObject data = getJsonObject();
-
-        if (!data.has("posts")) {
-            return null;
-        }
-
-        JSONObject posts = data.getJSONObject("posts");
-        String postId = String.valueOf(id);
-        if (!posts.has(postId)) {
-            return null;
-        }
-
-        try {
-            JSONObject postData = posts.getJSONObject(postId);
-
-            if (!"review".equals(postData.optString("type", ""))) {
-                return null;
-            }
-
-            String title = postData.optString("title", "Untitled Review");
-            String description = postData.optString("description", "");
-            String username = postData.optString("user", "unknown");
-
-            Account postUser = new Account(username, "");
-
-            Review review = new Review(postUser, id, title, description);
-
-            if (postData.has("rating")) {
-                double rating = postData.optDouble("rating", -1);
-                if (rating >= 0 && rating <= 5) {
-                    review.setRating(rating);
-                }
-            } else {
-                if (postData.has("contents")) {
-                    try {
-                        JSONObject contents = postData.getJSONObject("contents");
-                        if (contents.has("rating")) {
-                            JSONArray arr = contents.getJSONArray("rating");
-                            if (!arr.isEmpty()) {
-                                double rating = Double.parseDouble(arr.getString(0));
-                                review.setRating(rating);
-                            }
-                        }
-                    } catch (Exception ignored) {}
-                }
-            }
-
-            if (postData.has("likes")) {
-                review.setLikes(postData.optInt("likes", 0));
-            }
-            return review;
-        } catch (Exception e) {
-            System.err.println("Error reading review " + id + ": " + e.getMessage());
-            return null;
-        }
-    }
+//    @Override
+//    public Review getReview(long id) {
+//        JSONObject data = getJsonObject();
+//
+//        if (!data.has("posts")) {
+//            return null;
+//        }
+//
+//        JSONObject posts = data.getJSONObject("posts");
+//        String postId = String.valueOf(id);
+//        if (!posts.has(postId)) {
+//            return null;
+//        }
+//
+//        try {
+//            JSONObject postData = posts.getJSONObject(postId);
+//
+//            if (!"review".equals(postData.optString("type", ""))) {
+//                return null;
+//            }
+//
+//            String title = postData.optString("title", "Untitled Review");
+//            String description = postData.optString("description", "");
+//            String username = postData.optString("user", "unknown");
+//
+//            Account postUser = new Account(username, "");
+//
+//            Review review = new Review(postUser, id, title, description);
+//
+//            if (postData.has("rating")) {
+//                double rating = postData.optDouble("rating", -1);
+//                if (rating >= 0 && rating <= 5) {
+//                    review.setRating(rating);
+//                }
+//            } else {
+//                if (postData.has("contents")) {
+//                    try {
+//                        JSONObject contents = postData.getJSONObject("contents");
+//                        if (contents.has("rating")) {
+//                            JSONArray arr = contents.getJSONArray("rating");
+//                            if (!arr.isEmpty()) {
+//                                double rating = Double.parseDouble(arr.getString(0));
+//                                review.setRating(rating);
+//                            }
+//                        }
+//                    } catch (Exception ignored) {}
+//                }
+//            }
+//
+//            if (postData.has("likes")) {
+//                review.setLikes(postData.optInt("likes", 0));
+//            }
+//            return review;
+//        } catch (Exception e) {
+//            System.err.println("Error reading review " + id + ": " + e.getMessage());
+//            return null;
+//        }
+//    }
 
     private void cleanupDeletedPost(long postId) {
         JSONObject data = getJsonObject();
