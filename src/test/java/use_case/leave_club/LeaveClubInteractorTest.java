@@ -193,6 +193,36 @@ public class LeaveClubInteractorTest {
         assertEquals(100L, presenter.out.getAnnouncements().get(0).getID());
     }
 
+    @Test
+    void userClubListUpdatedAfterLeaving() {
+        // Arrange
+        Account user = new Account("henry", "pw");
+        ArrayList<String> initialClubs = new ArrayList<>();
+        initialClubs.add("900");
+        initialClubs.add("901");
+        user.setClubs(initialClubs);
+        userDAO.save(user);
+
+        ArrayList<Account> members900 = new ArrayList<>(); members900.add(user);
+        ArrayList<Account> members901 = new ArrayList<>(); members901.add(user);
+        clubsDAO.writeClub(900L, members900, "LeaveTarget", "d", null, new ArrayList<Post>(), new ArrayList<>());
+        clubsDAO.writeClub(901L, members901, "StayClub", "d", null, new ArrayList<Post>(), new ArrayList<>());
+
+        // Act
+        interactor.execute(new LeaveClubInputData("henry", 900L));
+
+        // Assert
+        Account refreshed = (Account) userDAO.get("henry");
+        assertNotNull(refreshed);
+        ArrayList<String> updated = refreshed.getClubs();
+        assertNotNull(updated, "User clubs list should not be null");
+        assertFalse(updated.contains("900"), "Club 900 should be removed from user's club list");
+        assertTrue(updated.contains("901"), "Other club membership should be preserved");
+        Club leftClub = clubsDAO.getClub(900L);
+        assertNotNull(leftClub);
+        assertTrue(leftClub.getMembers().stream().noneMatch(a -> a.getUsername().equals("henry")), "User should no longer appear in club member list");
+    }
+
     private static class TestPresenter implements LeaveClubOutputBoundary {
         LeaveClubOutputData out; String error;
         public void prepareSuccessView(LeaveClubOutputData outputData) { this.out = outputData; }

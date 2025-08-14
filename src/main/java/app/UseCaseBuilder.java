@@ -58,12 +58,12 @@ import use_case.analyze_recipe.AnalyzeRecipeOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.club.ClubMembershipMutation;
+import use_case.club.ClubReadOperations;
 import use_case.comment.CommentPostInputBoundary;
 import use_case.comment.CommentPostInteractor;
 import use_case.comment.CommentPostOutputBoundary;
-import use_case.create_club.CreateClubInputBoundary;
-import use_case.create_club.CreateClubInteractor;
-import use_case.create_club.CreateClubOutputBoundary;
+import use_case.create_club.*;
 import use_case.create_post.CreatePostInputBoundary;
 import use_case.create_post.CreatePostInteractor;
 import use_case.create_post.CreatePostOutputBoundary;
@@ -449,7 +449,7 @@ public class UseCaseBuilder {
     public UseCaseBuilder addSpecificClubUseCase() {
         final SpecificClubOutputBoundary specificClubOutputBoundary = new SpecificClubPresenter(viewBuilder.getSpecificClubViewModel());
         final SpecificClubInputBoundary specificClubInteractor = new SpecificClubInteractor(
-                dbClubsDataAccessObject,
+                (ClubReadOperations) dbClubsDataAccessObject,
                 userDataAccessObject,
                 specificClubOutputBoundary
         );
@@ -467,7 +467,7 @@ public class UseCaseBuilder {
     public UseCaseBuilder addCreateClubUseCase() {
         final CreateClubOutputBoundary createClubOutputBoundary = new CreateClubPresenter(viewBuilder.getCreateClubViewModel());
         final CreateClubInputBoundary createClubInteractor = new CreateClubInteractor(
-                dbClubsDataAccessObject,
+                (ClubWriteOperations) dbClubsDataAccessObject,
                 userDataAccessObject,
                 createClubOutputBoundary
         );
@@ -491,7 +491,7 @@ public class UseCaseBuilder {
      */
     public UseCaseBuilder addListClubsUseCase() {
         final ListClubsOutputBoundary output = new ListClubsPresenter(viewBuilder.getClubViewModel());
-        final ListClubsInputBoundary interactor = new ListClubsInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final ListClubsInputBoundary interactor = new ListClubsInteractor((ClubReadOperations) dbClubsDataAccessObject, userDataAccessObject, output);
         final ListClubsController controller = new ListClubsController(interactor);
         viewBuilder.getClubHomePageView().setListClubsController(controller);
         return this;
@@ -502,7 +502,11 @@ public class UseCaseBuilder {
      */
     public UseCaseBuilder addJoinClubUseCase() {
         final JoinClubOutputBoundary output = new JoinClubPresenter(viewBuilder.getClubViewModel());
-        final JoinClubInputBoundary interactor = new JoinClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final JoinClubInputBoundary interactor = new JoinClubInteractor(
+                (ClubReadOperations) dbClubsDataAccessObject,
+                (ClubWriteOperations) dbClubsDataAccessObject,
+                userDataAccessObject,
+                output);
         final JoinClubController controller = new JoinClubController(interactor);
         viewBuilder.getClubHomePageView().setJoinClubController(controller);
         return this;
@@ -513,7 +517,11 @@ public class UseCaseBuilder {
      */
     public UseCaseBuilder addLeaveClubUseCase() {
         final LeaveClubOutputBoundary output = new LeaveClubPresenter(viewBuilder.getClubViewModel(), viewBuilder.getSpecificClubViewModel());
-        final LeaveClubInputBoundary interactor = new LeaveClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final LeaveClubInputBoundary interactor = new LeaveClubInteractor(
+                (ClubReadOperations) dbClubsDataAccessObject,
+                (ClubMembershipMutation) dbClubsDataAccessObject,
+                userDataAccessObject,
+                output);
         final LeaveClubController controller = new LeaveClubController(interactor);
         viewBuilder.getSpecificClubView().setLeaveClubController(controller);
         return this;
@@ -524,7 +532,11 @@ public class UseCaseBuilder {
      */
     public UseCaseBuilder addDeleteClubUseCase() {
         final DeleteClubOutputBoundary output = new DeleteClubPresenter(viewBuilder.getClubViewModel(), viewBuilder.getSpecificClubViewModel());
-        final DeleteClubInputBoundary interactor = new DeleteClubInteractor(dbClubsDataAccessObject, userDataAccessObject, output);
+        final DeleteClubInputBoundary interactor = new DeleteClubInteractor(
+                (ClubReadOperations) dbClubsDataAccessObject,
+                (ClubWriteOperations) dbClubsDataAccessObject,
+                userDataAccessObject,
+                output);
         final DeleteClubController controller = new DeleteClubController(interactor);
         viewBuilder.getSpecificClubView().setDeleteClubController(controller);
         return this;

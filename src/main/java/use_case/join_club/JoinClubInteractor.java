@@ -1,6 +1,9 @@
 package use_case.join_club;
 
-import data_access.ClubsDataAccessObject;
+import use_case.club.ClubAnnouncementCollector;
+import use_case.club.ClubAnnouncementResult;
+import use_case.club.ClubReadOperations;
+import use_case.create_club.ClubWriteOperations;
 import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
@@ -9,14 +12,17 @@ import entity.Post;
 import java.util.ArrayList;
 
 public class JoinClubInteractor implements JoinClubInputBoundary {
-    private final ClubsDataAccessObject clubsDataAccessObject;
+    private final ClubReadOperations clubRead; // replaces ClubLookup + ClubListing
+    private final ClubWriteOperations clubWrite; // replaces ClubCreationWrite
     private final UserDataAccessObject userDataAccessObject;
     private final JoinClubOutputBoundary presenter;
 
-    public JoinClubInteractor(ClubsDataAccessObject clubsDataAccessObject,
+    public JoinClubInteractor(ClubReadOperations clubRead,
+                              ClubWriteOperations clubWrite,
                               UserDataAccessObject userDataAccessObject,
                               JoinClubOutputBoundary presenter) {
-        this.clubsDataAccessObject = clubsDataAccessObject;
+        this.clubRead = clubRead;
+        this.clubWrite = clubWrite;
         this.userDataAccessObject = userDataAccessObject;
         this.presenter = presenter;
     }
@@ -26,7 +32,7 @@ public class JoinClubInteractor implements JoinClubInputBoundary {
         try {
             String username = inputData.getUsername();
             long clubId = inputData.getClubId();
-            Club club = clubsDataAccessObject.getClub(clubId);
+            Club club = clubRead.getClub(clubId);
             if (club == null) {
                 presenter.prepareFailView("Club not found");
                 return;
@@ -42,7 +48,7 @@ public class JoinClubInteractor implements JoinClubInputBoundary {
             if (!already) {
                 ArrayList<Account> members = club.getMembers();
                 members.add(user);
-                clubsDataAccessObject.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getImageUrl(), club.getPosts(), club.getTags());
+                clubWrite.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getImageUrl(), club.getPosts(), club.getTags());
             }
 
             // Update user club list
@@ -57,26 +63,12 @@ public class JoinClubInteractor implements JoinClubInputBoundary {
                 userDataAccessObject.save(user);
             }
 
-            // Build updated lists (reuse listing logic inline)
-            ArrayList<Club> allClubs = clubsDataAccessObject.getAllClubs();
-            ArrayList<Club> memberClubs = new ArrayList<>();
-            ArrayList<Club> nonMemberClubs = new ArrayList<>();
-            ArrayList<Post> announcements = new ArrayList<>();
-            for (Club c : allClubs) {
-                if (userClubs.contains(String.valueOf(c.getId()))) {
-                    memberClubs.add(c);
-                    ArrayList<Post> posts = c.getPosts();
-                    if (posts != null) {
-                        for (Post p : posts) {
-                            if (p != null && p.getType() != null && p.getType().trim().equalsIgnoreCase("announcement")) {
-                                announcements.add(p);
-                            }
-                        }
-                    }
-                } else {
-                    nonMemberClubs.add(c);
-                }
-            }
+            // Build updated lists via collector
+            ArrayList<Club> allClubs = clubRead.getAllClubs();
+            ClubAnnouncementResult res = ClubAnnouncementCollector.collect(user, allClubs);
+            ArrayList<Club> memberClubs = new ArrayList<>(res.memberClubs());
+            ArrayList<Club> nonMemberClubs = new ArrayList<>(res.nonMemberClubs());
+            ArrayList<Post> announcements = new ArrayList<>(res.announcements());
 
             presenter.prepareSuccessView(new JoinClubOutputData(memberClubs, nonMemberClubs, announcements, true, null));
         } catch (Exception e) {

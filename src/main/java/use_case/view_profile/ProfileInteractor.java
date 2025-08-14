@@ -9,6 +9,13 @@ import entity.Post;
 import entity.User;
 
 public class ProfileInteractor implements ProfileInputBoundary {
+    /**
+     * Explicit (non-functional) field to allow UML/diagram tools that rely solely on
+     * attribute inspection to recognize the dependency on the User entity.
+     * Not used in logic; kept null intentionally.
+     */
+    @SuppressWarnings("unused")
+    private User _umlUserDependency;
     private final ProfileUserDataAccessInterface userDataAccessObject;
     private final PostCommentsLikesDataAccessObject postCommentsLikesDataAccessObject;
     private final ProfileOutputBoundary presenter;

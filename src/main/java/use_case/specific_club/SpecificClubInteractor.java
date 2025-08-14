@@ -1,19 +1,19 @@
 package use_case.specific_club;
 
-import data_access.ClubsDataAccessObject;
 import data_access.UserDataAccessObject;
 import entity.Club;
+import use_case.club.ClubReadOperations;
 
 public class SpecificClubInteractor implements SpecificClubInputBoundary {
-    private final ClubsDataAccessObject clubsDataAccessObject;
+    private final ClubReadOperations clubRead; // was ClubLookup
     private final UserDataAccessObject userDataAccessObject; // retained for future extension
     private final SpecificClubOutputBoundary specificClubPresenter;
 
     public SpecificClubInteractor(
-            ClubsDataAccessObject clubsDataAccessObject,
+            ClubReadOperations clubRead,
             UserDataAccessObject userDataAccessObject,
             SpecificClubOutputBoundary specificClubPresenter) {
-        this.clubsDataAccessObject = clubsDataAccessObject;
+        this.clubRead = clubRead;
         this.userDataAccessObject = userDataAccessObject;
         this.specificClubPresenter = specificClubPresenter;
     }
@@ -21,7 +21,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void execute(SpecificClubInputData inputData) {
         try {
-            Club club = clubsDataAccessObject.getClub(inputData.getClubId());
+            Club club = clubRead.getClub(inputData.getClubId());
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -35,7 +35,7 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     @Override
     public void loadClub(long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(clubId);
+            Club club = clubRead.getClub(clubId);
             if (club == null) {
                 specificClubPresenter.prepareFailView("Club not found");
                 return;
@@ -47,25 +47,17 @@ public class SpecificClubInteractor implements SpecificClubInputBoundary {
     }
 
     @Override
-    public void fetchAnnouncements(long clubId) {
-        // Currently same as load; could filter announcements into separate output DTO if needed
-        loadClub(clubId);
-    }
+    public void fetchAnnouncements(long clubId) { loadClub(clubId); }
 
     @Override
-    public void fetchPosts(long clubId) {
-        // Currently same as load; differentiation can be added later
-        loadClub(clubId);
-    }
+    public void fetchPosts(long clubId) { loadClub(clubId); }
 
     @Override
     public boolean isMember(String username, long clubId) {
         try {
-            Club club = clubsDataAccessObject.getClub(clubId);
+            Club club = clubRead.getClub(clubId);
             if (club == null) return false;
             return club.getMembers().stream().anyMatch(m -> m.getUsername().equals(username));
-        } catch (Exception e) {
-            return false;
-        }
+        } catch (Exception e) { return false; }
     }
 }
