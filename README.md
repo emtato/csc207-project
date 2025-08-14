@@ -86,6 +86,8 @@ Jean Armstrong runs his own French bakery, and wants to interact with other Fren
 
 He joins a French bakery club and creates posts in the specific French bakery club feed, where he can make posts tailored to French pastries and users interested in the same topic. He also scrolls through the club feed to view and interact with posts that other members in the club have made.
 
+Main Features:
+
 Create Club: Create a new club with a name, description, profile image, tags​
 
 - Select Club Members: Selecting users from database of existing users to join the club​ from a drop down menu
