@@ -46,7 +46,6 @@ The urban setting also ensures that many of the experiences featured in the app 
 which might not be the case in smaller towns.
 
 ## Paragraph About Demographics Less Likely to Use Our Product
-- older population
-- people not interested in food?
-- people who dont or are unable or have difficulty using social media?
+Seniors with limited technology knowledge an
+people who live in smaller towns may not be able to use our app to the full extent. Locating restaurants and events near them will be less useful, as will be finding people in their community.
 
