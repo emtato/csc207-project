@@ -79,6 +79,12 @@ Use cases:
    - Creating new posts
   - saving posts and comments and likes to database
   - fetching posts, likes and comments from database
+(homepage view, display posts, fetch posts)
+<img width="1206" height="739" alt="image" src="https://github.com/user-attachments/assets/0df8e097-8150-4fb9-917c-766c011ef027" />
+(full post view, comment, save comment to database)
+<img width="1507" height="910" alt="image" src="https://github.com/user-attachments/assets/aeac076b-7e8a-461c-b101-459d615db1f1" />
+(create new post view, save post to database)
+<img width="1434" height="882" alt="image" src="https://github.com/user-attachments/assets/bab91924-794d-41ac-ab5f-863a4b645341" />
 
 ### User Story 6
 
