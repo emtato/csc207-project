@@ -1,6 +1,7 @@
 package use_case.fetch_review;
 
 import data_access.PostCommentsLikesDataAccessObject;
+import entity.Post;
 import entity.Review;
 
 import java.util.ArrayList;
@@ -19,12 +20,17 @@ public class FetchReviewInteractor implements FetchReviewInputBoundary {
 
     @Override
     public void execute(FetchReviewInputData inputData) {
-        getRandomFeedReviews(inputData);
+        // not used for now
     }
 
+    /**
+     * Fetch random reviews by:
+     *  - getting all available post IDs
+     *  - fetching each post with getPost(id)
+     *  - keeping only posts that are reviews (type == "review" or instanceof Review)
+     */
     public void getRandomFeedReviews(FetchReviewInputData inputData) {
-        // IMPORTANT: fetch available review IDs, not post IDs
-        List<Long> availableIDs = postDAO.getAvailableReviews();
+        ArrayList<Long> availableIDs = postDAO.getAvailablePosts();
         if (availableIDs == null || availableIDs.isEmpty()) {
             presenter.prepareFailView("No reviews found");
             return;
@@ -32,20 +38,45 @@ public class FetchReviewInteractor implements FetchReviewInputBoundary {
 
         Collections.shuffle(availableIDs);
         List<Review> result = new ArrayList<>();
-        for (int i = 0; i < Math.min(inputData.getNumberOfReviews(), availableIDs.size()); i++) {
-            Review r = postDAO.getReview(availableIDs.get(i));
-            if (r != null) {
-                result.add(r);
+
+        for (Long id : availableIDs) {
+            Post p = postDAO.getPost(id);
+            if (p == null) continue;
+            // accept if it's typed as review
+            if (p instanceof Review || "review".equalsIgnoreCase(p.getType())) {
+                // safe cast if instance of Review, else try to coerce
+                if (p instanceof Review) {
+                    result.add((Review) p);
+                } else {
+                    // create Review wrapper if needed (rare, depends on DAO)
+                    Review r = new Review(p.getUser(), p.getID(), p.getTitle(), p.getDescription());
+                    r.setTags(p.getTags());
+                    r.setDateTimeFromString(p.getDateTimeToString());
+                    result.add(r);
+                }
             }
+            if (result.size() >= inputData.getNumberOfReviews()) break;
         }
 
         if (result.isEmpty()) {
             presenter.prepareFailView("No reviews found");
         } else {
-            presenter.prepareSuccessView(new FetchReviewOutputData((ArrayList<Review>) result));
+            FetchReviewOutputData data = new FetchReviewOutputData(new ArrayList<>(result));
+            presenter.prepareSuccessView(data);
         }
     }
+
     public void getAvailableReviewsID() {
-        //
+        ArrayList<Long> availableIDs = postDAO.getAvailablePosts();
+        if (availableIDs == null) {
+            presenter.prepareFailView("No reviews found");
+            return;
+        }
+        ArrayList<Long> matches = new ArrayList<>();
+        for (Long id : availableIDs) {
+            Post p = postDAO.getPost(id);
+            if (p == null) continue;
+            if (p instanceof Review || "review".equalsIgnoreCase(p.getType())) matches.add(id);
+        }
     }
 }

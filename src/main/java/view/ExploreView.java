@@ -6,16 +6,12 @@ import data_access.PostCommentsLikesDataAccessObject;
 import entity.*;
 import entity.Event;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.like_post.LikePostController;
 import interface_adapter.map.MapState;
 import interface_adapter.map.MapViewModel;
-import use_case.like_post.LikePostInputBoundary;
-import use_case.like_post.LikePostInteractor;
 import view.map.MapView;
 import view.map.RestaurantSearch;
 import view.ui_components.MapPanel;
 import view.ui_components.MenuBarPanel;
-import view.ui_components.ReviewPanel;
 
 import javax.swing.*;
 import java.awt.*;

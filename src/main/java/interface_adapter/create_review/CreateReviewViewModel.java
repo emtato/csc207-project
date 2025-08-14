@@ -1,4 +1,4 @@
-package interface_adapter.create_review_view;
+package interface_adapter.create_review;
 
 import interface_adapter.ViewModel;
 import java.beans.PropertyChangeListener;

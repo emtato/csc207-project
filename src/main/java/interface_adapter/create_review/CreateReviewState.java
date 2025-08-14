@@ -1,4 +1,4 @@
-package interface_adapter.create_review_view;
+package interface_adapter.create_review;
 
 import java.util.ArrayList;
 

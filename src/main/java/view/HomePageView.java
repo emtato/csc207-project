@@ -1,14 +1,10 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.*;
 
-import entity.Account;
 import entity.Post;
-import entity.Recipe;
 import entity.Review;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.fetch_post.FetchPostController;
@@ -57,12 +53,12 @@ public class HomePageView extends JPanel {
         tagsButton.setPreferredSize(buttonSize);
         tagsButton.setBorder(BorderFactory.createEmptyBorder());
 
-        JButton refreshButton = new JButton("Refesh Homescreen");
+        JButton refreshButton = new JButton("Refresh Homescreen");
         refreshButton.setPreferredSize(buttonSize);
         refreshButton.setBorder(BorderFactory.createEmptyBorder());
         refreshButton.addActionListener(e -> updateHomeFeed());
 
-        JButton createButton = new JButton("NEW POST??");
+        JButton createButton = new JButton("NEW POST?");
         createButton.setPreferredSize(new Dimension(80, 30));
         createButton.setBorder(BorderFactory.createEmptyBorder());
         createButton.addActionListener(e -> {

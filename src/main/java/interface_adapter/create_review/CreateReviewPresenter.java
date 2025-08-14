@@ -1,4 +1,4 @@
-package interface_adapter.create_review_view;
+package interface_adapter.create_review;
 
 import use_case.create_review.CreateReviewOutputBoundary;
 import use_case.create_review.CreateReviewOutputData;

@@ -21,8 +21,8 @@ public class EditProfileViewModel extends ViewModel<EditProfileState> {
     public static final String PREFERENCE_TAGS_LABEL = "Preference Tags";
     public static final String EDIT_LOCATION_LABEL = "Location";
     public static final String SAVE_CHANGES_BUTTON_LABEL = "Save Changes";
-    public static final int EDIT_PANEL_WIDTH = GUIConstants.WINDOW_WIDTH;
-    public static final int EDIT_PANEL_HEIGHT = GUIConstants.WINDOW_HEIGHT;
+    public static final int EDIT_PANEL_WIDTH = 800; //GUIConstants.WINDOW_WIDTH;
+    public static final int EDIT_PANEL_HEIGHT = 400; //GUIConstants.WINDOW_HEIGHT;
 
     public EditProfileViewModel() {
         super("edit profile");

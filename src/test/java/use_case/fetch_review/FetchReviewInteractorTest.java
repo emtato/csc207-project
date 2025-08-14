@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -18,14 +19,22 @@ public class FetchReviewInteractorTest {
     void successTest() {
         PostCommentsLikesDataAccessObject dao = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // write dummy review
-        dao.writeReview(
-                203332,
+        // write dummy review via writePost with postType = "review"
+        HashMap<String, ArrayList<String>> contents = new HashMap<>();
+        // include rating if your DAO reads it from contents
+        contents.put("rating", new ArrayList<>(Arrays.asList("-1"))); // or "4.0"
+
+        dao.writePost(
+                203332L,
                 new Account("hi", "hi"),
                 "review title",
+                "review", // postType indicating a review
                 "review body",
+                contents,
                 new ArrayList<>(Arrays.asList("tag1")),
-                "2025-08-07 02:12 a.m."
+                new ArrayList<>(), // images
+                "2025-08-07 02:12 a.m.",
+                new ArrayList<>() // clubs
         );
 
         FetchReviewOutputBoundary successPresenter = new FetchReviewOutputBoundary() {
@@ -50,15 +59,15 @@ public class FetchReviewInteractorTest {
         interactor.getRandomFeedReviews(new FetchReviewInputData(1));
 
         // cleanup
-        try { dao.deleteReview(203332); } catch (Exception ignored) {}
+        try { dao.deletePost(203332L); } catch (Exception ignored) {}
     }
 
     @Test
     void failTest() {
         PostCommentsLikesDataAccessObject dao = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
-        // ensure no reviews exist
-        try { dao.deleteReview(203332); } catch (Exception ignored) {}
+        // ensure no reviews exist by deleting known test id
+        try { dao.deletePost(203332L); } catch (Exception ignored) {}
 
         FetchReviewOutputBoundary failPresenter = new FetchReviewOutputBoundary() {
             @Override
