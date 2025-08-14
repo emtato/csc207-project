@@ -1,29 +1,32 @@
 package use_case.create_club;
 
-import data_access.ClubsDataAccessObject;
-import data_access.UserDataAccessObject;
 import entity.Account;
 import entity.Club;
+import entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreateClubInteractor implements CreateClubInputBoundary {
-    private final ClubsDataAccessObject clubsDataAccessObject;
-    private final UserDataAccessObject userDataAccessObject;
+    private final CreateClubClubsDataAccessInterface clubsGateway;
+    private final CreateClubUserDataAccessInterface userGateway;
     private final CreateClubOutputBoundary createClubPresenter;
 
     public CreateClubInteractor(
-            ClubsDataAccessObject clubsDataAccessObject,
-            UserDataAccessObject userDataAccessObject,
+            CreateClubClubsDataAccessInterface clubsGateway,
+            CreateClubUserDataAccessInterface userGateway,
             CreateClubOutputBoundary createClubPresenter) {
-        this.clubsDataAccessObject = clubsDataAccessObject;
-        this.userDataAccessObject = userDataAccessObject;
+        this.clubsGateway = clubsGateway;
+        this.userGateway = userGateway;
         this.createClubPresenter = createClubPresenter;
     }
 
     @Override
-    public void create(String title, String description, String imageUrl, List<String> tags, List<String> memberUsernames) {
+    public void execute(CreateClubInputData inputData) {
+        String title = inputData.getTitle();
+        String description = inputData.getDescription();
+        List<String> tags = inputData.getTags();
+        List<String> memberUsernames = inputData.getMemberUsernames();
         try {
             // Input validation
             if (title == null || title.trim().isEmpty()) {
@@ -36,13 +39,11 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                 return;
             }
 
-            // Check if club with same name exists
-            if (clubsDataAccessObject.clubExists(title)) {
+            if (clubsGateway.clubExists(title)) {
                 createClubPresenter.prepareFailView("A club with this name already exists");
                 return;
             }
 
-            // Defensive null handling for memberUsernames
             if (memberUsernames == null) {
                 memberUsernames = new ArrayList<>();
             }
@@ -62,7 +63,8 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
             ArrayList<String> invalidUsernames = new ArrayList<>();
 
             for (String username : dedupedUsernames) {
-                Account member = (Account) userDataAccessObject.get(username);
+                User user = userGateway.get(username);
+                Account member = user instanceof Account ? (Account) user : null;
                 if (member != null) {
                     // Avoid duplicates by username
                     boolean alreadyAdded = false;
@@ -94,13 +96,14 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
             long clubId = System.currentTimeMillis();
 
             // Create the club
-            clubsDataAccessObject.writeClub(
+            ArrayList<String> tagList = tags == null ? new ArrayList<>() : new ArrayList<>(tags);
+            clubsGateway.writeClub(
                 clubId,
                 members,
                 title,
                 description,
                 new ArrayList<>(),  // New club starts with no posts
-                (ArrayList<String>) tags
+                tagList
             );
 
             // Update each member's club list (avoid duplicate club IDs)
@@ -114,11 +117,11 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
                     clubList.add(clubIdStr);
                 }
                 member.setClubs(clubList);
-                userDataAccessObject.save(member);
+                userGateway.save(member);
             }
 
             // Get the created club and prepare success view
-            Club createdClub = clubsDataAccessObject.getClub(clubId);
+            Club createdClub = clubsGateway.getClub(clubId);
             createClubPresenter.prepareSuccessView(new CreateClubOutputData(createdClub, true, null));
 
         } catch (Exception e) {
@@ -129,7 +132,7 @@ public class CreateClubInteractor implements CreateClubInputBoundary {
     @Override
     public void showMemberSelection(List<Account> currentMembers, String creatorUsername) {
         try {
-            ArrayList<Account> allUsers = userDataAccessObject.getAllUsers();
+            ArrayList<Account> allUsers = userGateway.getAllUsers();
             ArrayList<Account> availableUsers = new ArrayList<>();
 
             for (Account user : allUsers) {

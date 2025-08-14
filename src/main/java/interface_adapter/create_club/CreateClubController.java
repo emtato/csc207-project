@@ -2,6 +2,7 @@ package interface_adapter.create_club;
 
 import entity.Account;
 import use_case.create_club.CreateClubInputBoundary;
+import use_case.create_club.CreateClubInputData;
 import java.util.List;
 
 public class CreateClubController {
@@ -12,7 +13,9 @@ public class CreateClubController {
     }
 
     public void createClub(String title, String description, List<String> memberUsernames, List<String> tags) {
-        createClubUseCaseInteractor.create(title, description, null, tags, memberUsernames);
+        // imageUrl currently null / placeholder
+        CreateClubInputData inputData = new CreateClubInputData(title, description, null, tags, memberUsernames);
+        createClubUseCaseInteractor.execute(inputData);
     }
 
     public void showMemberSelection(List<Account> currentMembers, String creatorUsername) {

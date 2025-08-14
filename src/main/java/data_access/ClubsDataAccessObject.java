@@ -1,17 +1,14 @@
 package data_access;
 
-import entity.Account;
 import entity.Club;
-import entity.Post;
+import use_case.create_club.CreateClubClubsDataAccessInterface;
 
 import java.util.ArrayList;
 
-public interface ClubsDataAccessObject{
+public interface ClubsDataAccessObject extends CreateClubClubsDataAccessInterface {
 
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags);
-    public Club getClub(long clubID);
-    public ArrayList<Club> getAllClubs();
-    public boolean clubExists(String clubName);
-    public void removeMemberFromClub(String username, long clubID);
-    public void deleteClub(long clubID);
+    // Methods specific to broader club management beyond Create Club use case
+    ArrayList<Club> getAllClubs();
+    void removeMemberFromClub(String username, long clubID);
+    void deleteClub(long clubID);
 }

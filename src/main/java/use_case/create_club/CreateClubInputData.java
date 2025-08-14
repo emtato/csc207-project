@@ -1,6 +1,5 @@
 package use_case.create_club;
 
-import entity.Account;
 import java.util.List;
 
 public class CreateClubInputData {

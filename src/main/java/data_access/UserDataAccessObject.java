@@ -12,6 +12,7 @@ import use_case.manage_following.ManageFollowingUserDataAccessInterface;
 import use_case.view_profile.ProfileUserDataAccessInterface;
 import use_case.toggle_settings.SettingsUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+import use_case.create_club.CreateClubUserDataAccessInterface;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,8 @@ public interface UserDataAccessObject extends
         ManageFollowingUserDataAccessInterface,
         ManageFollowersUserDataAccessInterface,
         CreatePostDataAccessInterface,
-        DeleteAccountUserDataAccessInterface {
+        DeleteAccountUserDataAccessInterface,
+        CreateClubUserDataAccessInterface { // Added create club gateway
     void removeClubFromUser(String username, String clubId);
 
     /**
