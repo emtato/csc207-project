@@ -60,16 +60,6 @@ public class CreatePostInteractor implements CreatePostInputBoundary {
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                Post persisted = postDAO.getPost(postId);
-                if (persisted != null) {
-                    persisted.setClub(true);
-                }
-            }
-            else {
-                Post persisted = postDAO.getPost(postId);
-                if (persisted != null) {
-                    persisted.setClub(false);
-                }
             }
 
             CreatePostOutputData outputData = new CreatePostOutputData(post.getID(), timestamp);
