@@ -46,6 +46,14 @@ The urban setting also ensures that many of the experiences featured in the app 
 which might not be the case in smaller towns.
 
 ## Paragraph About Demographics Less Likely to Use Our Product
-Seniors with limited technology knowledge an
-people who live in smaller towns may not be able to use our app to the full extent. Locating restaurants and events near them will be less useful, as will be finding people in their community.
-
+Elderly individuals:
+    Seniors with limited technology knowledge would struggle navigating through the application, as they did not grow up with technology.
+    In psychology, learning new things during early childhood can make it easier to learn new things later in life (in this case, 
+    learning how to use devices) because early childhood experiences significantly shape brain development - particularly in areas 
+    related to learning and memory. Even if new models of computers, phones, etc. are released, they still hold some similarity to the
+    earlier models, which current seniors did not have.
+Rural and/or poor populations:
+    People who live in smaller or poor towns may not be able to use our app to the full extent.
+        - For people living in rural areas, locating restaurants and events near them will be less useful, as will be finding people in
+          their community.
+        - For people living in poor areas, the population may find it more difficult to afford a device to even use the application.
