@@ -2,6 +2,7 @@ package use_case.specific_club;
 
 import data_access.*;
 import entity.Account;
+import entity.Club;
 import entity.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,9 @@ class SpecificClubInteractorTest {
         PostCommentsLikesDataAccessObject postDAO = InMemoryPostCommentLikesDataAccessObject.getInstance();
         clubsDAO = InMemoryClubsDataAccessObject.getInstance(postDAO);
         userDAO = InMemoryUserDataAccessObject.getInstance();
+        // reset in-memory singleton state
+        for (Club c : new ArrayList<>(clubsDAO.getAllClubs())) { clubsDAO.deleteClub(c.getId()); }
+        for (Account a : new ArrayList<>(userDAO.getAllUsers())) { userDAO.deleteAccount(a.getUsername()); }
         presenter = new TestSpecificClubPresenter();
         specificClubInteractor = new SpecificClubInteractor(clubsDAO, userDAO, presenter);
     }
@@ -29,10 +33,7 @@ class SpecificClubInteractorTest {
     void executeSuccess() {
         // Setup test data
         long clubId = 1L;
-        ArrayList<Account> members = new ArrayList<>();
-        ArrayList<Post> posts = new ArrayList<>();
-        ArrayList<String> tags = new ArrayList<>();
-        clubsDAO.writeClub(clubId, members, "Test Club", "Description", posts, tags);
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.execute(new SpecificClubInputData(clubId, "Test Club", "Description"));
@@ -43,58 +44,153 @@ class SpecificClubInteractorTest {
     }
 
     @Test
+    void executeClubNotFound() {
+        specificClubInteractor.execute(new SpecificClubInputData(999L, "Missing", ""));
+        assertNull(presenter.getLastOutput());
+        assertEquals("Club not found", presenter.getLastError());
+    }
+
+    @Test
+    void executeExceptionCaught() {
+        // DAO that throws in getClub
+        class ThrowingClubsDAO implements ClubsDataAccessObject {
+            public void writeClub(long c, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public Club getClub(long id) { throw new RuntimeException("boom"); }
+            public boolean clubExists(String name) { return false; }
+            public ArrayList<entity.Club> getAllClubs() { return new ArrayList<>(); }
+            public void removeMemberFromClub(String u, long c) {}
+            public void deleteClub(long c) {}
+        }
+        SpecificClubInteractor throwing = new SpecificClubInteractor(new ThrowingClubsDAO(), userDAO, presenter);
+        throwing.execute(new SpecificClubInputData(5L, "X", "Y"));
+        assertNull(presenter.getLastOutput());
+        assertTrue(presenter.getLastError().startsWith("Error loading club:"));
+    }
+
+    @Test
     void loadClubSuccess() {
         // Setup test data
-        long clubId = 1L;
-        ArrayList<Account> members = new ArrayList<>();
-        clubsDAO.writeClub(clubId, members, "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
+        long clubId = 2L;
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Load Club", "Desc", new ArrayList<>(), new ArrayList<>());
 
         // Execute test
         specificClubInteractor.loadClub(clubId);
 
         // Verify results
         assertTrue(presenter.getLastOutput().isSuccess());
-        assertEquals("Test Club", presenter.getLastOutput().getClub().getName());
+        assertEquals("Load Club", presenter.getLastOutput().getClub().getName());
+    }
+
+    @Test
+    void loadClubNotFound() {
+        specificClubInteractor.loadClub(12345L);
+        assertNull(presenter.getLastOutput());
+        assertEquals("Club not found", presenter.getLastError());
+    }
+
+    @Test
+    void fetchAnnouncementsDelegatesSuccess() {
+        // Setup test data
+        long clubId = 3L;
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Ann Club", "Desc", new ArrayList<>(), new ArrayList<>());
+
+        // Execute test
+        specificClubInteractor.fetchAnnouncements(clubId);
+
+        // Verify results
+        assertNotNull(presenter.getLastOutput());
+        assertEquals("Ann Club", presenter.getLastOutput().getClub().getName());
+    }
+
+    @Test
+    void fetchAnnouncementsClubNotFound() {
+        specificClubInteractor.fetchAnnouncements(5678L);
+        assertNull(presenter.getLastOutput());
+        assertEquals("Club not found", presenter.getLastError());
+    }
+
+    @Test
+    void fetchPostsDelegatesSuccess() {
+        // Setup test data
+        long clubId = 4L;
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Posts Club", "Desc", new ArrayList<>(), new ArrayList<>());
+
+        // Execute test
+        specificClubInteractor.fetchPosts(clubId);
+
+        // Verify results
+        assertNotNull(presenter.getLastOutput());
+        assertEquals("Posts Club", presenter.getLastOutput().getClub().getName());
+    }
+
+    @Test
+    void fetchPostsClubNotFound() {
+        specificClubInteractor.fetchPosts(99999L);
+        assertNull(presenter.getLastOutput());
+        assertEquals("Club not found", presenter.getLastError());
     }
 
     @Test
     void isMemberTrue() {
         // Setup test data
-        long clubId = 1L;
+        long clubId = 10L;
         Account testUser = new Account("testUser", "password");
-        ArrayList<Account> members = new ArrayList<>();
-        members.add(testUser);
-        clubsDAO.writeClub(clubId, members, "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
+        ArrayList<Account> members = new ArrayList<>(); members.add(testUser);
+        clubsDAO.writeClub(clubId, members, "Member Club", "Desc", new ArrayList<>(), new ArrayList<>());
 
         // Execute test and verify
         assertTrue(specificClubInteractor.isMember("testUser", clubId));
     }
 
     @Test
-    void isMemberFalse() {
+    void isMemberFalseUserNotInClub() {
         // Setup test data
-        long clubId = 1L;
-        ArrayList<Account> members = new ArrayList<>();
-        clubsDAO.writeClub(clubId, members, "Test Club", "Description", new ArrayList<>(), new ArrayList<>());
+        long clubId = 11L;
+        clubsDAO.writeClub(clubId, new ArrayList<>(), "Empty Club", "Desc", new ArrayList<>(), new ArrayList<>());
 
         // Execute test and verify
-        assertFalse(specificClubInteractor.isMember("nonexistentUser", clubId));
+        assertFalse(specificClubInteractor.isMember("other", clubId));
+    }
+
+    @Test
+    void isMemberFalseClubNotFound() {
+        // Execute test and verify
+        assertFalse(specificClubInteractor.isMember("any", 123456L));
+    }
+
+    @Test
+    void isMemberExceptionReturnsFalse() {
+        class ThrowingClubsDAO implements ClubsDataAccessObject {
+            public void writeClub(long c, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public Club getClub(long id) { throw new RuntimeException("boom"); }
+            public boolean clubExists(String name) { return false; }
+            public ArrayList<entity.Club> getAllClubs() { return new ArrayList<>(); }
+            public void removeMemberFromClub(String u, long c) {}
+            public void deleteClub(long c) {}
+        }
+        SpecificClubInteractor throwing = new SpecificClubInteractor(new ThrowingClubsDAO(), userDAO, presenter);
+        assertFalse(throwing.isMember("user", 77L));
     }
 
     private static class TestSpecificClubPresenter implements SpecificClubOutputBoundary {
-        private SpecificClubOutputData lastOutput;
+        private SpecificClubOutputData lastOutput; private String lastError;
 
-        @Override
         public void prepareSuccessView(SpecificClubOutputData outputData) {
             this.lastOutput = outputData;
+            this.lastError = null;
         }
 
-        @Override
         public void prepareFailView(String error) {
+            this.lastOutput = null;
+            this.lastError = error;
         }
 
         public SpecificClubOutputData getLastOutput() {
             return lastOutput;
+        }
+
+        public String getLastError() {
+            return lastError;
         }
     }
 }
