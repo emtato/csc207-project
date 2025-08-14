@@ -646,7 +646,7 @@ public class FilePostCommentLikesDataAccessObject implements PostCommentsLikesDa
                         if (!toDelete.contains(p.getID())) kept.add(p); else changed = true;
                     }
                     if (changed) {
-                        clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), kept, club.getTags());
+                        clubsDAO.writeClub(club.getId(), club.getMembers(), club.getName(), club.getDescription(), club.getImageUrl(), kept, club.getTags());
                     }
                 }
             } catch (Exception e) {

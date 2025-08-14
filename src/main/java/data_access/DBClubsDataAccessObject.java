@@ -121,51 +121,35 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
     }
 
     @Override
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
+    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) {
         JSONObject data;
         try { data = getJsonObject(); } catch (DataAccessException e) { System.out.println(e.getMessage()); return; }
-
         JSONObject clubs = data.has("clubs") ? data.getJSONObject("clubs") : new JSONObject();
         JSONObject existing = clubs.has(String.valueOf(clubID)) ? clubs.getJSONObject(String.valueOf(clubID)) : new JSONObject();
-
-        // Preserve existing post IDs
         LinkedHashSet<Long> postIds = new LinkedHashSet<>();
         if (existing.has("posts")) {
             JSONArray existingPosts = existing.getJSONArray("posts");
-            for (int i = 0; i < existingPosts.length(); i++) {
-                try { postIds.add(existingPosts.getLong(i)); } catch (Exception ignored) {}
-            }
+            for (int i = 0; i < existingPosts.length(); i++) { try { postIds.add(existingPosts.getLong(i)); } catch (Exception ignored) {} }
         }
-        if (posts != null) {
-            for (Post p : posts) if (p != null) postIds.add(p.getID());
-        }
-
-        // Members
+        if (posts != null) { for (Post p : posts) if (p != null) postIds.add(p.getID()); }
         LinkedHashSet<String> memberUsernames = new LinkedHashSet<>();
-        if (members != null) {
-            for (Account m : members) if (m != null && m.getUsername() != null) memberUsernames.add(m.getUsername());
-        }
+        if (members != null) { for (Account m : members) if (m != null && m.getUsername() != null) memberUsernames.add(m.getUsername()); }
         JSONArray memberArray = new JSONArray();
         for (String uname : memberUsernames) memberArray.put(uname);
-
-        // Posts
         JSONArray postsArray = new JSONArray();
         for (Long id : postIds) postsArray.put(id);
-
-        // Tags
         LinkedHashSet<String> tagSet = new LinkedHashSet<>();
         if (tags != null) tagSet.addAll(tags);
         JSONArray tagArray = new JSONArray();
         for (String t : tagSet) if (t != null) tagArray.put(t);
-
         JSONObject newClub = new JSONObject();
         newClub.put("id", clubID);
         newClub.put("name", name);
         newClub.put("description", description);
+        newClub.put("imageUrl", imageUrl);
         newClub.put("members", memberArray);
         newClub.put("posts", postsArray);
         newClub.put("tags", tagArray);
-
         clubs.put(String.valueOf(clubID), newClub);
         data.put("clubs", clubs);
         try { saveJSONObject(data); } catch (DataAccessException e) { System.out.println(e.getMessage()); }
@@ -195,6 +179,7 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         JSONObject clubData = clubs.getJSONObject(key);
         String name = clubData.optString("name", "");
         String description = clubData.optString("description", "");
+        String imageUrl = clubData.has("imageUrl") ? clubData.optString("imageUrl", null) : null;
         long id = clubData.optLong("id", clubID);
 
         // Members
@@ -212,11 +197,7 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
             JSONArray pArr = clubData.getJSONArray("posts");
             JSONArray newPosts = new JSONArray();
             for (int i = 0; i < pArr.length(); i++) {
-                try {
-                    long pid = pArr.getLong(i);
-                    Post p = postDAO.getPost(pid);
-                    if (p != null) { posts.add(p); newPosts.put(pid); }
-                } catch (Exception ex) { System.out.println("DEBUG[DBClubsDAO]: Failed loading post: " + ex.getMessage()); }
+                try { long pid = pArr.getLong(i); Post p = postDAO.getPost(pid); if (p != null) { posts.add(p); newPosts.put(pid); } } catch (Exception ex) { System.out.println("DEBUG[DBClubsDAO]: Failed loading post: " + ex.getMessage()); }
             }
             // Replace posts array with validated list if changed
             if (newPosts.length() != pArr.length()) {
@@ -235,7 +216,7 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         }
 
         ArrayList<String> foodPreferences = new ArrayList<>(); // Not persisted separately in current design
-        return new Club(name, description, members, foodPreferences, posts, id, tags);
+        return new Club(name, description, imageUrl, members, foodPreferences, posts, id, tags);
     }
 
     @Override
@@ -291,19 +272,32 @@ public class DBClubsDataAccessObject implements ClubsDataAccessObject {
         JSONObject clubs = data.getJSONObject("clubs");
         String key = String.valueOf(clubID);
         if (!clubs.has(key)) return;
+        java.util.List<String> memberUsernames = new java.util.ArrayList<>();
         try {
             JSONObject clubData = clubs.getJSONObject(key);
             if (clubData.has("members")) {
                 JSONArray members = clubData.getJSONArray("members");
-                DBUserDataAccessObject userDAO = (DBUserDataAccessObject) DBUserDataAccessObject.getInstance();
                 for (int i = 0; i < members.length(); i++) {
-                    try { userDAO.removeClubFromUser(members.getString(i), key); } catch (Exception ignored) {}
+                    try { memberUsernames.add(members.getString(i)); } catch (Exception ignored) {}
                 }
             }
-        } catch (Exception ex) { System.out.println("DEBUG[DBClubsDAO]: Error cleaning members on delete: " + ex.getMessage()); }
+        } catch (Exception ex) { System.out.println("DEBUG[DBClubsDAO]: Error collecting members on delete: " + ex.getMessage()); }
+        try {
+            DBUserDataAccessObject userDAO = (DBUserDataAccessObject) DBUserDataAccessObject.getInstance();
+            userDAO.bulkRemoveClubFromUsers(key, memberUsernames);
+        } catch (Exception ex) { System.out.println("DEBUG[DBClubsDAO]: bulk member cleanup failed: " + ex.getMessage()); }
         clubs.remove(key);
         data.put("clubs", clubs);
-        try { saveJSONObject(data); } catch (DataAccessException e) { System.out.println(e.getMessage()); }
+        int attempts = 0;
+        while (attempts < 3) {
+            attempts++;
+            try { saveJSONObject(data); return; }
+            catch (DataAccessException e) {
+                System.out.println("DEBUG[DBClubsDAO]: save attempt " + attempts + " failed deleting club " + key + ": " + e.getMessage());
+                try { Thread.sleep(150L * attempts); } catch (InterruptedException ignored) {}
+            }
+        }
+        System.out.println("DEBUG[DBClubsDAO]: FAILED to persist deletion of club " + key + " after retries");
     }
 
     // Add a post ID to a club's post list (DB-only, no file mirroring)

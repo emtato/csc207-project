@@ -42,7 +42,7 @@ public class LeaveClubInteractor implements LeaveClubInputBoundary {
             ArrayList<Account> members = club.getMembers();
             boolean removed = members.removeIf(m -> m.getUsername().equals(username));
             if (removed) {
-                clubsDataAccessObject.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getPosts(), club.getTags());
+                clubsDataAccessObject.writeClub(club.getId(), members, club.getName(), club.getDescription(), club.getImageUrl(), club.getPosts(), club.getTags());
             }
 
             // Update user's club list
@@ -84,4 +84,3 @@ public class LeaveClubInteractor implements LeaveClubInputBoundary {
         }
     }
 }
-

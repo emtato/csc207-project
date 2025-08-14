@@ -60,6 +60,7 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
             username = app.Session.getCurrentUsername();
         }
         if (listClubsController != null && username != null) {
+            System.out.println("[ClubHome][DEBUG] Refresh fetch clubs for user='" + username + "'");
             listClubsController.fetch(username);
         }
     }
@@ -172,7 +173,9 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         clubIconPanel.setPreferredSize(new Dimension(150, 150));
         clubIconPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        RoundImagePanel roundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
+        String img = club.getImageUrl();
+        System.out.println("[ClubHome][DEBUG] Rendering member club id=" + club.getId() + " name='" + club.getName() + "' imageUrl='" + img + "'");
+        RoundImagePanel roundPanel = new RoundImagePanel(img);
         roundPanel.setPreferredSize(new Dimension(100, 100));
         JPanel centeringPanel = new JPanel();
         centeringPanel.add(roundPanel);
@@ -216,7 +219,9 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         explorePanel.setPreferredSize(new Dimension(370, 130));
         explorePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        RoundImagePanel exploreRoundPanel = new RoundImagePanel("images/Homemade-French-Fries_8.jpg");
+        String img = club.getImageUrl();
+        System.out.println("[ClubHome][DEBUG] Rendering explore club id=" + club.getId() + " name='" + club.getName() + "' imageUrl='" + img + "'");
+        RoundImagePanel exploreRoundPanel = new RoundImagePanel(img);
         exploreRoundPanel.setPreferredSize(new Dimension(100, 100));
         JPanel imageWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
         imageWrapper.setBackground(GUIConstants.WHITE);
@@ -297,6 +302,8 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
+            ClubState state = clubViewModel.getState();
+            System.out.println("[ClubHome][DEBUG] State update: memberClubs=" + state.getMemberClubs().size() + " nonMemberClubs=" + state.getNonMemberClubs().size() + " announcements=" + state.getAnnouncements().size());
             this.removeAll();
             this.add(createMainPanel());
             this.revalidate();

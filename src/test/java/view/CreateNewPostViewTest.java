@@ -38,7 +38,7 @@ class CreateNewPostViewTest {
         createNewPostView.actionPerformed(e1);
         createNewPostView.actionPerformed(e2);
 
-        Club c = new Club("hi", "desc", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 300l, new ArrayList<>());
+        Club c = new Club("hi", "desc", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 300l, new ArrayList<>());
         CreateNewPostView createNewPostView2 = new CreateNewPostView(new ViewManagerModel(), new CreatePostViewModel(), c);
 
         createNewPostView2.actionPerformed(e);
@@ -72,7 +72,7 @@ class CreateNewPostViewTest {
     @Test
     public void setClubTest() {
         CreateNewPostView view = new CreateNewPostView(new ViewManagerModel(), new CreatePostViewModel());
-        Club c = new Club("club", "d", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1L, new ArrayList<>());
+        Club c = new Club("club", "d", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1L, new ArrayList<>());
         view.setClub(c);
     }
 }

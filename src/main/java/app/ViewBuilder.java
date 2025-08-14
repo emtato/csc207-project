@@ -265,7 +265,7 @@ public class ViewBuilder {
     // TODO: add these views later, cant add them rn because they depend on daos rn
     public ViewBuilder addSpecificClubView() {
         // Create the default club for initial view
-        Club defaultClub = new Club("Default Club", "Default Description", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
+        Club defaultClub = new Club("Default Club", "Default Description", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>());
 
         specificClubViewModel = new SpecificClubViewModel();
         specificClubView = new SpecificClubView(

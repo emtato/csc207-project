@@ -7,11 +7,17 @@ import entity.Club;
 import entity.Post;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListClubsInteractor implements ListClubsInputBoundary {
     private final ClubsDataAccessObject clubsDataAccessObject;
     private final UserDataAccessObject userDataAccessObject;
     private final ListClubsOutputBoundary presenter;
+
+    private static final Map<String, ListClubsOutputData> CACHE = new HashMap<>();
+    private static final Map<String, Long> LAST_FETCH = new HashMap<>();
+    private static final long MIN_INTERVAL_MS = 1500; // throttle repeated fetches
 
     public ListClubsInteractor(ClubsDataAccessObject clubsDataAccessObject,
                                UserDataAccessObject userDataAccessObject,
@@ -23,8 +29,25 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
 
     @Override
     public void execute(ListClubsInputData inputData) {
+        final String username = inputData.getUsername();
+        long now = System.currentTimeMillis();
+        Long last = LAST_FETCH.get(username);
+        if (last != null && now - last < MIN_INTERVAL_MS) {
+            // Throttled: serve cached data if available
+            ListClubsOutputData cached = CACHE.get(username);
+            if (cached != null) {
+                presenter.prepareSuccessView(new ListClubsOutputData(
+                        cached.getMemberClubs(),
+                        cached.getNonMemberClubs(),
+                        cached.getAnnouncements(),
+                        true,
+                        "(throttled)"
+                ));
+                return;
+            }
+            // else continue to attempt fetch
+        }
         try {
-            String username = inputData.getUsername();
             Account currentUser = (Account) userDataAccessObject.get(username);
             if (currentUser == null) {
                 presenter.prepareFailView("User not found");
@@ -33,8 +56,8 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
             ArrayList<String> userClubIds = currentUser.getClubs();
             if (userClubIds == null) {
                 userClubIds = new ArrayList<>();
+                // Avoid immediate save (network) just for empty list; defer until we actually reconstruct
                 currentUser.setClubs(userClubIds);
-                userDataAccessObject.save(currentUser);
             }
 
             boolean reconstructed = false;
@@ -50,7 +73,7 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
                     }
                 }
                 if (reconstructed) {
-                    currentUser.setClubs(userClubIds);
+                    // Persist only if changed to reduce writes
                     userDataAccessObject.save(currentUser);
                 }
             }
@@ -76,11 +99,26 @@ public class ListClubsInteractor implements ListClubsInputBoundary {
                     nonMemberClubs.add(club);
                 }
             }
-
-            presenter.prepareSuccessView(new ListClubsOutputData(memberClubs, nonMemberClubs, announcements, true, null));
+            ListClubsOutputData out = new ListClubsOutputData(memberClubs, nonMemberClubs, announcements, true, null);
+            CACHE.put(username, out);
+            LAST_FETCH.put(username, now);
+            presenter.prepareSuccessView(out);
         } catch (Exception e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.toLowerCase().contains("too many requests")) {
+                ListClubsOutputData cached = CACHE.get(username);
+                if (cached != null) {
+                    presenter.prepareSuccessView(new ListClubsOutputData(
+                            cached.getMemberClubs(),
+                            cached.getNonMemberClubs(),
+                            cached.getAnnouncements(),
+                            true,
+                            "Using cached data (rate limited)"
+                    ));
+                    return;
+                }
+            }
             presenter.prepareFailView("Error fetching clubs data: " + e.getMessage());
         }
     }
 }
-

@@ -43,7 +43,7 @@ public class LeaveClubInteractorTest {
 
         ArrayList<Account> members = new ArrayList<>();
         members.add(user);
-        clubsDAO.writeClub(500L, members, "TempClub", "desc", new ArrayList<Post>(), new ArrayList<>());
+        clubsDAO.writeClub(500L, members, "TempClub", "desc", null, new ArrayList<Post>(), new ArrayList<>());
 
         interactor.execute(new LeaveClubInputData("carol", 500L));
 
@@ -65,7 +65,7 @@ public class LeaveClubInteractorTest {
     @Test
     void userNotFoundTriggersFailView() {
         // Create club but do not create user
-        clubsDAO.writeClub(77L, new ArrayList<>(), "LonelyClub", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(77L, new ArrayList<>(), "LonelyClub", "desc", null, new ArrayList<>(), new ArrayList<>());
         interactor.execute(new LeaveClubInputData("ghost", 77L));
         assertNull(presenter.out);
         assertEquals("User not found", presenter.error);
@@ -83,7 +83,7 @@ public class LeaveClubInteractorTest {
 
         ArrayList<Account> membersClub10 = new ArrayList<>();
         membersClub10.add(user);
-        clubsDAO.writeClub(10L, membersClub10, "ClubLeave", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(10L, membersClub10, "ClubLeave", "desc", null, new ArrayList<>(), new ArrayList<>());
 
         ArrayList<Account> membersClub11 = new ArrayList<>();
         membersClub11.add(user);
@@ -92,7 +92,7 @@ public class LeaveClubInteractorTest {
         posts.add(new Post(user, 1L, "Ann1", "d", new ArrayList<>(), new HashMap<>(), " Announcement ", "2024-01-01 10:00 AM", new ArrayList<>()));
         posts.add(null);
         posts.add(new Post(user, 2L, "Other", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-01 11:00 AM", new ArrayList<>()));
-        clubsDAO.writeClub(11L, membersClub11, "ClubStay", "desc", posts, new ArrayList<>());
+        clubsDAO.writeClub(11L, membersClub11, "ClubStay", "desc", null, posts, new ArrayList<>());
 
         // Force user clubs list to null to cover null branch
         user.setClubs(null);
@@ -115,9 +115,9 @@ public class LeaveClubInteractorTest {
         // Custom DAO that throws when getAllClubs called
         class ExplodingClubsDAO implements ClubsDataAccessObject {
             @Override
-            public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) { }
+            public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) { }
             @Override
-            public Club getClub(long clubID) { return new Club("Name", "desc", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), clubID, new ArrayList<>()); }
+            public Club getClub(long clubID) { return new Club("Name", "desc", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), clubID, new ArrayList<>()); }
             @Override
             public boolean clubExists(String clubName) { return false; }
             @Override
@@ -147,8 +147,8 @@ public class LeaveClubInteractorTest {
         // Club 600 (member) and Club 601 (not member of 601's member list)
         ArrayList<Account> members600 = new ArrayList<>();
         members600.add(user);
-        clubsDAO.writeClub(600L, members600, "MemberClub", "desc", new ArrayList<>(), new ArrayList<>());
-        clubsDAO.writeClub(601L, new ArrayList<>(), "OtherClub", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(600L, members600, "MemberClub", "desc", null, new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(601L, new ArrayList<>(), "OtherClub", "desc", null, new ArrayList<>(), new ArrayList<>());
 
         interactor.execute(new LeaveClubInputData("frank", 601L));
 
@@ -170,7 +170,7 @@ public class LeaveClubInteractorTest {
 
         // Club 21 (to leave) with membership including user
         ArrayList<Account> members21 = new ArrayList<>(); members21.add(user);
-        clubsDAO.writeClub(21L, members21, "LeaveThis", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(21L, members21, "LeaveThis", "desc", null, new ArrayList<>(), new ArrayList<>());
 
         // Club 22 (stay in) with posts
         ArrayList<Account> members22 = new ArrayList<>(); members22.add(user);
@@ -179,7 +179,7 @@ public class LeaveClubInteractorTest {
         posts.add(new Post(user, 101L, "NullType", "d", new ArrayList<>(), new HashMap<>(), null, "2024-01-01 10:05 AM", new ArrayList<>()));
         posts.add(null); // null post
         posts.add(new Post(user, 102L, "General", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-01 10:10 AM", new ArrayList<>()));
-        clubsDAO.writeClub(22L, members22, "StayClub", "desc", posts, new ArrayList<>());
+        clubsDAO.writeClub(22L, members22, "StayClub", "desc", null, posts, new ArrayList<>());
 
         interactor.execute(new LeaveClubInputData("gina", 21L));
 

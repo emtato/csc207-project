@@ -28,10 +28,13 @@ public class InMemoryClubsDataAccessObject implements ClubsDataAccessObject {
     }
 
     @Override
-    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) {
-        Club club = new Club(name, description, members != null ? members : new ArrayList<>(),
-                           new ArrayList<>(), posts != null ? posts : new ArrayList<>(),
-                           clubID, tags != null ? tags : new ArrayList<>());
+    public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) {
+        Club club = new Club(name, description, imageUrl,
+                members != null ? members : new ArrayList<>(),
+                new ArrayList<>(),
+                posts != null ? posts : new ArrayList<>(),
+                clubID,
+                tags != null ? tags : new ArrayList<>());
         clubs.put(clubID, club);
     }
 
@@ -69,20 +72,17 @@ public class InMemoryClubsDataAccessObject implements ClubsDataAccessObject {
         if (club != null) {
             ArrayList<Account> updatedMembers = new ArrayList<>(club.getMembers());
             updatedMembers.removeIf(member -> member.getUsername().equals(username));
-
-            // Create a new club instance with updated members
             Club updatedClub = new Club(
-                club.getName(),
-                club.getDescription(),
-                updatedMembers,
-                club.getFoodPreferences(),
-                club.getPosts(),
-                club.getId(),
-                club.getTags()
+                    club.getName(),
+                    club.getDescription(),
+                    club.getImageUrl(),
+                    updatedMembers,
+                    club.getFoodPreferences(),
+                    club.getPosts(),
+                    club.getId(),
+                    club.getTags()
             );
             clubs.put(clubID, updatedClub);
-
-            // Update user's club membership
             FileUserDataAccessObject userDAO = (FileUserDataAccessObject) FileUserDataAccessObject.getInstance();
             userDAO.removeClubFromUser(username, String.valueOf(clubID));
         }

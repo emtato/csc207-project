@@ -48,7 +48,7 @@ public class DeleteClubInteractorTest {
     @Test
     void userNotFound() {
         // create club without user
-        clubsDAO.writeClub(10L, new ArrayList<>(), "Test", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(10L, new ArrayList<>(), "Test", "desc", null, new ArrayList<>(), new ArrayList<>());
         interactor.execute(new DeleteClubInputData("ghost", 10L));
         assertNull(presenter.successData);
         assertEquals("User not found", presenter.error);
@@ -58,7 +58,7 @@ public class DeleteClubInteractorTest {
     void notAuthorized() {
         Account bob = new Account("bob", "pw"); userDAO.save(bob);
         // Club members do not include bob
-        clubsDAO.writeClub(11L, new ArrayList<>(), "Club", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(11L, new ArrayList<>(), "Club", "desc", null, new ArrayList<>(), new ArrayList<>());
         interactor.execute(new DeleteClubInputData("bob", 11L));
         assertEquals("Not authorized to delete this club", presenter.error);
     }
@@ -80,7 +80,7 @@ public class DeleteClubInteractorTest {
         posts.add(new Post(owner, 2L, "Ann2", "d", new ArrayList<>(), new HashMap<>(), " Announcement ", "2024-01-01 10:05 AM", new ArrayList<>()));
         posts.add(null);
         posts.add(new Post(owner, 3L, "General", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-01 10:10 AM", new ArrayList<>()));
-        clubsDAO.writeClub(20L, members, "DeleteMe", "desc", posts, new ArrayList<>());
+        clubsDAO.writeClub(20L, members, "DeleteMe", "desc", null, posts, new ArrayList<>());
         // Remaining club (owner only) WITH announcement posts to verify filtering AFTER deletion
         ArrayList<Account> remainMembers = new ArrayList<>(); remainMembers.add(owner);
         ArrayList<Post> remainPosts = new ArrayList<>();
@@ -88,7 +88,7 @@ public class DeleteClubInteractorTest {
         remainPosts.add(new Post(owner, 102L, "RemainAnn2", "d", new ArrayList<>(), new HashMap<>(), " Announcement ", "2024-01-02 09:05 AM", new ArrayList<>()));
         remainPosts.add(null);
         remainPosts.add(new Post(owner, 103L, "RemainGeneral", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-02 09:10 AM", new ArrayList<>()));
-        clubsDAO.writeClub(21L, remainMembers, "Remain", "desc", remainPosts, new ArrayList<>());
+        clubsDAO.writeClub(21L, remainMembers, "Remain", "desc", null, remainPosts, new ArrayList<>());
         owner.getClubs().add("21"); userDAO.save(owner);
 
         interactor.execute(new DeleteClubInputData("owner", 20L));
@@ -109,9 +109,9 @@ public class DeleteClubInteractorTest {
     void exceptionDuringDeletionHandled() {
         Account owner = new Account("zack", "pw"); owner.setClubs(new ArrayList<>(Collections.singletonList("30"))); userDAO.save(owner);
         // Basic club object to be returned by throwing DAO
-        Club club = new Club("ThrowClub", "desc", new ArrayList<>(Collections.singletonList(owner)), new ArrayList<>(), new ArrayList<>(), 30L, new ArrayList<>());
+        Club club = new Club("ThrowClub", "desc", null, new ArrayList<>(Collections.singletonList(owner)), new ArrayList<>(), new ArrayList<>(), 30L, new ArrayList<>());
         class ThrowingClubsDAO implements ClubsDataAccessObject {
-            public void writeClub(long id, ArrayList<Account> m, String n, String d, ArrayList<Post> p, ArrayList<String> t) {}
+            public void writeClub(long id, ArrayList<Account> m, String n, String d, String imageUrl, ArrayList<Post> p, ArrayList<String> t) {}
             public Club getClub(long id) { return club; }
             public boolean clubExists(String name) { return false; }
             public ArrayList<Club> getAllClubs() { return new ArrayList<>(); }

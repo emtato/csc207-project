@@ -10,11 +10,13 @@ public class Club {
     private final ArrayList<String> foodPreferences = new ArrayList<>();
     private final ArrayList<Post> posts = new ArrayList<>();
     private final ArrayList<String> tags = new ArrayList<>();
+    private final String imageUrl; // new field for club profile image
 
-    public Club(String name, String description, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts, long id, ArrayList<String> tags) {
+    public Club(String name, String description, String imageUrl, ArrayList<Account> members, ArrayList<String> foodPreferences, ArrayList<Post> posts, long id, ArrayList<String> tags) {
         this.name = name;
         this.description = description;
         this.id = id;
+        this.imageUrl = imageUrl;
         if (members != null) {
             this.members.addAll(members);
         }
@@ -37,42 +39,17 @@ public class Club {
         return this.description;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public long getId() { return id; }
+    public ArrayList<String> getTags() { return tags; }
+    public String getImageUrl() { return imageUrl; }
 
-    public long getId() {
-        return id;
-    }
+    public void setDisplayName(String newDisplayName) { }
+    public void setDescription(String newBio) { }
+    public void setPreferences(String newPreferences) { }
 
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    public void setDisplayName(String newDisplayName) {
-
-    }
-
-    public void setDescription(String newBio) {
-
-    }
-
-    public void setPreferences(String newPreferences) {
-
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public ArrayList<Account> getMembers() {
-        return members;
-    }
-
-    public ArrayList<String> getFoodPreferences() {
-        return foodPreferences;
-    }
-
+    public String getDescription() { return description; }
+    public ArrayList<Account> getMembers() { return members; }
+    public ArrayList<String> getFoodPreferences() { return foodPreferences; }
     public ArrayList<Post> getPosts() {return posts;}
-
 }

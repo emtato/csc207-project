@@ -11,8 +11,7 @@ import java.util.ArrayList;
  * Defined in the use_case layer to keep the interactor independent of outer data access details.
  */
 public interface CreateClubClubsDataAccessInterface {
-    void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags);
+    void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags);
     Club getClub(long clubID);
     boolean clubExists(String clubName);
 }
-

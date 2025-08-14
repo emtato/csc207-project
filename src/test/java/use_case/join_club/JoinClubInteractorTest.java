@@ -33,7 +33,7 @@ public class JoinClubInteractorTest {
     void joinClubAddsMembership() {
         Account user = new Account("bob", "pw");
         userDAO.save(user);
-        clubsDAO.writeClub(300L, new ArrayList<>(), "CoolClub", "desc", new ArrayList<Post>(), new ArrayList<>());
+        clubsDAO.writeClub(300L, new ArrayList<>(), "CoolClub", "desc", null, new ArrayList<Post>(), new ArrayList<>());
 
         interactor.execute(new JoinClubInputData("bob", 300L));
 
@@ -54,7 +54,7 @@ public class JoinClubInteractorTest {
 
     @Test
     void userNotFoundTriggersFailView() {
-        clubsDAO.writeClub(42L, new ArrayList<>(), "SomeClub", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(42L, new ArrayList<>(), "SomeClub", "desc", null, new ArrayList<>(), new ArrayList<>());
         interactor.execute(new JoinClubInputData("ghost", 42L));
         assertNull(presenter.out);
         assertEquals("User not found", presenter.error);
@@ -67,7 +67,7 @@ public class JoinClubInteractorTest {
         user.setClubs(userClubs);
         userDAO.save(user);
         ArrayList<Account> members = new ArrayList<>(); members.add(user);
-        clubsDAO.writeClub(55L, members, "DupClub", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(55L, members, "DupClub", "desc", null, new ArrayList<>(), new ArrayList<>());
 
         interactor.execute(new JoinClubInputData("chris", 55L));
 
@@ -85,7 +85,7 @@ public class JoinClubInteractorTest {
         Account user = new Account("dana", "pw");
         user.setClubs(null); // force null branch
         userDAO.save(user);
-        clubsDAO.writeClub(70L, new ArrayList<>(), "NullListClub", "desc", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(70L, new ArrayList<>(), "NullListClub", "desc", null, new ArrayList<>(), new ArrayList<>());
 
         interactor.execute(new JoinClubInputData("dana", 70L));
 
@@ -99,7 +99,7 @@ public class JoinClubInteractorTest {
         Account user = new Account("erin", "pw");
         userDAO.save(user);
         // Club A to join
-        clubsDAO.writeClub(81L, new ArrayList<>(), "AnnClub", "d", new ArrayList<>(), new ArrayList<>());
+        clubsDAO.writeClub(81L, new ArrayList<>(), "AnnClub", "d", null, new ArrayList<>(), new ArrayList<>());
         // Club B already joined with announcement posts
         ArrayList<Account> membersB = new ArrayList<>(); membersB.add(user);
         ArrayList<Post> postsB = new ArrayList<>();
@@ -107,7 +107,7 @@ public class JoinClubInteractorTest {
         postsB.add(new Post(user, 2L, "Other", "d", new ArrayList<>(), new HashMap<>(), "general", "2024-01-01 09:05 AM", new ArrayList<>()));
         postsB.add(null);
         postsB.add(new Post(user, 3L, "NullType", "d", new ArrayList<>(), new HashMap<>(), null, "2024-01-01 09:10 AM", new ArrayList<>()));
-        clubsDAO.writeClub(82L, membersB, "Existing", "d", postsB, new ArrayList<>());
+        clubsDAO.writeClub(82L, membersB, "Existing", "d", null, postsB, new ArrayList<>());
         // user is already member of 82
         ArrayList<String> uc = new ArrayList<>(); uc.add("82"); user.setClubs(uc); userDAO.save(user);
 
@@ -123,8 +123,8 @@ public class JoinClubInteractorTest {
     @Test
     void exceptionDuringProcessingTriggersFailView() {
         class ExplodingClubsDAO implements ClubsDataAccessObject {
-            @Override public void writeClub(long clubID, ArrayList<Account> members, String name, String description, ArrayList<Post> posts, ArrayList<String> tags) { }
-            @Override public Club getClub(long clubID) { return new Club("X", "d", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), clubID, new ArrayList<>()); }
+            @Override public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) { }
+            @Override public Club getClub(long clubID) { return new Club("X", "d", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), clubID, new ArrayList<>()); }
             @Override public boolean clubExists(String clubName) { return false; }
             @Override public ArrayList<Club> getAllClubs() { throw new RuntimeException("boom"); }
             @Override public void removeMemberFromClub(String username, long clubID) { }

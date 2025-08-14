@@ -30,6 +30,14 @@ public interface UserDataAccessObject extends
         DeleteAccountUserDataAccessInterface,
         CreateClubUserDataAccessInterface { // Added create club gateway
     void removeClubFromUser(String username, String clubId);
+    default void bulkRemoveClubFromUsers(String clubId, java.util.List<String> usernames) { // optional override
+        if (usernames != null) {
+            for (String u : usernames) {
+                try { removeClubFromUser(u, clubId); } catch (Exception ignored) {}
+            }
+        }
+    }
+    default void invalidateCache() { /* no-op for implementations without cache */ }
 
     /**
      * Gets all users in the system
