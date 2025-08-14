@@ -194,6 +194,141 @@ public class DBUserDataAccessObject implements UserDataAccessObject {
             for (int i = 0; i < arr.length(); i++) clubs.add(arr.optString(i));
             account.setClubs(clubs);
         }
+
+        // Load lists
+        if (userJson.has("likesUsernames")) {
+            ArrayList<Long> likes = new ArrayList<>();
+            JSONArray likesArray = userJson.getJSONArray("likesUsernames");
+            for (int i = 0; i < likesArray.length(); i++) {
+                likes.add(likesArray.getLong(i));
+            }
+            account.setLikesUsernames(likes);
+        }
+
+        // Load blocked terms and food preferences
+        if (userJson.has("blockedTerms")) {
+            ArrayList<String> blockedTerms = new ArrayList<>();
+            JSONArray termsArray = userJson.getJSONArray("blockedTerms");
+            for (int i = 0; i < termsArray.length(); i++) {
+                blockedTerms.add(termsArray.getString(i));
+            }
+            account.setBlockedTerms(blockedTerms);
+        }
+
+        if (userJson.has("foodPreferences")) {
+            ArrayList<String> foodPrefs = new ArrayList<>();
+            JSONArray prefsArray = userJson.getJSONArray("foodPreferences");
+            for (int i = 0; i < prefsArray.length(); i++) {
+                foodPrefs.add(prefsArray.getString(i));
+            }
+            account.setFoodPreferences(foodPrefs);
+        }
+
+        // Load maps and complex objects
+        // Note: For follower, following, blocked, and muted accounts, we only store usernames, display names, and
+        // profile picture urls, and create stub Account objects.
+        // Full account data would need to be loaded separately if needed.
+
+        if (userJson.has("followerAccounts")) {
+            HashMap<String, User> followers = new HashMap<>();
+            JSONObject followersJson = userJson.getJSONObject("followerAccounts");
+            for (String key : followersJson.keySet()) {
+                String followerUsername = followersJson.getJSONObject(key).getString("username");
+                String followerDisplayName = followersJson.getJSONObject(key).getString("displayName");
+                String followerPictureUrl = followersJson.getJSONObject(key).getString("profilePictureUrl");
+                User follower = new Account(followerUsername, "");
+                follower.setDisplayName(followerDisplayName);
+                follower.setProfilePictureUrl(followerPictureUrl);
+                followers.put(key, follower);
+            }
+            account.setFollowerAccounts(followers);
+        }
+
+        if (userJson.has("followingAccounts")) {
+            HashMap<String, User> following = new HashMap<>();
+            JSONObject followingJson = userJson.getJSONObject("followingAccounts");
+            for (String key : followingJson.keySet()) {
+                String followingUsername = followingJson.getJSONObject(key).getString("username");
+                String followingDisplayName = followingJson.getJSONObject(key).getString("displayName");
+                String followingPictureUrl = followingJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToFollow = new Account(followingUsername, "");
+                accountToFollow.setDisplayName(followingDisplayName);
+                accountToFollow.setProfilePictureUrl(followingPictureUrl);
+                following.put(key, accountToFollow);
+            }
+            account.setFollowingAccounts(following);
+        }
+
+        if (userJson.has("requestedAccounts")) {
+            HashMap<String, User> requested = new HashMap<>();
+            JSONObject requestedJson = userJson.getJSONObject("requestedAccounts");
+            for (String key : requestedJson.keySet()) {
+                String requestedUsername = requestedJson.getJSONObject(key).getString("username");
+                String requestedDisplayName = requestedJson.getJSONObject(key).getString("displayName");
+                String requestedPictureUrl = requestedJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToRequest = new Account(requestedUsername, "");
+                accountToRequest.setDisplayName(requestedDisplayName);
+                accountToRequest.setProfilePictureUrl(requestedPictureUrl);
+                requested.put(key, accountToRequest);
+            }
+            account.setRequestedAccounts(requested);
+        }
+
+        if (userJson.has("requesterAccounts")) {
+            HashMap<String, User> requesters = new HashMap<>();
+            JSONObject requesterJson = userJson.getJSONObject("requesterAccounts");
+            for (String key : requesterJson.keySet()) {
+                String requesterUsername = requesterJson.getJSONObject(key).getString("username");
+                String requesterDisplayName = requesterJson.getJSONObject(key).getString("displayName");
+                String requesterPictureUrl = requesterJson.getJSONObject(key).getString("profilePictureUrl");
+                User requester = new Account(requesterUsername, "");
+                requester.setDisplayName(requesterDisplayName);
+                requester.setProfilePictureUrl(requesterPictureUrl);
+                requesters.put(key, requester);
+            }
+            account.setRequesterAccounts(requesters);
+        }
+
+        if (userJson.has("blockedAccounts")) {
+            HashMap<String, User> blocked = new HashMap<>();
+            JSONObject blockedJson = userJson.getJSONObject("blockedAccounts");
+            for (String key : blockedJson.keySet()) {
+                String blockedUsername = blockedJson.getJSONObject(key).getString("username");
+                String blockedDisplayName = blockedJson.getJSONObject(key).getString("displayName");
+                String blockedPictureUrl = blockedJson.getJSONObject(key).getString("profilePictureUrl");
+                User accountToBlock = new Account(blockedUsername, "");
+                accountToBlock.setDisplayName(blockedDisplayName);
+                accountToBlock.setProfilePictureUrl(blockedPictureUrl);
+                blocked.put(key, accountToBlock);
+            }
+            account.setBlockedAccounts(blocked);
+        }
+
+        if (userJson.has("mutedAccounts")) {
+            ArrayList<User> muted = new ArrayList<>();
+            JSONArray mutedArray = userJson.getJSONArray("mutedAccounts");
+            for (int i = 0; i < mutedArray.length(); i++) {
+                String mutedUsername = mutedArray.getJSONObject(i).getString("username");
+                String mutedDisplayName = mutedArray.getJSONObject(i).getString("displayName");
+                String mutedPictureUrl = mutedArray.getJSONObject(i).getString("profilePictureUrl");
+                User accountToMute = new Account(mutedUsername, "");
+                accountToMute.setDisplayName(mutedDisplayName);
+                accountToMute.setProfilePictureUrl(mutedPictureUrl);
+                muted.add(accountToMute);
+            }
+            account.setMutedAccounts(muted);
+        }
+
+        // Load user posts
+        if (userJson.has("userPosts")) {
+            ArrayList<Long> posts = new ArrayList<>();
+            JSONArray postsJsonArray = userJson.getJSONArray("userPosts");
+            for (int i = 0; i < postsJsonArray.length(); i++) {
+                posts.add(postsJsonArray.getLong(i));
+            }
+            account.setUserPosts(posts);
+        }
+
         return account;
     }
 

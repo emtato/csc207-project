@@ -83,6 +83,10 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         createView();
 
         // add listeners
+        addListeners();
+    }
+
+    private void addListeners() {
         addNameInputFieldListener();
         addBioInputFieldListener();
         addUploadProfilePictureFieldListener();
@@ -135,11 +139,6 @@ public class EditProfileView extends JPanel implements PropertyChangeListener {
         editProfilePanel.add(uploadProfilePicturePanel);
 
         final JLabel editPreferencesLabel = new JLabel(EditProfileViewModel.PREFERENCE_TAGS_LABEL);
-        final StringBuilder preferences = new StringBuilder();
-        for (String pref : this.editProfileViewModel.getState().getPreferences()) {
-            preferences.append(pref).append(LINE_BREAK);
-        }
-        preferencesField.setText(preferences.toString());
         final JPanel editPrefsPanel = new LabelTextPanel(editPreferencesLabel, preferencesField);
         editProfilePanel.add(editPrefsPanel);
 
