@@ -110,4 +110,6 @@ public interface PostCommentsLikesDataAccessObject {
      * @param userDAO  the UserDataAccessObject instance for user-related data access
      */
     void deleteAllPostsByUser(String username, ClubsDataAccessObject clubsDAO, UserDataAccessObject userDAO);
+
+   // void clearAll();
 }

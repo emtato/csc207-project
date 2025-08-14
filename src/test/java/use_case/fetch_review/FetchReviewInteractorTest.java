@@ -4,6 +4,7 @@ import data_access.InMemoryPostCommentLikesDataAccessObject;
 import data_access.PostCommentsLikesDataAccessObject;
 import entity.Account;
 import entity.Review;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,6 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class FetchReviewInteractorTest {
+
+    @BeforeEach
+    void resetDao() {
+        ((InMemoryPostCommentLikesDataAccessObject)
+                InMemoryPostCommentLikesDataAccessObject.getInstance())
+                .clearAll();
+    }
 
     @Test
     void successTest() {
@@ -59,7 +67,11 @@ public class FetchReviewInteractorTest {
         interactor.getRandomFeedReviews(new FetchReviewInputData(1));
 
         // cleanup
-        try { dao.deletePost(203332L); } catch (Exception ignored) {}
+        try {
+            dao.deletePost(203332L);
+        }
+        catch (Exception ignored) {
+        }
     }
 
     @Test
@@ -67,7 +79,11 @@ public class FetchReviewInteractorTest {
         PostCommentsLikesDataAccessObject dao = InMemoryPostCommentLikesDataAccessObject.getInstance();
 
         // ensure no reviews exist by deleting known test id
-        try { dao.deletePost(203332L); } catch (Exception ignored) {}
+        try {
+            dao.deletePost(203332L);
+        }
+        catch (Exception ignored) {
+        }
 
         FetchReviewOutputBoundary failPresenter = new FetchReviewOutputBoundary() {
             @Override
