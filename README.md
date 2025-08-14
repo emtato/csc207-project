@@ -63,6 +63,28 @@ request, which her friend soon accepts.​ Finally, she returns to her profile t
   <img width="500" alt="image" src="https://github.com/user-attachments/assets/ba24e80c-6c20-4a8b-b54a-62cd27d7bb70" />
 </p>
 
+### User Story 6
+
+Jean Armstrong runs his own French bakery, and wants to interact with other French pastry chefs to talk about French baked goods and meet more people in the industry.​
+
+He joins a French bakery club and creates posts in the specific French bakery club feed, where he can make posts tailored to French pastries and users interested in the same topic. He also scrolls through the club feed to view and interact with posts that other members in the club have made.
+
+Create Club: Create a new club with a name, description, profile image, tags​
+- Select Club Members: Selecting users from database of existing users to join the club​ from a drop down menu
+
+Delete Club: delete an existing club​
+
+Joining/Deleting Club: the user can join or leave an existing club​ by clicking their respective buttons
+
+Making Announcements and Posts: Users can make an announcement or post through a specific club that will only show up on that specific club's feed. Announcement and general posts are separated into different feeds, while announcement posts will also show up on the general club home page. 
+
+Club Homepage View
+
+Club-Specific View
+
+Create Club View
+
+
 ## Installation Instructions
 
 ### Required Software
