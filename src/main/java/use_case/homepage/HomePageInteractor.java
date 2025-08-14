@@ -8,10 +8,10 @@ private final HomePageOutputBoundary homePageOutputBoundary;
         this.homePageOutputBoundary = homePageOutputBoundary;
     }
 
-//    @Override
-//    public void executeViewProfile() {
-//        final HomePageOutputData homePageOutputData = new HomePageOutputData();
-//    }
+    @Override
+    public void executeViewProfile() {
+        final HomePageOutputData homePageOutputData = new HomePageOutputData();
+    }
 
     @Override
     public void switchToSignUpView() {
