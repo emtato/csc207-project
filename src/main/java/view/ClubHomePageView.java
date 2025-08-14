@@ -15,6 +15,8 @@ import interface_adapter.like_post.LikePostController;
 import interface_adapter.specific_club.SpecificClubController;
 import interface_adapter.specific_club.SpecificClubViewModel;
 import view.ui_components.*;
+
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -28,6 +30,18 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     private LikePostController likePostController;
     private final SpecificClubViewModel specificClubViewModel;
     private SpecificClubController specificClubController;  // Remove final to allow setting later
+
+    // Layout constants for Explore Clubs cards
+    private static final int EXPLORE_CARD_WIDTH = 370;
+    private static final int EXPLORE_CARD_HEIGHT = 130;
+    private static final int IMAGE_WIDTH = 100; // width of the round image
+    private static final int H_GAP = 5; // BorderLayout hgap used in explore card
+    private static final int BORDER_PADDING_TOTAL = 20; // left + right (10 each)
+    private static final int CENTER_AVAILABLE_WIDTH = EXPLORE_CARD_WIDTH - BORDER_PADDING_TOTAL - IMAGE_WIDTH - H_GAP; // width available for text + button area
+    private static final int JOIN_BUTTON_WIDTH = 90;
+    private static final int JOIN_BUTTON_HEIGHT = 28;
+    private static final int TITLE_LABEL_WIDTH = Math.max(60, CENTER_AVAILABLE_WIDTH - JOIN_BUTTON_WIDTH - 30); // leave small gap
+    private static final int DESCRIPTION_WIDTH = CENTER_AVAILABLE_WIDTH; // full width below button row
 
     public ClubHomePageView(ViewManagerModel viewManagerModel,
                           ClubViewModel clubViewModel,
@@ -215,8 +229,9 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     private JPanel createExploreClubPanel(Club club) {
         JPanel explorePanel = new JPanel(new BorderLayout(5, 5));
         explorePanel.setBackground(GUIConstants.WHITE);
-        explorePanel.setMaximumSize(new Dimension(370, 130));
-        explorePanel.setPreferredSize(new Dimension(370, 130));
+        // Restore original fixed height so panels do not grow taller
+        explorePanel.setPreferredSize(new Dimension(EXPLORE_CARD_WIDTH, EXPLORE_CARD_HEIGHT));
+        explorePanel.setMaximumSize(new Dimension(EXPLORE_CARD_WIDTH, EXPLORE_CARD_HEIGHT));
         explorePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         String img = club.getImageUrl();
@@ -229,7 +244,7 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         explorePanel.add(imageWrapper, BorderLayout.WEST);
 
         JPanel exploreTextPanel = createExploreTextPanel(club);
-        explorePanel.add(exploreTextPanel);
+        explorePanel.add(exploreTextPanel, BorderLayout.CENTER);
 
         return explorePanel;
     }
@@ -238,23 +253,37 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         JPanel exploreTextPanel = new JPanel();
         exploreTextPanel.setLayout(new BoxLayout(exploreTextPanel, BoxLayout.Y_AXIS));
         exploreTextPanel.setBackground(GUIConstants.WHITE);
+        exploreTextPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel titleAndButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Title row with join button on the right (use GridBagLayout so button height stays small)
+        JPanel titleAndButtonPanel = new JPanel(new GridBagLayout());
         titleAndButtonPanel.setBackground(GUIConstants.WHITE);
+        titleAndButtonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel exploreLabel = new JLabel(club.getName());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 1.0; gbc.weighty = 0; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.anchor = GridBagConstraints.NORTHWEST;
+
+        String title = club.getName() == null ? "" : escapeHtml(club.getName());
+        String titleHtml = "<html><div style='width:" + TITLE_LABEL_WIDTH + "px; margin:0; padding:0;'>" + title + "</div></html>";
+        JLabel exploreLabel = new JLabel(titleHtml);
         exploreLabel.setFont(GUIConstants.FONT_TEXT);
-        titleAndButtonPanel.add(exploreLabel);
+        exploreLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        exploreLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        titleAndButtonPanel.add(exploreLabel, gbc);
 
         JButton joinButton = createJoinButton(club);
-        titleAndButtonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        titleAndButtonPanel.add(joinButton);
+        GridBagConstraints gbcBtn = new GridBagConstraints();
+        gbcBtn.gridx = 1; gbcBtn.gridy = 0; gbcBtn.weightx = 0; gbcBtn.weighty = 0; gbcBtn.insets = new Insets(0, 8, 0, 0); gbcBtn.anchor = GridBagConstraints.NORTH; gbcBtn.fill = GridBagConstraints.NONE;
+        titleAndButtonPanel.add(joinButton, gbcBtn);
 
         exploreTextPanel.add(titleAndButtonPanel);
         exploreTextPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        JLabel exploreDescription = new JLabel("<html><div style='width:200px'>" +
-                club.getDescription() + "</div></html>");
+        // Dynamic truncation with ellipsis based on remaining vertical space in fixed-height card
+        String rawDesc = club.getDescription() == null ? "" : escapeHtml(club.getDescription());
+        int titleHeight = titleAndButtonPanel.getPreferredSize().height; // includes wrapped title lines
+        String descHtml = buildDescriptionHtml(rawDesc, titleHeight);
+        JLabel exploreDescription = new JLabel(descHtml);
         exploreDescription.setFont(GUIConstants.SMALL_FONT_TEXT);
         exploreDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
         exploreTextPanel.add(exploreDescription);
@@ -262,8 +291,139 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
         return exploreTextPanel;
     }
 
+    // Build HTML for description truncated to fit remaining space with ellipsis if needed
+    private String buildDescriptionHtml(String text, int titleHeight) {
+        int availableHeight = EXPLORE_CARD_HEIGHT - 20 /* top+bottom border padding */ - titleHeight - 5 /* spacer */;
+        if (availableHeight <= 0) {
+            return wrapHtml("...");
+        }
+        Font descFont = GUIConstants.SMALL_FONT_TEXT != null ? GUIConstants.SMALL_FONT_TEXT : new JLabel().getFont().deriveFont(11f);
+        // Measure using temporary graphics
+        BufferedImage bi = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bi.createGraphics();
+        g2.setFont(descFont);
+        FontMetrics fm = g2.getFontMetrics();
+        int lineHeight = fm.getHeight();
+        int maxLines = Math.max(1, availableHeight / lineHeight);
+        java.util.List<String> lines = wrapTextToWidth(text, fm, DESCRIPTION_WIDTH, maxLines);
+        boolean truncated = didTruncate(text, lines);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lines.size(); i++) {
+            sb.append(lines.get(i));
+            if (i < lines.size() - 1) sb.append("<br>");
+        }
+        if (truncated) {
+            // Ensure last line ends with ellipsis (avoid duplicate)
+            if (!sb.toString().endsWith("...")) {
+                sb.append("...");
+            }
+        }
+        g2.dispose();
+        return "<html><div style='width:" + DESCRIPTION_WIDTH + "px; margin:0; padding:0;'>" + sb + "</div></html>";
+    }
+
+    private boolean didTruncate(String original, java.util.List<String> producedLines) {
+        String joined = String.join(" ", producedLines).replace("...", "");
+        // Rough check: if produced text (sans ellipsis) shorter than original it's truncated
+        return original.length() > joined.length();
+    }
+
+    private java.util.List<String> wrapTextToWidth(String text, FontMetrics fm, int maxWidth, int maxLines) {
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        String[] words = text.split("\\s+");
+        StringBuilder current = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            String candidate = current.length() == 0 ? word : current + " " + word;
+            if (fm.stringWidth(candidate) <= maxWidth) {
+                current.setLength(0);
+                current.append(candidate);
+            } else {
+                // commit current line
+                if (current.length() > 0) {
+                    lines.add(current.toString());
+                } else {
+                    // single long word; hard cut
+                    lines.add(cutWordToFit(word, fm, maxWidth));
+                }
+                if (lines.size() == maxLines) {
+                    return lines; // no space for more lines
+                }
+                current.setLength(0);
+                current.append(word);
+            }
+            if (i == words.length - 1 && current.length() > 0) {
+                lines.add(current.toString());
+            }
+            if (lines.size() == maxLines) break;
+        }
+        // If exceeded lines, ensure last line fits and leave rest for truncation
+        if (lines.size() > maxLines) {
+            return lines.subList(0, maxLines);
+        }
+        return lines;
+    }
+
+    private String cutWordToFit(String word, FontMetrics fm, int maxWidth) {
+        if (fm.stringWidth(word) <= maxWidth) return word;
+        StringBuilder sb = new StringBuilder();
+        for (char c : word.toCharArray()) {
+            if (fm.stringWidth(sb.toString() + c + "...") > maxWidth) break;
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    private String wrapHtml(String inner) {
+        return "<html><div style='width:" + DESCRIPTION_WIDTH + "px; margin:0; padding:0;'>" + inner + "</div></html>";
+    }
+
     private JButton createJoinButton(Club club) {
-        JButton joinButton = new JButton("Join Club");
+        JButton joinButton = new JButton("Join") {
+            @Override public Dimension getPreferredSize() { return new Dimension(JOIN_BUTTON_WIDTH, JOIN_BUTTON_HEIGHT); }
+            @Override public Dimension getMinimumSize() { return getPreferredSize(); }
+            @Override public Dimension getMaximumSize() { return getPreferredSize(); }
+            @Override public void updateUI() { /* lock UI so LAF doesn't inflate size */ }
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(220, 220, 220));
+                g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 8, 8);
+                g2.setColor(Color.DARK_GRAY);
+                FontMetrics fm = g2.getFontMetrics();
+                String txt = getText();
+                int tx = (getWidth() - fm.stringWidth(txt)) / 2;
+                int ty = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+                g2.drawString(txt, Math.max(2, tx), ty);
+                g2.dispose();
+            }
+            @Override protected void paintBorder(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(Color.GRAY);
+                g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 8, 8);
+                g2.dispose();
+            }
+        };
+        // Remove all padding; our preferred size is authoritative.
+        joinButton.setMargin(new Insets(0,0,0,0));
+        joinButton.setBorder(BorderFactory.createEmptyBorder());
+        joinButton.setContentAreaFilled(false); // we custom paint
+        joinButton.setFocusPainted(false);
+        joinButton.setOpaque(false);
+
+        // Fit font to height (simple shrink loop) but do not tie actual height to font.
+        Font base = GUIConstants.SMALL_FONT_TEXT != null ? GUIConstants.SMALL_FONT_TEXT : joinButton.getFont();
+        int target = JOIN_BUTTON_HEIGHT - 4;
+        int size = base.getSize();
+        Font trial = base;
+        FontMetrics fm = joinButton.getFontMetrics(trial);
+        while (size > 6 && fm.getHeight() > target) {
+            size -= 1;
+            trial = base.deriveFont((float) size);
+            fm = joinButton.getFontMetrics(trial);
+        }
+        joinButton.setFont(trial);
+
         String username = app.Session.getCurrentAccount() != null ?
                 app.Session.getCurrentAccount().getUsername() : app.Session.getCurrentUsername();
         joinButton.addActionListener(e -> {
@@ -271,6 +431,8 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
                 joinClubController.join(username, club.getId());
             }
         });
+        // Remove tooltip that showed full text to avoid confusion
+        joinButton.setToolTipText(null);
         return joinButton;
     }
 
@@ -326,5 +488,10 @@ public class ClubHomePageView extends JPanel implements PropertyChangeListener {
     // Allow other views (e.g., CreateNewPostView) to trigger a clubs refresh after posting
     public void reloadClubs() {
         refresh();
+    }
+
+    // Simple HTML escape for label content
+    private String escapeHtml(String s) {
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 }
