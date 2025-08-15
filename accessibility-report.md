@@ -46,14 +46,37 @@ The urban setting also ensures that many of the experiences featured in the app 
 which might not be the case in smaller towns.
 
 ## Paragraph About Demographics Less Likely to Use Our Product
-Elderly individuals:
-    Seniors with limited technology knowledge would struggle navigating through the application, as they did not grow up with technology.
-    In psychology, learning new things during early childhood can make it easier to learn new things later in life (in this case, 
-    learning how to use devices) because early childhood experiences significantly shape brain development - particularly in areas 
-    related to learning and memory. Even if new models of computers, phones, etc. are released, they still hold some similarity to the
-    earlier models, which current seniors did not have.
-Rural and/or poor populations:
-    People who live in smaller or poor towns may not be able to use our app to the full extent.
-        - For people living in rural areas, locating restaurants and events near them will be less useful, as will be finding people in
-          their community.
-        - For people living in poor areas, the population may find it more difficult to afford a device to even use the application.
+Certain demographic groups may be less inclined or able to engage with our food-focused social media platform due to barriers related to technology 
+access, lifestyle, or environment. While the program is designed to welcoming to anyone with an interest of exploring culinary experiences, it is
+important to recognize that factors such as age, geographic location, and socioeconomic status can influence their app usage.
+
+i. Elderly individuals: Seniors with limited technology knowledge would struggle navigating through the application, as they did not grow up with technology.
+
+In developmental psychology, learning new things during early childhood can make it easier to learn new things later in life - in this case, 
+learning how to use devices. These childhood experiences significantly shape brain development, particularly in areas related to learning and
+memory. For the people who were introduced to computers, smartphones, and other digital interfaces early in life, adapting to the latest versions
+is often easier, as modern devices build on concepts established in earlier models. In contrast, current seniors often missed those foundational
+experiences, which may lead to the most basic actions (e.g. navigating menus, adjusting settings) may feel unintuitive or frustrating. As a result, 
+they may be less inclined to use the app regularly or explore its full range of features.
+    
+ii. Rural citizens and/or poor populations: People who live in smaller or lower-income places may not be able to completely benefit from the app.
+
+- Rural areas: Many small towns and remote regions have fewer restaurants, specialty food vendors, or food-related events compared to urban centers. This
+  limits the usefulness of features like restaurant discovery, event calendars, or local meetups, as there are simply fewer listings to populate the feed.
+  Regardles of whether someone in a rural area is enthusiastic about food culture, the app’s value may feel reduced, as the extent of its content is
+  geographically distant. Moreover, rural communities may face slower or less reliable internet connections, making the photo-heavy, media-rich aspects of
+  our platform frustrating to use.
+
+- Economically disadvantaged areas: In lower-income communities, the barriers are twofold. First, residents may have limited access to the devices necessary
+  for full participation — such as smartphones with large screens, high-speed data plans, or updated operating systems capable of running the latest app
+  versions. Second, the cost of regularly exploring new restaurants, attending culinary events, or purchasing specialty foods may not be feasible. Even if
+  the app inspires them with ideas, the financial means to act on those ideas may be lacking, which can lead to disengagement over time.
+
+Furthermore, both rural and economically disadvantaged communities may have lower representation in user-generated content, since fewer residents are able 
+to contribute restaurant reviews, event photos, or recommendations. This ultimately creates a feedback loop: the app becomes less relevant to these users,
+which in turn makes the app’s local content even thinner.
+
+While our platform aims to connect all food enthusiasts, certain groups such as the aformentioned may naturally engage less with our service. These
+limitations stem not from a lack of interest in food culture, but from external factors like technological literacy, geographic accessibility, and
+affordability. Recognizing these challenges is essential, as it allows us to address gaps in usability, and ensure that our platform remains as inclusive
+and accessible as possible for diverse audiences.
