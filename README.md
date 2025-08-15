@@ -87,6 +87,88 @@ Use cases:
 (create new post view, save post to database)
 <img width="1434" height="882" alt="image" src="https://github.com/user-attachments/assets/bab91924-794d-41ac-ab5f-863a4b645341" />
 
+### User Story 5
+
+Del Icious is new in town and wants to familiarize herself with the restaurants around her, so that she can show her friends when they visit. Meanwhile, Del wants to make sure to find the best restaurant in the city, checking every review and comment relating to the business. During her spare time, Del goes out to check out the restaurants, noting their location on the app, and later writes her own reviews. She has a preference for inexpensive foods, with vegetarian options, to compensate for some of her friends’ needs.
+
+Main Topic: Restaurant list, Map View, Reviews​
+- Map [Uses Google Places API (New)]
+- Find restaurants based on location, preference, and dietary needs [Uses Google Places API (New)]
+- Browsing reviews
+- Post review
+- Saving reviews in the database (works locally)
+  
+Given the preferred tags (cuisine) and location of the user, a list of restaurants show in the explore view. If none is provided, the restaurants will still show based on the user's IP.​
+
+Associated Use Case: ​
+
+- Create review;​ creates a new review, a lot similar to creating a new post
+
+- Fetch review;​ fetches the review from the database [Uses CSC207 Grade APIs]
+
+- Search restaurant; searches restaurants based on cuisine (ArrayList<String>) and location (String) [Uses Google Places API (New)]
+
+Navigating each component:
+
+Explore View: After logging in, click the explore button (on the bottom, 2nd button from the left)
+
+<img width="309" height="88" alt="Image" src="https://github.com/user-attachments/assets/0220a473-6b89-41cc-902e-8faf822d3443" />
+
+<img width="1782" height="991" alt="Image" src="https://github.com/user-attachments/assets/186eabe2-4bda-4680-ae97-8415410f39cc" />
+
+In the left column, the user can see a list of restaurants based on their location.
+<img width="587" height="795" alt="Image" src="https://github.com/user-attachments/assets/a828235c-2990-4a87-838c-6517a8e46245" />
+
+Each restaurant has 3 buttons:
+
+<img width="561" height="119" alt="Image" src="https://github.com/user-attachments/assets/2a8cab5f-f4ec-4b11-874e-196862c903b4" />
+
+- Click "View Map"
+
+  You will see a map panel with an image and description of the restaurant
+  
+  <img width="993" height="839" alt="Image" src="https://github.com/user-attachments/assets/e922c7ca-aa0e-4d46-bae9-6774c090007e" />
+  
+    - Click "Open in Google Maps"
+    <img width="1776" height="895" alt="Image" src="https://github.com/user-attachments/assets/28364471-b74e-463e-a29e-2f5ac6f04369" />
+    
+    - Click "Open Website"
+    <img width="1861" height="974" alt="Image" src="https://github.com/user-attachments/assets/646187e5-5737-4fc0-943b-c7db7e4b605e" />
+    
+    - Click "Close"
+
+      It goes back to the explore page
+
+- Click "Website"
+
+  It is the same as "View Map" -> "Open Website"
+
+
+- Click "Post Review"
+
+  You will see an pop-up for user's to fill in a review of the restaurant
+  
+    - Empty review
+  <img width="771" height="539" alt="Image" src="https://github.com/user-attachments/assets/04755745-40cd-40ac-bc9e-e29586247d78" />
+  
+    - Incomplete review
+  <img width="766" height="541" alt="Image" src="https://github.com/user-attachments/assets/f00d86c1-88b0-4d05-9b82-c84850f6d96f" />
+  
+    - Complete review
+
+   <img width="768" height="539" alt="Image" src="https://github.com/user-attachments/assets/df52b3d8-0b6a-4dc9-96b6-1d41522fe015" />
+
+      
+  If the review is empty or incomplete, the review will not submit.
+  
+    <img width="370" height="149" alt="Image" src="https://github.com/user-attachments/assets/dd920519-355c-490b-995a-54754c5f4c05" />
+
+
+  If the review is complete, the review will submit.
+  
+    <img width="326" height="144" alt="Image" src="https://github.com/user-attachments/assets/15d36867-3bb8-4b0a-beff-c8aff3d00150" />
+
+
 ### User Story 6
 
 Jean Armstrong runs his own French bakery, and wants to interact with other French pastry chefs to talk about French baked goods and meet more people in the industry.​
