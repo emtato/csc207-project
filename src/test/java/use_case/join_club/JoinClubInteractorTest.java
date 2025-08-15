@@ -6,6 +6,8 @@ import entity.Club;
 import entity.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import use_case.club.ClubReadOperations;
+import use_case.create_club.ClubWriteOperations;
 
 import java.util.*;
 
@@ -26,7 +28,7 @@ public class JoinClubInteractorTest {
         for (Club c : new ArrayList<>(clubsDAO.getAllClubs())) { clubsDAO.deleteClub(c.getId()); }
         for (Account a : new ArrayList<>(userDAO.getAllUsers())) { userDAO.deleteAccount(a.getUsername()); }
         presenter = new TestPresenter();
-        interactor = new JoinClubInteractor(clubsDAO, userDAO, presenter);
+        interactor = new JoinClubInteractor((ClubReadOperations) clubsDAO, (ClubWriteOperations) clubsDAO, userDAO, presenter);
     }
 
     @Test
@@ -132,7 +134,7 @@ public class JoinClubInteractorTest {
         }
         Account user = new Account("fred", "pw"); userDAO.save(user);
         ClubsDataAccessObject exploding = new ExplodingClubsDAO();
-        JoinClubInteractor explodingInteractor = new JoinClubInteractor(exploding, userDAO, presenter);
+        JoinClubInteractor explodingInteractor = new JoinClubInteractor((ClubReadOperations) exploding, (ClubWriteOperations) exploding, userDAO, presenter);
         explodingInteractor.execute(new JoinClubInputData("fred", 9L));
         assertNull(presenter.out);
         assertTrue(presenter.error.startsWith("Error joining club:"));

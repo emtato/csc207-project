@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateClubInteractorTest {
     private CreateClubInteractor interactor;
-    private CreateClubClubsDataAccessInterface clubsGateway;
+    private ClubWriteOperations clubsGateway; // changed type from nonexistent interface
     private CreateClubUserDataAccessInterface userGateway;
     private TestCreateClubPresenter presenter;
     private static int uniqueCounter = 0;
@@ -20,7 +20,7 @@ class CreateClubInteractorTest {
     @BeforeEach
     void setUp() {
         PostCommentsLikesDataAccessObject postDAO = InMemoryPostCommentLikesDataAccessObject.getInstance();
-        clubsGateway = InMemoryClubsDataAccessObject.getInstance(postDAO);
+        clubsGateway = (ClubWriteOperations) InMemoryClubsDataAccessObject.getInstance(postDAO);
         userGateway = InMemoryUserDataAccessObject.getInstance();
         // Reset users (cannot easily clear clubs, so use unique titles per test)
         for (Account a : new ArrayList<>(((InMemoryUserDataAccessObject) userGateway).getAllUsers())) {
@@ -106,10 +106,10 @@ class CreateClubInteractorTest {
     @Test
     void exceptionDuringCreateHandled() {
         // Custom gateway throws after validation passes
-        class ThrowingClubsGateway implements ClubWriteOperations, ClubReadOperations {
+        class ThrowingClubsGateway implements ClubWriteOperations { // removed ClubReadOperations
             public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<entity.Post> posts, ArrayList<String> tags) { throw new RuntimeException("boom"); }
-            public Club getClub(long clubID) { return null; }
             public boolean clubExists(String clubName) { return false; }
+            public void deleteClub(long clubID) { /* not used in this test */ }
         }
         Account m = new Account("member", "pw"); userGateway.save(m);
         CreateClubInteractor throwingInteractor = new CreateClubInteractor(new ThrowingClubsGateway(), userGateway, presenter);

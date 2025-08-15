@@ -6,6 +6,8 @@ import entity.Club;
 import entity.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import use_case.club.ClubMembershipMutation;
+import use_case.club.ClubReadOperations;
 
 import java.util.*;
 
@@ -23,14 +25,10 @@ public class LeaveClubInteractorTest {
         clubsDAO = InMemoryClubsDataAccessObject.getInstance(postDAO);
         userDAO = InMemoryUserDataAccessObject.getInstance();
         // Reset singleton state (best-effort) to avoid test interference
-        for (Club c : new ArrayList<>(clubsDAO.getAllClubs())) {
-            clubsDAO.deleteClub(c.getId());
-        }
-        for (Account a : new ArrayList<>(userDAO.getAllUsers())) {
-            userDAO.deleteAccount(a.getUsername());
-        }
+        for (Club c : new ArrayList<>(clubsDAO.getAllClubs())) { clubsDAO.deleteClub(c.getId()); }
+        for (Account a : new ArrayList<>(userDAO.getAllUsers())) { userDAO.deleteAccount(a.getUsername()); }
         presenter = new TestPresenter();
-        interactor = new LeaveClubInteractor(clubsDAO, userDAO, presenter);
+        interactor = new LeaveClubInteractor((ClubReadOperations) clubsDAO, (ClubMembershipMutation) clubsDAO, userDAO, presenter);
     }
 
     @Test
@@ -114,21 +112,15 @@ public class LeaveClubInteractorTest {
     void exceptionDuringProcessingTriggersFailView() {
         // Custom DAO that throws when getAllClubs called
         class ExplodingClubsDAO implements ClubsDataAccessObject {
-            @Override
             public void writeClub(long clubID, ArrayList<Account> members, String name, String description, String imageUrl, ArrayList<Post> posts, ArrayList<String> tags) { }
-            @Override
             public Club getClub(long clubID) { return new Club("Name", "desc", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), clubID, new ArrayList<>()); }
-            @Override
             public boolean clubExists(String clubName) { return false; }
-            @Override
             public ArrayList<Club> getAllClubs() { throw new RuntimeException("boom"); }
-            @Override
             public void removeMemberFromClub(String username, long clubID) { }
-            @Override
             public void deleteClub(long clubID) { }
         }
         ClubsDataAccessObject explodingDAO = new ExplodingClubsDAO();
-        LeaveClubInteractor explodingInteractor = new LeaveClubInteractor(explodingDAO, userDAO, presenter);
+        LeaveClubInteractor explodingInteractor = new LeaveClubInteractor((ClubReadOperations) explodingDAO, (ClubMembershipMutation) explodingDAO, userDAO, presenter);
         Account user = new Account("erin", "pw");
         user.setClubs(new ArrayList<>(Collections.singletonList("1")));
         userDAO.save(user);

@@ -97,6 +97,17 @@ public class InMemoryClubsDataAccessObject implements ClubsDataAccessObject {
 
     @Override
     public void deleteClub(long clubID) {
-        clubs.remove(clubID);
+        // Remove and clean up member club references
+        Club removed = clubs.remove(clubID);
+        if (removed != null) {
+            try {
+                InMemoryUserDataAccessObject userDAO = (InMemoryUserDataAccessObject) InMemoryUserDataAccessObject.getInstance();
+                for (Account member : removed.getMembers()) {
+                    if (member != null && member.getUsername() != null) {
+                        userDAO.removeClubFromUser(member.getUsername(), String.valueOf(clubID));
+                    }
+                }
+            } catch (Exception ignored) { }
+        }
     }
 }
